@@ -1,0 +1,32 @@
+### Ansible ###
+*.retry
+
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# vscode-sops
+.decrypted~*.yaml
+
+# Local History for Visual Studio Code
+.history/
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+## Trash
+.DS_Store
+Thumbs.db
+
+## k8s
+kubeconfig
