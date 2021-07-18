@@ -23,6 +23,8 @@ spec:
         type: LoadBalancer
         loadBalancerIP: "${INGRESS_NGINX_LB}"
         externalTrafficPolicy: Local
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "${SHARED_IP}"
       config:
         ssl-protocols: "TLSv1.3 TLSv1.2"
         proxy-body-size: "100m"
