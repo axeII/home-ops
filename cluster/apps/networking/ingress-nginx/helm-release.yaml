@@ -22,7 +22,7 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerIP: "${INGRESS_NGINX_LB}"
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         annotations:
           metallb.universe.tf/allow-shared-ip: "${SHARED_IP}"
       config:
