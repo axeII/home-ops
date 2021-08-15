@@ -26,7 +26,7 @@ spec:
       createDefaultDiskLabeledNodes: true
       storageMinimalAvailablePercentage: "10"
       taintToleration: arm=true:NoExecute
-      backupTarget: nfs://10.10.10.31:/mnt/tardisk/k3s
+      backupTarget: "${NFS_BACKUP}"
     ingress:
       enabled: true
       host: "longhorn.${SECRET_DOMAIN}"
