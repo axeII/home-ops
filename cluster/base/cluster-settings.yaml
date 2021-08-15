@@ -8,3 +8,4 @@ data:
   METALLB_LB_RANGE: "192.168.69.100-192.168.69.100"
   INGRESS_NGINX_LB: 192.168.69.100
   SHARED_IP: my-shared-ip
+  NFS_BACKUP: "nfs://192.169.69.100:/media/apollo/k3s/backup"

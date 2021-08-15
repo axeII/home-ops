@@ -36,5 +36,5 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: homer-config
-        mountPath: /www/assets
+        storageClass: "longhorn"
+        size: 2Gi
