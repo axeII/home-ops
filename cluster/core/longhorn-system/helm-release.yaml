@@ -19,7 +19,7 @@ spec:
       interval: 5m
   values:
     persistence:
-      #defaultClassReplicaCount: 1
+      defaultClassReplicaCount: 2
     defaultSettings:
       replicaSoftAntiAffinity: true
       replicaZoneSoftAntiAffinity: true
@@ -27,7 +27,7 @@ spec:
       defaultReplicaCount: 2
       createDefaultDiskLabeledNodes: true
       storageMinimalAvailablePercentage: "10"
-      taintToleration: arm=true:NoExecute
+      # taintToleration: arm=true:NoExecute
       backupTarget: "${NFS_BACKUP}"
     ingress:
       enabled: true
