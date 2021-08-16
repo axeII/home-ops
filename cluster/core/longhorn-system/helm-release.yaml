@@ -19,10 +19,12 @@ spec:
       interval: 5m
   values:
     persistence:
-      defaultClassReplicaCount: 1
+      #defaultClassReplicaCount: 1
     defaultSettings:
-      defaultDataPath: /longhorn
-      defaultReplicaCount: 1
+      replicaSoftAntiAffinity: true
+      replicaZoneSoftAntiAffinity: true
+      #defaultDataPath: /longhorn
+      defaultReplicaCount: 2
       createDefaultDiskLabeledNodes: true
       storageMinimalAvailablePercentage: "10"
       taintToleration: arm=true:NoExecute
