@@ -28,11 +28,15 @@ spec:
       taintToleration: arm=true:NoExecute
       backupTarget: "${NFS_BACKUP}"
     ingress:
-      enabled: true
-      host: "longhorn.${SECRET_DOMAIN}"
-      tlsSecret: longhorn-cert
-      tls: true
-      annotations:
-        kubernetes.io/ingress.class: nginx-internal
-        kubernetes.io/tls-acme: "true"
-        cert-manager.io/cluster-issuer: letsencrypt-prod
+      main:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+        hosts:
+        - host: "longhorn.${SECRET_DOMAIN}"
+          paths:
+          - path: /
+            pathType: Prefix
+        tls:
+        - hosts:
+          - "longhorn.${SECRET_DOMAIN}"
