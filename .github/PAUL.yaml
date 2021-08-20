@@ -1,5 +1,5 @@
 maintainers:
-- axeII
+  - axeII
 labels: true
 empty_description_check:
   enabled: false
@@ -7,7 +7,7 @@ empty_description_check:
 branch_destroyer:
   enabled: true
   protected_branches:
-  - main
+    - main
 pull_requests:
   automated_merge: false
   cats_enabled: true
