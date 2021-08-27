@@ -25,7 +25,20 @@ _... managed with Flux and Renovate_ :robot:
 
 Welcome to my home Kubernetes cluster.
 
+## :art:&nbsp; Cluster components
+- [flannel](https://github.com/flannel-io/flannel) - default CNI provided by k3s
+- [longhorn](https://longhorn.com) - storage class provider for data persistence
+- [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
+- [metallb](https://metallb.universe.tf/) - bare metal load balancer
+- [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
+- [traefik](https://traefik.io/): Provides ingress cluster services.
+- [hajimari](https://github.com/toboshii/hajimari) - start page with ingress discovery
+- [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) - upgrade k3s
+- [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/): Encrypts secrets which is safe to store - even to a public repository.
+<!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
+
 ---
+
 
 ## :handshake:&nbsp; Thanks
 
