@@ -27,66 +27,60 @@ spec:
           - default
       name: "you"
       customApps:
-        - name: Some External Cluster Service
-          url: http://192.168.1.100:5000
-          icon: test-tube
+        - name: Pihole
+          url: https://pihole.juno.moe
+          icon: pihole
       groups:
-        - name: Communicate
+        - name: Daily
           links:
-            - name: Discord
-              url: "https://discord.com"
-            - name: Gmail
-              url: "https://gmail.com"
-            - name: Slack
-              url: "https://slack.com/signin"
-        - name: Cloud
+            - name: DockerHub
+              url: "https://hub.docker.com"
+            - name: GitHub
+              url: "https://github.com"
+            - name: InfoSecNews
+              url: "https://allinfosecnews.com"
+            - name: Unifi
+              url: "https://unifi"
+        - name: Fun
           links:
-            - name: Box
-              url: "https://box.com"
-            - name: Dropbox
-              url: "https://dropbox.com"
-            - name: Drive
-              url: "https://drive.google.com"
-        - name: Design
+            - name: Jellyfin
+              url: "https://jellyfin.juno.moe"
+            - name: Comics
+              url: "https://comics.juno.moe"
+            - name: Manhwa
+              url: "https://toonily.com"
+            - name: Shodan
+              url: "https://shodan.io"
+            - name: Archive
+              url: "https://archive.ph"
+            - name: Science
+              url: "https://nhentai.net"
+        - name: Reddit
           links:
-            - name: Awwwards
-              url: "https://awwwards.com"
-            - name: Dribbble
-              url: "https://dribbble.com"
-            - name: Muz.li
-              url: "https://medium.muz.li/"
+            - name: "/r/sysadmin"
+              url: "https://www.reddit.com/r/sysadmin/"
+            - name: "/r/slefhosted"
+              url: "https://www.reddit.com/r/selfhosted/"
+            - name: "/r/jellyfin"
+              url: "https://reddit.com/r/jellyfin"
+            - name: "/r/apple"
+              url: "https://reddit.com/r/apple"
+            - name: "/r/programming"
+              url: "https://reddit.com/r/programming"
+            - name: "/r/hacking"
+              url: "https://reddit.com/r/hacking"
+            - name: "/r/oscp"
+              url: "https://reddit.com/r/oscp"
         - name: Dev
           links:
+            - name: Visual studio
+              url: https://my.visualstudio.com"
             - name: Codepen
               url: "https://codepen.io/"
             - name: Devdocs
               url: "https://devdocs.io"
             - name: Devhints
               url: "https://devhints.io"
-        - name: Lifestyle
-          links:
-            - name: Design Milk
-              url: "https://design-milk.com/category/interior-design/"
-            - name: Dwell
-              url: "https://www.dwell.com/"
-            - name: Freshome
-              url: "https://www.mymove.com/freshome/"
-        - name: Media
-          links:
-            - name: Spotify
-              url: "http://browse.spotify.com"
-            - name: Trakt
-              url: "http://trakt.tv"
-            - name: YouTube
-              url: "https://youtube.com/feed/subscriptions"
-        - name: Reading
-          links:
-            - name: Instapaper
-              url: "https://www.instapaper.com/u"
-            - name: Medium
-              url: "http://medium.com"
-            - name: Reddit
-              url: "http://reddit.com"
         - name: Tech
           links:
             - name: Hacker News
