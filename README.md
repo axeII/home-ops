@@ -26,6 +26,7 @@ _... managed with Flux and Renovate_ :robot:
 Welcome to my home Kubernetes cluster.
 
 ## :art:&nbsp; Cluster components
+
 - [flannel](https://github.com/flannel-io/flannel) - default CNI provided by k3s
 - [longhorn](https://longhorn.com) - storage class provider for data persistence
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
@@ -38,7 +39,6 @@ Welcome to my home Kubernetes cluster.
 <!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
 
 ---
-
 
 ## :handshake:&nbsp; Thanks
 

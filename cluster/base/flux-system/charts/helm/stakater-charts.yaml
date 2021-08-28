@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: metallb-charts
+  name: stakater-charts
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://metallb.github.io/metallb
+  url: https://stakater.github.io/stakater-charts
   timeout: 3m

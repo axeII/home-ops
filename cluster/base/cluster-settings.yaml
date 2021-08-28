@@ -6,6 +6,6 @@ metadata:
   namespace: flux-system
 data:
   METALLB_LB_RANGE: "192.168.69.100-192.168.69.100"
-  INGRESS_NGINX_LB: 192.168.69.100
+  SVC_TRAEFIK_ADDR: 192.168.69.100
   SHARED_IP: my-shared-ip
   NFS_BACKUP: "nfs://192.168.69.242:/media/k3s/backup"
