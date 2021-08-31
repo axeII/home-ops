@@ -23,7 +23,7 @@ _... managed with Flux and Renovate_ :robot:
 
 ## :wave: Overview
 
-Welcome to my home Kubernetes cluster.
+Welcome to my home Kubernetes cluster. Made with k3s.
 
 ## :art:&nbsp; Cluster components
 - [flannel](https://github.com/flannel-io/flannel) - default CNI provided by k3s
@@ -38,7 +38,6 @@ Welcome to my home Kubernetes cluster.
 <!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
 
 ---
-
 
 ## :handshake:&nbsp; Thanks
 
