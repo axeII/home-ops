@@ -1,6 +1,9 @@
 ### Ansible ###
 *.retry
 
+## exports ###
+exports
+
 ### Helm ###
 # Chart dependencies
 **/charts/*.tgz
