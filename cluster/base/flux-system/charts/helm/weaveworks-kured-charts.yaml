@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: metallb-charts
+  name: weaveworks-kured-charts
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://metallb.github.io/metallb
+  url: https://weaveworks.github.io/kured
   timeout: 3m
