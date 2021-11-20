@@ -7,14 +7,14 @@ terraform {
     }
     proxmox = {
       source = "telmate/proxmox"
-      version = "2.7.4"
+      version = "2.9.1"
     }
   }
 }
 
 
 data "sops_file" "proxmox_secrets" {
-  source_file = "secret.sops.yaml"
+  source_file = "../secret.sops.yaml"
 }
 
 
