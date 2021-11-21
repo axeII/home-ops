@@ -1,5 +1,14 @@
+# k8s
+kubeconfig
+
+# vscode-sops
+.decrypted~*.yaml
+.config.env
+
+
 ### Ansible ###
 *.retry
+xanmanning.k3s*
 
 ## exports ###
 exports
@@ -27,9 +36,12 @@ exports
 .history
 .ionide
 
+# Terraform
+.terraform
+.terraform.tfstate*
+terraform.tfstate*
+
+
 ## Trash
 .DS_Store
 Thumbs.db
-
-## k8s
-kubeconfig
