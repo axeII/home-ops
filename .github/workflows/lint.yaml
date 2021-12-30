@@ -16,10 +16,3 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           yamllint_flags: "-c .github/yamllint.config.yaml ./cluster/"
-
-      - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@master
-
-      - name: Use pluto
-        run: |
-          pluto detect-files -d cluster
