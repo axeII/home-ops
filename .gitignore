@@ -4,14 +4,13 @@ kubeconfig
 # vscode-sops
 .decrypted~*.yaml
 .config.env
+configure.sh
 
 
 ### Ansible ###
 *.retry
 xanmanning.k3s*
 
-## exports ###
-exports
 
 ### Helm ###
 # Chart dependencies
