@@ -13,6 +13,11 @@
       127.0.0.1 localhost
       127.0.1.1 {{ inventory_hostname }}
 
+      192.168.69.105 k8s-0
+      192.168.69.106 k8s-1
+      192.168.69.107 k8s-2
+      192.168.69.108 k8s-3
+
       # The following lines are desirable for IPv6 capable hosts
       ::1 ip6-localhost ip6-loopback
       fe00::0 ip6-localnet
