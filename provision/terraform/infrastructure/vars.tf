@@ -1,10 +1,10 @@
 variable "subnet_numbers" {
   description = "Default resource group name that the network will be created in."
   default = {
-      "k3s-master-node" = "105"
-      "k3s-worker-node1" = "106"
-      "k3s-worker-node2" = "107"
-      "k3s-worker-node3" = "108"
+      "k8s-0" = "105"
+      "k8s-1" = "106"
+      "k8s-2" = "107"
+      "k8s-3" = "108"
     }
 }
 
