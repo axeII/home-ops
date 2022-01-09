@@ -37,6 +37,13 @@ Welcome to my home Kubernetes cluster. Made with k3s.
 - [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/): Encrypts secrets which is safe to store - even to a public repository.
 <!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
 
+Following tools I use to setup infrastructure: 
+
+- [Ubuntu](https://ubuntu.com/download/server) - a pretty universal operating system that supports running all kinds of home related workloads in Kubernetes
+- [Ansible](https://www.ansible.com) - tool I use for configuration ubuntu nodes and also to install k3s
+- [Terraform](https://www.terraform.io) - in order to help with the DNS settings and setup VM where I run k3s I use terraform
+
+
 ---
 
 ## :handshake:&nbsp; Thanks
