@@ -5,6 +5,13 @@
   when:
     - ansible_hostname != inventory_hostname
 
+- name: Insert/Update "Match User" configuration block in /etc/ssh/sshd_config
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      Match User ansible-agent
+      PasswordAuthentication no
+
 - name: Update /etc/hosts to include hostname
   ansible.builtin.blockinfile:
     path: /etc/hosts

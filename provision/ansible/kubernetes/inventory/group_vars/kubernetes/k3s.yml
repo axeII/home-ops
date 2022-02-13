@@ -17,7 +17,7 @@ k3s_become: true
 k3s_debug: false
 
 # (bool) Enable etcd embedded datastore
-k3s_etcd_datastore: true
+k3s_etcd_datastore: false
 
 # (bool) Allow the use of unsupported configurations in k3s
 k3s_use_unsupported_config: false
