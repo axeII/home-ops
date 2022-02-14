@@ -20,3 +20,27 @@ tasks:
     dir: provision/terraform/cloudflare
     cmds:
       - "terraform apply"
+
+  init:infrastructure:
+    desc: Initialize terraform
+    dir: provision/terraform/infrastructure
+    cmds:
+      - "terraform init"
+
+  plan:infrastructure:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: provision/terraform/infrastructure
+    cmds:
+      - "terraform plan"
+
+  apply:infrastructure:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: provision/terraform/infrastructure
+    cmds:
+      - "terraform apply"
+
+  destroy:infrastructure:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: provision/terraform/infrastructure
+    cmds:
+      - "terraform destroy"
