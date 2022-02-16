@@ -5,7 +5,7 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  METALLB_LB_RANGE: "192.168.69.105-192.168.69.115"
-  INGRESS_NGINX_LB: 192.168.69.100
+  METALLB_LB_RANGE: "192.168.69.70-192.168.69.80"
+  METALLB_TRAEFIK_ADDR: 192.168.69.105
   SHARED_IP: my-shared-ip
-  NFS_BACKUP: "nfs://192.168.69.242:/media/k3s/backup"
+  NFS_BACKUP: "nfs://192.168.69.100:/media/k3s/backup"
