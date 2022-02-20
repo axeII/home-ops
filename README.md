@@ -28,7 +28,7 @@ Welcome to my HomeOps setup. See the hardware sectio where I describe what soft 
 For setting cluster and my services I use terraform and ansible to make the most things as IaC (Inracsturcure as Code). I can anytime destroy my cluster build it again. While for my virutal machies before I migrate to IaC and kubernetes I currently back up everyting on NAS using NFS including whole VMs (yes they run on NFS :partying_face: )
 
 
-Finally at the moment of February 2022 I feel I have ready robust infrastructure ready for my home-ops and now I would like to move to add more services to my setup.
+Finally at the moment of February 2022 I am satisfied with the home-ops infrastructure. Now I would like to move to the next faze and that is to add more services to my cluster.
 
 ## :art:&nbsp; Cluster components
 
