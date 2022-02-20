@@ -57,6 +57,8 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | Proxmox Master                                       |
 | Intel NUC8i5BEH                         | 250GB NVMe   | 1TB SSD.             | 32GB | Proxmox Node                                       |
 | QNAP DAS (storage)                | BTRFS raid 1 16TB       | 2x3TB HDD, 2x10TB HDD | N/A  |  NFS storage |
+| Unifi UDM Pro                | HDD 1TB       | N/A | 8BG  | Router and security Gateway  |
+| Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
 
 Using terraform I craete vitual machines for k3s on both nodes. Ansible I use to configure them.
 
