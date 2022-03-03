@@ -33,7 +33,7 @@ Finally at the moment of February 2022 I am satisfied with the home-ops infrastr
 
 ## :art:&nbsp; Cluster components
 
-- [flannel](https://github.com/flannel-io/flannel) - default CNI provided by k3s
+- [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
 - [longhorn](https://longhorn.com) - storage class provider for data persistence
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer
