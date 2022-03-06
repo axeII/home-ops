@@ -34,6 +34,7 @@ Finally at the moment of February 2022 I am satisfied with the home-ops infrastr
 ## :art:&nbsp; Cluster components
 
 - [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
+- [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
 - [longhorn](https://longhorn.com) - storage class provider for data persistence
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer

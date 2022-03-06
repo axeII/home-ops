@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
   - traefik
   - wildcard-certificate
+  # - cloudflare-ddns
+  - echo-server
