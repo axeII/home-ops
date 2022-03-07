@@ -31,3 +31,4 @@ jobs:
           TERRAFORM_TFLINT_CONFIG_FILE: .tflint.hcl
           YAML_CONFIG_FILE: .yamllint.yaml
           KUBERNETES_KUBEVAL_OPTIONS: --ignore-missing-schemas
+          SHELLCHECK_OPTS: "-e SC2086"

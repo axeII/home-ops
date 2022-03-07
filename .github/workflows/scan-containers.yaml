@@ -42,7 +42,6 @@ jobs:
           sudo apt-get install jo
       - name: Detect Containers in Files
         id: containers
-        # shellcheck disable=SC2086
         run: |
           containers=$(.github/scripts/container-parser.sh --file "${{ matrix.file }}")
           echo "${containers}"
