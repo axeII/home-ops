@@ -43,6 +43,7 @@ Finally at the moment of February 2022 I am satisfied with the home-ops infrastr
 - [traefik](https://traefik.io/): Provides ingress cluster services.
 - [hajimari](https://github.com/toboshii/hajimari) - start page with ingress discovery
 - [reflector](https://github.com/emberstack/kubernetes-reflector) - mirror configmaps or secrets to other Kubernetes namespaces
+- [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
 - [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) - upgrade k3s
 - [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/): Encrypts secrets which is safe to store - even to a public repository.
 <!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
