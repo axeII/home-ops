@@ -24,7 +24,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 ## :wave: Overview
 
 Welcome to my HomeOps setup. See the hardware sectio where I describe what soft of hardware I am running locally. Unlike others I don't run pure k8s baremetal.
-This is because I don't have enough hardware to run robust k8s and also I still like to run some services in docker/docker-compose and solution where k3s and docker are on the same machine resolt in some netowrk issues due iptables and nftables.
+This is because I don't have enough hardware to run robust k8s and also I still like to run some services in docker/docker-compose and solution where k3s and docker are on the same machine resolt in some network issues due iptables and nftables.
 
 For setting cluster and my services I use terraform and ansible to make the most things as IaC (Inracsturcure as Code). I can anytime destroy my cluster build it again.
 While for my virutal machies before I migrate to IaC and kubernetes I currently back up everyting on NAS using NFS including whole VMs (which saves ssd storage alot).
@@ -58,14 +58,16 @@ Following tools I use to setup infrastructure:
 
 My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20.04):
 
+<!-- textlint-disable -->
 | Device                                  | OS Disk Size | Data Disk Size       | Ram  | Purpose                                          |
 |-----------------------------------------|--------------|----------------------|------|--------------------------------------------------|
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | Proxmox Master                                       |
-| Intel NUC8i5BEH                         | 250GB NVMe   | 1TB HDD             | 32GB | Proxmox node                                       |
-| QNAP DAS (storage)                | BTRFS raid 1 16TB       | 2x3TB HDD, 2x10TB HDD | N/A  |  NFS storage |
+| Intel NUC8i5BEH                         | 250GB NVMe   | 1TB HDD             | 32GB | Proxmox Node                                       |
+| QNAP DAS (storage)                | BTRFS raid 1 16TB       | 2x3TB HDD, 2x10TB HDD | N/A  |  NFS Storage |
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
 | rock64                         | 16GB MMC |    N/A     | 4GB | Services backup device  (in case proxmox cluster is down )              |
+<!-- textlint-enable -->
 
 ---
 
