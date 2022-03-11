@@ -23,8 +23,8 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. See the hardware sectio where I describe what soft of hardware I am running locally. Unlike others I don't run pure k8s baremetal.
-This is because I don't have enough hardware to run robust k8s and also I still like to run some services in docker/docker-compose and solution where k3s and docker are on the same machine resolt in some network issues due iptables and nftables.
+Welcome to my HomeOps setup. See the hardware section where I describe what sort of hardware I am running locally. Unlike the others I don't run pure k8s baremetal.
+This is because I don't have enough hardware currently to run a robust k8s and also I like to run some services in docker/docker-compose and solution where k3s and docker run on the same machine can result in some network issues due iptables and nftables.
 
 For setting cluster and my services I use terraform and ansible to make the most things as IaC (Inracsturcure as Code). I can anytime destroy my cluster build it again.
 While for my virutal machies before I migrate to IaC and kubernetes I currently back up everyting on NAS using NFS including whole VMs (which saves ssd storage alot).
