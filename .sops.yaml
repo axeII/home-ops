@@ -8,3 +8,6 @@ creation_rules:
     encrypted_regex: "^(data|stringData)$"
     age: >-
       age12evtyez2gz3w209lld8r6nw0v0572v468v0hl05m5259v0zrn5eq3cct4h
+  - path_regex: provision/docker/.env
+    age: >-
+      age12evtyez2gz3w209lld8r6nw0v0572v468v0hl05m5259v0zrn5eq3cct4h

@@ -1,0 +1,42 @@
+---
+version: "3"
+services:
+  jellyfin-vue:
+    container_name: jellyfin_vue
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    image: jellyfin/jellyfin-vue:unstable
+    restart: unless-stopped
+    depends_on: jellyfin
+    labels:
+      - traefik.http.routers.jellyfin-vue.rule=Host(`jellyfin.${DOMAIN}`)
+      - traefik.http.routers.jellyfin-vue.entrypoints=web-secure
+      - traefik.http.routers.jellyfin-vue.tls=true
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Prague
+    volumes:
+      - config:/config
+      - /data/TVShows:/data/tvshows
+      - /data/Movies:/data/movies
+      - /data/Music/:/data/music
+    # ports:
+      # - 8096:8096
+    restart: unless-stopped
+    privileged: true
+    deploy:
+    resources:
+      reservations:
+        devices:
+          - capabilities: [gpu]
+
+
+volumes:
+  config:
