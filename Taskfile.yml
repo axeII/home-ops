@@ -6,6 +6,7 @@ vars:
     sh: "git rev-parse --show-toplevel"
   CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
   ANSIBLE_DIR: "{{.PROJECT_DIR}}/provision/ansible/kubernetes"
+  DOCKER_DIR: "{{.PROJECT_DIR}}/provision/docker"
   TERRAFORM_DIR: "{{.PROJECT_DIR}}/provision/terraform"
 
 env:
@@ -18,3 +19,4 @@ includes:
   lint: .taskfiles/lint.yml
   pre-commit: .taskfiles/pre-commit.yml
   terraform: .taskfiles/terraform.yml
+  docker: .taskfiles/docker.yml
