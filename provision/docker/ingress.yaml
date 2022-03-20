@@ -1,5 +1,43 @@
 ---
-version: "3"
+version: "3.7"
 services:
   ingress:
     image: traefik:latest
+    container_name: "ingress"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    command:
+      - "--log.level=DEBUG"
+      - --api.insecure=true
+      - --global.sendAnonymousUsage=false
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web-secure.address=:443
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "certs:/etc/certs/"
+    restart: always
+    networks:
+      - "traefik_net"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      # - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      # - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=admin_auth@docker"
+      # echo $(htpasswd -nB user) | sed -e s/\\$/\\$\\$/g
+      - "traefik.http.middlewares.admin_auth.basicauth.users=admin:$$2y$$05$$TFNZCeG5YUx1YNHf310.2ugeJJ.MYOVWs3kVAbzEKWc2sLvGkn8U2"
+
+volumes:
+  certs:
+
+networks:
+  traefik_net:
+    external: true
