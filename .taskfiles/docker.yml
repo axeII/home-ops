@@ -1,0 +1,31 @@
+---
+version: "3"
+
+vars:
+  CONTEXT: "home"
+
+tasks:
+
+  ingress:status:
+    desc: Status of ingress
+    dir: provision/terraform/cloudflare
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml ps"
+
+  ingress:logs:
+    desc: Logging of ingress
+    dir: provision/terraform/cloudflare
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml logs"
+
+  ingress:start:
+    desc: Start the ingress
+    dir: provision/terraform/cloudflare
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml up -d --force-recreate"
+
+  ingress:stop:
+    desc: Stop the ingress
+    dir: provision/terraform/cloudflare
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml down"
