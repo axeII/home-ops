@@ -30,8 +30,8 @@ services:
       # Set up the TLS configuration for our websecure listener
       - --entrypoints.websecure.http.tls=true
       - --entrypoints.websecure.http.tls.certResolver=letsencrypt
-      - --entrypoints.websecure.http.tls.domains[0].main=d.${DOMAIN}
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.d.${DOMAIN}
+      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "letsencrypt:/letsencrypt"
@@ -46,11 +46,12 @@ services:
       - "traefik.http.routers.traefik.entrypoints=web-secure"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=admin_auth@docker"
+      - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      # - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      # - 'traefik.http.routers.traefik.middlewares=strip'
+      # - 'traefik.http.middlewares.strip.stripprefix.prefixes=/traefik'
       # echo $(htpasswd -nB user) | sed -e s/\\$/\\$\\$/g
+      # - "traefik.http.routers.dashboard.middlewares=admin_auth@docker"
       # - "traefik.http.middlewares.admin_auth.basicauth.users=admin:$$2y$$05$$TFNZCeG5YUx1YNHf310.2ugeJJ.MYOVWs3kVAbzEKWc2sLvGkn8U2"
 
 volumes:

@@ -9,11 +9,15 @@ services:
       - TZ=Europe/London
     image: jellyfin/jellyfin-vue:unstable
     restart: unless-stopped
-    depends_on: jellyfin
     labels:
+      - traefik.enable=true
       - traefik.http.routers.jellyfin-vue.rule=Host(`jellyfin.${DOMAIN}`)
       - traefik.http.routers.jellyfin-vue.entrypoints=web-secure
       - traefik.http.routers.jellyfin-vue.tls=true
+      - traefik.http.routers.jellyfin-vue.tls.certresolver=letsencrypt
+    depends_on:
+      jellyfin:
+        condition: service_healthy
 
   jellyfin:
     image: linuxserver/jellyfin:latest
