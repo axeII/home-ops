@@ -6,26 +6,26 @@ vars:
 
 tasks:
 
-  ingress:status:
-    desc: Status of ingress
-    dir: provision/terraform/cloudflare
+  container:status:
+    desc: Status of docker container
+    dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml ps"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml ps"
 
-  ingress:logs:
-    desc: Logging of ingress
-    dir: provision/terraform/cloudflare
+  container:logs:
+    desc: Logging of docker container
+    dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml logs"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml logs"
 
-  ingress:start:
-    desc: Start the ingress
-    dir: provision/terraform/cloudflare
+  container:start:
+    desc: Start the dcoker continer
+    dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml up -d --force-recreate"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml up -d --force-recreate"
 
-  ingress:stop:
-    desc: Stop the ingress
-    dir: provision/terraform/cloudflare
+  container:stop:
+    desc: Stop the docker container
+    dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress.yaml down"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml down"
