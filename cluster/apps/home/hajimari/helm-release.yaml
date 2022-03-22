@@ -27,7 +27,7 @@ spec:
       name: "you"
       customApps:
         - name: Pihole
-          url: https://pihole.juno.moe
+          url: "https://pihole.${SECRET_DOMAIN}"
           icon: pihole
       groups:
         - name: Daily
@@ -43,9 +43,9 @@ spec:
         - name: Fun
           links:
             - name: Jellyfin
-              url: "https://jellyfin.juno.moe"
+              url: "https://jellyfin.${SECRET_DOMAIN}"
             - name: Comics
-              url: "https://comics.juno.moe"
+              url: "https://comics.${SECRET_DOMAIN}"
             - name: Manhwa
               url: "https://toonily.com"
             - name: Shodan
