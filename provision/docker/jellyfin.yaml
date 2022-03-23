@@ -16,8 +16,10 @@ services:
       - traefik.http.routers.jellyfin-vue.tls=true
       - traefik.http.routers.jellyfin-vue.tls.certresolver=letsencrypt
     depends_on:
-      jellyfin:
-        condition: service_healthy
+      - jellyfin
+    # wait for jellyfin 10.8.0 release
+      # jellyfin:
+        # condition: service_healthy
 
   jellyfin:
     image: linuxserver/jellyfin:latest
@@ -35,11 +37,12 @@ services:
       # - 8096:8096
     restart: unless-stopped
     privileged: true
-    deploy:
-    resources:
-      reservations:
-        devices:
-          - capabilities: [gpu]
+    # TODO: Fix proxmox gpu throughput
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
 
 
 volumes:
