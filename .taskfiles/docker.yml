@@ -6,26 +6,26 @@ vars:
 
 tasks:
 
-  container:status:
-    desc: Status of docker container
+  container:ingress:
+    desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml ps"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress/*.yaml {{.CLI_ARGS}}"
 
-  container:logs:
-    desc: Logging of docker container
+  container:jellyfin:
+    desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml logs"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/jellyfin/*.yaml {{.CLI_ARGS}}"
 
-  container:start:
-    desc: Start the dcoker continer
+  container:comics:
+    desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml up -d --force-recreate"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/comics/*.yaml {{.CLI_ARGS}}"
 
-  container:stop:
-    desc: Stop the docker container
+  container:media:
+    desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/{{.CLI_ARGS}}.yaml down"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/media/*.yaml {{.CLI_ARGS}}"
