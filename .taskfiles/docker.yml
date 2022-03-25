@@ -10,22 +10,22 @@ tasks:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/ingress/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/ingress/*.yaml {{.CLI_ARGS}}"
 
   container:jellyfin:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/jellyfin/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/jellyfin/*.yaml {{.CLI_ARGS}}"
 
   container:comics:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/comics/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/comics/*.yaml {{.CLI_ARGS}}"
 
   container:media:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.env -f {{.DOCKER_DIR}}/media/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/media/*.yaml {{.CLI_ARGS}}"

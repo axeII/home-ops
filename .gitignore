@@ -5,6 +5,7 @@ kubeconfig
 .decrypted~*.yaml
 .config.env
 configure.sh
+.sops.dec.env
 
 
 ### Ansible ###
