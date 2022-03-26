@@ -5,11 +5,11 @@ services:
     image: traefik:latest
     container_name: "ingress"
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
+      - 80:80
+      - 443:443
+      - 8080
     command:
-      - "--log.level=DEBUG"
+      # - "--log.level=DEBUG"
       - --api.insecure=true
       # Enable the Trafik dashboard
       - --api.dashboard=true
@@ -48,6 +48,7 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      # traefik hide to subdomain - optional
       # - 'traefik.http.routers.traefik.middlewares=strip'
       # - 'traefik.http.middlewares.strip.stripprefix.prefixes=/traefik'
       # echo $(htpasswd -nB user) | sed -e s/\\$/\\$\\$/g
