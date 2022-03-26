@@ -26,7 +26,7 @@ services:
         # condition: service_healthy
 
   jellyfin:
-    image: linuxserver/jellyfin:latest
+    image: linuxserver/jellyfin:10.7.7
     container_name: jellyfin
     networks:
       - traefik_net

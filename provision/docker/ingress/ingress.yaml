@@ -2,7 +2,7 @@
 version: "3.7"
 services:
   ingress:
-    image: traefik:latest
+    image: traefik:v2.6.2
     container_name: "ingress"
     ports:
       - 80:80
