@@ -6,25 +6,25 @@ vars:
 
 tasks:
 
-  container:ingress:
+  compose:ingress:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/ingress/*.yaml {{.CLI_ARGS}}"
 
-  container:jellyfin:
+  compose:jellyfin:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/jellyfin/*.yaml {{.CLI_ARGS}}"
 
-  container:comics:
+  compose:comics:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/comics/*.yaml {{.CLI_ARGS}}"
 
-  container:media:
+  compose:media:
     desc: Docker container control
     dir: provision/docker
     cmds:
