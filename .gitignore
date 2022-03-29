@@ -5,13 +5,15 @@ kubeconfig
 .decrypted~*.yaml
 .config.env
 configure.sh
-.sops.dec.env
 
 
 ### Ansible ###
 *.retry
 xanmanning.k3s*
 
+## secrets ##
+.sops.dec.env
+provision/ansible/cloud/hosts.yml
 
 ### Helm ###
 # Chart dependencies

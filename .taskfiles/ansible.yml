@@ -9,6 +9,7 @@ vars:
   ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/kubernetes/inventory"
   ANSIBLE_PROXMOX_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/proxmox/inventory"
   ANSIBLE_PROXMOX_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/proxmox/playbooks"
+  ANSIBLE_CLOUD_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/cloud"
 
 tasks:
 
@@ -58,7 +59,7 @@ tasks:
     desc: Ping all the hosts
     dir: provision/ansible
     cmds:
-      - "ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -m 'ping'"
+      - "ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_CLOUD_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -m 'ping'"
 
   adhoc:uptime:
     desc: Uptime of all the hosts
@@ -70,7 +71,7 @@ tasks:
     desc: Uptime of all the hosts
     dir: provision/ansible
     cmds:
-      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -a 'uptime'
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_CLOUD_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -a 'uptime'
 
   adhoc:reboot:
     desc: Reboot all the k8s nodes
