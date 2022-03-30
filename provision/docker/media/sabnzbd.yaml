@@ -1,0 +1,44 @@
+---
+version: "2.1"
+services:
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    networks:
+      - traefik_net
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - config:/config
+      - /data/downloads:/downloads
+      - /data/temporary:/incomplete-downloads #optional
+      - /data/Movies:/data/Movies
+      - /data/TVShows:/data/TVShows
+    ports:
+      - 8080
+      - 9090
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sabzb.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.sabzb.entrypoints=web-secure
+      - traefik.http.routers.sabzb.tls=true
+      - traefik.http.routers.sabzb.tls.certresolver=letsencrypt
+      - traefik.http.routers.sabzb.middlewares=my-whitelist-in-docker@docker
+      - traefik.http.services.sabzb.loadbalancer.server.port=8080
+    healthcheck:
+      test: curl -f http://localhost:8080
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
+
+
+volumes:
+  config:
+
+networks:
+  traefik_net:
+    external: true
