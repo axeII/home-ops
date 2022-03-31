@@ -26,7 +26,6 @@ services:
       - traefik.http.routers.sabzb.entrypoints=web-secure
       - traefik.http.routers.sabzb.tls=true
       - traefik.http.routers.sabzb.tls.certresolver=letsencrypt
-      - traefik.http.routers.sabzb.middlewares=my-whitelist-in-docker@docker
       - traefik.http.services.sabzb.loadbalancer.server.port=8080
     healthcheck:
       test: curl -f http://localhost:8080
