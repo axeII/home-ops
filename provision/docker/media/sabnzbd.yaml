@@ -2,7 +2,7 @@
 version: "2.1"
 services:
   sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
+    image: ghcr.io/linuxserver/sabnzbd:3.5.3
     container_name: sabnzbd
     networks:
       - traefik_net
@@ -18,7 +18,6 @@ services:
       - /data/TVShows:/data/TVShows
     ports:
       - 8080
-      - 9090
     restart: unless-stopped
     labels:
       - traefik.enable=true
