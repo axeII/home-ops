@@ -22,10 +22,10 @@ tasks:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/comics/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/comics {{.CLI_ARGS}}"
 
   compose:media:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/media/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/media {{.CLI_ARGS}}"
