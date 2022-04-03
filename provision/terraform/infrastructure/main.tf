@@ -4,11 +4,11 @@ data "sops_file" "proxmox_secrets" {
 
 
 provider "proxmox" {
-  pm_api_url = "https://${var.proxmox_ip}:8006/api2/json"
-  pm_api_token_id = data.sops_file.proxmox_secrets.data["pm_api_token_id"]
+  pm_api_url          = "https://${var.proxmox_ip}:8006/api2/json"
+  pm_api_token_id     = data.sops_file.proxmox_secrets.data["pm_api_token_id"]
   pm_api_token_secret = data.sops_file.proxmox_secrets.data["pm_api_token_secret"]
   # leave tls_insecure set to true unless you have your proxmox SSL certificate situation fully sorted out (if you do, you will know)
-  pm_tls_insecure = true
+  pm_tls_insecure     = true
 }
 
 resource "proxmox_vm_qemu" "k3s_server" {
