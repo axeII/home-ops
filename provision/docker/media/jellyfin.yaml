@@ -35,7 +35,7 @@ services:
       - PGID=1000
       - TZ=Europe/Prague
     volumes:
-      - config:/config
+      - jellyfin_config:/config
       - /data/TVShows:/data/tvshows
       - /data/Movies:/data/movies
       - /data/Music/:/data/music
@@ -59,7 +59,7 @@ services:
 
 
 volumes:
-  config:
+  jellyfin_config:
 
 networks:
   traefik_net:
