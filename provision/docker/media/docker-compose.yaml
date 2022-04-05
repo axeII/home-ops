@@ -1,0 +1,30 @@
+---
+version: "2.1"
+services:
+  radarr:
+    extends:
+      file: radarr.yaml
+      service: radarr
+  sonarr:
+    extends:
+      file: sonarr.yaml
+      service: sonarr
+  sabnzbd:
+    extends:
+      file: sabnzbd.yaml
+      service: sabnzbd
+  jellyfin:
+    extends:
+      file: jellyfin.yaml
+      service: jellyfin
+
+
+volumes:
+  config:
+  jellyfin_config:
+  radarr_config:
+  sonarr_config:
+
+networks:
+  traefik_net:
+    external: true

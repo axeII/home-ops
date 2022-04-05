@@ -1,0 +1,35 @@
+---
+version: "2.1"
+services:
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    networks:
+      - traefik_net
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - sonarr_config:/config
+      - /data/TVShows:/tv
+      - /data/downloads/:/downloads
+      - /data/TVShows:/data/TVShows
+    ports:
+      - 8989
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)
+      - traefik.http.routers.sonarr.entrypoints=web-secure
+      - traefik.http.routers.sonarr.tls=true
+      - traefik.http.routers.sonarr.tls.certresolver=letsencrypt
+      - traefik.http.services.sonarr.loadbalancer.server.port=8989
+      # - "traefik.http.routers.sonarr.middlewares=my-whitelist-in-docker@docker"
+
+volumes:
+  sonarr_config:
+
+networks:
+  traefik_net:
+    external: true

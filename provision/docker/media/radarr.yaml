@@ -1,0 +1,34 @@
+---
+version: "2.1"
+services:
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    networks:
+      - traefik_net
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - radarr_config:/config
+      - /data/Movies:/downloads/Movies
+      - /data/Movies:/movies
+      - /data/downloads:/downloads
+    ports:
+      - 7878
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.routers.radarr.entrypoints=web-secure
+      - traefik.http.routers.radarr.tls=true
+      - traefik.http.routers.radarr.tls.certresolver=letsencrypt
+      - traefik.http.services.radarr.loadbalancer.server.port=7878
+
+volumes:
+  radarr_config:
+
+networks:
+  traefik_net:
+    external: true
