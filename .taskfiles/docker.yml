@@ -6,17 +6,11 @@ vars:
 
 tasks:
 
-  compose:ingress:
+  compose:network:
     desc: Docker container control
     dir: provision/docker
     cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/ingress/*.yaml {{.CLI_ARGS}}"
-
-  compose:jellyfin:
-    desc: Docker container control
-    dir: provision/docker
-    cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env -f {{.DOCKER_DIR}}/jellyfin/*.yaml {{.CLI_ARGS}}"
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/network {{.CLI_ARGS}}"
 
   compose:comics:
     desc: Docker container control
@@ -29,3 +23,9 @@ tasks:
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/media {{.CLI_ARGS}}"
+
+  compose:pihole:
+    desc: Docker container control
+    dir: provision/docker
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/pihole {{.CLI_ARGS}}"
