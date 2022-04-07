@@ -1,0 +1,18 @@
+---
+version: "2.1"
+services:
+  ingress:
+    extends:
+      file: ingress.yaml
+      service: ingress
+  autoheal:
+    extends:
+      file: autoheal.yaml
+      service: autoheal
+
+volumes:
+  letsencrypt:
+
+networks:
+  traefik_net:
+    external: true
