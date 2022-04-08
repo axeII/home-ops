@@ -1,0 +1,37 @@
+---
+version: '3.3'
+services:
+  ubooquity:
+    image: linuxserver/ubooquity:latest
+    container_name: ubooquity
+    networks:
+      - traefik_net
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ="Europe/Paris"
+      - MAXMEM=1024
+    volumes:
+      - comic_config:/config
+      - /data/Comics/:/comics
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ubooquity.rule=Host(`comics.${DOMAIN}`)
+      - traefik.http.routers.ubooquity.entrypoints=web-secure
+      - traefik.http.routers.ubooquity.tls=true
+      - traefik.http.routers.ubooquity.tls.certresolver=letsencrypt
+      - traefik.http.routers.ubooquity.middlewares=add-context
+      - traefik.http.services.ubooquity.loadbalancer.server.port=2202
+      - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
+      - traefik.http.middlewares.add-context.redirectregex.replacement=https://$$1/ubooquity
+      #- traefik.http.middlewares.add-ubooquity.addprefix.prefix=/ubooquity
+      #- traefik.http.routers.ubooquity.middlewares=ubooquity-stripprefix
+      #- traefik.http.middlewares.ubooquity-stripprefix.stripprefix.prefixes=/ubooquity/
+
+volumes:
+  comic_config:
+
+networks:
+  traefik_net:
+    external: true

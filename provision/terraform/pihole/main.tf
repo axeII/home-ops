@@ -55,3 +55,8 @@ resource "pihole_dns_record" "proxy_record" {
   domain = "proxy.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.99"
 }
+
+resource "pihole_dns_record" "comic_record" {
+  domain = "comics.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.101"
+}
