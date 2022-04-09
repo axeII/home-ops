@@ -24,10 +24,6 @@ services:
       - traefik.http.routers.ubooquity.middlewares=add-context
       - traefik.http.services.ubooquity.loadbalancer.server.port=2202
       - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
-      - traefik.http.middlewares.add-context.redirectregex.replacement=https://$$1/ubooquity
-      #- traefik.http.middlewares.add-ubooquity.addprefix.prefix=/ubooquity
-      #- traefik.http.routers.ubooquity.middlewares=ubooquity-stripprefix
-      #- traefik.http.middlewares.ubooquity-stripprefix.stripprefix.prefixes=/ubooquity/
 
 volumes:
   comic_config:
