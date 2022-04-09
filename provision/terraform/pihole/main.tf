@@ -60,3 +60,8 @@ resource "pihole_dns_record" "comic_record" {
   domain = "comics.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.101"
 }
+
+resource "pihole_dns_record" "mylar_record" {
+  domain = "mylar.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.101"
+}
