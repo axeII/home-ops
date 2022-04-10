@@ -25,6 +25,7 @@ resource "proxmox_vm_qemu" "k3s_server" {
 
   # basic VM settings here. agent refers to guest agent
   agent = 1
+  onboot = "true"
   os_type = "cloud-init"
   cores = 4
   sockets = 1
