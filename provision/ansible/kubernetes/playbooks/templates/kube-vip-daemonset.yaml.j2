@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: kube-vip
-          image: ghcr.io/kube-vip/kube-vip:v0.3.8
+          image: ghcr.io/kube-vip/kube-vip:v0.4.2
           imagePullPolicy: IfNotPresent
           args:
             - manager
@@ -39,19 +39,31 @@ spec:
               value: kube-system
             - name: svc_enable
               value: "false"
-            - name: vip_address
+            - name: address
               value: "{{ k3s_registration_address }}"
           securityContext:
             capabilities:
               add:
-              - NET_ADMIN
-              - NET_RAW
-              - SYS_TIME
+                - NET_ADMIN
+                - NET_RAW
+      hostAliases:
+        - hostnames:
+            - kubernetes
+          ip: 127.0.0.1
       hostNetwork: true
-      nodeSelector:
-        node-role.kubernetes.io/master: "true"
       serviceAccountName: kube-vip
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/master
+                  operator: Exists
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
       tolerations:
-        - key: node-role.kubernetes.io/master
+        - effect: NoSchedule
           operator: Exists
-          effect: NoSchedule
+        - effect: NoExecute
+          operator: Exists
