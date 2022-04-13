@@ -20,11 +20,6 @@
       127.0.0.1 localhost
       127.0.1.1 {{ inventory_hostname }}
 
-      192.168.69.105 k8s-0
-      192.168.69.106 k8s-1
-      192.168.69.107 k8s-2
-      192.168.69.108 k8s-3
-
       # The following lines are desirable for IPv6 capable hosts
       ::1 ip6-localhost ip6-loopback
       fe00::0 ip6-localnet
@@ -32,6 +27,27 @@
       ff02::1 ip6-allnodes
       ff02::2 ip6-allrouters
       ff02::3 ip6-allhosts
+
+- name: Stop and disable systemd-resolved
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    daemon_reload: false
+    enabled: false
+    state: stopped
+
+- name: Remove resovl.conf symlink
+  file:
+    path: "/etc/resolv.conf"
+    state: absent
+
+- name: Set statics domain name servers
+  ansible.builtin.blockinfile:
+    mode: 0644
+    create: true
+    path: /etc/resolv.conf
+    block: |
+      nameserver 192.168.69.101
+      nameserver 192.168.69.99
 
 - name: Check for bridge-nf-call-iptables
   ansible.builtin.stat:
