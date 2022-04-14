@@ -12,10 +12,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "traefik.${SECRET_DOMAIN}"
+        - "k-traefik.${SECRET_DOMAIN}"
       secretName: "${SECRET_DOMAIN/./-}-tls"
   rules:
-    - host: "traefik.${SECRET_DOMAIN}"
+    - host: "k-traefik.${SECRET_DOMAIN}"
       http:
         paths:
           - path: /
