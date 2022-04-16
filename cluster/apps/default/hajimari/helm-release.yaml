@@ -34,10 +34,9 @@ spec:
           - networking
       name: "you"
       customApps:
-        customApps:
-          - name: Pihole
-            url: "https://pihole.${SECRET_DOMAIN}"
-            icon: pi-hole
+        - name: Pihole
+          url: "https://pihole.${SECRET_DOMAIN}"
+          icon: pi-hole
       groups:
         - name: Daily
           links:
@@ -54,7 +53,7 @@ spec:
             - name: Jellyfin
               url: "https://jellyfin.${SECRET_DOMAIN}"
             - name: Comics
-              url: "https://comics.${SECRET_DOMAIN}"
+              url: "https://comics.${SECRET_DOMAIN}/ubooquity/"
             - name: Manhwa
               url: "https://toonily.com"
             - name: Shodan
