@@ -36,8 +36,8 @@ spec:
       customApps:
         customApps:
           - name: Pihole
-            url: https://pihole.${SECRET_DOMAIN}
-            icon: pihole
+            url: "https://pihole.${SECRET_DOMAIN}"
+            icon: pi-hole
       groups:
         - name: Daily
           links:
