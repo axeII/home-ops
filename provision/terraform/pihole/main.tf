@@ -77,7 +77,7 @@ resource "pihole_dns_record" "longhorn_record" {
 }
 
 resource "pihole_dns_record" "traefik_record" {
-  domain = "k-traefik.${data.sops_file.pihole_secrets.data["domain"]}"
+  domain = "traefik-dashboard.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.105"
 }
 
