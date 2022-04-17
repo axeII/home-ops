@@ -40,6 +40,8 @@ spec:
       groups:
         - name: Daily
           links:
+            - name: k8s-at-home-search
+              url: "https://whazor.github.io/k8s-at-home-search/"
             - name: DockerHub
               url: "https://hub.docker.com"
             - name: GitHub
