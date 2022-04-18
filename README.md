@@ -23,13 +23,13 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. See the hardware section where I describe what sort of hardware I am running locally. Unlike the others I don't run pure k8s baremetal.
-This is because I don't have enough hardware currently to run a robust k8s and also I like to run some services in docker/docker-compose and solution where k3s and docker run on the same machine can result in some network issues due iptables and nftables.
+Welcome to my HomeOps setup. See the hardware section where I describe what sort of hardware I am running locally. Most guys in the community run their k8s on bare metal. I don't have that much HW so I use promox and VM to catch up. And also I run some services in docker and it easier to separate docker and k3s (iptables).
 
-For setting cluster and my services I use terraform and ansible to make the most things as IaC (Inracsturcure as Code). I can anytime destroy my cluster build it again.
-While for my virutal machies before I migrate to IaC and kubernetes I currently back up everyting on NAS using NFS including whole VMs (which saves ssd storage alot).
+Thanks to terraform and ansible it's very easy to manage infrastructure and cluster as well.
+[February 2022] Finally at the moment of  I am satisfied with the home-ops infrastructure.
+[April 2022] Cluster is working again yay.
 
-Finally at the moment of February 2022 I am satisfied with the home-ops infrastructure. Now I would like to move to the next phase -- add more services to my cluster.
+Now I would like to move to the next phase -- add more services to my cluster.
 
 ## :art:&nbsp; Cluster components
 
@@ -73,4 +73,4 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 
 ## :handshake:&nbsp; Thanks
 
-I am proud to be memeber k8s at home community! A lot of help and inspiration for my kubernetes cluster came from this community. Love you guys :heart: . Checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes)
+I am proud to be memeber k8s-at-home community! A lot of help and inspiration for my kubernetes cluster came from this community. Without their help and inspiration I wouldn't be where I am so thank you guys :heart: . Definately checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) or join the [community](https://k8s-at-home.com).
