@@ -25,11 +25,13 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 Welcome to my HomeOps setup. See the hardware section where I describe what sort of hardware I am running locally. Most guys in the community run their k8s on bare metal. I don't have that much HW so I use promox and VM to catch up. And also I run some services in docker and it easier to separate docker and k3s (iptables).
 
-Thanks to terraform and ansible it's very easy to manage infrastructure and cluster as well.
-[February 2022] Finally at the moment of  I am satisfied with the home-ops infrastructure.
-[April 2022] Cluster is working again yay.
+Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and cluster as well.
 
-Now I would like to move to the next phase -- add more services to my cluster.
+### Timeline:
+- [January 2022] Rebuild of infrastructure.
+- [February 2022] Finally at the moment of  I am satisfied with the home-ops infrastructure.
+- [April 2022] Cluster is working again yayy.
+- [Today] Now I would like to move to the next phase -- add more services to my cluster.
 
 ## :art:&nbsp; Cluster components
 
@@ -73,4 +75,4 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 
 ## :handshake:&nbsp; Thanks
 
-I am proud to be memeber k8s-at-home community! A lot of help and inspiration for my kubernetes cluster came from this community. Without their help and inspiration I wouldn't be where I am so thank you guys :heart: . Definately checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) or join the [community](https://k8s-at-home.com).
+I am proud to be memeber k8s-at-home community! A lot of help and inspiration for my k8s cluster came from this community. Without their help and inspiration I would not be where I am now. Thank you guys :heart:. Definately checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) and join the [community](https://k8s-at-home.com).
