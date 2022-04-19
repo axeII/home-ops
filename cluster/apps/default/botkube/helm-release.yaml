@@ -24,7 +24,7 @@ spec:
       enabled: true
     config:
       settings:
-        clustername: k3s
+        clustername: default
       resources:
         - name: v1/pods # Name of the resources e.g pod, deployment, ingress, etc. (Resource name must be in singular form)
           namespaces:
