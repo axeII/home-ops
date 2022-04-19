@@ -189,5 +189,3 @@ spec:
       valuesKey: discord-channel
       targetPath: communications.discord.channel
       optional: false
-    - kind: ConfigMap
-      name: botkube-config-values
