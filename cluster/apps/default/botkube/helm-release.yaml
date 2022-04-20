@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: botkube
-  namespace: default
+  namespace: monitoring
 spec:
   interval: 5m
   chart:
@@ -173,19 +173,10 @@ spec:
             - delete
             - error
     recommendations: true
-  valuesFrom:
-    - kind: Secret
-      name: botkube
-      valuesKey: discord-token
-      targetPath: communications.discord.token
-      optional: false
-    - kind: Secret
-      name: botkube
-      valuesKey: discord-botid
-      targetPath: communications.discord.botid
-      optional: false
-    - kind: Secret
-      name: botkube
-      valuesKey: discord-channel
-      targetPath: communications.discord.channel
-      optional: false
+    communications:
+      discord:
+        enabled: true
+        notiftype: short
+        channel: "966049949705977916"
+        botid: ${SECRET_BOTKUBE_DISCORD_BOTID}
+        token: ${SECRET_BOTKUBE_DISCORD_TOKEN}
