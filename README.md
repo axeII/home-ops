@@ -71,6 +71,12 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 | rock64                         | 16GB MMC |    N/A     | 4GB | Services backup device  (in case proxmox cluster is down )              |
 <!-- textlint-enable -->
 
+### Tips
+Check for uniq mac addresses:
+```
+ansible all -i home-ops/provision/ansible/kubernetes/inventory/hosts.yml --one-line -m shell -a 'ip link show | grep link' | awk '{print $13}' | sort | uniq | wc -l
+```
+
 ---
 
 ## :handshake:&nbsp; Thanks
