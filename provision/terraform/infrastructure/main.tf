@@ -36,7 +36,6 @@ resource "proxmox_vm_qemu" "k3s_server" {
 
   disk {
     slot = 0
-    # set disk size here. leave it small for testing because expanding the disk takes time.
     size = "20G"
     type = "scsi"
     storage = "local-lvm"
