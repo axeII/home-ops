@@ -208,3 +208,5 @@ spec:
             - create
             - delete
             - error
+      ssl:
+        enabled: true
