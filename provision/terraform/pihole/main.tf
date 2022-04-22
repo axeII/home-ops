@@ -16,6 +16,8 @@ data "sops_file" "pihole_secrets" {
   source_file = "secrets.sops.yaml"
 }
 
+### DOCKER ###
+
 provider "pihole" {
   url      = data.sops_file.pihole_secrets.data["pihole_url"]
   password = data.sops_file.pihole_secrets.data["pihole_password"]
@@ -64,21 +66,6 @@ resource "pihole_dns_record" "comic_record" {
 resource "pihole_dns_record" "mylar_record" {
   domain = "mylar.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.101"
-}
-
-resource "pihole_dns_record" "echo-server_record" {
-  domain = "echo-server.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.105"
-}
-
-resource "pihole_dns_record" "longhorn_record" {
-  domain = "longhorn.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.105"
-}
-
-resource "pihole_dns_record" "traefik_record" {
-  domain = "traefik-dashboard.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.105"
 }
 
 ### K8S ###
