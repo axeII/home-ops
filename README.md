@@ -37,12 +37,15 @@ Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. 
 
 - [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
 - [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
-- [longhorn](https://longhorn.com) - storage class provider for data persistence
+- ~[longhorn](https://longhorn.com) - storage class provider for data persistence~
+- [local-path-provisioner](https://github.com/rancher/local-path-provisioner) - default storage class provided by k3s
+- [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer
 - [kube-vip](https://kube-vip.chipzoller.dev/) - layer 2 load balancer for the Kubernetes control plane
 - [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
 - [traefik](https://traefik.io/): Provides ingress cluster services.
+- [botkube](https://github.com/infracloudio/botkube) Bot that helps me to monitor the cluster with notifications.
 - [hajimari](https://github.com/toboshii/hajimari) - start page with ingress discovery
 - [reflector](https://github.com/emberstack/kubernetes-reflector) - mirror configmaps or secrets to other Kubernetes namespaces
 - [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
