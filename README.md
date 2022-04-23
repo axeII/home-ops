@@ -13,7 +13,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 <br/>
 
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60&style=for-the-badge)](https://discord.com/invite/S9yWcJVEMQ)
-[![k3s](https://img.shields.io/badge/k3s-v1.23.3-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://k3s.io/)
+[![k3s](https://img.shields.io/badge/k3s-v1.23.5-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://k3s.io/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
 [![renovate](https://img.shields.io/badge/renovate-enabled?style=for-the-badge&logo=renovatebot&logoColor=white&color=brightgreen)](https://github.com/renovatebot/renovate)
 
@@ -23,14 +23,14 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. See the hardware section where I describe what sort of hardware I am running locally. Most guys in the community run their k8s on bare metal. I don't have that much HW so I use promox and VM to catch up. And also I run some services in docker and it easier to separate docker and k3s (iptables).
+Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. under folder `provision` I store all my ansible and terraform scripts to manage promox virtual machines. Some of them are used for k3s cluster some only for docker instances. 
 
-Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and cluster as well.
 
 ### Timeline:
 - [January 2022] Rebuild of infrastructure.
 - [February 2022] Finally at the moment of  I am satisfied with the home-ops infrastructure.
 - [April 2022] Cluster is working again yayy.
+- [May 2022] Migrating to robust storage for cluster a monitoring.
 - [Today] Now I would like to move to the next phase -- add more services to my cluster.
 
 ## :art:&nbsp; Cluster components
