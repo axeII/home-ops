@@ -40,6 +40,10 @@ spec:
         - name: Promox
           url: "https://proxmox.${SECRET_DOMAIN}"
           icon: server
+        # for some reason longhorn is ignored in helm-release
+        - name: Longhorn
+          url: "https://longhorn.${SECRET_DOMAIN}"
+          icon: cow
       groups:
         - name: Daily
           links:
