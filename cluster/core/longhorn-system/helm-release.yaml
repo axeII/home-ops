@@ -33,17 +33,19 @@ spec:
     ingress:
       enabled: true
       ingressClassName: "traefik"
-      # tlsSecret: longhorn-tls
+      host: "longhorn.${SECRET_DOMAIN}"
+      path: /
+      tls: true
+      tlsSecret: longhorn-system-tls
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
-        hajimari.io/icon: "hdd"
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: traefik-default-middlewares-chain@kubernetescrd
+        traefik.ingress.kubernetes.io/router.tls.options: traefik-secure-tlsoptions@kubernetescrd
         hajimari.io/enable: "true"
-        kubernetes.io/ingress.class: "traefik"
-        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-      tls:
-        - hosts:
-            - "longhorn.${SECRET_DOMAIN}"
-          tlsSecret: longhorn-tls
+        hajimari.io/icon: cow
+        hajimari.io/group: storage
+        hajimari.io/appName: longhorn
 
     # resources:
     #   requests:
