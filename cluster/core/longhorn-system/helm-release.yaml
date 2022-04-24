@@ -32,7 +32,7 @@ spec:
       backupTarget: "${NFS_BACKUP}"
     ingress:
       enabled: true
-      # ingressClassName: "traefik"
+      ingressClassName: "traefik"
       # tlsSecret: longhorn-tls
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
@@ -40,14 +40,10 @@ spec:
         hajimari.io/enable: "true"
         kubernetes.io/ingress.class: "traefik"
         traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-      hosts:
-        - host: "longhorn.${SECRET_DOMAIN}"
-          paths:
-            - "/"
       tls:
-        - secretName: longhorn-tls
-          hosts:
+        - hosts:
             - "longhorn.${SECRET_DOMAIN}"
+          tlsSecret: longhorn-tls
 
     # resources:
     #   requests:
