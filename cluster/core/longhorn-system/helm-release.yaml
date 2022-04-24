@@ -32,8 +32,8 @@ spec:
       backupTarget: "${NFS_BACKUP}"
     ingress:
       enabled: true
-      # ingressClassName: "traefik"
-      # tlsSecret: longhorn-cert
+      ingressClassName: "traefik"
+      tlsSecret: longhorn-cert
       annotations:
         hajimari.io/icon: "hdd"
         hajimari.io/enable: "true"
