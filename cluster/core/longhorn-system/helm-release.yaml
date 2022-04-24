@@ -33,11 +33,11 @@ spec:
     ingress:
       enabled: true
       ingressClassName: "traefik"
-      tlsSecret: longhorn-cert
+      tlsSecret: longhorn-tls
       annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/icon: "hdd"
         hajimari.io/enable: "true"
-        kubernetes.io/ingress.class: "traefik"
         traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
       hosts:
         - host: "longhorn.${SECRET_DOMAIN}"
