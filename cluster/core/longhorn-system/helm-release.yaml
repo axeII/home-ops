@@ -32,8 +32,8 @@ spec:
       backupTarget: "${NFS_BACKUP}"
     ingress:
       enabled: true
-      ingressClassName: "traefik"
-      tlsSecret: longhorn-tls
+      # ingressClassName: "traefik"
+      # tlsSecret: longhorn-tls
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/icon: "hdd"
