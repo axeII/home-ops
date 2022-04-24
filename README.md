@@ -23,7 +23,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. under folder `provision` I store all my ansible and terraform scripts to manage promox virtual machines. Some of them are used for k3s cluster some only for docker instances. 
+Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. under folder `provision` I store all my ansible and terraform scripts to manage promox virtual machines. Some of them are used for k3s cluster some only for docker instances.
 
 
 ### Timeline:
@@ -37,8 +37,7 @@ Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. 
 
 - [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
 - [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
-- ~[longhorn](https://longhorn.com) - storage class provider for data persistence~
-- [local-path-provisioner](https://github.com/rancher/local-path-provisioner) - default storage class provided by k3s
+- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah giving longhorn second chance)
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer
