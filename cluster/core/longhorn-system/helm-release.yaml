@@ -46,7 +46,7 @@ spec:
       tls:
         - secretName: longhorn-tls
           hosts:
-            - "echo-server.${SECRET_DOMAIN}"
+            - "longhorn.${SECRET_DOMAIN}"
 
     # resources:
     #   requests:
