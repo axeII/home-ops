@@ -18,8 +18,8 @@ spec:
   values:
     communications:
       existingSecretName: "botkube-communications"
-    # serviceMonitor:
-      # enabled: true
+    serviceMonitor:
+      enabled: true
     config:
       recommendations: false
       settings:
