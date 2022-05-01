@@ -47,6 +47,8 @@ spec:
       groups:
         - name: Daily
           links:
+            - name: Home-Ops
+              url: "https://github.com/axeII/home-ops"
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
             - name: DockerHub
