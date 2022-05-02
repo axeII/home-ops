@@ -1,0 +1,39 @@
+---
+version: "3.5"
+services:
+    minio:
+        image: minio/minio:latest
+        container_name: minio
+        ports:
+            - 9000
+            - 9001
+        restart: unless-stopped
+        environment:
+            MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+            MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+            MINIO_PROMETHEUS_AUTH_TYPE: "public"
+        volumes:
+            - minio_data:/data
+        networks:
+            - traefik_net
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.minio.rule=Host(`s3.${DOMAIN}`)
+            - traefik.http.routers.minio.entrypoints=web-secure
+            - traefik.http.routers.minio.tls=true
+            - traefik.http.routers.minio.tls.certresolver=letsencrypt
+            - traefik.http.services.minio.loadbalancer.server.port=9000
+            ## console
+            - traefik.http.routers.minio-console.rule=Host(`minio-console.${DOMAIN}`)
+            - traefik.http.routers.minio-console.entrypoints=web-secure
+            - traefik.http.routers.minio-console.tls=true
+            - traefik.http.routers.minio-console.tls.certresolver=letsencrypt
+            - traefik.http.services.minio-console.loadbalancer.server.port=9000
+        command: server /data --console-address :9001
+
+volumes:
+    minio_data:
+
+networks:
+    traefik_net:
+        external: true
