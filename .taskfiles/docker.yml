@@ -29,3 +29,9 @@ tasks:
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/pihole {{.CLI_ARGS}}"
+
+  compose:minio:
+    desc: Docker container control
+    dir: provision/docker
+    cmds:
+      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/minio {{.CLI_ARGS}}"
