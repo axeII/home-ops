@@ -68,6 +68,11 @@ resource "pihole_dns_record" "mylar_record" {
   ip     = "192.168.69.101"
 }
 
+resource "pihole_dns_record" "minio_record" {
+  domain = "s3.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.101"
+}
+
 ### K8S ###
 
 resource "pihole_dns_record" "k8s-0_record" {
