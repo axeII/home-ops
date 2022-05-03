@@ -44,3 +44,21 @@ tasks:
     dir: provision/terraform/infrastructure
     cmds:
       - "terraform destroy"
+
+  init:pihole:
+    desc: Initialize terraform
+    dir: provision/terraform/pihole
+    cmds:
+      - "terraform init"
+
+  plan:pihole:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: provision/terraform/pihole
+    cmds:
+      - "terraform plan"
+
+  apply:pihole:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: provision/terraform/pihole
+    cmds:
+      - "terraform apply"
