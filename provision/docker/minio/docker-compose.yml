@@ -32,7 +32,6 @@ services:
             - traefik.http.routers.minio-console.tls=true
             - traefik.http.routers.minio-console.tls.certresolver=letsencrypt
             - traefik.http.services.minio-console.loadbalancer.server.port=9001
-        # command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
         command: server /data --console-address :9001
 
 volumes:
