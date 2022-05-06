@@ -9,8 +9,8 @@ terraform {
 
   required_providers {
     minio = {
-      source  = "refaktory/minio"
-      version = "0.1.0"
+      source  = "aminueza/minio"
+      version = "1.5.1"
     }
     sops = {
       source  = "carlpett/sops"
@@ -24,10 +24,10 @@ data "sops_file" "minio_secrets" {
 }
 
 provider "minio" {
-  endpoint   = data.sops_file.minio_secrets.data["minio_endpoint"]
-  access_key = data.sops_file.minio_secrets.data["minio_root_user"]
-  secret_key = data.sops_file.minio_secrets.data["minio_root_password"]
-  ssl        = true
+  minio_server = data.sops_file.minio_secrets.data["minio_endpoint"]
+  minio_access_key = data.sops_file.minio_secrets.data["minio_root_user"]
+  minio_secret_key = data.sops_file.minio_secrets.data["minio_root_password"]
+  minio_ssl        = true
 }
 
 locals {
