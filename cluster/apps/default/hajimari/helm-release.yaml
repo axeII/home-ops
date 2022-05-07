@@ -44,6 +44,10 @@ spec:
         - name: Longhorn
           url: "https://longhorn.${SECRET_DOMAIN}"
           icon: cow
+        - name: Sabnzbd
+          url: "https://Sabnzbd.${SECRET_DOMAIN}"
+          icon: pc
+
       groups:
         - name: Daily
           links:
