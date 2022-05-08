@@ -2,7 +2,8 @@
 version: "3"
 services:
   jellyfin:
-    image: linuxserver/jellyfin:10.7.7
+    # image: linuxserver/jellyfin:10.7.7
+    image: jellyfin/jellyfin:10.8.0-beta2
     container_name: jellyfin
     networks:
       - traefik_net
@@ -26,12 +27,11 @@ services:
       - 8096
     restart: unless-stopped
     privileged: true
-    # TODO: Fix proxmox gpu throughput
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
 
 
 volumes:
