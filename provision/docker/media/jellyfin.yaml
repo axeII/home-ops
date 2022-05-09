@@ -2,8 +2,8 @@
 version: "3"
 services:
   jellyfin:
-    # image: linuxserver/jellyfin:10.7.7
-    image: jellyfin/jellyfin:10.8.0-beta2
+    image: linuxserver/jellyfin:10.7.7
+    # image: jellyfin/jellyfin:10.8.0-beta2
     container_name: jellyfin
     networks:
       - traefik_net
@@ -12,7 +12,7 @@ services:
       - PGID=1000
       - TZ=Europe/Prague
     volumes:
-      - jellyfin_config:/config
+      - jellyfin_config_old:/config
       - /data/TVShows:/data/tvshows
       - /data/Movies:/data/movies
       - /data/Music/:/data/music
@@ -35,7 +35,7 @@ services:
 
 
 volumes:
-  jellyfin_config:
+  jellyfin_config_old:
 
 networks:
   traefik_net:

@@ -25,7 +25,7 @@ services:
 
 volumes:
   config:
-  jellyfin_config:
+  jellyfin_config_old:
   radarr_config:
   sonarr_config:
 
