@@ -16,6 +16,8 @@ services:
       - /data/TVShows:/data/tvshows
       - /data/Movies:/data/movies
       - /data/Music/:/data/music
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
     labels:
       - traefik.enable=true
       - traefik.http.routers.jellyfin.rule=Host(`backend.jellyfin.${DOMAIN}`)
@@ -27,11 +29,12 @@ services:
       - 8096
     restart: unless-stopped
     privileged: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
+    # for NVIDIA gpu
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
 
 
 volumes:
