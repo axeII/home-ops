@@ -45,9 +45,17 @@ spec:
           url: "https://longhorn.${SECRET_DOMAIN}"
           icon: cow
         - name: Sabnzbd
-          url: "https://Sabnzbd.${SECRET_DOMAIN}"
-          icon: pc
-
+          url: "https://sabnzbd.${SECRET_DOMAIN}"
+          icon: download
+        - name: Jellyfin-vue
+          url: "https://jellyfin.${SECRET_DOMAIN}"
+          icon: movie-open
+        - name: Jellyfin
+          url: "https://backend.jellyfin.${SECRET_DOMAIN}"
+          icon: movie-roll
+        - name: Comics
+          url: "https://comics.${SECRET_DOMAIN}/ubooquity"
+          icon: thought-bubble
       groups:
         - name: Daily
           links:
@@ -67,8 +75,6 @@ spec:
           links:
             - name: Jellyfin
               url: "https://jellyfin.${SECRET_DOMAIN}"
-            - name: Comics
-              url: "https://comics.${SECRET_DOMAIN}/ubooquity/"
             - name: Manhwa
               url: "https://toonily.com"
             - name: Shodan
@@ -81,7 +87,7 @@ spec:
           links:
             - name: "/r/sysadmin"
               url: "https://www.reddit.com/r/sysadmin/"
-            - name: "/r/slefhosted"
+            - name: "/r/selfhosted"
               url: "https://www.reddit.com/r/selfhosted/"
             - name: "/r/jellyfin"
               url: "https://reddit.com/r/jellyfin"
