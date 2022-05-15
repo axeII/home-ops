@@ -11,11 +11,15 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Prague
+    # user: 1000:1000
+    group_add:
+      - "110"
     volumes:
       - jellyfin_config_old:/config
       - /data/TVShows:/data/tvshows
       - /data/Movies:/data/movies
       - /data/Music/:/data/music
+    devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
     labels:
