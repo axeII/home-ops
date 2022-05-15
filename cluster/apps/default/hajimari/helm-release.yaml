@@ -139,6 +139,8 @@ spec:
       data:
         enabled: true
         existingClaim: hajimari-config
+    podSecurityContext:
+      fsGroup: 101
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hajimari-settings"
     resources:
