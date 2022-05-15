@@ -1,11 +1,13 @@
 terraform {
 
-  backend "remote" {
-    organization = "home"
-    workspaces {
-      name = "home-minio"
-    }
-  }
+  # backend "remote" {
+  #   organization = "home"
+  #   workspaces {
+  #     name = "home-minio"
+  #   }
+  # }
+
+  backend "local" {}
 
   required_providers {
     minio = {
@@ -20,7 +22,7 @@ terraform {
 }
 
 data "sops_file" "minio_secrets" {
-  source_file = "secret.sops.yaml"
+  source_file = "secrets.sops.yaml"
 }
 
 provider "minio" {
@@ -32,13 +34,14 @@ provider "minio" {
 
 locals {
   bucket_settings = {
-    "k3s"      = { versioning_enabled = false },
+    "k3s"          = { versioning_enabled = false },
+    "metrics"      = { versioning_enabled = false },
   }
 }
 
-resource "minio_bucket" "map" {
+resource "minio_s3_bucket" "map" {
   for_each = local.bucket_settings
 
-  name               = each.key
-  versioning_enabled = each.value.versioning_enabled
+  bucket               = each.key
+  acl                  = "public"
 }
