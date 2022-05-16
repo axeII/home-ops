@@ -36,6 +36,7 @@ locals {
   bucket_settings = {
     "k3s"          = { versioning_enabled = false },
     "metrics"      = { versioning_enabled = false },
+    "public"      = { versioning_enabled = false },
   }
 }
 

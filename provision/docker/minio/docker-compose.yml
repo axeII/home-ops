@@ -8,13 +8,20 @@ services:
             - 9000
             - 9001
         restart: unless-stopped
+        hostname: s3.juno.moe
         environment:
             MINIO_ROOT_USER: ${MINIO_ROOT_USER}
             MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
             MINIO_PROMETHEUS_AUTH_TYPE: "public"
-            MINIO_DOMAIN: "s3.${DOMAIN}"
+            # MINIO_SERVER_URL: "https://s3.${DOMAIN}"
+            MINIO_BROWSER_REDIRECT_URL: "https://console.s3.${DOMAIN}"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 30s
+            timeout: 20s
+            retries: 3
         volumes:
-            - minio_data:/data
+            - /data/minio:/data
         networks:
             - traefik_net
         labels:
@@ -27,15 +34,15 @@ services:
             - traefik.http.services.minio.loadbalancer.server.port=9000
             ## console
             - traefik.http.routers.minio-console.service=minio-console
-            - traefik.http.routers.minio-console.rule=Host(`minio-console.${DOMAIN}`)
+            - traefik.http.routers.minio-console.rule=Host(`console.s3.${DOMAIN}`)
             - traefik.http.routers.minio-console.entrypoints=web-secure
             - traefik.http.routers.minio-console.tls=true
             - traefik.http.routers.minio-console.tls.certresolver=letsencrypt
             - traefik.http.services.minio-console.loadbalancer.server.port=9001
         command: server /data --console-address :9001
 
-volumes:
-    minio_data:
+# volumes:
+    # minio_data:
 
 networks:
     traefik_net:

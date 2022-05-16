@@ -79,7 +79,7 @@ resource "pihole_dns_record" "minio_record" {
 }
 
 resource "pihole_dns_record" "minio-console_record" {
-  domain = "minio-console.${data.sops_file.pihole_secrets.data["domain"]}"
+  domain = "console.s3.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.101"
 }
 
