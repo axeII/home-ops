@@ -37,6 +37,7 @@ locals {
     "k3s"          = { versioning_enabled = false },
     "metrics"      = { versioning_enabled = false },
     "public"      = { versioning_enabled = false },
+    "loki"      = { versioning_enabled = false },
   }
 }
 
