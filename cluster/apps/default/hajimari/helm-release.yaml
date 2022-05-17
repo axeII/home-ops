@@ -47,6 +47,9 @@ spec:
         - name: Sabnzbd
           url: "https://sabnzbd.${SECRET_DOMAIN}"
           icon: download
+        - name: Sonarr
+          url: "https://sonarr.${SECRET_DOMAIN}"
+          icon: tire
         - name: Jellyfin-vue
           url: "https://jellyfin.${SECRET_DOMAIN}"
           icon: movie-open
