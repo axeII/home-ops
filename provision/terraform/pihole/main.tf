@@ -43,6 +43,11 @@ resource "pihole_dns_record" "jellyfin_record" {
   ip     = "192.168.69.101"
 }
 
+resource "pihole_dns_record" "jellyseerr_record" {
+  domain = "jellyseerr.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.101"
+}
+
 resource "pihole_dns_record" "be_jellyfin_record" {
   domain = "backend.jellyfin.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.101"

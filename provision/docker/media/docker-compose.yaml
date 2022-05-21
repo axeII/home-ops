@@ -21,11 +21,16 @@ services:
     extends:
       file: jellyfin-vue.yaml
       service: jellyfin-vue
+  jellyseerr:
+    extends:
+      file: jellyseerr.yaml
+      service: jellyseerr
 
 
 volumes:
   config:
   jellyfin_config_old:
+  jellyseerr_config:
   radarr_config:
   sonarr_config:
 
