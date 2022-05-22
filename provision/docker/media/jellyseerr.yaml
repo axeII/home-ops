@@ -2,7 +2,7 @@
 version: "3"
 services:
     jellyseerr:
-        image: fallenbagel/jellyseerr:develop
+        image: fallenbagel/jellyseerr:1.1.0
         ontainer_name: jellyseerr
         networks:
             - traefik_net
