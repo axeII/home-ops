@@ -1,0 +1,28 @@
+# yamllint disable
+apiVersion: v1
+kind: Secret
+metadata:
+    name: thanos-objstore
+    namespace: monitoring
+stringData:
+    objstore.yml: ENC[AES256_GCM,data:UvHJHxhoB/3MqXjFotdLD1Y4pI2aVYFaA5kObCPZpraXBum9tgE/JIOV9oA/NQCWuQEu/TEQL1ZluY+UIbUjRVlUJjhsZTUvUtkiS3ktL2FhaCyFoMZfEU8OIrXY9FHLsasF7LAesEl04DFpSyBJH3iuQTD8lQsChyGLiSUm3rUj3wvpC88=,iv:Xb7sKgtQkeGGaAyGYGU1emLBjfXV4k4BQNF5QKsdUp0=,tag:NmlWQsIddIy8ZRVS1LgcpA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age12evtyez2gz3w209lld8r6nw0v0572v468v0hl05m5259v0zrn5eq3cct4h
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUR0hhMnB4bUFFZTNEK0JO
+            MmEvUHEwZ2kyS0FjaUQyK1JjWTd1TXdGWWxrCkZkK2ZjYlpZdnJ0aDNkdjhxM09x
+            U0hMTno0NjBZb2IzK2tXTHNPMGZOelkKLS0tIFNaVC9XaEVJWTBjVnVIa0hpMXlZ
+            WnZoL2xkRTVPdkhDQklSeUNjQlNiMXMKBEYt41CC3eZCBnx+yMWzKXV7+5T9spL9
+            5i+1GAChPEaKQhCNx+iWYzWr5MpnCSUqgcmxkVmUuzvdZpsb6qfbig==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-05-26T21:03:24Z"
+    mac: ENC[AES256_GCM,data:XUMtmWg8ukuSlGdkbEyzTMytUqBVsSNWg32pXLS/4OLOoxbDzjTIi7kZATxx2piZ5Qfhn3HnVQvhZcsg4P4cI18/OR2a3oLoj2pt8SZCHuTKhR4s4G48lUHinlbi/3WIWIiUUsj2yQSTJOx/VgpaS/PM3KOrqFQNje45JjUKQy8=,iv:jmaw/VpJ3VhAeJTRX1bQODzd2jg9svXTUhuvQa99z0k=,tag:fKDi7pBzy1NiGLLA5GziOA==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3
