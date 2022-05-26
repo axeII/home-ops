@@ -38,6 +38,7 @@ locals {
     "metrics"      = { versioning_enabled = false },
     "public"      = { versioning_enabled = false },
     "loki"      = { versioning_enabled = false },
+    "thanos"      = { versioning_enabled = false },
   }
 }
 
