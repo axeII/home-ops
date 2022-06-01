@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: &app s3
+  name: "${SECRET_MINIO_SERVER}"
   namespace: default
-  labels:
-    app.kubernetes.io/name: *app
-    app.kubernetes.io/instance: *app
+  # labels:
+    # app.kubernetes.io/name: *app
+    # app.kubernetes.io/instance: *app
 spec:
   type: ExternalName
-  externalName: ${SECRET_MINIO_SERVER}
+  externalName: 192.168.69.101
   ports:
     - name: http
       port: 80
