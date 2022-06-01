@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - echo-server
   - hajimari
-  - s3
