@@ -31,7 +31,8 @@ spec:
       GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURTIY_COOKIE_SECURE: false
       GF_SECURITY_COOKIE_SAMESITE: disabled
-    adminPassword: "${SECRET_GRAFANA_PASSWORD}"
+    admin:
+      existingSecret: grafana-admin-creds
     grafana.ini:
       server:
         root_url: "https://grafana.${SECRET_DOMAIN}"
