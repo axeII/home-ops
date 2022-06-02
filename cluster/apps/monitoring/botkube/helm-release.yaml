@@ -16,6 +16,9 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    image:
+      repository: infracloudio/botkube
+      tag: v0.12.4
     communications:
       existingSecretName: "botkube-communications"
     serviceMonitor:
