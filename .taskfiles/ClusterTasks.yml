@@ -29,6 +29,11 @@ tasks:
     cmds:
       - kubectl apply -k {{.CLUSTER_DIR}}/base/flux-system
 
+  flux:restart:
+    desc: Suspend Flux helmrelease
+    cmds:
+      - flux suspend helmrelease {{.CLI_ARGS}} && flux resume helmrelease {{.CLI_ARGS}}
+
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
