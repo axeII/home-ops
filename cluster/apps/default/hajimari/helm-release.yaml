@@ -53,6 +53,9 @@ spec:
         - name: Jellyfin-vue
           url: "https://jellyfin.${SECRET_DOMAIN}"
           icon: movie-open
+        - name: Jellyseerr
+          url: "https://jellyseerr.${SECRET_DOMAIN}"
+          icon: jellyfish
         - name: Jellyfin
           url: "https://backend.jellyfin.${SECRET_DOMAIN}"
           icon: movie-roll
