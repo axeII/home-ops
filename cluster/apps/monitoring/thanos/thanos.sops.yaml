@@ -5,7 +5,7 @@ metadata:
     name: thanos-objstore
     namespace: monitoring
 stringData:
-    objstore.yml: ENC[AES256_GCM,data:FEAN5kSihYQAjqWxRGZxT9MxQ3q9zisjF55akX2DQqIKfuahmdR7kK7TVJgd2yAB4OO0kzyi8Ml70RypNdzG/DpBzOBT096gmdAfIEQu+fmcXcW9Y+VE/qV7xq/0MgvFtZybxG1O2wGlMxoRhsmFiVWcMB1KL29eiuRJIn4yKA==,iv:927HXi1XM2MALDKJYPp7beHpPutwxj6f4QFAUOy+fIo=,tag:70Y8yXlmfuhWb6XUx7nOvQ==,type:str]
+    objstore.yml: ENC[AES256_GCM,data:oOvNklfYdjYtSeD1r5K/Hg5O9IXIlbQ62LIiEiI/sadKyZTcoTBqLj4pj1yCW9a9aX0xv490jgzdY7ZOg922RrcKRX9S2Lnx4bt2lW/4y8kOvCAS0lvJQP4LZ3IK6SPm6gpbQgzB86eGN3X4NgVha31fKrg+ONr1ithtTDs2/jP6IXDU9g==,iv:6oypbZcgWQm/f7HNdKvzZxL2Srhthy8eO5MxU/s4x3I=,tag:AtCfbs0+Tblfsb9p8P4nHA==,type:str]
 sops:
     kms: []
     gcp_kms: []
@@ -21,8 +21,8 @@ sops:
             WnZoL2xkRTVPdkhDQklSeUNjQlNiMXMKBEYt41CC3eZCBnx+yMWzKXV7+5T9spL9
             5i+1GAChPEaKQhCNx+iWYzWr5MpnCSUqgcmxkVmUuzvdZpsb6qfbig==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2022-06-01T17:50:13Z"
-    mac: ENC[AES256_GCM,data:uwYI8ZXPMpaKDrYPe0a1HHRuYIwvtm+xO1XXQo5rmsPhwTNwLPkaPfaP664AJaTdT9/P6H/n0RodJ7YC41ApO4Aa3OHKXHQHzQBUIAAMHDOU3HHF3JJBWPfQc4va2azdBGeB4tZlnzlFitEvg9lf7OK+0cDdb/ZU06iKUBvfXr8=,iv:EjfoCpX86P5Qi828gmXD1iD5177INFJDT4SfAr6Rzrc=,tag:0nWxmW50W302hJ0KUmXk9Q==,type:str]
+    lastmodified: "2022-06-04T18:58:28Z"
+    mac: ENC[AES256_GCM,data:RVDbdjmC2hU61AaosjAB6HL+n6bPXK/lHg5aONiXJZ/g282Oiozb313DJC5IzP/QcKhf+yNjW9nDfKVunJOPS+XVoawC6TyrUbRtkiiwSHSLUb7WEmkAYa1rBvEIx4LV8RNSXIxCsgMDtsI+HYXbNlpWHQILpRwp1XbeBHdgoyE=,iv:ndEO1Var4PVBzBHfTUJjDkAtBOEkl7Pwja9l56nAigk=,tag:3S5Mu5sPdBFx3FGFLetdMw==,type:str]
     pgp: []
     encrypted_regex: ^(data|stringData)$
     version: 3.7.3
