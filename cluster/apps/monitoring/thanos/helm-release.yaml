@@ -34,7 +34,7 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         tls: true
-      tlsSecret: thanos-tls
+        tlsSecret: thanos-tls
     existingObjstoreSecret: thanos-objstore
     queryFrontend:
       enabled: false
