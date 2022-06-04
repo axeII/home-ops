@@ -83,6 +83,16 @@ resource "pihole_dns_record" "minio-console_record" {
   ip     = "192.168.69.101"
 }
 
+resource "pihole_dns_record" "pihole_dns_record2" {
+  domain = "console2.pihole.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.99"
+}
+
+resource "pihole_dns_record" "status_record" {
+  domain = "status.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.99"
+}
+
 ### K8S ###
 
 resource "pihole_dns_record" "k8s-0_record" {
