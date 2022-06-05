@@ -3,7 +3,7 @@ version: "3.5"
 services:
   pihole:
     container_name: pihole
-    image: "pihole/pihole:2022.04.3"
+    image: "pihole/pihole:2022.05"
     networks:
       - traefik_net
     ports:
