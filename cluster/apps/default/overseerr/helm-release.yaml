@@ -38,7 +38,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/enable: "true"
-          hajimari.io/icon: "weather-sunset"
+          hajimari.io/icon: "jellyfish"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -53,6 +53,7 @@ spec:
           - hosts:
               - *host-release
               - *host-custom
+            secretName: "overseerr-tls"
     persistence:
       config:
         enabled: true
