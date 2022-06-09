@@ -1,5 +1,5 @@
 ---
-version: "2.1"
+version: "3.8"
 services:
   radarr:
     extends:
@@ -25,14 +25,23 @@ services:
     extends:
       file: jellyseerr.yaml
       service: jellyseerr
-
+  overseerr:
+    extends:
+      file: overseerr.yaml
+      service: overseerr
+  plex:
+    extends:
+      file: plex.yaml
+      service: plex
 
 volumes:
   config:
   jellyfin_config_old:
   jellyseerr_config:
+  overseerr_config:
   radarr_config:
   sonarr_config:
+  plex_config:
 
 networks:
   traefik_net:

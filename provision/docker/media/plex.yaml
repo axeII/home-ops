@@ -1,0 +1,26 @@
+---
+version: "3.8"
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    hostname: "plex.${DOMAIN}"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      VERSION: "docker"
+      ADVERTISE_IP: "https://plex.${DOMAIN}"
+    volumes:
+      - plex_config:/config
+      - /dev/shm:/dev/shm
+      - /data/TVShows:/tv
+      - /data/Movies:/movies
+      - /data/Music/:/music
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+    network_mode: host
+    restart: unless-stopped
+
+volumes:
+  plex_config:
