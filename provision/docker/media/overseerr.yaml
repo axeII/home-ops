@@ -1,0 +1,32 @@
+---
+version: "3.8"
+services:
+    overseerr:
+        image: lscr.io/linuxserver/overseerr:1.29.0
+        ontainer_name: overseerr
+        networks:
+            - traefik_net
+        environment:
+            LOG_LEVEL: "debug"
+            TZ: "Europe/Paris"
+            PUID: 1000
+            PGID: 1000
+        ports:
+            - 5055
+        volumes:
+            - overseerr_config:/app/config
+        restart: unless-stopped
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.overseeerr.rule=Host(`overseeerr.${DOMAIN}`)
+            - traefik.http.routers.overseeerr.entrypoints=web-secure
+            - traefik.http.routers.overseeerr.tls=true
+            - traefik.http.routers.overseeerr.tls.certresolver=letsencrypt
+            - traefik.http.services.overseeerr.loadbalancer.server.port=5055
+
+volumes:
+    overseerr_config:
+
+networks:
+    traefik_net:
+        external: true

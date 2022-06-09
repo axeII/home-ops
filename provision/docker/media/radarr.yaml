@@ -16,7 +16,7 @@ services:
       - /data/Movies:/movies
       - /data/downloads:/downloads
     ports:
-      - 7878
+      - 7878:7878
     restart: unless-stopped
     labels:
       - traefik.enable=true

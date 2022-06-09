@@ -16,7 +16,7 @@ services:
       - /data/downloads/:/downloads
       - /data/TVShows:/data/TVShows
     ports:
-      - 8989
+      - 8989:8989
     restart: unless-stopped
     labels:
       - traefik.enable=true
