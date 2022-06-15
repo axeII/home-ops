@@ -4,8 +4,6 @@ services:
   pihole:
     container_name: pihole
     image: "pihole/pihole:2022.05"
-    networks:
-      - traefik_net
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -22,21 +20,10 @@ services:
     volumes:
       - "etc-pihole:/etc/pihole/"
       - "etc-dnsmasq:/etc/dnsmasq.d/"
-    cap_add:
-      - NET_ADMIN
     restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)
-      - traefik.http.routers.pihole.entrypoints=web-secure
-      - traefik.http.routers.pihole.tls=true
-      - traefik.http.routers.pihole.tls.certresolver=letsencrypt
-      - traefik.http.services.pihole.loadbalancer.server.port=5005
+    #cap_add:
+    #  - NET_ADMIN
 
 volumes:
   etc-pihole:
   etc-dnsmasq:
-
-networks:
-  traefik_net:
-    external: true
