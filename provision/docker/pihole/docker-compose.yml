@@ -1,5 +1,5 @@
 ---
-version: "3.5"
+version: "3.8"
 services:
   pihole:
     container_name: pihole
@@ -9,14 +9,14 @@ services:
       - "53:53/udp"
       - "5005:5005/tcp"
     environment:
-      - DNS1=1.1.1.1
-      - TZ="Europe/Paris"
-      - VIRTUAL_HOST=pihole.${DOMAIN}
-      - ServerIP=192.168.69.101
-      - WEBPASSWORD=${PIHOLE_PASSWORD}
-      - INTERFACE=eth0
-      - IPv6=False
-      - WEB_PORT=5005
+      DNS1: 1.1.1.1
+      TZ: 'Europe/Paris'
+      VIRTUAL_HOST: 'pihole.${DOMAIN}'
+      ServerIP: '192.168.69.101'
+      WEBPASSWORD: '${PIHOLE_PASSWORD}'
+      INTERFACE: 'eth0'
+      IPv6: False
+      WEB_PORT: 5005
     volumes:
       - "etc-pihole:/etc/pihole/"
       - "etc-dnsmasq:/etc/dnsmasq.d/"
