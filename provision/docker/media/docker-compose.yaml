@@ -13,32 +13,13 @@ services:
     extends:
       file: sabnzbd.yaml
       service: sabnzbd
-  jellyfin:
-    extends:
-      file: jellyfin.yaml
-      service: jellyfin
-  jellyfin-vue:
-    extends:
-      file: jellyfin-vue.yaml
-      service: jellyfin-vue
-  jellyseerr:
-    extends:
-      file: jellyseerr.yaml
-      service: jellyseerr
-  overseerr:
-    extends:
-      file: overseerr.yaml
-      service: overseerr
   plex:
     extends:
       file: plex.yaml
       service: plex
 
 volumes:
-  config:
-  jellyfin_config_old:
-  jellyseerr_config:
-  overseerr_config:
+  config: # sabnzdb
   radarr_config:
   sonarr_config:
   plex_config:
