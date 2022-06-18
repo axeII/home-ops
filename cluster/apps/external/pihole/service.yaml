@@ -1,52 +1,17 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: &app pihole-ui
+  name: &app pihole
   namespace: external
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: "external-add-pihole-admin-internal@kubernetescrd"
 spec:
-  rules:
-    - host: &host pihole.${SECRET_DOMAIN}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: pihole
-                port:
-                  number: 80
-  tls:
-    - hosts:
-        - pihole.${SECRET_DOMAIN}
-      secretName: pihole-tls
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: add-pihole-admin
-  namespace: external
-spec:
-  addPrefix:
-    prefix: "/admin"
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: add-pihole-admin-internal
-  namespace: external
-spec:
-  chain:
-    middlewares:
-      - name: traefik-system-internal@kubernetescrd
-      - name: external-add-pihole-admin@kubernetescrd
+  type: ExternalName
+  externalName: pihole.${SECRET_DOMAIN}
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 5005
