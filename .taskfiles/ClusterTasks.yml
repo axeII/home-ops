@@ -3,6 +3,11 @@ version: "3"
 
 tasks:
 
+  clean:
+    desc: Clean evited and unknown pods from cluster
+    cmds:
+      - for n in $(kubectl get ns | awk '{print $1}'); do for a in $(kubectl get pods -n $n | grep -i 'unknown\|evicted\|error\|completed' | awk '{print $1}') ; do kubectl delete pod/$a -n $n ; done; done;
+
   flux:verify:
     desc: Verify flux meets the prerequisites
     cmds:
