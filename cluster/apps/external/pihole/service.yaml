@@ -20,6 +20,9 @@ kind: Endpoints
 metadata:
   name: &app pihole
   namespace: external
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 subsets:
   - addresses:
       - ip: 192.168.69.101
