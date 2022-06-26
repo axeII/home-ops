@@ -1,0 +1,41 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: &app metube-ui
+  namespace: external
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: "external-add-metube-admin-internal@kubernetescrd"
+spec:
+  ingressClassName: "traefik"
+  rules:
+    - host: &host metube.${SECRET_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metube
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - metube.${SECRET_DOMAIN}
+      secretName: metube-tls
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: add-metube-admin-internal
+  namespace: external
+spec:
+  chain:
+    middlewares:
+      - name: external-add-metube-admin@kubernetescrd
