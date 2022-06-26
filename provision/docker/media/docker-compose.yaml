@@ -17,6 +17,11 @@ services:
     extends:
       file: plex.yaml
       service: plex
+  metube:
+    extends:
+      file: metube.yaml
+      service: metube
+
 
 volumes:
   config: # sabnzdb
