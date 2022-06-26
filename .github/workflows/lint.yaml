@@ -30,5 +30,5 @@ jobs:
           MARKDOWN_CONFIG_FILE: .markdownlint.yaml
           TERRAFORM_TFLINT_CONFIG_FILE: .tflint.hcl
           YAML_CONFIG_FILE: .yamllint.yaml
-          KUBERNETES_KUBEVAL_OPTIONS: --ignore-missing-schemas
+          KUBERNETES_KUBEVAL_OPTIONS: '--ignore-missing-schemas --ignored-filename-patterns="^(?:.+/)?(?:Kustomization|kustomization\.ya?ml)$"'
           SHELLCHECK_OPTS: "-e SC2086"
