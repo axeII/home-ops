@@ -99,8 +99,3 @@ resource "pihole_dns_record" "k8s-4_record" {
   domain = "k8s-4"
   ip     = "192.168.69.114"
 }
-
-resource "pihole_dns_record" "k8s-5_record" {
-  domain = "k8s-5"
-  ip     = "192.168.69.115"
-}

@@ -36,7 +36,7 @@ resource "proxmox_vm_qemu" "k3s_server" {
 
   disk {
     slot = 0
-    size = "20G"
+    size = "50G"
     type = "scsi"
     storage = "local-lvm"
     iothread = 1
