@@ -10,7 +10,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: "external-add-metube-admin-internal@kubernetescrd"
 spec:
   ingressClassName: "traefik"
   rules:
@@ -28,14 +27,3 @@ spec:
     - hosts:
         - metube.${SECRET_DOMAIN}
       secretName: metube-tls
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: add-metube-admin-internal
-  namespace: external
-spec:
-  chain:
-    middlewares:
-      - name: external-add-metube-admin@kubernetescrd
