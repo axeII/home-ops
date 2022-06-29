@@ -1,0 +1,50 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: &app ubooquity-ui
+  namespace: external
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: "traefik"
+  rules:
+    - host: &host comics.${SECRET_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ubooquity
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - comics.${SECRET_DOMAIN}
+      secretName: ubooquity-tls
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: add-ubooquity-url
+  namespace: external
+spec:
+  addPrefix:
+    prefix: "/ubooquity"
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: add-ubooquity-url-internal
+  namespace: external
+spec:
+  chain:
+    middlewares:
+      - name: external-add-ubooquity-url@kubernetescrd

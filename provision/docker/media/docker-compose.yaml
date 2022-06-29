@@ -21,13 +21,17 @@ services:
     extends:
       file: metube.yaml
       service: metube
-
+  ubooquity:
+    extends:
+      file: ubooquity.yaml
+      service: ubooquity
 
 volumes:
   config: # sabnzdb
   radarr_config:
   sonarr_config:
   plex_config:
+  comic_config:
 
 networks:
   traefik_net:

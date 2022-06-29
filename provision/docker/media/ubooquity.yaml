@@ -4,6 +4,8 @@ services:
   ubooquity:
     image: linuxserver/ubooquity:latest
     container_name: ubooquity
+    ports:
+      - 2202:2202
     networks:
       - traefik_net
     environment:
@@ -15,15 +17,8 @@ services:
       - comic_config:/config
       - /data/Comics/:/comics
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.ubooquity.rule=Host(`comics.${DOMAIN}`)
-      - traefik.http.routers.ubooquity.entrypoints=web-secure
-      - traefik.http.routers.ubooquity.tls=true
-      - traefik.http.routers.ubooquity.tls.certresolver=letsencrypt
-      - traefik.http.routers.ubooquity.middlewares=add-context
-      - traefik.http.services.ubooquity.loadbalancer.server.port=2202
-      - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
+    # labels:
+      # - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
 
 volumes:
   comic_config:
