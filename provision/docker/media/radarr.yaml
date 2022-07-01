@@ -12,9 +12,9 @@ services:
       - TZ=Europe/London
     volumes:
       - radarr_config:/config
-      - /data/Movies:/downloads/Movies
-      - /data/Movies:/movies
-      - /data/downloads:/downloads
+      - /media/Movies:/downloads/Movies
+      - /media/Movies:/movies
+      - /media/downloads:/downloads
     ports:
       - 7878:7878
     restart: unless-stopped

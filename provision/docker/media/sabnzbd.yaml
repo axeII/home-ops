@@ -12,10 +12,10 @@ services:
       - TZ=Europe/London
     volumes:
       - config:/config
-      - /data/downloads:/downloads
-      - /data/temporary:/incomplete-downloads #optional
-      - /data/Movies:/data/Movies
-      - /data/TVShows:/data/TVShows
+      - /media/downloads:/downloads
+      - /media/temporary:/incomplete-downloads #optional
+      - /media/Movies:/data/Movies
+      - /media/TVShows:/data/TVShows
     ports:
       - 8080
     restart: unless-stopped

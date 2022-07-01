@@ -7,5 +7,5 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - /data/videos:/downloads
+      - /media/videos:/downloads
     restart: unless-stopped

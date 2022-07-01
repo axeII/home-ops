@@ -15,7 +15,7 @@ services:
       - MAXMEM=1024
     volumes:
       - comic_config:/config
-      - /data/Comics/:/comics
+      - /media/Comics/:/comics
     restart: unless-stopped
     # labels:
       # - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$

@@ -12,9 +12,9 @@ services:
       - TZ=Europe/London
     volumes:
       - sonarr_config:/config
-      - /data/TVShows:/tv
-      - /data/downloads/:/downloads
-      - /data/TVShows:/data/TVShows
+      - /media/TVShows:/tv
+      - /media/downloads/:/downloads
+      - /media/TVShows:/data/TVShows
     ports:
       - 8989:8989
     restart: unless-stopped

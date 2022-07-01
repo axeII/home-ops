@@ -13,9 +13,9 @@ services:
     volumes:
       - plex_config:/config
       - /dev/shm:/dev/shm
-      - /data/TVShows:/tv
-      - /data/Movies:/movies
-      - /data/Music/:/music
+      - /media/TVShows:/tv
+      - /media/Movies:/movies
+      - /media/Music/:/music
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
