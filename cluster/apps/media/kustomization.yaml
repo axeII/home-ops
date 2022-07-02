@@ -4,4 +4,7 @@ kind: Kustomization
 resources:
   - overseerr
   - bazarr
+  - sonarr
+  - radarr
+  - sabnzbd
   - media-nfs-share.yaml
