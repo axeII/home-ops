@@ -7,4 +7,5 @@ resources:
   - sonarr
   - radarr
   - sabnzbd
+  - readarr
   - media-nfs-share.yaml
