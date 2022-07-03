@@ -30,10 +30,10 @@ spec:
       tag: 0.4.2.1857@sha256:b7997d6cee20d865ac247d6cd95f0cc5f488a49278b989b8140d1447e98b63e1
     env:
       TZ: "${TIMEZONE}"
-      LIDARR__INSTANCE_NAME: Prowlarr
-      LIDARR__PORT: &port 80
-      LIDARR__BRANCH: nightly
-      LIDARR__LOG_LEVEL: info
+      PROWLARR__INSTANCE_NAME: Prowlarr
+      PROWLARR__PORT: &port 80
+      PROWLARR__BRANCH: nightly
+      PROWLARR__LOG_LEVEL: info
     envFrom:
       - secretRef:
           name: *app
