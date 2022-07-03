@@ -77,13 +77,6 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: false
-      # backup:
-      #   enabled: true
-      #   type: nfs
-      #   server: ""
-      #   path: /
-      #   mountPath: /config/Backups
-      #   readOnly: false
     resources:
       requests:
         cpu: 10m
