@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: minio-charts
+  name: infracloudio-charts
   namespace: flux-system
 spec:
-  interval: 30m
-  url: https://operator.min.io
+  interval: 1h
+  url: https://infracloudio.github.io/charts
   timeout: 3m

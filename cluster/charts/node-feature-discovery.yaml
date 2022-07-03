@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: hajimari-charts
+  name: node-feature-discovery-charts
   namespace: flux-system
 spec:
-  interval: 30m
-  url: https://hajimari.io
+  interval: 1h
+  url: https://kubernetes-sigs.github.io/node-feature-discovery/charts
   timeout: 3m

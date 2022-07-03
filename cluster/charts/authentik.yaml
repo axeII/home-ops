@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: infracloudio-charts
+  name: authentik-charts
   namespace: flux-system
 spec:
-  interval: 30m
-  url: https://infracloudio.github.io/charts
+  interval: 1h
+  url: https://charts.goauthentik.io/
   timeout: 3m
