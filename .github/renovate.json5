@@ -5,62 +5,45 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
-  "schedule": [
-    "every weekend"
-  ],
-  // set up ignored deps
-  "ignoreDeps": [
-    "ghcr.io/fluxcd/helm-controller",
-    "ghcr.io/fluxcd/image-automation-controller",
-    "ghcr.io/fluxcd/image-reflector-controller",
-    "ghcr.io/fluxcd/kustomize-controller",
-    "ghcr.io/fluxcd/notification-controller",
-    "ghcr.io/fluxcd/source-controller"
-  ],
+  "schedule": ["every weekend"],
   "pre-commit": {
     "enabled": true
   },
   "flux": {
-    "fileMatch": [
-      "cluster/.+\\.ya?ml$"
-    ]
+    "fileMatch": ["cluster/.+\\.ya?ml$"]
   },
   "helm-values": {
-    "fileMatch": [
-      "cluster/.+\\.ya?ml$"
-    ]
+    "fileMatch": ["cluster/.+\\.ya?ml$"]
   },
   "kubernetes": {
     "fileMatch": [
       "cluster/.+\\.ya?ml$",
-      "provision/ansible/playbooks/templates/.+\\.ya?ml.j2$"
+      "provision/ansible/.+\\.ya?ml.j2$"
     ]
   },
   "regexManagers": [
-    // Read and process GitHub Releases
     {
-      "fileMatch": [
-        "cluster/.+\\.ya?ml$",
-        "ansible/.+\\.ya?ml$"
-      ],
+      "description": "Process CRD dependencies",
+      "fileMatch": ["cluster/crds/.+\\.ya?ml$"],
       "matchStrings": [
-        "datasource=(?<datasource>.*?)( versioning=(?<versioning>.*?))?\n *url: https:\/\/github\\.com\/(?<depName>.*?)\\.git\n *ref:\n *tag: (?<currentValue>.*)\n",
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_version: \"(?<currentValue>.*)\"\n",
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_VERSION=\"(?<currentValue>.*)\"\n"
+        // GitRepository and Flux Kustomization where 'Git release/tag' matches 'Helm' version
+        "registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
+        // Kustomization where 'GitHub release artifact URL' matches 'Docker image' version
+        "datasource=(?<datasource>\\S+) image=(?<depName>\\S+)\n.*?-\\s(.*?)\/(?<currentValue>[^/]+)\/[^/]+\n"
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}helm{{/if}}"
     },
-    // Read and process Custom Resource Definitions
     {
+      "description": "Process various other dependencies",
       "fileMatch": [
+        "provision/ansible/.+\\.ya?ml$",
         "cluster/.+\\.ya?ml$"
       ],
       "matchStrings": [
-        "registryUrl=(?<registryUrl>.*?)\n *tag: (?<depName>[a-zA-Z-]+)-(?<currentValue>.*)\n",
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n.*\\/v?(?<currentValue>.*)\n"
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"
       ],
-      "datasourceTemplate": "helm"
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "packageRules": [
@@ -77,6 +60,14 @@
       "commitMessageTopic": "container image {{depName}}",
       "commitMessageExtra": "to {{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}",
       "matchUpdateTypes": ["major", "minor", "patch"]
+    },
+    {
+      "description": "Group Cert-Manager image (for CRDs) and chart",
+      "groupName": "Cert-Manager",
+      "matchPackagePatterns": ["cert-manager"],
+      "matchDatasources": ["docker", "helm"],
+      "group": { "commitMessageTopic": "{{{groupName}}} group" },
+      "separateMinorPatch": true
     },
     // add labels according to package and update types
     {
