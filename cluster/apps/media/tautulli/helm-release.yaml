@@ -27,7 +27,7 @@ spec:
       nameOverride: *app
     image:
       repository: ghcr.io/onedr0p/tautulli
-      tag: 2.10.1@sha256:4e2e6ae71982ed97192135adf39309a86a7d0b83179bedefb660d791fcb00e9c
+      tag: 2.10.2@sha256:5ec2a975ae7975e0d79c7e51240f4aefd5d6c577de5d953ef089b849b2ee11e0
     env:
       TZ: "${TIMEZONE}"
     service:
