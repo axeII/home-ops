@@ -28,7 +28,6 @@ spec:
       tag: 0.5.2
     ingress:
       enabled: true
-      ingressClassName: "traefik"
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/enable: "true"
