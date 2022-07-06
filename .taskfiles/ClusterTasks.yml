@@ -3,11 +3,6 @@ version: "3"
 
 tasks:
 
-  clean:
-    desc: Clean evited and unknown pods from cluster
-    cmds:
-      - for n in $(kubectl get ns | awk '{print $1}'); do for a in $(kubectl get pods -n $n | grep -i 'unknown\|evicted\|error\|completed' | awk '{print $1}') ; do kubectl delete pod/$a -n $n ; done; done;
-
   verify:
     desc: Verify flux meets the prerequisites
     cmds:
@@ -19,6 +14,7 @@ tasks:
       - kubectl apply --kustomize {{.CLUSTER_DIR}}/bootstrap/
       - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
       - kubectl apply --kustomize {{.CLUSTER_DIR}}/flux/flux-system/
+      - sleep 10
       - task: reconcile
     preconditions:
       - sh: test -f {{.SOPS_AGE_KEY_FILE}}
@@ -27,16 +23,11 @@ tasks:
     vars:
       SOPS_AGE_KEY_FILE: ~/.config/sops/age/keys.txt
 
-  # flux:restart:
-    # desc: Suspend Flux helmrelease
-    # cmds:
-      # - flux suspend helmrelease {{.CLI_ARGS}} && flux resume helmrelease {{.CLI_ARGS}}
-
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
       - flux reconcile -n flux-system source git flux-cluster
-      - flux reconcile -n flux-system source kustomization flux-cluster
+      - flux reconcile -n flux-system kustomization flux-cluster
 
   nodes:
     desc: List all the nodes in your cluster
@@ -59,12 +50,12 @@ tasks:
       - kubectl get helmreleases {{.CLI_ARGS | default "-A"}}
 
   helmrepositories:
-    desc: List all the helmreleases in your cluster
+    desc: List all the helmrepositories in your cluster
     cmds:
       - kubectl get helmrepositories {{.CLI_ARGS | default "-A"}}
 
   gitrepositories:
-    desc: List all the helmreleases in your cluster
+    desc: List all the gitrepositories in your cluster
     cmds:
       - kubectl get gitrepositories {{.CLI_ARGS | default "-A"}}
 
@@ -73,6 +64,11 @@ tasks:
     cmds:
       - kubectl get certificates {{.CLI_ARGS | default "-A"}}
       - kubectl get certificaterequests {{.CLI_ARGS | default "-A"}}
+
+  ingresses:
+    desc: List all the ingresses in your cluster
+    cmds:
+      - kubectl get ingress {{.CLI_ARGS | default "-A"}}
 
   resources:
     desc: Gather common resources in your cluster, useful when asking for support
@@ -83,4 +79,14 @@ tasks:
       - task: helmrepositories
       - task: gitrepositories
       - task: certificates
+      - task: ingresses
       - task: pods
+
+  restart:
+    desc: Restart helm releaseName
+    cmds:
+      - flux suspend hr {{.CLI_ARGS}} -n {{.NAMESPACE}}
+      - flux resume hr {{.CLI_ARGS}} -n {{.NAMESPACE}}
+    vars:
+      NAMESPACE:
+        sh: cat $(rg -l -n -w 'name:? {{.CLI_ARGS}}') | yq '.metadata.namespace'
