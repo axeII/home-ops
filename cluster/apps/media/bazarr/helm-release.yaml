@@ -7,6 +7,9 @@ metadata:
 spec:
   releaseName: bazarr
   interval: 5m
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   chart:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
