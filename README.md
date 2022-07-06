@@ -26,13 +26,6 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. under folder `provision` I store all my ansible and terraform scripts to manage promox virtual machines. Some of them are used for k3s cluster some only for docker instances.
 
 
-### Timeline:
-- [January 2022] Rebuild of infrastructure.
-- [February 2022] Finally at the moment of  I am satisfied with the home-ops infrastructure.
-- [April 2022] Cluster is working again yayy.
-- [May 2022] Migrating to robust storage for cluster a monitoring.
-- [Today] Now I would like to move to the next phase -- add more services to my cluster.
-
 ## :art:&nbsp; Cluster components
 
 - [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
@@ -77,6 +70,17 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 Check for uniq mac addresses:
 ```
 ansible all -i home-ops/provision/ansible/kubernetes/inventory/hosts.yml --one-line -m shell -a 'ip link show | grep link' | awk '{print $13}' | sort | uniq | wc -l
+```
+
+Fix issue with /tmp.ansible/tmp rights
+```
+ansible all -i provision/ansible/kubernetes/inventory/hosts.yml -m ansible.builtin.shell -a  "mkdir -p /tmp/.ansible/tmp ; chmod 777 /tmp/.ansible/tmp"
+```
+
+Add worker nodes label
+```
+kubectl label node k8s-3 node-role.kubernetes.io/worker=worker
+kubectl label node k8s-4 node-role.kubernetes.io/worker=worker
 ```
 
 ---
