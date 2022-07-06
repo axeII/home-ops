@@ -7,3 +7,4 @@ resources:
   - monitoring.yaml
   - longhorn-system.yaml
   - external.yaml
+  - media.yaml
