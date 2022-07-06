@@ -18,18 +18,12 @@ spec:
       interval: 5m
   values:
     persistence:
-      defaultClass: true
-      defaultFsType: ext4
       defaultClassReplicaCount: 2
     defaultSettings:
-      replicaSoftAntiAffinity: true
-      replicaZoneSoftAntiAffinity: true
-      defaultDataPath: /longhorn
-      defaultReplicaCount: 2
-      createDefaultDiskLabeledNodes: true
-      storageMinimalAvailablePercentage: "10"
-      volumeAttachmentRecoveryPolicy: "wait"
       backupTarget: "${NFS_BACKUP}"
+      backupTargetCredentialSecret: longhorn-backup
+      defaultReplicaCount: 2
+      defaultLonghornStaticStorageClass: longhorn
     ingress:
       enabled: true
       ingressClassName: "traefik"
