@@ -64,8 +64,10 @@ spec:
               - *host-custom
             secretName: "sabnzbd-tls"
     podSecurityContext:
-      supplementalGroups:
-        - 100
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
@@ -85,8 +87,8 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: "expanse.${SECRET_PRIVATE_DOMAIN}"
+        server: "192.168.69.100"
         path: /media
         mountPath: /media
-      incomplete:
-        eemory: 8000Mi
+      limits:
+        memory: 5000Mi

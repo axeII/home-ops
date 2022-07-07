@@ -64,10 +64,11 @@ spec:
               - *host-release
               - *host-custom
             secretName: "radarr-tls"
-
     podSecurityContext:
-      supplementalGroups:
-        - 100
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
@@ -77,13 +78,6 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: false
-      # backup:
-      #   enabled: true
-      #   type: nfs
-      #   server: ""
-      #   path: /
-      #   mountPath: /config/Backups
-      #   readOnly: false
     resources:
       requests:
         cpu: 10m
