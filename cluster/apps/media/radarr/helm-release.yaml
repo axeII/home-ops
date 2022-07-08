@@ -38,13 +38,6 @@ spec:
     controller:
       type: statefulset
       replicas: 1
-    service:
-      main:
-        enabled: true
-        type: ClusterIP
-        port:
-          port: 7878
-          protocol: TCP
     ingress:
       main:
         enabled: true
