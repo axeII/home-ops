@@ -6,6 +6,9 @@ metadata:
   namespace: monitoring
 spec:
   interval: 5m
+  dependsOn:
+    - name: cert-manager
+      namespace: kube-system
   chart:
     spec:
       chart: botkube
