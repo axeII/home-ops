@@ -6,6 +6,9 @@ metadata:
   namespace: media
 spec:
   interval: 15m
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   chart:
     spec:
       chart: kah-common-chart
@@ -56,6 +59,11 @@ spec:
               - *host-release
               - *host-custom
             secretName: "tautulli-tls"
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
