@@ -37,7 +37,7 @@ spec:
             paths:
               - "/"
         tls:
-          - secretName: thanos
+          - secretName: thanos-tls
             hosts:
               - "thanos.${SECRET_DOMAIN}"
     existingObjstoreSecret: thanos-objstore
