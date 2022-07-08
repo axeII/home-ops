@@ -16,7 +16,7 @@ spec:
       chart: lidarr
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home-charts
+        name: k8s-at-home
         namespace: flux-system
       interval: 5m
   install:
