@@ -82,11 +82,12 @@ tasks:
       - task: ingresses
       - task: pods
 
-  restart:
+  reinstall:
     desc: Restart helm releaseName
     cmds:
       - flux suspend hr {{.CLI_ARGS}} -n {{.NAMESPACE}}
+      - sleep 2
       - flux resume hr {{.CLI_ARGS}} -n {{.NAMESPACE}}
     vars:
       NAMESPACE:
-        sh: cat $(rg -l -n -w 'name:? {{.CLI_ARGS}}') | yq '.metadata.namespace'
+        sh: cat $(rg -l -n -w 'name:? {{.CLI_ARGS}}' | head -1) | yq '.metadata.namespace'
