@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app readarr
+  name: readarr
   namespace: media
 spec:
   interval: 15m
@@ -11,13 +11,14 @@ spec:
       namespace: longhorn-system
   chart:
     spec:
-      chart: kah-common-chart
-      version: 1.1.2
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      version: 6.3.2
+      chart: readarr
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: k8s-at-home-charts
         namespace: flux-system
-      interval: 15m
+      interval: 5m
   install:
     createNamespace: true
     remediation:
@@ -26,25 +27,11 @@ spec:
     remediation:
       retries: 5
   values:
-    global:
-      nameOverride: *app
     image:
-      repository: ghcr.io/onedr0p/readarr-nightly
-      tag: 0.1.1.1377@sha256:0d06b21454e5b889516620a791449c868743006aaac99fc52d8437eb4314cf30
+      repository: ghcr.io/k8s-at-home/readarr
+      tag: v0.1.1.1352
     env:
       TZ: "${TIMEZONE}"
-      READARR__INSTANCE_NAME: Readarr (Audio)
-      READARR__PORT: &port 80
-      READARR__BRANCH: develop
-      READARR__LOG_LEVEL: info
-    envFrom:
-      - secretRef:
-          name: *app
-    service:
-      main:
-        ports:
-          http:
-            port: *port
     ingress:
       main:
         enabled: true
@@ -67,10 +54,7 @@ spec:
               - *host-custom
             secretName: "readarr-tls"
     podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
       fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
