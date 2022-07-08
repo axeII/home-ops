@@ -31,10 +31,6 @@ spec:
       tag: v4.1.0.6175
     env:
       TZ: ${TIMEZONE}
-    podSecurityContext:
-      runAsUser: 1024
-      supplementalGroups:
-        - 100
     controller:
       type: statefulset
       replicas: 1
@@ -61,6 +57,8 @@ spec:
               - *host-release
               - *host-custom
             secretName: "radarr-tls"
+    podSecurityContext:
+      fsGroup: 568
     persistence:
       config:
         enabled: true

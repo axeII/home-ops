@@ -2,14 +2,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app prowlarr
+  name: prowlarr
   namespace: media
 spec:
   interval: 15m
   chart:
     spec:
-      chart: kah-common-chart
-      version: 1.1.2
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      version: 4.4.2
+      chart: prowlarr
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -23,25 +24,11 @@ spec:
     remediation:
       retries: 5
   values:
-    global:
-      nameOverride: *app
     image:
-      repository: ghcr.io/onedr0p/prowlarr-nightly
-      tag: 0.4.3.1891@sha256:cf9f34456dd4102ebfd53864ff1c1810156edbb96961072ec028a3647d5906b2
+      repository: ghcr.io/k8s-at-home/prowlarr-nightly
+      tag: v0.4.3.1897
     env:
       TZ: "${TIMEZONE}"
-      PROWLARR__INSTANCE_NAME: Prowlarr
-      PROWLARR__PORT: &port 80
-      PROWLARR__BRANCH: nightly
-      PROWLARR__LOG_LEVEL: info
-    envFrom:
-      - secretRef:
-          name: *app
-    service:
-      main:
-        ports:
-          http:
-            port: *port
     ingress:
       main:
         enabled: true
@@ -64,10 +51,7 @@ spec:
               - *host-custom
             secretName: "prowlarr-tls"
     podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
       fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
