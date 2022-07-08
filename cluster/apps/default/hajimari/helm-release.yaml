@@ -40,6 +40,9 @@ spec:
         - name: Promox
           url: "https://proxmox.${SECRET_DOMAIN}"
           icon: server
+        - name: Status
+          url: "https://status.${SECRET_DOMAIN}"
+          icon: access-point
         # for some reason longhorn is ignored in helm-release
         - name: Longhorn
           url: "https://longhorn.${SECRET_DOMAIN}"

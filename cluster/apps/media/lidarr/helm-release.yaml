@@ -88,15 +88,6 @@ spec:
       #   path: /tycho/Apps/External/Backups/lidarr
       #   mountPath: /config/Backups
       #   readOnly: false
-    initContainers:
-      update-volume-permission:
-        image: busybox
-        command: ["sh", "-c", "chown -R 568:568 /config"]
-        volumeMounts:
-          - name: config
-            mountPath: /config
-        securityContext:
-          runAsUser: 0
     resources:
       requests:
         cpu: 10m

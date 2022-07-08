@@ -77,15 +77,6 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: false
-    initContainers:
-      update-volume-permission:
-        image: busybox
-        command: ["sh", "-c", "chown -R 568:568 /config"]
-        volumeMounts:
-          - name: config
-            mountPath: /config
-        securityContext:
-          runAsUser: 0
     resources:
       requests:
         cpu: 10m
