@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app radarr
+  name: radarr
   namespace: media
 spec:
   interval: 15m
@@ -11,13 +11,14 @@ spec:
       namespace: longhorn-system
   chart:
     spec:
-      chart: kah-common-chart
-      version: 1.1.2
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: radarr
+      version: 16.2.3
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: k8s-at-home-charts
         namespace: flux-system
-      interval: 15m
+        interval: 15m
   install:
     createNamespace: true
     remediation:
@@ -26,26 +27,25 @@ spec:
     remediation:
       retries: 5
   values:
-    global:
-      nameOverride: *app
     image:
-      repository: ghcr.io/onedr0p/radarr-nightly
-      tag: 4.2.0.6407@sha256:c0dd6648f62310d586f67de6c73565ee82f7b2f17e874ec9bb122b0eeafaa805
+      repository: ghcr.io/k8s-at-home/radarr
+      tag: v4.1.0.6175
     env:
-      TZ: "${TIMEZONE}"
-      RADARR__INSTANCE_NAME: Radarr
-      RADARR__PORT: &port 80
-      RADARR__BRANCH: nightly
-      RADARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
-      RADARR__LOG_LEVEL: info
-    envFrom:
-      - secretRef:
-          name: *app
+      TZ: ${TIMEZONE}
+    podSecurityContext:
+      runAsUser: 1024
+      supplementalGroups:
+        - 100
+    controller:
+      type: statefulset
+      replicas: 1
     service:
       main:
-        ports:
-          http:
-            port: *port
+        enabled: true
+        type: ClusterIP
+        port:
+          port: 7878
+          protocol: TCP
     ingress:
       main:
         enabled: true
@@ -53,6 +53,8 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "movie-roll"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -67,11 +69,6 @@ spec:
               - *host-release
               - *host-custom
             secretName: "radarr-tls"
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
