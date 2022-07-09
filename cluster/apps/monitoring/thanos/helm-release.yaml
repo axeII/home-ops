@@ -33,13 +33,13 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
-          - hosts: "thanos.${SECRET_DOMAIN}"
+          - host: &host "thanos.${SECRET_DOMAIN}"
             paths:
               - "/"
         tls:
-          - secretName: thanos-tls
-            hosts:
-              - "thanos.${SECRET_DOMAIN}"
+          - hosts:
+              - *host
+            secretName: "thanos-tls"
     existingObjstoreSecret: thanos-objstore
     queryFrontend:
       enabled: false
