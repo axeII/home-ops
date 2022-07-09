@@ -59,6 +59,8 @@ spec:
             secretName: "radarr-tls"
     podSecurityContext:
       fsGroup: 568
+      supplementalGroups:
+        - 100
     persistence:
       config:
         enabled: true
