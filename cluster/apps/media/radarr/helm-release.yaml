@@ -18,22 +18,20 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 15m
   install:
-    createNamespace: true
     remediation:
       retries: 5
   upgrade:
     remediation:
       retries: 5
+      remediateLastFailure: true
   values:
     image:
       repository: ghcr.io/k8s-at-home/radarr
       tag: v4.1.0.6175
     env:
       TZ: ${TIMEZONE}
-    controller:
-      type: statefulset
-      replicas: 1
     ingress:
       main:
         enabled: true
@@ -57,6 +55,9 @@ spec:
               - *host-release
               - *host-custom
             secretName: "radarr-tls"
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
     podSecurityContext:
       fsGroup: 568
       supplementalGroups:
@@ -70,6 +71,13 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: false
+    metrics:
+      enabled: true
+      serviceMonitor:
+        interval: 3m
+        scrapeTimeout: 1m
+      prometheusRule:
+        enabled: true
     resources:
       requests:
         cpu: 10m
