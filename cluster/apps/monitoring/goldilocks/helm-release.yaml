@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: goldilocks
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: goldilocks
+      version: 6.1.3
+      sourceRef:
+        kind: HelmRepository
+        name: fairwinds
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controller:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          memory: 250M
+    dashboard:
+      replicaCount: 1
+      ingress:
+        main:
+          enabled: true
+          ingressClassName: "traefik"
+          annotations:
+            cert-manager.io/cluster-issuer: "letsencrypt-staging"
+            traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+            hajimari.io/enable: "true"
+            hajimari.io/icon: "abacus"
+          hosts:
+            - host: &host "goldilocks.${SECRET_DOMAIN}"
+              paths:
+                - "/"
+          tls:
+            - hosts:
+                - *host
+              secretName: "goldilocks-tls"
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 100M
