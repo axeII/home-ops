@@ -109,41 +109,43 @@ spec:
     dashboards:
       default:
         longhorn:
-          datasource: Prometheus
           gnetId: 13032
           revision: 6
-        blocky:
-          url: https://raw.githubusercontent.com/0xERR0R/blocky/master/docs/blocky-grafana.json
           datasource: Prometheus
-        apc-smart-ups-1500:
-          url: https://raw.githubusercontent.com/k8s-at-home/grafana-dashboards/main/apc-smart-ups-1500-snmp.json
-          datasource: Prometheus
+      media:
         lidarr:
           url: https://raw.githubusercontent.com/k8s-at-home/grafana-dashboards/main/lidarr.json
+          datasource: Prometheus
         radarr:
           url: https://raw.githubusercontent.com/k8s-at-home/grafana-dashboards/main/radarr.json
+          datasource: Prometheus
         sonarr:
           url: https://raw.githubusercontent.com/k8s-at-home/grafana-dashboards/main/sonarr.json
-        # Ref: https://grafana.com/grafana/dashboards/13502
-        minio:
-          gnetId: 13502
-          revision: 10
           datasource: Prometheus
+      flux:
+        url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/grafana/dashboards/cluster.json
+        datasource: Prometheus
         # Ref: https://grafana.com/grafana/dashboards/11315
-        unifi-client-insights:
-          gnetId: 11315
-          revision: 8
-          datasource: Prometheus
+        #unifi-client-insights:
+        #  gnetId: 11315
+        #  revision: 8
+        #  datasource: Prometheus
+    imageRenderer:
+      enabled: true
     sidecar:
       dashboards:
         enabled: true
         searchNamespace: ALL
         folderAnnotation: grafana_folder
+        multicluster: true
         provider:
           foldersFromFilesStructure: true
+          allowUiUpdates: true
+          disableDelete: false
       datasources:
         enabled: true
         searchNamespace: ALL
+        label: grafana_datasource
     plugins:
       - natel-discrete-panel
       - pr0ps-trackmap-panel
