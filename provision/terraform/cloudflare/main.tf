@@ -1,5 +1,13 @@
 terraform {
 
+  cloud {
+    organization = "akira128"
+
+    workspaces {
+      name = "example-workspace"
+    }
+  }
+
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
