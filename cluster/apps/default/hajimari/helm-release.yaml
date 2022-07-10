@@ -68,20 +68,26 @@ spec:
       groups:
         - name: Daily
           links:
-            - name: Home-Ops
-              url: "https://github.com/axeII/home-ops"
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
             - name: DockerHub
               url: "https://hub.docker.com"
-            - name: "Tailscale"
-              url: "https://login.tailscale.com/admin/machines"
             - name: GitHub
               url: "https://github.com"
             - name: InfoSecNews
               url: "https://allinfosecnews.com"
             - name: Unifi
               url: "https://unifi"
+        - name: DevOps
+          links:
+            - name: Home-Ops
+              url: "https://github.com/axeII/home-ops"
+            - name: TerraformCloud
+              url: "https://app.terraform.io/"
+            - name: "Tailscale"
+              url: "https://login.tailscale.com/admin/machines"
+            - name: Visual studio
+              url: https://my.visualstudio.com"
         - name: Fun
           links:
             - name: Jellyfin
@@ -110,16 +116,6 @@ spec:
               url: "https://reddit.com/r/hacking"
             - name: "/r/oscp"
               url: "https://reddit.com/r/oscp"
-        - name: Dev
-          links:
-            - name: Visual studio
-              url: https://my.visualstudio.com"
-            - name: Codepen
-              url: "https://codepen.io/"
-            - name: Devdocs
-              url: "https://devdocs.io"
-            - name: Devhints
-              url: "https://devhints.io"
         - name: Tech
           links:
             - name: Hacker News
