@@ -1,8 +1,16 @@
 terraform {
 
+  cloud {
+    organization = "akira128"
+
+    workspaces {
+      name = "pihole"
+    }
+  }
+
   required_providers {
     pihole = {
-      source = "ryanwholey/pihole"
+      source  = "ryanwholey/pihole"
       version = "0.0.12"
     }
     sops = {
@@ -21,21 +29,6 @@ data "sops_file" "pihole_secrets" {
 provider "pihole" {
   url      = data.sops_file.pihole_secrets.data["pihole_url"]
   password = data.sops_file.pihole_secrets.data["pihole_password"]
-}
-
-resource "pihole_dns_record" "radarr_record" {
-  domain = "radarr.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.101"
-}
-
-resource "pihole_dns_record" "sonarr_record" {
-  domain = "sonarr.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.101"
-}
-
-resource "pihole_dns_record" "sabzbd_record" {
-  domain = "sabnzbd.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.101"
 }
 
 resource "pihole_dns_record" "proxmox_record" {
