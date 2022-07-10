@@ -15,11 +15,30 @@ spec:
         name: grafana
         namespace: flux-system
       interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
   values:
     image:
       repository: ghcr.io/k8s-at-home/loki
-
+    env:
+      - name: TZ
+        value: ${TIMEZONE}
+    ingress:
+      enabled: false
     config:
+      limits_config:
+        enforce_metric_name: false
+        reject_old_samples: true
+        reject_old_samples_max_age: 168h
+        ingestion_rate_mb: 8
+        ingestion_burst_size_mb: 12
       storage_config:
         aws:
           s3: s3://${SECRET_MINIO_LOKI_ACCESS_KEY}:${SECRET_MINIO_LOKI_SECRET_KEY}@${SECRET_MINIO_REGION}/loki
@@ -29,6 +48,12 @@ spec:
           active_index_directory: /data/index
           cache_location: /data/boltdb-cache
           shared_store: s3
-
+      ruler:
+        rule_path: /tmp/scratch
+        alertmanager_url: http://prometheus-alertmanager:9093
+        ring:
+          kvstore:
+            store: inmemory
+        enable_api: true
     serviceMonitor:
       enabled: true
