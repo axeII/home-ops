@@ -1,7 +1,16 @@
+terraform {
+  cloud {
+    organization = "akira128"
+
+    workspaces {
+      name = "infrastructure"
+    }
+  }
+}
+
 data "sops_file" "proxmox_secrets" {
   source_file = "../secret.sops.yaml"
 }
-
 
 provider "proxmox" {
   pm_api_url          = "https://${var.proxmox_ip}:8006/api2/json"
