@@ -59,8 +59,36 @@ spec:
             type: file
             disableDeletion: false
             editable: true
+            allowUiUpdates: true
             options:
               path: /var/lib/grafana/dashboards/default
+          - name: "flux"
+            orgId: 1
+            folder: "flux"
+            type: file
+            updateIntervalSeconds: 10
+            disableDeletion: false
+            allowUiUpdates: true
+            options:
+              path: /var/lib/grafana/dashboards/flux
+          - name: "loki"
+            orgId: 1
+            folder: "loki"
+            type: file
+            updateIntervalSeconds: 10
+            disableDeletion: false
+            allowUiUpdates: true
+            options:
+              path: /var/lib/grafana/dashboards/loki
+          - name: "media"
+            orgId: 1
+            folder: "media"
+            type: file
+            updateIntervalSeconds: 10
+            disableDeletion: false
+            allowUiUpdates: true
+            options:
+              path: /var/lib/grafana/dashboards/media
     datasources:
       datasources.yaml:
         apiVersion: 1
