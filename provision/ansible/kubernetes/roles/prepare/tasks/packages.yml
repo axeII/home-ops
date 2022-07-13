@@ -19,7 +19,7 @@
       - iputils-ping
       - ipvsadm
       - lvm2
-      - nano
+      - vim
       - net-tools
       - nfs-common
       - nvme-cli

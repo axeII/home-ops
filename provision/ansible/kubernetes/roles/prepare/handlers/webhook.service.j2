@@ -1,0 +1,15 @@
+[Unit]
+Description=webhook service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=kmuser
+ExecStart=/usr/bin/webhook -port 9002 -secure -hooks hooks.json -verbose -cert cert.pem -key key.pem
+WorkingDirectory={{ working_dir }}
+
+[Install]
+WantedBy=multi-user.target
