@@ -2,7 +2,7 @@
 version: "2.1"
 services:
   sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd:3.5.3
+    image: ghcr.io/linuxserver/sabnzbd:3.6.0
     container_name: sabnzbd
     networks:
       - traefik_net
@@ -17,21 +17,8 @@ services:
       - /media/Movies:/data/Movies
       - /media/TVShows:/data/TVShows
     ports:
-      - 8080
+      - 8080:8080
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sabzb.rule=Host(`sabnzbd.${DOMAIN}`)
-      - traefik.http.routers.sabzb.entrypoints=web-secure
-      - traefik.http.routers.sabzb.tls=true
-      - traefik.http.routers.sabzb.tls.certresolver=letsencrypt
-      - traefik.http.services.sabzb.loadbalancer.server.port=8080
-    healthcheck:
-      test: curl -f http://localhost:8080
-      interval: 10s
-      timeout: 1s
-      retries: 3
-      start_period: 10s
 
 
 volumes:

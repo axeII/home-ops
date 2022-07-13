@@ -18,14 +18,6 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)
-      - traefik.http.routers.sonarr.entrypoints=web-secure
-      - traefik.http.routers.sonarr.tls=true
-      - traefik.http.routers.sonarr.tls.certresolver=letsencrypt
-      - traefik.http.services.sonarr.loadbalancer.server.port=8989
-      # - "traefik.http.routers.sonarr.middlewares=my-whitelist-in-docker@docker"
 
 volumes:
   sonarr_config:

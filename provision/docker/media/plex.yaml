@@ -2,7 +2,7 @@
 version: "3.8"
 services:
   plex:
-    image: lscr.io/linuxserver/plex:1.27.0
+    image: lscr.io/linuxserver/plex:1.27.2
     container_name: plex
     hostname: "plex.${DOMAIN}"
     environment:
@@ -12,7 +12,7 @@ services:
       ADVERTISE_IP: "https://plex.${DOMAIN}"
     volumes:
       - plex_config:/config
-      - /dev/shm:/dev/shm
+      - /dev/shm:/dev/shk
       - /media/TVShows:/tv
       - /media/Movies:/movies
       - /media/Music/:/music

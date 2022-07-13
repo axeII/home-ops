@@ -18,13 +18,6 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
-      - traefik.http.routers.radarr.entrypoints=web-secure
-      - traefik.http.routers.radarr.tls=true
-      - traefik.http.routers.radarr.tls.certresolver=letsencrypt
-      - traefik.http.services.radarr.loadbalancer.server.port=7878
 
 volumes:
   radarr_config:
