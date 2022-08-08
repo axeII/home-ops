@@ -8,7 +8,7 @@ resources:
   - prowlarr
   - radarr
   - readarr
-  - sabnzbd
+  # - sabnzbd
   - sonarr
   - tautulli
   - whisparr
