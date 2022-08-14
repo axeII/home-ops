@@ -24,8 +24,8 @@ spec:
       tag: v0.12.4
     communications:
       existingSecretName: "botkube-communications"
-    serviceMonitor:
-      enabled: true
+    #serviceMonitor:
+      #enabled: true
     config:
       recommendations: false
       settings:
