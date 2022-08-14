@@ -5,3 +5,4 @@ resources:
   - traefik
   - k8s-gateway
   - error-pages
+  - metallb
