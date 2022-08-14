@@ -8,4 +8,5 @@ resources:
   - system-upgrade
   - monitoring
   - external
-  - media
+  - flux-system
+  #- media

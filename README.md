@@ -72,10 +72,6 @@ Check for uniq mac addresses:
 ansible all -i home-ops/provision/ansible/kubernetes/inventory/hosts.yml --one-line -m shell -a 'ip link show | grep link' | awk '{print $13}' | sort | uniq | wc -l
 ```
 
-Fix issue with /tmp.ansible/tmp rights
-```
-ansible all -i provision/ansible/kubernetes/inventory/hosts.yml -m ansible.builtin.shell -a  "mkdir -p /tmp/.ansible/tmp ; chmod 777 /tmp/.ansible/tmp"
-```
 
 Add worker nodes label
 ```

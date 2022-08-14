@@ -54,3 +54,4 @@ k3s_server:
     # Allow k8s services to contain TCP and UDP on the same port
     - "feature-gates=MixedProtocolLBService=true"
     # Required for HAProxy health-checks
+    - "anonymous-auth=true"
