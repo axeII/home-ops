@@ -116,8 +116,6 @@ spec:
         allow_sign_up: false
         auto_assign_org_role: Admin
         viewers_can_edit: true
-    ingress:
-      enabled: false
     persistence:
       enabled: true
       type: pvc
@@ -155,3 +153,15 @@ spec:
       datasources:
         enabled: true
         searchNamespace: ALL
+    ingress:
+      enabled: true
+      ingressClassName: "traefik"
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+        cert-manager.io/cluster-issuer: letsencrypt-staging
+      hosts:
+        - "grafana.${SECRET_DOMAIN}"
+      tls:
+        - hosts:
+            - "grafana.${SECRET_DOMAIN}"
+          secretName: grafana
