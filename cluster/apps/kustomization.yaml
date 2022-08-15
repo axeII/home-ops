@@ -9,4 +9,4 @@ resources:
   - monitoring
   - external
   - flux-system
-  #- media
+  - media
