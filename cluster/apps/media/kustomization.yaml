@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
   #- bazarr
   #- lidarr
-  #- overseerr
+  - overseerr
   #- prowlarr
   #- radarr
   #- readarr
