@@ -11,6 +11,7 @@ resources:
   - grafana.yaml
   - hajimari.yaml
   - infracloudio.yaml
+  - fairwinds.yaml
   - jetstack.yaml
   - k8s-at-home.yaml
   - k8s-gateway.yaml
