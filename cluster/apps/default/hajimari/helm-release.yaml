@@ -44,24 +44,15 @@ spec:
           url: "https://status.${SECRET_DOMAIN}"
           icon: access-point
         # for some reason longhorn is ignored in helm-release
-        - name: Longhorn
-          url: "https://longhorn.${SECRET_DOMAIN}"
-          icon: cow
+        # - name: Longhorn
+        #   url: "https://longhorn.${SECRET_DOMAIN}"
+        #   icon: cow
         - name: Sabnzbd
           url: "https://sabnzbd.${SECRET_DOMAIN}"
           icon: download
         - name: Sonarr
           url: "https://sonarr.${SECRET_DOMAIN}"
           icon: tire
-        - name: Jellyfin-vue
-          url: "https://jellyfin.${SECRET_DOMAIN}"
-          icon: movie-open
-        - name: Jellyseerr
-          url: "https://jellyseerr.${SECRET_DOMAIN}"
-          icon: jellyfish
-        - name: Jellyfin
-          url: "https://backend.jellyfin.${SECRET_DOMAIN}"
-          icon: movie-roll
         - name: Comics
           url: "https://comics.${SECRET_DOMAIN}/ubooquity"
           icon: thought-bubble
