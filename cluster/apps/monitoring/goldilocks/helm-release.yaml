@@ -20,6 +20,7 @@ spec:
     vpa:
       enabled: true
     dashboard:
+      enabled: true
       ingress:
         enabled: true
         annotations:
