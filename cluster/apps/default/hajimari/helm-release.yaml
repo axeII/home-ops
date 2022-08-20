@@ -43,16 +43,9 @@ spec:
         - name: Status
           url: "https://status.${SECRET_DOMAIN}"
           icon: access-point
-        # for some reason longhorn is ignored in helm-release
-        # - name: Longhorn
-        #   url: "https://longhorn.${SECRET_DOMAIN}"
-        #   icon: cow
-        - name: Sabnzbd
-          url: "https://sabnzbd.${SECRET_DOMAIN}"
-          icon: download
-        - name: Sonarr
-          url: "https://sonarr.${SECRET_DOMAIN}"
-          icon: tire
+        - name: Plex
+          url: "https://app.plex.tv"
+          icon: plex
         - name: Comics
           url: "https://comics.${SECRET_DOMAIN}/ubooquity"
           icon: thought-bubble
