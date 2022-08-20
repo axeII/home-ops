@@ -32,7 +32,7 @@ spec:
         # matchNames:
           # - default
           # - networking
-      name: "you"
+      name: "Ales"
       customApps:
         - name: Pihole
           url: "https://pihole.${SECRET_DOMAIN}"
