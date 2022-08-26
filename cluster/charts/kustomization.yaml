@@ -27,3 +27,4 @@ resources:
   - stakater.yaml
   - traefik.yaml
   - weaveworks-kured.yaml
+  - portainer-charts.yaml
