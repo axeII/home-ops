@@ -1,0 +1,42 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: portainer
+  namespace: networking
+spec:
+  interval: 5m
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
+  chart:
+    spec:
+      chart: portainer
+      version: 1.0.33
+      sourceRef:
+        kind: HelmRepository
+        name: portainer-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    persistence:
+      size: "256Mi"
+      storageClass: longhorn
+    ingress:
+      enabled: true
+      ingressClassName: "traefik"
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        hajimari.io/enable: "true"
+        hajimari.io/appName: "portainer"
+        hajimari.io/icon: "pier-crane"
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      hosts:
+        - host: &host "portainer.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+          secretName: "portainer-tls"
