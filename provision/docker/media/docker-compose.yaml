@@ -1,18 +1,18 @@
 ---
 version: "3.8"
 services:
-  radarr:
-    extends:
-      file: radarr.yaml
-      service: radarr
-  sonarr:
-    extends:
-      file: sonarr.yaml
-      service: sonarr
-  sabnzbd:
-    extends:
-      file: sabnzbd.yaml
-      service: sabnzbd
+  # radarr:
+  #   extends:
+  #     file: radarr.yaml
+  #     service: radarr
+  # sonarr:
+  #   extends:
+  #     file: sonarr.yaml
+  #     service: sonarr
+  # sabnzbd:
+  #   extends:
+  #     file: sabnzbd.yaml
+  #     service: sabnzbd
   plex:
     extends:
       file: plex.yaml
@@ -27,9 +27,9 @@ services:
       service: ubooquity
 
 volumes:
-  config: # sabnzdb
-  radarr_config:
-  sonarr_config:
+  # config: # sabnzdb
+  # radarr_config:
+  # sonarr_config:
   plex_config:
   comic_config:
 

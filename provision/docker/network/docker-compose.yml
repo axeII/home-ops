@@ -9,6 +9,11 @@ services:
     extends:
       file: autoheal.yaml
       service: autoheal
+  autoupdate:
+    extends:
+      file: autoupdate.yaml
+      service: autoupdate
+
 
 volumes:
   letsencrypt:

@@ -17,7 +17,8 @@ services:
       - comic_config:/config
       - /media/Comics/:/comics
     restart: unless-stopped
-    # labels:
+    label:
+      com.centurylinklabs.watchtower.enable: true
       # - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
 
 volumes:
