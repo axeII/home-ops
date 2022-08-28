@@ -6,25 +6,25 @@ vars:
 
 tasks:
 
-  compose:network:
+  network:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/network {{.CLI_ARGS}}"
 
-  compose:media:
+  media:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/media {{.CLI_ARGS}}"
 
-  compose:pihole:
+  pihole:
     desc: Docker container control
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/pihole {{.CLI_ARGS}}"
 
-  compose:minio:
+  minio:
     desc: Docker container control
     dir: provision/docker
     cmds:
