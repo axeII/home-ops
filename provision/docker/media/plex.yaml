@@ -6,8 +6,8 @@ services:
     container_name: plex
     hostname: "plex.${DOMAIN}"
     environment:
-      # PUID: 1000
-      # PGID: 1000
+      PUID: 1000
+      PGID: 1000
       VERSION: "docker"
       ADVERTISE_IP: "https://plex.${DOMAIN}"
     volumes:
