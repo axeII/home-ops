@@ -42,3 +42,4 @@ terraform.tfstate*
 ## Trash
 .DS_Store
 Thumbs.db
+megalinter-reports
