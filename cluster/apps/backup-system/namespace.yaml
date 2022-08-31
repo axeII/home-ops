@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: backup-system
+  name: velero
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
     goldilocks.fairwinds.com/enabled: "true"
