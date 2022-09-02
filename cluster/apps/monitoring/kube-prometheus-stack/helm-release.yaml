@@ -238,5 +238,3 @@ spec:
           objectStorageConfig:
             name: thanos-objstore
             key: objstore.yml
-
-    nodeName: k8s-3
