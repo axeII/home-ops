@@ -209,7 +209,6 @@ spec:
           cpu: 250m
         limits:
           memory: 2048Mi
-      nodeName: k8s-0
 
       thanosService:
         enabled: true
@@ -239,3 +238,5 @@ spec:
           objectStorageConfig:
             name: thanos-objstore
             key: objstore.yml
+
+    nodeName: k8s-3
