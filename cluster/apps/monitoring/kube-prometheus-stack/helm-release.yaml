@@ -229,8 +229,7 @@ spec:
               storageClassName: "longhorn"
               resources:
                 requests:
-                  storage: 6Gi
-
+                  storage: 3Gi
 
         thanos:
           image: quay.io/thanos/thanos:v0.28.0
