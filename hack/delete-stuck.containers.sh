@@ -5,9 +5,16 @@ function delete_pod () {
     kubectl delete pod $1
 }
 
-TERMINATING_POD=$(kubectl get pods | awk '$3=="ContainerStatusUnknown" {print $1}')
 
-for pod in $TERMINATING_POD
-do
-    delete_pod $pod
-done
+function delete_from_source () {
+    for pod in $1
+    do
+        delete_pod $pod
+    done
+}
+
+UNKNOWN_PODS=$(kubectl get pods | awk '$3=="ContainerStatusUnknown" {print $1}')
+EVICTED_PODS=$(kubectl get pods | awk '$3=="Evicted" {print $1}')
+
+delete_from_source $UNKNOWN_PODS
+delete_from_source $EVICTED_PODS
