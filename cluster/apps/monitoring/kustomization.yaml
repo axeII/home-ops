@@ -3,9 +3,9 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - botkube
-  - grafana
-  - kube-prometheus-stack
-  - loki
-  - thanos
+  #- grafana
+  #- kube-prometheus-stack
+  #- loki
+  #- thanos
   - unifi-poller
   - goldilocks
