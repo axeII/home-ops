@@ -37,25 +37,36 @@ spec:
           - kube-system
           - monitoring
       name: "Ales"
+      defaultSearchProvider: YouTube
+      searchProviders:
+        - name: YouTube
+          token: 'y'
+          icon: simple-icons:youtube
+          searchUrl: https://www.youtube.com/results?search_query={query}
+          url: https://www.youtube.com
       customApps:
-        - name: Pihole
-          url: "https://pihole.${SECRET_DOMAIN}"
-          icon: pi-hole
-        - name: Promox
-          url: "https://proxmox.${SECRET_DOMAIN}"
-          icon: server
-        - name: Status
-          url: "https://status.${SECRET_DOMAIN}"
-          icon: access-point
-        - name: Plex
-          url: "https://app.plex.tv"
-          icon: plex
-        - name: Comics
-          url: "https://comics.${SECRET_DOMAIN}/ubooquity"
-          icon: thought-bubble
-      groups:
-        - name: Daily
-          links:
+        - group: Infra
+          apps:
+            - name: Pihole
+              url: "https://pihole.${SECRET_DOMAIN}"
+              icon: pi-hole
+            - name: Promox
+              url: "https://proxmox.${SECRET_DOMAIN}"
+              icon: server
+            - name: Status
+              url: "https://status.${SECRET_DOMAIN}"
+              icon: access-point
+        - group: Media
+          apps:
+            - name: Plex
+              url: "https://app.plex.tv"
+              icon: plex
+            - name: Comics
+              url: "https://comics.${SECRET_DOMAIN}/ubooquity"
+              icon: thought-bubble
+      globalBookmarks:
+        - group: Daily
+          bookmarks:
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
             - name: DockerHub
@@ -66,8 +77,8 @@ spec:
               url: "https://allinfosecnews.com"
             - name: Unifi
               url: "https://unifi"
-        - name: DevOps
-          links:
+        - group: DevOps
+          bookmarks:
             - name: Home-Ops
               url: "https://github.com/axeII/home-ops"
             - name: TerraformCloud
@@ -76,8 +87,8 @@ spec:
               url: "https://login.tailscale.com/admin/machines"
             - name: Visual studio
               url: https://my.visualstudio.com"
-        - name: Fun
-          links:
+        - group: Fun
+          bookmarks:
             - name: Jellyfin
               url: "https://jellyfin.${SECRET_DOMAIN}"
             - name: Manhwa
@@ -88,8 +99,8 @@ spec:
               url: "https://archive.ph"
             - name: Science
               url: "https://nhentai.net"
-        - name: Reddit
-          links:
+        - group: Reddit
+          bookmarks:
             - name: "/r/sysadmin"
               url: "https://www.reddit.com/r/sysadmin/"
             - name: "/r/selfhosted"
@@ -104,8 +115,8 @@ spec:
               url: "https://reddit.com/r/hacking"
             - name: "/r/oscp"
               url: "https://reddit.com/r/oscp"
-        - name: Tech
-          links:
+        - group: Tech
+          bookmarks:
             - name: Hacker News
               url: "https://news.ycombinator.com/"
             - name: The Verge
