@@ -68,7 +68,7 @@ spec:
       nfs-nas-media:
         enabled: true
         existingClaim: media-nfs-share-pvc
-        mountPath: /mnt/ThiccBoi/media
+        mountPath: /media
         readOnly: false
     metrics:
       enabled: true
