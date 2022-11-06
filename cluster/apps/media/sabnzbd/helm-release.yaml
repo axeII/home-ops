@@ -70,21 +70,21 @@ spec:
       downloads:
         enabled: true
         type: nfs
-        server: "192.168.69.100"
-        path: /media/downloads
+        server: "192.168.69.69"
+        path: /mnt/ThiccBoi/media/downloads
         mountPath: /downloads
       temporary:
         enabled: true
         type: nfs
-        server: "192.168.69.100"
-        path: /media/temporary
+        server: "192.168.69.69"
+        path: /mnt/ThiccBoi/media/temporary
         mountPath: /incomplete-downloads
       media:
         enabled: true
         type: nfs
-        server: "192.168.69.100"
-        path: /media
+        server: "192.168.69.69"
+        path: /mnt/ThiccBoi/media
         mountPath: /media
       limits:
-        memory: 5000Mi
-    nodeName: k8s-4
+        memory: 5000Mi # TODO: Allow more memory after migration
+    nodeName: k8s-4 #TODO: Remove this after migration
