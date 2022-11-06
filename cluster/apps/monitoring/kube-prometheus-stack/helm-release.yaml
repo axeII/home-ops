@@ -232,7 +232,7 @@ spec:
                   storage: 3Gi
 
         thanos:
-          image: quay.io/thanos/thanos:v0.28.1
+          image: quay.io/thanos/thanos:v0.29.0
           version: v0.22.0
           objectStorageConfig:
             name: thanos-objstore
