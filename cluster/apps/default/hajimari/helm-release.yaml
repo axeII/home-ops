@@ -97,6 +97,8 @@ spec:
               url: "https://shodan.io"
             - name: Archive
               url: "https://archive.ph"
+            - name: Wallpapers
+              url: "https://unsplash.com"
             - name: Science
               url: "https://nhentai.net"
         - group: Reddit
