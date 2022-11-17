@@ -48,12 +48,12 @@ resource "pihole_dns_record" "mylar_record" {
 
 resource "pihole_dns_record" "minio_record" {
   domain = "s3.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.101"
+  ip     = "192.168.69.99"
 }
 
 resource "pihole_dns_record" "minio-console_record" {
   domain = "console.s3.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.101"
+  ip     = "192.168.69.99"
 }
 
 resource "pihole_dns_record" "pihole_dns_record2" {
@@ -68,7 +68,7 @@ resource "pihole_dns_record" "status_record" {
 
 resource "pihole_dns_record" "nas_record" {
   domain = "truenas.${data.sops_file.pihole_secrets.data["domain"]}"
-  ip     = "192.168.69.69"
+  ip     = "192.168.69.99"
 }
 
 ### K8S ###
