@@ -66,6 +66,11 @@ resource "pihole_dns_record" "status_record" {
   ip     = "192.168.69.99"
 }
 
+resource "pihole_dns_record" "nas_record" {
+  domain = "truenas.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.69"
+}
+
 ### K8S ###
 
 resource "pihole_dns_record" "k8s-0_record" {
