@@ -2,7 +2,7 @@
 version: "3"
 
 vars:
-  CONTEXT: "home"
+  CONTEXT: "stradale"
 
 tasks:
 
@@ -17,15 +17,3 @@ tasks:
     dir: provision/docker
     cmds:
       - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/media {{.CLI_ARGS}}"
-
-  pihole:
-    desc: Docker container control
-    dir: provision/docker
-    cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/pihole {{.CLI_ARGS}}"
-
-  minio:
-    desc: Docker container control
-    dir: provision/docker
-    cmds:
-      - "docker-compose --context {{.CONTEXT}} --env-file {{.DOCKER_DIR}}/.sops.dec.env --project-directory {{.DOCKER_DIR}}/minio {{.CLI_ARGS}}"
