@@ -1,10 +1,10 @@
 ---
-version: "2.1"
+version: "3.8"
 services:
-  ingress:
+  pihole:
     extends:
-      file: ingress.yaml
-      service: ingress
+      file: pihole.yaml
+      service: pihole
   autoheal:
     extends:
       file: autoheal.yaml
@@ -13,11 +13,19 @@ services:
     extends:
       file: autoupdate.yaml
       service: autoupdate
+  proxy:
+    extends:
+      file: nginx-proxy.yaml
+      service: proxy
+  uptime:
+    extends:
+      file: uptime-kuma.yaml
+      service: uptime
 
 
 volumes:
-  letsencrypt:
-
-networks:
-  traefik_net:
-    external: true
+  etc-pihole:
+  etc-dnsmasq:
+  nginx_data:
+  nginx_letsencrypt:
+  uptime-kuma-data:

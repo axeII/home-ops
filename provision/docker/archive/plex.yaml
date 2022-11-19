@@ -16,9 +16,9 @@ services:
       - /media/TVShows:/tv
       - /media/Movies:/movies
       - /media/Music/:/music
-    devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128
-      - /dev/dri/card0:/dev/dri/card0
+    # devices:
+      # - /dev/dri/renderD128:/dev/dri/renderD128
+      # - /dev/dri/card0:/dev/dri/card0
     network_mode: host
     restart: unless-stopped
     label:

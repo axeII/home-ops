@@ -12,11 +12,12 @@ services:
       DNS1: 1.1.1.1
       TZ: 'Europe/Paris'
       VIRTUAL_HOST: 'pihole.${DOMAIN}'
-      ServerIP: '192.168.69.101'
+      ServerIP: '192.168.69.99'
       WEBPASSWORD: '${PIHOLE_PASSWORD}'
       INTERFACE: 'eth0'
       IPv6: False
       WEB_PORT: 5005
+      DNSMASQ_USER: 'root'
     volumes:
       - "etc-pihole:/etc/pihole/"
       - "etc-dnsmasq:/etc/dnsmasq.d/"
