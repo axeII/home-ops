@@ -59,8 +59,9 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 | Device                                  | OS Disk Size | Data Disk Size       | Ram  | Purpose                                          |
 |-----------------------------------------|--------------|----------------------|------|--------------------------------------------------|
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | Proxmox Master                                       |
-| Intel NUC8i5BEH                         | 250GB NVMe   | 1TB HDD             | 32GB | Proxmox Node                                       |
-| QNAP DAS (storage)                | BTRFS raid 1 16TB       | 2x3TB HDD, 2x10TB HDD | N/A  |  NFS Storage |
+| Intel NUC                         | 250GB NVMe   | 1TB HDD             | 32GB | Proxmox Node                                       |
+| TRUENAS                 | ZFS raidz 1 40TB       | 4x10TB HDD | 32GB  |   Storage |
+| AMD CPU Server                 | 20GB      | 1TB SSD | 32GB  |   Storage |
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
 | rock64                         | 16GB MMC |    N/A     | 4GB | Services backup device  (in case proxmox cluster is down )              |
