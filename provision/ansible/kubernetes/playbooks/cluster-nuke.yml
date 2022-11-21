@@ -9,40 +9,33 @@
     - name: nuke
       prompt: |-
         Are you sure you want to nuke this cluster?
-        Type DESTROY to proceed
+        Type CONFIRM to proceed
       default: "n"
       private: false
   pre_tasks:
     - name: Check for confirmation
       ansible.builtin.fail:
         msg: Aborted nuking the cluster
-      when: nuke != 'DESTROY'
+      when: nuke != 'CONFIRM'
 
     - name: Pausing for 5 seconds...
       ansible.builtin.pause:
         seconds: 5
   tasks:
-    - name: Kill k3s
-      ansible.builtin.command: /usr/local/bin/k3s-killall.sh
     - name: Uninstall k3s
-      ansible.builtin.command:
-        cmd: /usr/local/bin/k3s-uninstall.sh
-        removes: /usr/local/bin/k3s-uninstall.sh
-    - name: Uninstall k3s agent
-      ansible.builtin.command:
-        cmd: /usr/local/bin/k3s-agent-uninstall.sh
-        removes: /usr/local/bin/k3s-agent-uninstall.sh
-    - name: Gather list of CNI files to delete
+      ansible.builtin.include_role:
+        name: xanmanning.k3s
+        public: true
+      vars:
+        k3s_state: uninstalled
+    - name: Gather list of CNI files
       ansible.builtin.find:
         paths: /etc/cni/net.d
         patterns: "*"
-      register: files_to_delete
+        hidden: true
+      register: directory_contents
     - name: Delete CNI files
       ansible.builtin.file:
         path: "{{ item.path }}"
         state: absent
-      loop: "{{ files_to_delete.files }}"
-    - name: Delete longhorn files
-      ansible.builtin.file:
-        path: "/var/lib/longhorn"
-        state: absent
+      loop: "{{ directory_contents.files }}"
