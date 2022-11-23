@@ -8,3 +8,4 @@ resources:
   - reloader
   - cert-manager
   - kube-vip
+  - nvidia-device-plugin
