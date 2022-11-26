@@ -1,0 +1,132 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: media
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: plex
+      version: 6.4.3
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home-charts
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  dependsOn:
+    - name: nvidia-gpu-plugin
+      namespace: kube-system
+  values:
+    runtimeClassName: nvidia
+    image:
+      repository: ghcr.io/k8s-at-home/plex
+      tag: v1.29.2.6364-6d72b0cf6
+    env:
+      TZ: "${TZ}"
+      ADVERTISE_IP: "http://${METALLB_PLEX_ADDR}:32400/"
+      # PLEX_CLAIM: "${SECRET_PLEX_CLAIM_TOKEN}"
+    podSecurityContext:
+      fsGroup: 568
+      supplementalGroups:
+        - 1000
+        - 44 # video
+        - 109 # render
+    hostNetwork: true
+    service:
+      plex:
+        enabled: true
+        type: LoadBalancer
+        loadBalancerIP: "${METALLB_PLEX_ADDR}"
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            enabled: true
+            port: 32400
+            targetPort: 32400
+            protocol: HTTP
+          dlna-udp:
+            enabled: true
+            port: 1900
+            targetPort: 1900
+            protocol: UDP
+          dlna-tcp:
+            enabled: true
+            port: 32469
+            targetPort: 32469
+            protocol: TCP
+          plex-companion:
+            enabled: true
+            port: 3005
+            targetPort: 3005
+            protocol: TCP
+          plex-roku:
+            enabled: true
+            port: 8234
+            targetPort: 8234
+            protocol: TCP
+          gdm-1:
+            enabled: true
+            port: 32410
+            targetPort: 32410
+            protocol: UDP
+          gdm-2:
+            enabled: true
+            port: 32412
+            targetPort: 32412
+            protocol: UDP
+          gdm3:
+            enabled: true
+            port: 32413
+            targetPort: 32413
+            protocol: UDP
+          gdm-4:
+            enabled: true
+            port: 32414
+            targetPort: 32414
+            protocol: UDP
+          bonjour:
+            enabled: true
+            port: 5353
+            targetPort: 5353
+            protocol: UDP
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "traefik"
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "plex"
+        hosts:
+          - host: &host "plex.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+            secretName: "plex-tls"
+    persistence:
+      config:
+        enabled: true
+        existingClaim: plex-config-v1
+      media:
+        enabled: true
+        existingClaim: media-nfs-share-pvc
+        mountPath: /media
+        readOnly: true
+      backup:
+        enabled: false
+      transcode:
+        enabled: true
+        type: empty
+    resources:
+      requests:
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
