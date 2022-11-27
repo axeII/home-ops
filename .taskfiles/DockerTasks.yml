@@ -2,7 +2,7 @@
 version: "3"
 
 vars:
-  CONTEXT: "stradale"
+  CONTEXT: "rock64"
 
 tasks:
 

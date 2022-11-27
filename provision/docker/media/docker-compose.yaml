@@ -1,22 +1,8 @@
 ---
 version: "3.8"
+volumes:
+  comic_config:
 services:
-  # radarr:
-  #   extends:
-  #     file: radarr.yaml
-  #     service: radarr
-  # sonarr:
-  #   extends:
-  #     file: sonarr.yaml
-  #     service: sonarr
-  # sabnzbd:
-  #   extends:
-  #     file: sabnzbd.yaml
-  #     service: sabnzbd
-  plex:
-    extends:
-      file: plex.yaml
-      service: plex
   metube:
     extends:
       file: metube.yaml
@@ -25,14 +11,3 @@ services:
     extends:
       file: ubooquity.yaml
       service: ubooquity
-
-volumes:
-  # config: # sabnzdb
-  # radarr_config:
-  # sonarr_config:
-  plex_config:
-  comic_config:
-
-networks:
-  traefik_net:
-    external: true

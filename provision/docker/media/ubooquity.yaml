@@ -6,11 +6,9 @@ services:
     container_name: ubooquity
     ports:
       - 2202:2202
-    networks:
-      - traefik_net
     environment:
-      - PGID=1000
-      - PUID=1000
+      - PGID=568
+      - PUID=568
       - TZ="Europe/Paris"
       - MAXMEM=1024
     volumes:
@@ -19,11 +17,12 @@ services:
     restart: unless-stopped
     label:
       com.centurylinklabs.watchtower.enable: true
-      # - traefik.http.middlewares.add-context.redirectregex.regex=^https:\\/\\/([^\\/]+)\\/?$$
 
 volumes:
   comic_config:
-
-networks:
-  traefik_net:
-    external: true
+  # nfs:
+  #   driver: local
+  #   driver_opts:
+  #     type: nfs
+  #     o: addr=192.168.69.69,rw
+  #     device: ":/mnt/ThiccBoi/media"
