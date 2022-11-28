@@ -4,3 +4,4 @@ resources:
   - cert-manager
   - traefik
   - system-upgrade-controller
+  - metallb
