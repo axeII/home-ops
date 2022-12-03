@@ -71,29 +71,17 @@ resource "pihole_dns_record" "nas_record" {
   ip     = "192.168.69.99"
 }
 
-### K8S ###
-
-resource "pihole_dns_record" "k8s-0_record" {
-  domain = "k8s-0"
-  ip     = "192.168.69.110"
+resource "pihole_dns_record" "proxmoxnode1" {
+  domain = "proxmox-server01.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.100"
 }
 
-resource "pihole_dns_record" "k8s-1_record" {
-  domain = "k8s-1"
-  ip     = "192.168.69.111"
+resource "pihole_dns_record" "proxmoxnode2" {
+  domain = "proxmox-server02.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.90"
 }
 
-resource "pihole_dns_record" "k8s-2_record" {
-  domain = "k8s-2"
-  ip     = "192.168.69.112"
-}
-
-resource "pihole_dns_record" "k8s-3_record" {
-  domain = "k8s-3"
-  ip     = "192.168.69.113"
-}
-
-resource "pihole_dns_record" "k8s-4_record" {
-  domain = "k8s-4"
-  ip     = "192.168.69.114"
+resource "pihole_dns_record" "proxmoxnode3" {
+  domain = "proxmox-server03.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.80"
 }
