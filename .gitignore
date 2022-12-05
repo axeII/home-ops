@@ -6,6 +6,10 @@ kubeconfig
 .config.env
 configure.sh
 
+# downloaded compressed files
+hack/*.gz
+hack/*.zst
+
 
 ### Ansible ###
 *.retry
