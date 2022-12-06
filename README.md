@@ -53,7 +53,7 @@ Following tools I use to setup infrastructure:
 
 ## :file_cabinet: Hardware
 
-My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20.04):
+My homelab runs on the following hardware (all k8s nodes are running on Fedora 37):
 
 <!-- textlint-disable -->
 | Device                                  | OS Disk Size | Data Disk Size       | Ram  | Purpose                                          |
@@ -64,20 +64,19 @@ My homelab runs on the following hardware (all nodes are running on VM Ubuntu 20
 | AMD CPU Server                 | 20GB      | 1TB SSD | 32GB  |   k3s node |
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
-| rock64                         | 16GB MMC |    N/A     | 4GB | Services backup device  (in case proxmox cluster is down )              |
+| rock64                         | 16GB MMC |    N/A     | 4GB | Docker service in case some servies aren't running in k8s              |
 <!-- textlint-enable -->
 
 ### Tips
-Check for uniq mac addresses:
+Check for uniq mac addresses, sometimes if you are generting vms this can mess up layer 2 networking:
 ```
 ansible all -i home-ops/provision/ansible/kubernetes/inventory/hosts.yml --one-line -m shell -a 'ip link show | grep link' | awk '{print $13}' | sort | uniq | wc -l
 ```
 
 
-Add worker nodes label
+Add worker label to worker node:
 ```
-kubectl label node k8s-3 node-role.kubernetes.io/worker=worker
-kubectl label node k8s-4 node-role.kubernetes.io/worker=worker
+kubectl label node k8s-2 node-role.kubernetes.io/worker=worker
 ```
 
 ---
