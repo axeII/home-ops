@@ -38,7 +38,7 @@ tasks:
     desc: Prepare all the k8s nodes for running k3s
     dir: provision/terraform/infrastructure
     cmds:
-      - "terraform apply"
+      - "terraform apply --parallelism=3 -auto-approve"
 
   infrastructure:destroy:
     desc: Prepare all the k8s nodes for running k3s
@@ -62,4 +62,4 @@ tasks:
     desc: Prepare all the k8s nodes for running k3s
     dir: provision/terraform/pihole
     cmds:
-      - "terraform apply"
+      - "terraform apply -auto-approve"
