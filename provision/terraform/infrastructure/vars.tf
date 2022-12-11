@@ -14,6 +14,6 @@ variable "proxmox_node3" {
 }
 
 variable "template_name" {
-  default = "fedora-cloudinit-template"
+  default = "fedora-cloud-template"
   type    = string
 }
