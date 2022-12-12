@@ -26,6 +26,5 @@ resources:
   - longhorn.yaml
   - stakater.yaml
   - traefik.yaml
-  - weaveworks-kured.yaml
   - portainer-charts.yaml
   - vmware-tanzu-charts.yaml
