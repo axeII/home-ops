@@ -44,17 +44,18 @@ resource "proxmox_vm_qemu" "k8s-0" {
   os_type  = "cloud-init"
   cores    = 8
   sockets  = 1
+  vcpus    = 0
   cpu      = "host"
-  memory   = "28672"
+  memory   = 28672
   scsihw   = "virtio-scsi-pci"
   bootdisk = "scsi0"
 
   disk {
-    slot     = 0
-    size     = "180G"
-    type     = "scsi"
-    storage  = "local-lvm"
-    iothread = 1
+    size    = "180G"
+    type    = "scsi"
+    storage = "local-lvm"
+    ssd     = 1
+    discard = "on"
   }
 
   # if you want two NICs, just copy this whole network section and duplicate it
@@ -95,11 +96,11 @@ resource "proxmox_vm_qemu" "k8s-1" {
   bootdisk = "scsi0"
 
   disk {
-    slot     = 0
-    size     = "180G"
-    type     = "scsi"
-    storage  = "local-lvm"
-    iothread = 1
+    slot    = 0
+    size    = "180G"
+    type    = "scsi"
+    storage = "local-lvm"
+    discard = "on"
   }
 
   # if you want two NICs, just copy this whole network section and duplicate it
@@ -140,11 +141,11 @@ resource "proxmox_vm_qemu" "k8s-2" {
   bootdisk = "scsi0"
 
   disk {
-    slot     = 0
-    size     = "500G"
-    type     = "scsi"
-    storage  = "local-lvm"
-    iothread = 1
+    slot    = 0
+    size    = "500G"
+    type    = "scsi"
+    storage = "local-lvm"
+    discard = "on"
   }
 
   # if you want two NICs, just copy this whole network section and duplicate it
