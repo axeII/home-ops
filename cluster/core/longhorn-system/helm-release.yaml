@@ -22,7 +22,7 @@ spec:
     defaultSettings:
       backupTarget: "${NFS_BACKUP}"
       backupTargetCredentialSecret: longhorn-backup
-      defaultReplicaCount: 2
+      defaultReplicaCount: 1
       defaultLonghornStaticStorageClass: longhorn
     ingress:
       enabled: true
