@@ -38,7 +38,6 @@ spec:
         hajimari.io/icon: "cow"
         # hajimari.io/group: storage
         hajimari.io/appName: "longhorn"
-
     # resources:
     #   requests:
     #     cpu: "100m"
