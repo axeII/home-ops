@@ -6,6 +6,9 @@ metadata:
   namespace: velero
 spec:
   interval: 5m
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
   chart:
     spec:
       chart: velero
