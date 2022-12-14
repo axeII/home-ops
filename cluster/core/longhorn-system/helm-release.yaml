@@ -32,7 +32,7 @@ spec:
       tls: true
       tlsSecret: longhorn-system-tls
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
         traefik.ingress.kubernetes.io/router.entrypoints: websecure
         hajimari.io/enable: "true"
         hajimari.io/icon: "cow"

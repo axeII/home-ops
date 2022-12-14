@@ -89,7 +89,7 @@ spec:
     ingress:
       enabled: true
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
+        cert-manager.io/cluster-issuer: letsencrypt-staging
         hajimari.io/enable: "true"
         hajimari.io/icon: ip-network-outline
         traefik.ingress.kubernetes.io/router.entrypoints: "websecure"

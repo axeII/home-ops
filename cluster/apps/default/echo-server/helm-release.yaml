@@ -29,7 +29,7 @@ spec:
     ingress:
       enabled: true
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
         hajimari.io/enable: "true"
         hajimari.io/icon: "video-input-antenna"
         kubernetes.io/ingress.class: "traefik"
