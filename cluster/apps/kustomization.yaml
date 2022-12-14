@@ -10,4 +10,4 @@ resources:
   - external
   - flux-system
   - media
-  - backup-system
+  #- backup-system
