@@ -11,8 +11,8 @@ spec:
       namespace: longhorn-system
   chart:
     spec:
-      chart: radarr
-      version: 16.3.2
+      chart: app-template
+      version: 1.2.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -27,10 +27,14 @@ spec:
       remediateLastFailure: true
   values:
     image:
-      repository: ghcr.io/k8s-at-home/radarr
-      tag: v4.2.4.6635
+      repository: ghcr.io/onedr0p/radarr-develop
+      tag: 4.3.1.6822@sha256:2d61733e8b7054dd723eb158eb8f44d63cad1c3261058a759884b50838a6964d
     env:
       TZ: ${TIMEZONE}
+      RADARR__INSTANCE_NAME: Radarr
+      RADARR__PORT: &port 80
+      RADARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+      RADARR__LOG_LEVEL: info
     ingress:
       main:
         enabled: true
@@ -59,6 +63,7 @@ spec:
       runAsGroup: 0
     podSecurityContext:
       fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
       supplementalGroups:
         - 100
     persistence:
