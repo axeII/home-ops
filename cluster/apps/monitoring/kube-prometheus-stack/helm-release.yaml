@@ -211,7 +211,7 @@ spec:
           memory: 2048Mi
 
       thanosService:
-        enabled: true
+        enabled: false
 
       prometheusSpec:
         replicas: 1
@@ -231,9 +231,9 @@ spec:
                 requests:
                   storage: 3Gi
 
-        thanos:
-          image: quay.io/thanos/thanos:v0.29.0
-          version: v0.22.0
-          objectStorageConfig:
-            name: thanos-objstore
-            key: objstore.yml
+        # thanos:
+        #   image: quay.io/thanos/thanos:v0.29.0
+        #   version: v0.22.0
+        #   objectStorageConfig:
+        #     name: thanos-objstore
+        #     key: objstore.yml
