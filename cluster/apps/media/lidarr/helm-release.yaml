@@ -11,12 +11,11 @@ spec:
       namespace: longhorn-system
   chart:
     spec:
-      # renovate: registryUrl=https://k8s-at-home.com/charts/
-      version: 14.2.2
-      chart: lidarr
+      version: 1.2.0
+      chart: app-template
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: bjw-s-charts
         namespace: flux-system
       interval: 5m
   install:
@@ -28,8 +27,17 @@ spec:
       retries: 5
   values:
     image:
-      repository: ghcr.io/k8s-at-home/lidarr
-      tag: v1.0.2.2592
+      repository: lscr.io/linuxserver/lidarr
+      tag: 1.0.2.2592-ls101
+    env:
+      TZ: "${TIMEZONE}"
+      PUID: 0
+      PGID: 0
+    service:
+      main:
+        ports:
+          http:
+            port: 8686
     ingress:
       main:
         enabled: true
@@ -54,7 +62,9 @@ spec:
               - *host-custom
             secretName: "lidarr-tls"
     podSecurityContext:
-      fsGroup: 1024
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     persistence:
       config:
         enabled: true
