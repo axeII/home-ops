@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - authentik.yaml
   - bitnami.yaml
+  - bjw-s-charts.yaml
   - deliveryhero.yaml
   - descheduler.yaml
   - ealenn.yaml
