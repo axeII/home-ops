@@ -8,9 +8,8 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://k8s-at-home.com/charts/
-      version: 4.5.2
-      chart: prowlarr
+      version: 1.2.0
+      chart: app-template
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -25,10 +24,19 @@ spec:
       retries: 5
   values:
     image:
-      repository: ghcr.io/k8s-at-home/prowlarr-nightly
-      tag: v0.4.10.2089
+      repository: ghcr.io/onedr0p/prowlarr-nightly
+      tag: 0.4.11.2114@sha256:65c24aab131fa188265f0660e333f790e94551f044c0c05201e4112aaa27346b
     env:
       TZ: "${TIMEZONE}"
+      PROWLARR__INSTANCE_NAME: Prowlarr
+      PROWLARR__PORT: &port 9696
+      PROWLARR__LOG_LEVEL: info
+      PROWLARR__ANALYTICS_ENABLED: "False"
+    service:
+      main:
+        ports:
+          http:
+            port: *port
     ingress:
       main:
         enabled: true
@@ -53,7 +61,10 @@ spec:
               - *host-custom
             secretName: "prowlarr-tls"
     podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
       fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
         enabled: true
