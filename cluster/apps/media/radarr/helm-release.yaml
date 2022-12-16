@@ -35,6 +35,11 @@ spec:
       RADARR__PORT: &port 80
       RADARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
       RADARR__LOG_LEVEL: info
+    service:
+      main:
+        ports:
+          http:
+            port: *port
     ingress:
       main:
         enabled: true
