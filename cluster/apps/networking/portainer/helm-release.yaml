@@ -26,7 +26,7 @@ spec:
       enabled: true
       ingressClassName: "traefik"
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/enable: "true"
         hajimari.io/appName: "portainer"
         hajimari.io/icon: "pier-crane"
