@@ -41,10 +41,6 @@ spec:
         sabnzbd.media.svc.cluster,
         sabnzbd.media.svc.cluster.local,
         sabnzbd.${SECRET_DOMAIN}
-    envFrom:
-      - secretRef:
-          name: *app
-
     service:
       main:
         ports:
@@ -58,6 +54,8 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-staging
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "download"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
