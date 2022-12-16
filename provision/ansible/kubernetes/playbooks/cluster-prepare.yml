@@ -25,6 +25,15 @@
             path: /etc/hosts
             block: |
               127.0.1.1   {{ inventory_hostname }}
+        - name: Add nameserver
+          ansible.builtin.blockinfile:
+            path: /etc/systemd/resolved.conf
+            block: |
+              DNS=192.168.69.99
+        - name: Restart systemd-resolved
+          ansible.builtin.service:
+            name: systemd-resolved.service
+            state: restarted
     - name: Packages
       block:
         - name: Packages | Improve dnf performance
@@ -70,6 +79,7 @@
             enabled: false
             masked: true
             state: stopped
+          ignore_errors: true # firewall is already disabled TODO: make this more bulletproof
         - name: System Configuration (1) | Enable fstrim
           ansible.builtin.systemd:
             service: fstrim.timer
@@ -112,6 +122,7 @@
         - name: System Configuration (2) | Permissive SELinux
           ansible.posix.selinux:
             state: permissive
+            policy: targeted
       notify: Reboot
 
   handlers:
