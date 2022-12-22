@@ -39,17 +39,17 @@ spec:
           level: DEBUG
       version: 1
     remoteAuth:
-      enabled: True
-      header: HTTP_X_AUTH_REQUEST_EMAIL
-      groupHeader: HTTP_X_AUTH_REQUEST_GROUPS
-      defaultPermissions: None
-      groupSyncEnabled: True
-      groupSeparator: ','
-      autoCreateUser: True
-      superuserGroups:
-        - admins
-      staffGroups:
-        - family
+      enabled: False
+      # header: HTTP_X_AUTH_REQUEST_EMAIL
+      # groupHeader: HTTP_X_AUTH_REQUEST_GROUPS
+      # defaultPermissions: None
+      # groupSyncEnabled: True
+      # groupSeparator: ','
+      # autoCreateUser: True
+      # superuserGroups:
+      #   - admins
+      # staffGroups:
+      #   - family
     # plugins:
     #   - netbox_ddns
     # - napalm-vyos
