@@ -99,6 +99,12 @@ spec:
           paths:
             - path: /
               pathType: Prefix
+              backend:
+                service:
+                  name: netbox
+                  port:
+                    number: 8000
+
       tls:
         - hosts:
             - "netbox.${SECRET_DOMAIN}"
