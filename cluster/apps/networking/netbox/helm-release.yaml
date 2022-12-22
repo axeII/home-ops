@@ -54,7 +54,7 @@ spec:
       # username: "auto"
       # args:
         # key_file: /run/secrets/ssh-keys/id_rsa
-    existingSecret: "netbox"
+    # existingSecret: "netbox"
     postgresql:
       enabled: true
     redis:
