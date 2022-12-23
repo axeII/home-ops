@@ -54,11 +54,14 @@ spec:
       # username: "auto"
       # args:
         # key_file: /run/secrets/ssh-keys/id_rsa
-    # existingSecret: "netbox"
+    existingSecret: "netbox"
     postgresql:
       enabled: true
+      postgresqlPassword: "test"
     redis:
       enabled: true
+      auth:
+        password: "test"
     persistence:
       enabled: false
     reportsPersistence:
@@ -94,7 +97,7 @@ spec:
     updateStrategy:
       type: RollingUpdate
     worker:
-      enabled: true
+      enabled: false
       nodeSelector:
         kubernetes.io/arch: amd64
       updateStrategy:
