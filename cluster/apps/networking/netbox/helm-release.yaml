@@ -94,7 +94,7 @@ spec:
     updateStrategy:
       type: RollingUpdate
     worker:
-      enabled: false
+      enabled: true
       nodeSelector:
         kubernetes.io/arch: amd64
       updateStrategy:
