@@ -44,75 +44,73 @@ spec:
       runAsGroup: 0
       fsGroup: 0
     hostNetwork: true
-    # probes:
-    #   liveness:
+        # service:
+    #   plex:
     #     enabled: true
-    #     custom: true
-    #     spec:
-    #       initialDelaySeconds: 30
-    #       periodSeconds: 10
-    #       timeoutSeconds: 1
-    #       failureThreshold: 3
-    #       httpGet:
-    #         path: /identity
-    #         port: *port
+    #     type: LoadBalancer
+    #     loadBalancerIP: "${METALLB_PLEX_ADDR}"
+    #     externalTrafficPolicy: Local
+    #     ports:
+    #       http:
+    #         enabled: true
+    #         port: 32400
+    #         targetPort: 32400
+    #         protocol: HTTP
+    #       dlna-udp:
+    #         enabled: true
+    #         port: 1900
+    #         targetPort: 1900
+    #         protocol: UDP
+    #       dlna-tcp:
+    #         enabled: true
+    #         port: 32469
+    #         targetPort: 32469
+    #         protocol: TCP
+    #       plex-companion:
+    #         enabled: true
+    #         port: 3005
+    #         targetPort: 3005
+    #         protocol: TCP
+    #       plex-roku:
+    #         enabled: true
+    #         port: 8234
+    #         targetPort: 8234
+    #         protocol: TCP
+    #       gdm-1:
+    #         enabled: true
+    #         port: 32410
+    #         targetPort: 32410
+    #         protocol: UDP
+    #       gdm-2:
+    #         enabled: true
+    #         port: 32412
+    #         targetPort: 32412
+    #         protocol: UDP
+    #       gdm3:
+    #         enabled: true
+    #         port: 32413
+    #         targetPort: 32413
+    #         protocol: UDP
+    #       gdm-4:
+    #         enabled: true
+    #         port: 32414
+    #         targetPort: 32414
+    #         protocol: UDP
+    #       bonjour:
+    #         enabled: true
+    #         port: 5353
+    #         targetPort: 5353
+    #         protocol: UDP
     service:
-      plex:
-        enabled: true
+      main:
         type: LoadBalancer
-        loadBalancerIP: "${METALLB_PLEX_ADDR}"
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: ${PLEX_ENDPOINT}
+          traefik.ingress.kubernetes.io/service.serversscheme: https
         externalTrafficPolicy: Local
         ports:
           http:
-            enabled: true
-            port: 32400
-            targetPort: 32400
-            protocol: HTTP
-          dlna-udp:
-            enabled: true
-            port: 1900
-            targetPort: 1900
-            protocol: UDP
-          dlna-tcp:
-            enabled: true
-            port: 32469
-            targetPort: 32469
-            protocol: TCP
-          plex-companion:
-            enabled: true
-            port: 3005
-            targetPort: 3005
-            protocol: TCP
-          plex-roku:
-            enabled: true
-            port: 8234
-            targetPort: 8234
-            protocol: TCP
-          gdm-1:
-            enabled: true
-            port: 32410
-            targetPort: 32410
-            protocol: UDP
-          gdm-2:
-            enabled: true
-            port: 32412
-            targetPort: 32412
-            protocol: UDP
-          gdm3:
-            enabled: true
-            port: 32413
-            targetPort: 32413
-            protocol: UDP
-          gdm-4:
-            enabled: true
-            port: 32414
-            targetPort: 32414
-            protocol: UDP
-          bonjour:
-            enabled: true
-            port: 5353
-            targetPort: 5353
-            protocol: UDP
+            port: &port 32400
     ingress:
       main:
         enabled: true
@@ -150,3 +148,15 @@ spec:
         nvidia.com/gpu: 1
       limits:
         nvidia.com/gpu: 1
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          httpGet:
+            path: /identity
+            port: *port
