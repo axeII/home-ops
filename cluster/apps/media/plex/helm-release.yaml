@@ -105,7 +105,7 @@ spec:
       main:
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: ${PLEX_ENDPOINT}
+          metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
           traefik.ingress.kubernetes.io/service.serversscheme: https
         externalTrafficPolicy: Local
         ports:
