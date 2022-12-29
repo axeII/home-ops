@@ -8,11 +8,11 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: plex
-      version: 6.4.3
+      chart: app-template
+      version: 1.2.0
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home-charts
+        name: bjw-s-charts
         namespace: flux-system
       interval: 5m
   install:
@@ -20,22 +20,42 @@ spec:
   dependsOn:
     - name: nvidia-gpu-plugin
       namespace: kube-system
+    - name: longhorn
+      namespace: longhorn-system
   values:
     runtimeClassName: nvidia
     image:
-      repository: ghcr.io/k8s-at-home/plex
-      tag: v1.29.2.6364-6d72b0cf6
+      repository: plexinc/pms-docker
+      tag: 1.30.0.6486-629d58034
     env:
+      # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
       TZ: "${TZ}"
-      ADVERTISE_IP: "http://${METALLB_PLEX_ADDR}:32400/"
-      # PLEX_CLAIM: "${SECRET_PLEX_CLAIM_TOKEN}"
+      ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
+      # ALLOWED_NETWORKS: "10.1.1.0/24,10.1.2.0/24,10.42.0.0/16,10.43.0.0/16"
+      PLEX_UID: 0
+      PLEX_GID: 0
+      # Transcoding:
+      # https://github.com/NVIDIA/nvidia-container-runtime#nvidia_visible_devices
+      NVIDIA_VISIBLE_DEVICES: all
+      # https://github.com/NVIDIA/nvidia-container-runtime#nvidia_driver_capabilities
+      NVIDIA_DRIVER_CAPABILITIES: all
     podSecurityContext:
-      fsGroup: 568
-      supplementalGroups:
-        - 1000
-        - 44 # video
-        - 109 # render
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     hostNetwork: true
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          httpGet:
+            path: /identity
+            port: *port
     service:
       plex:
         enabled: true
