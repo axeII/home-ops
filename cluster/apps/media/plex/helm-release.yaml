@@ -131,6 +131,8 @@ spec:
           - hosts:
               - *host
             secretName: "plex-tls"
+    securityContext:
+      privileged: true
     persistence:
       config:
         enabled: true
@@ -139,7 +141,6 @@ spec:
         enabled: true
         existingClaim: media-nfs-share-pvc
         mountPath: /media
-        readOnly: true
       transcode:
         enabled: true
         type: emptyDir
