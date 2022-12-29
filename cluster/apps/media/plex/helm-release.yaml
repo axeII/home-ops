@@ -140,11 +140,10 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: true
-      backup:
-        enabled: false
       transcode:
         enabled: true
-        type: empty
+        type: emptyDir
+        mountPath: /transcode
     resources:
       requests:
         nvidia.com/gpu: 1
