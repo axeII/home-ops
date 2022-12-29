@@ -18,7 +18,7 @@ spec:
   install:
     createNamespace: true
   dependsOn:
-    - name: nvidia-gpu-plugin
+    - name: nvidia-device-plugin
       namespace: kube-system
     - name: longhorn
       namespace: longhorn-system
