@@ -44,18 +44,18 @@ spec:
       runAsGroup: 0
       fsGroup: 0
     hostNetwork: true
-    probes:
-      liveness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-          httpGet:
-            path: /identity
-            port: *port
+    # probes:
+    #   liveness:
+    #     enabled: true
+    #     custom: true
+    #     spec:
+    #       initialDelaySeconds: 30
+    #       periodSeconds: 10
+    #       timeoutSeconds: 1
+    #       failureThreshold: 3
+    #       httpGet:
+    #         path: /identity
+    #         port: *port
     service:
       plex:
         enabled: true
