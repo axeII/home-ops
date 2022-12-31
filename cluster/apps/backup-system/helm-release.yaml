@@ -32,7 +32,7 @@ spec:
         config:
           region: eu-west-1
           s3ForcePathStyle: true
-          s3Url: http://192.168.69.99:9005
+          s3Url: http://192.168.69.69:9000
       resticTimeout: 4h
     initContainers:
       - name: velero-plugin-for-aws
