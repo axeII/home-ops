@@ -143,11 +143,11 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
-    resources:
-      requests:
-        nvidia.com/gpu: 1
-      limits:
-        nvidia.com/gpu: 1
+    # resources:
+    #   requests:
+    #     nvidia.com/gpu: 1
+    #   limits:
+    #     nvidia.com/gpu: 1
     probes:
       liveness:
         enabled: true
