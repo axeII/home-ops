@@ -17,7 +17,7 @@ spec:
     required:
       nodeSelectorTerms:
         - matchExpressions:
-            - key: kubernetes.io/hostname
+            - key: disktype
               operator: In
               values:
-                - k8s-2
+                - ssd
