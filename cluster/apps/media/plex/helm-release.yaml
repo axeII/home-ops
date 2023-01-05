@@ -18,8 +18,8 @@ spec:
   install:
     createNamespace: true
   dependsOn:
-    - name: nvidia-device-plugin
-      namespace: kube-system
+    # - name: nvidia-device-plugin
+      # namespace: kube-system
     - name: longhorn
       namespace: longhorn-system
   values:
