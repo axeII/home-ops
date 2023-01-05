@@ -44,7 +44,7 @@ spec:
       runAsGroup: 0
       fsGroup: 0
     hostNetwork: true
-        # service:
+    # service:
     #   plex:
     #     enabled: true
     #     type: LoadBalancer
@@ -143,11 +143,6 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
-    # resources:
-    #   requests:
-    #     nvidia.com/gpu: 1
-    #   limits:
-    #     nvidia.com/gpu: 1
     probes:
       liveness:
         enabled: true
@@ -160,3 +155,17 @@ spec:
           httpGet:
             path: /identity
             port: *port
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - k8s-2
+    # resources:
+    #     requests:
+    #       nvidia.com/gpu: 1
+    #     limits:
+    #       nvidia.com/gpu: 1

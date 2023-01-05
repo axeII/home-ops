@@ -1,23 +1,13 @@
 ---
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
   namespace: media
   name: plex-config-v1
 spec:
-  capacity:
-    storage: 80Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /media/disks/vol1
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: disktype
-              operator: In
-              values:
-                - ssd
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 60Gi
