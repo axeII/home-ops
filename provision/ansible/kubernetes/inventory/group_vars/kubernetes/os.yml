@@ -5,18 +5,29 @@ timezone: "Europe/Paris"
 # (list) Additional ssh public keys to add to the nodes
 # ssh_authorized_keys:
 
-packages:
-  - "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  - "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  - dnf-automatic
-  - dnf-utils
-  - fish
-  - hdparm
-  - htop
-  - ipvsadm
-  - lm_sensors
-  - nano
-  - nvme-cli
-  - socat
-  - iscsi-initiator-utils
-  - nfs-utils
+fedora:
+  packages:
+    - dnf-plugin-system-upgrade
+    - dnf-utils
+    - hdparm
+    - htop
+    - intel-gpu-tools
+    - ipvsadm
+    - lm_sensors
+    - nano
+    - nvme-cli
+    - socat
+    - python3-libselinux
+
+ubuntu:
+  # disable_ufw: true
+  # disable_swap: true
+  packages:
+    - hdparm
+    - htop
+    - intel-gpu-tools
+    - ipvsadm
+    - lm-sensors
+    - nano
+    - nvme-cli
+    - socat
