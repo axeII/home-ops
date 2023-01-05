@@ -10,6 +10,9 @@ configure.sh
 hack/*.gz
 hack/*.zst
 
+# nvidia tests
+nvidia*.yaml
+
 
 ### Ansible ###
 *.retry
