@@ -8,4 +8,4 @@ resources:
   - error-pages
   - metallb
   - portainer
-  - netbox
+  # - netbox
