@@ -17,7 +17,7 @@ spec:
       interval: 5m
   values:
     annotations:
-      secret.reloader.stakater.com/reload: velero-s3-creds
+      secret.reloader.stakater.com/reload: velero-s3-secret
     configuration:
       extraEnvVars:
         TZ: "Europe/Paris"
@@ -70,11 +70,11 @@ spec:
     backupsEnabled: true
     snapshotsEnabled: false
     upgradeCRDs: false
-    cleanUpCRDs: falsex
+    cleanUpCRDs: false
     kubectl:
       image:
         repository: docker.io/bitnami/kubectl
-        tag: 1.25.5
+        tag: 1.24
     deployNodeAgent: false
     initContainers:
       - name: velero-plugin-for-aws
