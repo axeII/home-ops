@@ -65,6 +65,7 @@ My homelab runs on the following hardware (all k8s nodes are running on Fedora 3
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
 | rock64                         | 16GB MMC |    N/A     | 4GB | Docker service in case some servies aren't running in k8s              |
+| Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc | 
 <!-- textlint-enable -->
 
 ### Tips
