@@ -56,9 +56,20 @@ spec:
         # key_file: /run/secrets/ssh-keys/id_rsa
     # existingSecret: "netbox"
     postgresql:
-      enabled: true
+      enabled: false
     redis:
-      enabled: true
+      enabled: false
+    tasksRedis:
+      host: 100.111.77.91
+    cachingRedis:
+      host: 100.111.77.91
+    externalDatabase:
+      host: 100.111.77.91
+      port: 5432
+      database: netbox
+      username: postgres
+      existingSecretName: "netbox"
+      existingSecretKey: "db_password"
     persistence:
       enabled: false
     reportsPersistence:
