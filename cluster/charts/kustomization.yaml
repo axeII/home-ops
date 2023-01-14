@@ -31,3 +31,4 @@ resources:
   - vmware-tanzu-charts.yaml
   - nvidia-device-plugin.yaml
   - bootc-charts.yaml
+  - kubernetes-dashboard.yaml
