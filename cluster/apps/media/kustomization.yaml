@@ -8,6 +8,7 @@ resources:
   - overseerr
   - prowlarr
   - radarr
+  - radarr-uhd
   - readarr
   - sabnzbd
   - sonarr
