@@ -111,10 +111,10 @@ resource "pihole_dns_record" "echo-server_moe" {
   ip     = "192.168.69.105"
 }
 
-# resource "pihole_dns_record" "juno_moe" {
-#   domain = "${data.sops_file.pihole_secrets.data["domain"]}"
-#   ip     = "192.168.69.105"
-# }
+resource "pihole_dns_record" "juno_moe" {
+  domain = data.sops_file.pihole_secrets.data["domain"]
+  ip     = "192.168.69.105"
+}
 
 resource "pihole_dns_record" "metube_moe" {
   domain = "metube.${data.sops_file.pihole_secrets.data["domain"]}"
