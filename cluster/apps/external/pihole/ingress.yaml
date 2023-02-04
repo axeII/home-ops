@@ -10,7 +10,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: "external-add-pihole-admin-internal@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.middlewares: "external-add-pihole-admin@kubernetescrd"
 spec:
   ingressClassName: "traefik"
   rules:
@@ -39,14 +39,13 @@ spec:
   addPrefix:
     prefix: "/admin"
 
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: add-pihole-admin-internal
-  namespace: external
-spec:
-  chain:
-    middlewares:
-      - name: external-internal@kubernetescrd
-      - name: external-add-pihole-admin@kubernetescrd
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: add-pihole-admin-internal
+#   namespace: external
+# spec:
+#   chain:
+#     middlewares:
+#       - name: external-add-pihole-admin@kubernetescrd
