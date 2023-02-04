@@ -34,7 +34,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: add-pihole-admin
-  namespace: networking
+  namespace: external
 spec:
   addPrefix:
     prefix: "/admin"
@@ -44,7 +44,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: add-pihole-admin-internal
-  namespace: networking
+  namespace: external
 spec:
   chain:
     middlewares:
