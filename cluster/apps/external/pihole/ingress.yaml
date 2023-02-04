@@ -10,11 +10,11 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: "add-pihole-admin@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.middlewares: "networking-add-pihole-admin-internal@kubernetescrd"
 spec:
   ingressClassName: "traefik"
   rules:
-    - host: &host pihole.${SECRET_DOMAIN}
+    - host: &custom-host pihole.${SECRET_DOMAIN}
       http:
         paths:
           - path: /
@@ -26,7 +26,7 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - pihole.${SECRET_DOMAIN}
+        - *custom-host
       secretName: pihole-tls
 
 ---
@@ -34,7 +34,19 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: add-pihole-admin
-  namespace: external
+  namespace: networking
 spec:
   addPrefix:
     prefix: "/admin"
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: add-pihole-admin-internal
+  namespace: networking
+spec:
+  chain:
+    middlewares:
+      - name: networking-internal@kubernetescrd
+      - name: networking-add-pihole-admin@kubernetescrd
