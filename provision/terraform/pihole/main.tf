@@ -156,6 +156,11 @@ resource "pihole_dns_record" "overseerr_moe" {
   ip     = "192.168.69.105"
 }
 
+resource "pihole_dns_record" "requests_moe" {
+  domain = "requests.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.105"
+}
+
 resource "pihole_dns_record" "plex_moe" {
   domain = "plex.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.105"
