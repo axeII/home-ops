@@ -176,6 +176,11 @@ resource "pihole_dns_record" "radarr_moe" {
   ip     = "192.168.69.105"
 }
 
+resource "pihole_dns_record" "radarr_uhd_moe" {
+  domain = "radarr-uhd.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.105"
+}
+
 resource "pihole_dns_record" "readarr_moe" {
   domain = "readarr.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.105"
