@@ -101,6 +101,8 @@ spec:
               url: "https://unsplash.com"
             - name: Science
               url: "https://nhentai.net"
+            - name: Rainbow-Player-status
+              url: "https://r6.tracker.network"
         - group: Reddit
           bookmarks:
             - name: "/r/sysadmin"
