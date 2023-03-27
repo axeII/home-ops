@@ -87,6 +87,8 @@ spec:
               url: "https://login.tailscale.com/admin/machines"
             - name: Visual studio
               url: https://my.visualstudio.com"
+            - name: Atlantis
+              url: "https://www.runatlantis.io/"
         - group: Fun
           bookmarks:
             - name: Jellyfin
@@ -99,6 +101,8 @@ spec:
               url: "https://archive.ph"
             - name: Wallpapers
               url: "https://unsplash.com"
+            - name: "Anime"
+              url: "https://anichart.net/"
             - name: Science
               url: "https://nhentai.net"
             - name: Rainbow-Player-status
@@ -109,16 +113,16 @@ spec:
               url: "https://www.reddit.com/r/sysadmin/"
             - name: "/r/selfhosted"
               url: "https://www.reddit.com/r/selfhosted/"
-            - name: "/r/jellyfin"
-              url: "https://reddit.com/r/jellyfin"
+            - name: "/r/kubernetes"
+              url: "https://reddit.com/r/kubernetes/"
             - name: "/r/apple"
-              url: "https://reddit.com/r/apple"
+              url: "https://reddit.com/r/apple/"
             - name: "/r/programming"
-              url: "https://reddit.com/r/programming"
+              url: "https://reddit.com/r/programming/"
             - name: "/r/hacking"
-              url: "https://reddit.com/r/hacking"
+              url: "https://reddit.com/r/hacking/"
             - name: "/r/oscp"
-              url: "https://reddit.com/r/oscp"
+              url: "https://reddit.com/r/oscp/"
         - group: Tech
           bookmarks:
             - name: Hacker News
