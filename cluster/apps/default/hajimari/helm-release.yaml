@@ -95,8 +95,6 @@ spec:
               url: "https://jellyfin.${SECRET_DOMAIN}"
             - name: Manhwa
               url: "https://toonily.com"
-            - name: Shodan
-              url: "https://shodan.io"
             - name: Archive
               url: "https://archive.ph"
             - name: Wallpapers
@@ -105,8 +103,8 @@ spec:
               url: "https://anichart.net/"
             - name: Science
               url: "https://nhentai.net"
-            - name: Rainbow-Player-status
-              url: "https://r6.tracker.network"
+            - name: Diving-sites
+              url: "https://www.padi.com/dive-sites"
         - group: Reddit
           bookmarks:
             - name: "/r/sysadmin"
@@ -127,6 +125,8 @@ spec:
           bookmarks:
             - name: Hacker News
               url: "https://news.ycombinator.com/"
+            - name: Shodan
+              url: "https://shodan.io"
             - name: The Verge
               url: "https://theverge.com/"
             - name: MIT Technology Review
