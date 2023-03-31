@@ -13,7 +13,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 <br/>
 
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60&style=for-the-badge)](https://discord.com/invite/S9yWcJVEMQ)
-[![k3s](https://img.shields.io/badge/k3s-v1.24.3-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://k3s.io/)
+[![k3s](https://img.shields.io/badge/k3s-v1.25.7-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://k3s.io/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
 [![renovate](https://img.shields.io/badge/renovate-enabled?style=for-the-badge&logo=renovatebot&logoColor=white&color=brightgreen)](https://github.com/renovatebot/renovate)
 
@@ -60,12 +60,12 @@ My homelab runs on the following hardware (all k8s nodes are running on Fedora 3
 |-----------------------------------------|--------------|----------------------|------|--------------------------------------------------|
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | k3s node                                       |
 | Intel NUC                         | 250GB NVMe   | 1TB HDD             | 32GB | k3s node                                       |
+| AMD CPU Server                 | 250GB NVMe      | 1TB SSD | 32GB  |   k3s node |
 | TRUENAS                 | ZFS raidz 1 40TB       | 4x10TB HDD | 32GB  |   Storage |
-| AMD CPU Server                 | 20GB      | 1TB SSD | 32GB  |   k3s node |
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
 | rock64                         | 16GB MMC |    N/A     | 4GB | Docker service in case some servies aren't running in k8s              |
-| Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc | 
+| Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc |
 <!-- textlint-enable -->
 
 ### Tips
