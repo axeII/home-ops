@@ -68,17 +68,6 @@ My homelab runs on the following hardware (all k8s nodes are running on Fedora 3
 | Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc |
 <!-- textlint-enable -->
 
-### Tips
-Check for uniq mac addresses, sometimes if you are generting vms this can mess up layer 2 networking:
-```
-ansible all -i home-ops/provision/ansible/kubernetes/inventory/hosts.yml --one-line -m shell -a 'ip link show | grep link' | awk '{print $13}' | sort | uniq | wc -l
-```
-
-
-Add worker label to worker node:
-```
-kubectl label node k8s-2 node-role.kubernetes.io/worker=worker
-```
 
 ---
 
