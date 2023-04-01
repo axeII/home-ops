@@ -8,6 +8,7 @@ k3s_control_node: true
 # (dict) k3s settings for all control-plane nodes
 k3s_server:
   node-ip: "{{ ansible_host }}"
+  datastore-endpoint: postgres://postgres:verybadpass@database:5432/postgres?sslmode=disable
   tls-san:
     # kube-vip
     - "{{ kubevip_address }}"
@@ -15,6 +16,8 @@ k3s_server:
   docker: false
   flannel-backend: "none" # This needs to be in quotes
   disable:
+    # Disable local-path-provisioner - installed with Flux
+    - local-storage
     # Disable flannel - replaced with Calico
     - flannel
     # Disable traefik - installed with Flux
