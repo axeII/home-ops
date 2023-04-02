@@ -89,6 +89,8 @@ spec:
               url: https://my.visualstudio.com"
             - name: Atlantis
               url: "https://www.runatlantis.io/"
+            - name: Git-cleaner
+              url: "https://rtyley.github.io/bfg-repo-cleaner/"
         - group: Fun
           bookmarks:
             - name: Jellyfin
