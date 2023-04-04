@@ -9,7 +9,7 @@ metadata:
     # external-dns/is-public: "true"
     # external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: "flux-receiver.${SECRET_DOMAIN}"
       http:
