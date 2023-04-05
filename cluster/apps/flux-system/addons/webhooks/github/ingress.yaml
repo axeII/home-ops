@@ -8,10 +8,11 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     # external-dns/is-public: "true"
     # external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
 spec:
-  ingressClassName: traefik
+  ingressClassName: "traefik"
   rules:
-    - host: "flux-receiver.${SECRET_DOMAIN}"
+    - host: &host "flux-receiver.${SECRET_DOMAIN}"
       http:
         paths:
           - path: /hook/
@@ -23,5 +24,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - "flux-receiver.${SECRET_DOMAIN}"
+        - *host
       secretName: flux-receiver-tls
