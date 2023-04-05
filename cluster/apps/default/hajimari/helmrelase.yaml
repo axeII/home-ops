@@ -91,6 +91,8 @@ spec:
               url: "https://www.runatlantis.io/"
             - name: Git-cleaner
               url: "https://rtyley.github.io/bfg-repo-cleaner/"
+            - name: Github-download-folder
+              url: "https://download-directory.github.io"
         - group: Fun
           bookmarks:
             - name: Jellyfin
