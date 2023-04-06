@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   uptime:
-    image: louislam/uptime-kuma:1.16.1-alpine
+    image: louislam/uptime-kuma:1.21.2-alpine
     dns: 192.168.69.99
     container_name: uptime-kuma
     volumes:
