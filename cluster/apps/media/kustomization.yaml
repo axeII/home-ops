@@ -14,5 +14,7 @@ resources:
   - sonarr
   - tautulli
   - whisparr
+  - unpackerr
+  - wikijs
   - plex
   - media-nfs-share.yaml
