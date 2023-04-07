@@ -8,7 +8,7 @@ k3s_control_node: true
 # (dict) k3s settings for all control-plane nodes
 k3s_server:
   node-ip: "{{ ansible_host }}"
-  datastore-endpoint: postgres://postgres:verybadpass@database:5432/postgres?sslmode=disable
+  datastore-endpoint: "{{ database_endpoint }}"
   tls-san:
     # kube-vip
     - "{{ kubevip_address }}"
