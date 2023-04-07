@@ -22,7 +22,7 @@ def ask_for_input():
     return user, host, name
 
 
-def check_if_port_open():
+def check_if_port_open(host):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if sock.connect_ex((host, 22)) != 0:
         print("Couldn't connect")
@@ -60,10 +60,11 @@ def apply_changes_to_config(config_path, user, host, name):
 
 def main():
     the_path = f"{Path.home()}/.ssh/config.d/home"
-    check_if_port_open()
-
     u, h, n = ask_for_input()
-    upload_pub_key(u, h)
+    check_if_port_open(h)
+
+    if import_key := input(" Yo you want to import key?[Y/n]: ").lower() == 'y':
+      upload_pub_key(u, h)
     apply_changes_to_config(the_path, u, h, n)
 
 
