@@ -7,7 +7,7 @@ vars:
   TERRAFORM_DIR: "{{.ROOT_DIR}}/terraform"
   DOCKER_DIR: "{{.PROJECT_DIR}}/provision/docker"
 
-dotenv: [".config.env"]
+# dotenv: [".config.env"]
 
 env:
   KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
