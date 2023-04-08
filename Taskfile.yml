@@ -2,20 +2,21 @@
 version: "3"
 
 vars:
-  PROJECT_DIR:
-    sh: "git rev-parse --show-toplevel"
-  CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
-  ANSIBLE_DIR: "{{.PROJECT_DIR}}/provision/ansible"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+  TERRAFORM_DIR: "{{.ROOT_DIR}}/terraform"
   DOCKER_DIR: "{{.PROJECT_DIR}}/provision/docker"
-  TERRAFORM_DIR: "{{.PROJECT_DIR}}/provision/terraform"
+
+dotenv: [".config.env"]
 
 env:
-  KUBECONFIG: "{{.PROJECT_DIR}}/provision/kubeconfig"
+  KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  SOPS_AGE_KEY_FILE: ~/.config/sops/age/keys.txt
 
 includes:
   ansible: .taskfiles/AnsibleTasks.yml
   cluster: .taskfiles/ClusterTasks.yml
-  pre-commit: .taskfiles/PreCommitTasks.yml
+  precommit: .taskfiles/PrecommitTasks.yml
   terraform: .taskfiles/TerraformTasks.yml
   docker: .taskfiles/DockerTasks.yml
 
@@ -36,7 +37,6 @@ tasks:
         ansible
         direnv
         fluxcd/tap/flux
-        gitleaks
         go-task/tap/go-task
         helm
         ipcalc
@@ -49,5 +49,16 @@ tasks:
         stern
         terraform
         tflint
+        weaveworks/tap/gitops
         yamllint
         yq
+
+  verify:
+    desc: Verify env settings
+    cmds:
+      - ./configure --verify
+
+  configure:
+    desc: Configure repository from env settings
+    cmds:
+      - ./configure

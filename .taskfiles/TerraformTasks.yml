@@ -21,31 +21,6 @@ tasks:
     cmds:
       - "terraform apply"
 
-
-  infrastructure:init:
-    desc: Initialize terraform
-    dir: provision/terraform/infrastructure
-    cmds:
-      - "terraform init"
-
-  infrastructure:plan:
-    desc: Prepare all the k8s nodes for running k3s
-    dir: provision/terraform/infrastructure
-    cmds:
-      - "terraform plan"
-
-  infrastructure:apply:
-    desc: Prepare all the k8s nodes for running k3s
-    dir: provision/terraform/infrastructure
-    cmds:
-      - "terraform apply --parallelism=3 -auto-approve"
-
-  infrastructure:destroy:
-    desc: Prepare all the k8s nodes for running k3s
-    dir: provision/terraform/infrastructure
-    cmds:
-      - "terraform destroy"
-
   pihole:init:
     desc: Initialize terraform
     dir: provision/terraform/pihole
