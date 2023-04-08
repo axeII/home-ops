@@ -2,82 +2,75 @@
 version: "3"
 
 env:
-  ANSIBLE_CONFIG: "{{.PROJECT_DIR}}/ansible.cfg"
+  ANSIBLE_CONFIG: "{{.ROOT_DIR}}/ansible.cfg"
+  K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
 
 vars:
   ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/kubernetes/playbooks"
   ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/kubernetes/inventory"
-  ANSIBLE_PROXMOX_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/proxmox/inventory"
-  ANSIBLE_PROXMOX_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/proxmox/playbooks"
-  ANSIBLE_CLOUD_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/cloud"
 
 tasks:
 
   init:
     desc: Install / Upgrade Ansible galaxy deps
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
+      - pip3 install --user --requirement requirements.txt
       - ansible-galaxy install -r requirements.yml --roles-path ~/.ansible/roles --force
       - ansible-galaxy collection install -r requirements.yml --collections-path ~/.ansible/collections --force
 
   list:
     desc: List all the hosts
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --list-hosts
 
   prepare:
     desc: Prepare all the k8s nodes for running k3s
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-prepare.yml
 
   install:
     desc: Install Kubernetes on the nodes
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-installation.yml
 
   nuke:
     desc: Uninstall Kubernetes on the nodes
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     interactive: true
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-nuke.yml
-      - task: reboot
+      - task: force-reboot
 
   ping:
     desc: Ping all the hosts
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --one-line -m 'ping'
 
   uptime:
     desc: Uptime of all the hosts
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --one-line -a 'uptime'
 
-  reboot:
+  rollout-reboot:
+    desc: Rollout a reboot across all the k8s nodes
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-rollout-reboot.yml
+
+  force-reboot:
     desc: Reboot all the k8s nodes
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-reboot.yml
 
-  poweroff:
+  force-poweroff:
     desc: Shutdown all the k8s nodes
-    dir: provision/ansible
+    dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -a '/usr/bin/systemctl poweroff' --become
-
-  adhoc:ping:all:
-    desc: Ping all the hosts
-    dir: provision/ansible
-    cmds:
-      - "ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_CLOUD_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -m 'ping'"
-
-  adhoc:uptime:all:
-    desc: Uptime of all the hosts
-    dir: provision/ansible
-    cmds:
-      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_CLOUD_INVENTORY_DIR}}/hosts.yml -i {{.ANSIBLE_PROXMOX_INVENTORY_DIR}}/hosts.yml --one-line -a 'uptime'
