@@ -29,6 +29,6 @@ resources:
   - ./traefik.yaml
   - ./portainer-charts.yaml
   - ./vmware-tanzu-charts.yaml
-  - ./nvidia-plugin.yaml
+  - ./nvidia.yaml
   - ./bootc-charts.yaml
   - ./kubernetes-dashboard.yaml
