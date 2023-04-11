@@ -67,6 +67,8 @@ spec:
       globalBookmarks:
         - group: Daily
           bookmarks:
+            - name: chatGPT
+              url: "https://chat.openai.com/chat"
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
             - name: DockerHub
