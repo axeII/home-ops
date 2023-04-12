@@ -1,4 +1,5 @@
-apiVersion: cert-manager.io/v1
+---
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
@@ -19,7 +20,7 @@ spec:
           dnsZones:
             - "${SECRET_DOMAIN}"
 ---
-apiVersion: cert-manager.io/v1
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
