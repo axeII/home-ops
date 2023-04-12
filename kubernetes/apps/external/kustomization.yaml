@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - pihole
-  - metube
-  - ubooquity
+  - ./namespace.yaml
+  - ./pihole/ks.yaml
+  - ./metube/ks.yaml
+  - ./ubooquity/ks.yaml
