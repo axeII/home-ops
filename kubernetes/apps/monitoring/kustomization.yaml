@@ -6,7 +6,7 @@ resources:
   - ./botkube/ks.yaml
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
-  - ./loki.ks.yaml
+  - ./loki/ks.yaml
   - ./unifi-poller/ks.yaml
   - ./goldilocks/ks.yaml
   - ./kubernetes-dashboard/ks.yaml
