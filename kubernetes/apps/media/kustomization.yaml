@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./namespace.yaml
+  - ./media-nfs-share.yaml
+  - ./bazarr/ks.yaml
+  - ./lidarr/ks.yaml
+  - ./overseerr/ks.yaml
+  - ./prowlarr/ks.yaml
+  - ./radarr/ks.yaml
+  - ./radarr-uhd/ks.yaml
+  - ./readarr/ks.yaml
+  - ./sabnzbd/ks.yaml
+  - ./sonarr/ks.yaml
+  - ./tautulli/ks.yaml
+  - ./whisparr/ks.yaml
+  - ./unpackerr/ks.yaml
+  - ./wikijs/ks.yaml
+  - ./plex/ks.yaml
