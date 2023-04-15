@@ -11,7 +11,7 @@ spec:
       namespace: longhorn-system
   chart:
     spec:
-      version: 1.3.2
+      version: 1.4.0
       chart: app-template
       sourceRef:
         kind: HelmRepository
