@@ -23,14 +23,16 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. under folder `provision` I store all my ansible and terraform scripts to manage promox virtual machines. Some of them are used for k3s cluster some only for docker instances.
+Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision` I store all my ansible and terraform scripts my infrastructure. Some of them are used for k3s cluster some only for docker instances.
+
+I deciced for my cluster that instead of high disk load using etcd I switched to postgres. Just in case you would like to copy my cluster configuration keep this note in mind (feel free though!).  
 
 
 ## :art:&nbsp; Cluster components
 
 - [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
 - [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
-- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah giving longhorn second chance)
+- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer
@@ -53,7 +55,7 @@ Following tools I use to setup infrastructure:
 
 ## :file_cabinet: Hardware
 
-My homelab runs on the following hardware (all k8s nodes are running on Fedora 37):
+My homelab runs on the following hardware (all k8s nodes are running on ubuntu 20.04):
 
 <!-- textlint-disable -->
 | Device                                  | OS Disk Size | Data Disk Size       | Ram  | Purpose                                          |
