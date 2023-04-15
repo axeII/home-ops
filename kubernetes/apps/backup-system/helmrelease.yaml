@@ -74,7 +74,6 @@ spec:
     snapshotsEnabled: false
     upgradeCRDs: false
     cleanUpCRDs: false
-    deployRestic: false
     # kubectl:
     #   image:
     #     repository: docker.io/bitnami/kubectl
