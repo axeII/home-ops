@@ -8,7 +8,7 @@ spec:
   interval: 5m
   dependsOn:
     - name: cert-manager
-      namespace: kube-system
+      namespace: cert-manager
   chart:
     spec:
       chart: botkube
