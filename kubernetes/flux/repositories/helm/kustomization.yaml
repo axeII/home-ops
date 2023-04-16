@@ -32,3 +32,4 @@ resources:
   - ./novideo.yaml
   - ./bootc-charts.yaml
   - ./kubernetes-dashboard.yaml
+  - ./weave-gitops.yaml
