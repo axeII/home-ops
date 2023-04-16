@@ -65,7 +65,7 @@ spec:
             isDefault: true
             name: Prometheus
             type: prometheus
-            url: http://thanos-query:9090
+            url: http://prometheus-prometheus:9090
           - access: proxy
             name: Loki
             type: loki
@@ -158,6 +158,8 @@ spec:
       ingressClassName: "traefik"
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+        hajimari.io/enable: "true"
+        hajimari.io/icon: "chart-bar"
         cert-manager.io/cluster-issuer: letsencrypt-production
       hosts:
         - "grafana.${SECRET_DOMAIN}"
