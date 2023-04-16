@@ -36,6 +36,8 @@ spec:
           - networking
           - kube-system
           - monitoring
+          - flux-system
+          - external
       name: "Ales"
       defaultSearchProvider: YouTube
       searchProviders:
