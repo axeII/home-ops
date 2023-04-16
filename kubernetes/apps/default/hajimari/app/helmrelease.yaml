@@ -60,7 +60,7 @@ spec:
               icon: access-point
         - group: Media
           apps:
-            - name: Plex
+            - name: Plex.tv
               url: "https://app.plex.tv"
               icon: plex
             - name: Comics
