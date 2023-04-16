@@ -42,11 +42,11 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           external-dns/is-public: "true"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/name: "Wiki.js"
-          gethomepage.dev/group: "Public"
-          gethomepage.dev/icon: "https://js.wiki/favicon.ico"
-          gethomepage.dev/description: "A modern and powerful wiki app built on Node.js."
+          hajimari.io/enabled: "true"
+          hajimari.io/name: "Wiki.js"
+          hajimari.io/group: "Public"
+          hajimari.io/icon: "https://js.wiki/favicon.ico"
+          hajimari.io/description: "A modern and powerful wiki app built on Node.js."
         hosts:
           - host: &host "info.${SECRET_DOMAIN}"
             paths:
