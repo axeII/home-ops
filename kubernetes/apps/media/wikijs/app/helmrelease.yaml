@@ -5,9 +5,6 @@ metadata:
   name: wikijs
   namespace: media
 spec:
-  dependsOn:
-    - name: postgresql
-      namespace: database
   interval: 15m
   chart:
     spec:
