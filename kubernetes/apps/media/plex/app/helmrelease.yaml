@@ -18,7 +18,7 @@ spec:
   install:
     createNamespace: true
   dependsOn:
-    - name: cluster-apps-nvidia
+    - name: nvidia-device-plugin
       namespace: kube-system
     - name: longhorn
       namespace: longhorn-system
@@ -31,13 +31,9 @@ spec:
       # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
       TZ: "${TZ}"
       ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
-      # ALLOWED_NETWORKS: "10.1.1.0/24,10.1.2.0/24,10.42.0.0/16,10.43.0.0/16"
       PLEX_UID: 0
       PLEX_GID: 0
-      # Transcoding:
-      # https://github.com/NVIDIA/nvidia-container-runtime#nvidia_visible_devices
       NVIDIA_VISIBLE_DEVICES: all
-      # https://github.com/NVIDIA/nvidia-container-runtime#nvidia_driver_capabilities
       NVIDIA_DRIVER_CAPABILITIES: all
     podSecurityContext:
       runAsUser: 0
@@ -49,7 +45,6 @@ spec:
         type: LoadBalancer
         annotations:
           metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
-          # traefik.ingress.kubernetes.io/service.serversscheme: https
         externalTrafficPolicy: Local
         ports:
           http:
@@ -107,8 +102,3 @@ spec:
                   operator: In
                   values:
                     - k8s-2
-    # resources:
-    #     requests:
-    #       nvidia.com/gpu: 1
-    #     limits:
-    #       nvidia.com/gpu: 1
