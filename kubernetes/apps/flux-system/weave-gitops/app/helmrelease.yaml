@@ -45,6 +45,7 @@ spec:
       tls:
         - hosts:
             - *host
+          secretName: "weaveops-tls"
     networkPolicy:
       create: false
     metrics:
