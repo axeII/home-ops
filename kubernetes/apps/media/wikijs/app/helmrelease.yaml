@@ -40,11 +40,10 @@ spec:
         ingressClassName: "traefik"
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
-          external-dns/is-public: "true"
+          # external-dns/is-public: "true"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
           hajimari.io/enabled: "true"
-          hajimari.io/name: "Wiki.js"
-          hajimari.io/group: "Public"
+          hajimari.io/name: "wiki.js"
           hajimari.io/icon: "https://js.wiki/favicon.ico"
           hajimari.io/description: "A modern and powerful wiki app built on Node.js."
         hosts:
