@@ -1,0 +1,17 @@
+---
+- hosts:
+    - database
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Make sure psycopg2 is installed
+      pip:
+        name: psycopg2-binary
+        state: present
+
+    - name: Drop database
+      community.postgresql.postgresql_db:
+        name: test
+        state: absent
+      become_user: postgres
