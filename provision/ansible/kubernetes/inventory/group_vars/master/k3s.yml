@@ -9,23 +9,23 @@ k3s_control_node: true
 k3s_server:
   node-ip: "{{ ansible_host }}"
   datastore-endpoint: "{{ database_endpoint }}"
+  # datastore-endpoint: "postgres://etcd:verybadpass@192.168.69.107:5432/postgres?sslmode=disable"
   tls-san:
-    # kube-vip
     - "{{ kubevip_address }}"
   # Disable Docker - this will use the default containerd CRI
   docker: false
   flannel-backend: "none" # This needs to be in quotes
   disable:
-    # Disable local-path-provisioner - installed with Flux
-    - local-storage
     # Disable flannel - replaced with Calico
     - flannel
-    # Disable traefik - installed with Flux
-    - traefik
-    # Disable servicelb - replaced with metallb and install with Flux
-    - servicelb
+    # Disable local-path-provisioner - installed with Flux
+    - local-storage
     # Disable metrics-server - installed with Flux
     - metrics-server
+    # Disable servicelb - replaced with metallb and installed with Flux
+    - servicelb
+    # Disable traefik - replaced with ingress-nginx and installed with Flux
+    - traefik
   disable-network-policy: true
   disable-cloud-controller: true
   write-kubeconfig-mode: "644"
@@ -33,28 +33,17 @@ k3s_server:
   cluster-cidr: "10.42.0.0/16"
   # Network CIDR to use for service IPs
   service-cidr: "10.43.0.0/16"
-  kubelet-arg:
-    # Allow k8s services to contain TCP and UDP on the same port
-    - "feature-gates=MixedProtocolLBService=true"
   kube-controller-manager-arg:
-    # Allow k8s services to contain TCP and UDP on the same port
-    - "feature-gates=MixedProtocolLBService=true"
     # Required to monitor kube-controller-manager with kube-prometheus-stack
     - "bind-address=0.0.0.0"
   kube-proxy-arg:
-    # Allow k8s services to contain TCP and UDP on the same port
-    - "feature-gates=MixedProtocolLBService=true"
     # Required to monitor kube-proxy with kube-prometheus-stack
     - "metrics-bind-address=0.0.0.0"
   kube-scheduler-arg:
-    # Allow k8s services to contain TCP and UDP on the same port
-    - "feature-gates=MixedProtocolLBService=true"
     # Required to monitor kube-scheduler with kube-prometheus-stack
     - "bind-address=0.0.0.0"
   # Required to monitor etcd with kube-prometheus-stack
   etcd-expose-metrics: true
   kube-apiserver-arg:
-    # Allow k8s services to contain TCP and UDP on the same port
-    - "feature-gates=MixedProtocolLBService=true"
     # Required for HAProxy health-checks
     - "anonymous-auth=true"
