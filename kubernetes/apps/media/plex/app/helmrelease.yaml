@@ -25,8 +25,8 @@ spec:
   values:
     runtimeClassName: nvidia
     image:
-      repository: plexinc/pms-docker
-      tag: 1.30.0.6486-629d58034
+      repository: ghcr.io/onedr0p/plex
+      tag: 1.32.0.6918-6f393eda1@sha256:1a7ca3a38bbe42d846f0e3cd812fba4db6c1eafc63478bb809643d04a3501dc0
     env:
       # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
       TZ: "${TZ}"
