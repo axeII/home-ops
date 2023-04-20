@@ -235,3 +235,13 @@ resource "pihole_dns_record" "traefik-dashboard_moe" {
   domain = "traefik-dashboard.${data.sops_file.pihole_secrets.data["domain"]}"
   ip     = "192.168.69.105"
 }
+
+resource "pihole_dns_record" "weaveops" {
+  domain = "gitops.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.105"
+}
+
+resource "pihole_dns_record" "wikijs" {
+  domain = "info.${data.sops_file.pihole_secrets.data["domain"]}"
+  ip     = "192.168.69.105"
+}
