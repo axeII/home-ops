@@ -7,5 +7,5 @@ resources:
   - ./error-pages/ks.yaml
   - ./metallb/ks.yaml
   - ./portainer/ks.yaml
-  # - ./k8s-gateway/ks.yaml
+  - ./k8s-gateway/ks.yaml
   # - ./netbox/ks.yaml
