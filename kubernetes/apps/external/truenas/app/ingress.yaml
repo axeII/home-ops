@@ -10,7 +10,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     hajimari.io/enable: "true"
-    hajimari.io/icon: "truenas"
+    hajimari.io/icon: "simple-icons:truenas"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: "traefik"
