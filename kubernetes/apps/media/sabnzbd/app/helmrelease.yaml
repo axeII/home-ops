@@ -102,3 +102,13 @@ spec:
         cpu: 500m
       limits:
         memory: 7500Mi
+
+  affinity:
+    nodeAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: nvidia-gpu
+                operator: In
+                values:
+                  - "false"
