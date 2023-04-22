@@ -32,6 +32,7 @@ spec:
     env:
       TZ: "${TIMEZONE}"
       DOWNLOAD_DIR: "/downloads/videos"
+      STATE_DIR: "/downloads/videos/.metube"
     service:
       main:
         ports:
