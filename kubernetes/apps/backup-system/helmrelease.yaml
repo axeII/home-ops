@@ -81,7 +81,7 @@ spec:
     deployNodeAgent: false
     initContainers:
       - name: velero-plugin-for-aws
-        image: velero/velero-plugin-for-aws:v1.6.1@sha256:39734038bcdffd50a050bac004deef2578a29c756de330e70566279152d6d5b1
+        image: velero/velero-plugin-for-aws:v1.7.0@sha256:91b0be561037f3b6420ace15536996afed5bd0fba537f7ab8e171587977cdc83
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
