@@ -7,4 +7,12 @@ spec:
   containers:
     - name: dns-test-container
       image: alpine
-      command: ["sh", "-c", "apk update && apk add curl && apk add bash && curl https://raw.githubusercontent.com/macvk/dnsleaktest/master/dnsleaktest.sh -o dnsleaktest.sh && bash dnsleaktest.sh"]
+      command:
+        - sh
+        - "-c"
+        - >
+          apk update &&
+          apk add curl &&
+          apk add bash &&
+          curl https://raw.githubusercontent.com/macvk/dnsleaktest/master/dnsleaktest.sh -o dnsleaktest.sh &&
+          bash dnsleaktest.sh
