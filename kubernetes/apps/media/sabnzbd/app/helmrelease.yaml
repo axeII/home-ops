@@ -102,13 +102,13 @@ spec:
         cpu: 500m
       limits:
         memory: 7500Mi
-
-  affinity:
-    nodeAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-              - key: nvidia-gpu
-                operator: In
-                values:
-                  - "false"
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - k8s-0
+                    - k8s-1
