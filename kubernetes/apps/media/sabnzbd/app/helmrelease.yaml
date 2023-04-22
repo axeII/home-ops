@@ -107,8 +107,7 @@ spec:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
-                - key: kubernetes.io/hostname
+                - key: nvidia.com/gpu
                   operator: In
                   values:
-                    - k8s-0
-                    - k8s-1
+                    - false
