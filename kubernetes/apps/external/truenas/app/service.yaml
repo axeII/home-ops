@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: &app metube
+  name: &app truenas
   namespace: external
   labels:
     app.kubernetes.io/name: *app
@@ -18,7 +18,7 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: &app metube
+  name: &app truenas
   namespace: external
   labels:
     app.kubernetes.io/name: *app
