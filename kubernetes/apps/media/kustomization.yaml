@@ -18,3 +18,4 @@ resources:
   - ./unpackerr/ks.yaml
   - ./wikijs/ks.yaml
   - ./plex/ks.yaml
+  - ./metube/ks.yaml
