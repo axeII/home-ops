@@ -50,7 +50,7 @@ spec:
           - hosts:
               - *host
             secretName: tls-kavita
-        persistence:
+    persistence:
       config:
         enabled: true
         existingClaim: kavita-config-v1
