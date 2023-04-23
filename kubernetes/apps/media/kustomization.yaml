@@ -19,3 +19,4 @@ resources:
   - ./wikijs/ks.yaml
   - ./plex/ks.yaml
   - ./metube/ks.yaml
+  - ./kavita/ks.yaml
