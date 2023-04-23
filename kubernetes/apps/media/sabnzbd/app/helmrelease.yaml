@@ -108,6 +108,6 @@ spec:
           nodeSelectorTerms:
             - matchExpressions:
                 - key: nvidia.com/gpu
-                  operator: ==
+                  operator: In
                   values:
                     - "false"
