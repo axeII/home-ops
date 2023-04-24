@@ -8,4 +8,5 @@ resources:
   - ./metallb/ks.yaml
   - ./portainer/ks.yaml
   - ./k8s-gateway/ks.yaml
+  - ./tailscale-gateway/ks.yaml
   # - ./netbox/ks.yaml
