@@ -43,7 +43,8 @@ spec:
       main:
         ports:
           http:
-            port: &port 45387
+            port: &port 41641
+    readinessProbe: null
 
     podSecurityContext:
       runAsUser: 1000
