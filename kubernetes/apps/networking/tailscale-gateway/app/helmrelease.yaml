@@ -43,7 +43,7 @@ spec:
       main:
         ports:
           http:
-            port: &port 41641
+            port: &port 65142
 
     podSecurityContext:
       runAsUser: 1000
@@ -54,10 +54,10 @@ spec:
         enabled: false
 
     # tailscale is running on udp and I can't find better solution yet
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+    # probes:
+    #   liveness:
+    #     enabled: false
+    #   readiness:
+    #     enabled: false
+    #   startup:
+    #     enabled: false
