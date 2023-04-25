@@ -45,19 +45,19 @@ spec:
           http:
             port: &port 41641
 
-    # tailscale is running on udp and I can't find better solution yet
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-        readinessProbe: null
-        livenessProbe: null
-
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
 
     ingress:
       main:
+        enabled: false
+
+    # tailscale is running on udp and I can't find better solution yet
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
         enabled: false
