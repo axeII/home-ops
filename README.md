@@ -62,7 +62,7 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 |-----------------------------------------|--------------|----------------------|------|--------------------------------------------------|
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | k3s node                                       |
 | Intel NUC                         | 250GB NVMe   | 1TB HDD             | 32GB | k3s node                                       |
-| AMD CPU Server                 | 250GB NVMe      | 1TB SSD | 32GB  |   k3s node |
+| AMD GPU Server                 | 250GB NVMe      | 1TB SSD | 32GB  |   k3s node with nvidia GPU |
 | TRUENAS                 | ZFS raidz 1 40TB       | 4x10TB HDD | 32GB  |   Storage |
 | Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
 | Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
