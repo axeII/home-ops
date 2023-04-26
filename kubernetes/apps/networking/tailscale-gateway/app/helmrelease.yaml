@@ -43,6 +43,7 @@ spec:
       main:
         ports:
           http:
+            # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
             port: &port 65142
 
     podSecurityContext:
@@ -53,7 +54,6 @@ spec:
       main:
         enabled: false
 
-    # tailscale is running on udp and I can't find better solution yet
     # probes:
     #   liveness:
     #     enabled: false
