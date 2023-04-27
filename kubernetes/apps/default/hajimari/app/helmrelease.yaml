@@ -99,8 +99,8 @@ spec:
               url: "https://download-directory.github.io"
         - group: Fun
           bookmarks:
-            - name: Jellyfin
-              url: "https://jellyfin.${SECRET_DOMAIN}"
+            - name: Translator
+              url: "https://www.deepl.com/translator"
             - name: Manhwa
               url: "https://toonily.com"
             - name: Archive
