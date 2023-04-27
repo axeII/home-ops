@@ -124,8 +124,8 @@ spec:
       enabled: true
       endpoints:
         - 192.168.69.110
-        - 192.168.69.111
-        - 192.168.69.112
+        - 192.168.69.109
+        - 192.168.69.108
       service:
         enabled: true
         port: 10257
@@ -139,8 +139,8 @@ spec:
       enabled: true
       endpoints:
         - 192.168.69.110
-        - 192.168.69.111
-        - 192.168.69.112
+        - 192.168.69.109
+        - 192.168.69.108
       service:
         enabled: true
         port: 10259
@@ -154,15 +154,15 @@ spec:
       enabled: true
       endpoints:
         - 192.168.69.110
-        - 192.168.69.111
-        - 192.168.69.112
+        - 192.168.69.109
+        - 192.168.69.108
 
     kubeEtcd:
-      enabled: true
+      enabled: false
       endpoints:
         - 192.168.69.110
-        - 192.168.69.111
-        - 192.168.69.112
+        - 192.168.69.109
+        - 192.168.69.108
       service:
         enabled: true
         port: 2381
