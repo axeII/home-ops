@@ -20,3 +20,4 @@ resources:
   - ./plex/ks.yaml
   - ./metube/ks.yaml
   - ./kavita/ks.yaml
+  - ./deluge/ks.yaml

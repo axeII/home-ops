@@ -9,5 +9,4 @@ resources:
   - ./portainer/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./tailscale-gateway/ks.yaml
-  - ./deluge/ks.yaml
   # - ./netbox/ks.yaml
