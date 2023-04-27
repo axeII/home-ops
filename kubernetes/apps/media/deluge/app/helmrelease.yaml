@@ -74,3 +74,12 @@ spec:
         cpu: 25m
       limits:
         memory: 6000Mi
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: nvidia.com/gpu
+                  operator: In
+                  values:
+                    - "false"
