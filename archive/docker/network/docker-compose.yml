@@ -21,6 +21,10 @@ services:
     extends:
       file: uptime-kuma.yaml
       service: uptime
+  # transmission:
+  #   extends:
+  #     file: transmission.yaml
+  #     service: transmission
 
 
 volumes:
@@ -29,3 +33,4 @@ volumes:
   nginx_data:
   nginx_letsencrypt:
   uptime-kuma-data:
+  trans-config:
