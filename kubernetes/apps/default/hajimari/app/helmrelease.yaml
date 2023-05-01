@@ -95,6 +95,8 @@ spec:
               url: "https://www.runatlantis.io/"
             - name: Git-cleaner
               url: "https://rtyley.github.io/bfg-repo-cleaner/"
+            - name: K8S Exam simulator
+              url: "https://killer.sh/"
             - name: Github-download-folder
               url: "https://download-directory.github.io"
         - group: Fun
