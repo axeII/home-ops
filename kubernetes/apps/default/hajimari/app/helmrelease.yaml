@@ -69,18 +69,20 @@ spec:
       globalBookmarks:
         - group: Daily
           bookmarks:
-            - name: chatGPT
-              url: "https://chat.openai.com/chat"
+            - name: Phind
+              url: "https://www.phind.com"
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
-            - name: DockerHub
-              url: "https://hub.docker.com"
             - name: GitHub
               url: "https://github.com"
             - name: InfoSecNews
               url: "https://allinfosecnews.com"
             - name: Unifi
               url: "https://unifi"
+            - name: "NextDNS"
+              url: "https://my.nextdns.io/"
+            - name: "News"
+              url: "https://www.newsminimalist.com/"
         - group: DevOps
           bookmarks:
             - name: Home-Ops
