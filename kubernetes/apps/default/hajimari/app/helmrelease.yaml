@@ -27,7 +27,7 @@ spec:
       repository: ghcr.io/toboshii/hajimari
       tag: v0.3.1
     hajimari:
-      defaultEnable: false
+      defaultEnable: true
       namespaceSelector:
         matchNames:
           - default

@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./traefik/ks.yaml
+  - ./ingress-nginx/ks.yaml
   - ./error-pages/ks.yaml
   - ./metallb/ks.yaml
   - ./portainer/ks.yaml

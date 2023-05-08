@@ -26,7 +26,7 @@ resources:
   - ./rook-ceph.yaml
   - ./longhorn.yaml
   - ./stakater.yaml
-  - ./traefik.yaml
+  - ./ingress-nginx.yaml
   - ./portainer-charts.yaml
   - ./vmware-tanzu-charts.yaml
   - ./novideo.yaml
