@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: webhook-receiver
   namespace: flux-system
-  spec:
+spec:
   ingressClassName: nginx
   rules:
     - host: &host "flux-receiver.${SECRET_DOMAIN}"
