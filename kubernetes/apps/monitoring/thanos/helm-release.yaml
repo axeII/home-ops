@@ -29,13 +29,11 @@ spec:
         sidecarsNamespace: monitoring
       ingress:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           hajimari.io/instance: "bloop-quarky"
-          hajimari.io/enable: "true"
           hajimari.io/appName: "Thanos"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host "thanos.${SECRET_DOMAIN}"
             paths:

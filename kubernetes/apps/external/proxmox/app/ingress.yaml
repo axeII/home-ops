@@ -9,11 +9,10 @@ metadata:
     app.kubernetes.io/instance: *app
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    hajimari.io/enable: "true"
     hajimari.io/icon: "simple-icons:proxmox"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  ingressClassName: "traefik"
+  ingressClassName: nginx
   rules:
     - host: &host proxmox.${SECRET_DOMAIN}
       http:
