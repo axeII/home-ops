@@ -23,13 +23,10 @@ spec:
       enabled: true
       ingress:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          hajimari.io/enable: "true"
           hajimari.io/appName: "goldilocks"
           hajimari.io/icon: "abacus"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host "goldilocks.${SECRET_DOMAIN}"
             paths:
@@ -38,4 +35,3 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "goldilocks-tls"

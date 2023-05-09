@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
     hajimari.io/enable: "true"
     hajimari.io/icon: "youtube"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
@@ -27,5 +26,4 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - metube.${SECRET_DOMAIN}
-      secretName: metube-tls
+        - *host

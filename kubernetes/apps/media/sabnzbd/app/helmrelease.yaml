@@ -50,11 +50,8 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          hajimari.io/enable: "true"
           hajimari.io/icon: "download"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -64,7 +61,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: tls.sabnzbd
 
     podSecurityContext:
       runAsUser: 568

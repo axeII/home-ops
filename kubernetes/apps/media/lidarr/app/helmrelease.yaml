@@ -41,12 +41,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          hajimari.io/enable: "true"
           hajimari.io/icon: "music-box"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -60,7 +57,6 @@ spec:
           - hosts:
               - *host-release
               - *host-custom
-            secretName: "lidarr-tls"
     podSecurityContext:
       runAsUser: 0
       runAsGroup: 0
@@ -74,7 +70,6 @@ spec:
         existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: false
-      # stolen from devin but I want to give a chance to longhorn
       # backup:
       #   enabled: true
       #   type: nfs

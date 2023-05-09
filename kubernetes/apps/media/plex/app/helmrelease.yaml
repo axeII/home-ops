@@ -52,11 +52,8 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          hajimari.io/enable: "true"
           hajimari.io/icon: "plex"
         hosts:
           - host: &host "plex.${SECRET_DOMAIN}"
@@ -66,7 +63,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "plex-tls"
     securityContext:
       privileged: true
     persistence:

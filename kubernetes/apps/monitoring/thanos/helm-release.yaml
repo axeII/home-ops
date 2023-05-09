@@ -29,13 +29,11 @@ spec:
         sidecarsNamespace: monitoring
       ingress:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           hajimari.io/instance: "bloop-quarky"
-          hajimari.io/enable: "true"
           hajimari.io/appName: "Thanos"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host "thanos.${SECRET_DOMAIN}"
             paths:
@@ -54,10 +52,7 @@ spec:
       ingress:
         enabled: true
         hostname: &hostbweb "thanos-bucketweb.${SECRET_DOMAIN}"
-        ingressClassName: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          traefik.ingress.kubernetes.io/service.serversscheme: h2c
+        ingressClassName: nginx
         tls: true
         extraTls:
           - hosts:
@@ -69,10 +64,7 @@ spec:
       ingress:
         enabled: true
         hostname: &hostcompact "thanos-compactor.${SECRET_DOMAIN}"
-        ingressClassName: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          traefik.ingress.kubernetes.io/service.serversscheme: h2c
+        ingressClassName: nginx
         tls: true
         extraTls:
           - hosts:
@@ -86,11 +78,7 @@ spec:
       ingress:
         enabled: true
         hostname: &hostgateway "thanos-storegateway.${SECRET_DOMAIN}"
-        ingressClassName: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          traefik.ingress.kubernetes.io/service.serversscheme: h2c
-          traefik.ingress.kubernetes.io/router.middlewares: networking-rfc1918@kubernetescrd
+        ingressClassName: nginx
         tls: true
         extraTls:
           - hosts:
@@ -121,10 +109,7 @@ spec:
       ingress:
         enabled: true
         hostname: &hostruler "thanos-ruler.${SECRET_DOMAIN}"
-        ingressClassName: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          traefik.ingress.kubernetes.io/service.serversscheme: h2c
+        ingressClassName: nginx
         tls: true
         extraTls:
           - hosts:

@@ -35,12 +35,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          hajimari.io/enable: "true"
           hajimari.io/icon: "notebook-heart"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: &host "comics.${SECRET_DOMAIN}"
             paths:
@@ -49,7 +46,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: tls-kavita
     persistence:
       config:
         enabled: true

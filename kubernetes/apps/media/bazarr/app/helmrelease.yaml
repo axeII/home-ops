@@ -41,13 +41,10 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
           kubernetes.io/tls-acme: "true"
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          hajimari.io/enable: "true"
           hajimari.io/icon: "subtitles"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
         hosts:
           - host: "bazarr.${SECRET_DOMAIN}"
             paths:
@@ -56,7 +53,6 @@ spec:
         tls:
           - hosts:
               - "bazarr.${SECRET_DOMAIN}"
-            secretName: tls-bazarr
     persistence:
       config:
         enabled: true

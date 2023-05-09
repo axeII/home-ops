@@ -49,11 +49,8 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          hajimari.io/enable: "true"
           hajimari.io/icon: "tire"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -68,7 +65,6 @@ spec:
           - hosts:
               - *host-release
               - *host-custom
-            secretName: "sonarr-tls"
     podSecurityContext:
       runAsUser: 568
       runAsGroup: 568

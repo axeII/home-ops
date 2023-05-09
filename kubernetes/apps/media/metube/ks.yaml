@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-traefik
+    - name: cluster-apps-ingress-nginx
   path: ./kubernetes/apps/media/metube/app
   prune: true
   sourceRef:

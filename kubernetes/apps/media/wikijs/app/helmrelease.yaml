@@ -37,12 +37,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "traefik"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
           # external-dns/is-public: "true"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          hajimari.io/enable: "true"
           hajimari.io/name: "wiki.js"
           hajimari.io/icon: "wikipedia"
           hajimari.io/description: "A modern and powerful wiki app built on Node.js."
@@ -54,7 +51,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: wikijs-tls
     resources:
       requests:
         memory: 150M
