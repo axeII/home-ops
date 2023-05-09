@@ -85,7 +85,6 @@ spec:
         tls:
           - hosts:
               - "alert-manager.${SECRET_DOMAIN}"
-            secretName: alert-manager-cert
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:

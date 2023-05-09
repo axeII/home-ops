@@ -37,7 +37,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
           hajimari.io/icon: "notebook-heart"
         hosts:
           - host: &host "comics.${SECRET_DOMAIN}"
@@ -47,7 +46,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: tls-kavita
     persistence:
       config:
         enabled: true

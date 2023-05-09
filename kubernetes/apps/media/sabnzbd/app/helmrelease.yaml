@@ -52,7 +52,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
           hajimari.io/icon: "download"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -62,7 +61,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: tls.sabnzbd
 
     podSecurityContext:
       runAsUser: 568

@@ -154,10 +154,8 @@ spec:
       ingressClassName: nginx
       annotations:
         hajimari.io/icon: "chart-bar"
-        cert-manager.io/cluster-issuer: letsencrypt-production
       hosts:
         - "grafana.${SECRET_DOMAIN}"
       tls:
         - hosts:
             - "grafana.${SECRET_DOMAIN}"
-          secretName: grafana

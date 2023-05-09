@@ -110,8 +110,6 @@ spec:
         enabled: true
         hostname: &hostruler "thanos-ruler.${SECRET_DOMAIN}"
         ingressClassName: nginx
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
         tls: true
         extraTls:
           - hosts:
