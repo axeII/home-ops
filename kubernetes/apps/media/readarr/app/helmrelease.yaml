@@ -37,7 +37,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/icon: "book-open"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -52,7 +51,6 @@ spec:
           - hosts:
               - *host-release
               - *host-custom
-            secretName: "readarr-tls"
     podSecurityContext:
       fsGroup: 568
     persistence:

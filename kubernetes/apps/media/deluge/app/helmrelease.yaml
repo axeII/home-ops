@@ -45,7 +45,6 @@ spec:
         ingressClassName: nginx
         annotations:
           kubernetes.io/tls-acme: "true"
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/icon: "mdi:download"
         hosts:
           - host: &host torrent.${SECRET_DOMAIN}
@@ -53,9 +52,8 @@ spec:
               - path: /
                 pathType: Prefix
         tls:
-          - secretName: tls-deluge
-            hosts:
-              - *host
+          hosts:
+            - *host
     persistence:
       config:
         enabled: true

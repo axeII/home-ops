@@ -30,17 +30,14 @@ spec:
       host: "longhorn.${SECRET_DOMAIN}"
       path: /
       tls: true
-      tlsSecret: longhorn-system-tls
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
         hajimari.io/icon: "cow"
-        # hajimari.io/group: storage
         hajimari.io/appName: "longhorn"
-    # resources:
-    #   requests:
-    #     cpu: "100m"
-    #     memory: "50Mi"
-    #   limits:
-    #     cpu: "250m"
-    #     memory: "500Mi"
+
+# resources:
+#   requests:
+#     cpu: "100m"
+#     memory: "50Mi"
+#   limits:
+#     cpu: "250m"
+#     memory: "500Mi"

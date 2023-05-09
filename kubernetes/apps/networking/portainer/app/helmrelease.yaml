@@ -26,7 +26,6 @@ spec:
       enabled: true
       ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/appName: "portainer"
         hajimari.io/icon: "pier-crane"
       hosts:
@@ -37,4 +36,3 @@ spec:
       tls:
         - hosts:
             - *host
-          secretName: "portainer-tls"

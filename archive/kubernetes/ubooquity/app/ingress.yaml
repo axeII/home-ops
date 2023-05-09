@@ -8,10 +8,9 @@ metadata:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  ingressClassName: "traefik"
+  ingressClassName: nginx
   rules:
     - host: &host comics.${SECRET_DOMAIN}
       http:
@@ -26,7 +25,6 @@ spec:
   tls:
     - hosts:
         - comics.${SECRET_DOMAIN}
-      secretName: ubooquity-tls
 
 ---
 apiVersion: traefik.containo.us/v1alpha1

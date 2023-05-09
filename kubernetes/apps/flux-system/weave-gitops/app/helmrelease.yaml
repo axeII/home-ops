@@ -31,9 +31,8 @@ spec:
       username: admin
     ingress:
       enabled: true
-      className: traefik
+      className: nginx
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/icon: sawtooth-wave
       hosts:
         - host: &host "gitops.${SECRET_DOMAIN}"
@@ -43,7 +42,6 @@ spec:
       tls:
         - hosts:
             - *host
-          secretName: "weaveops-tls"
     networkPolicy:
       create: false
     metrics:

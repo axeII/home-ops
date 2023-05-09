@@ -54,7 +54,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/icon: "plex"
         hosts:
           - host: &host "plex.${SECRET_DOMAIN}"
@@ -64,7 +63,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "plex-tls"
     securityContext:
       privileged: true
     persistence:

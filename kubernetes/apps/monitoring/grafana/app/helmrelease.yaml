@@ -53,10 +53,6 @@ spec:
           datasource: Prometheus
           gnetId: 13665
           revision: 1
-        traefik-ingress:
-          datasource: Prometheus
-          gnetId: 4475
-          revision: 5
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -94,7 +90,7 @@ spec:
         oauth_auto_login: true
       auth.basic:
         disable_login_form: false
-      # auth.google:
+        # auth.google:
         # allow_sign_up: true
         # client_id: ${SECRET_GRAFANA_AUTH_GOOGLE_CLIENT_ID}
         # client_secret: ${SECRET_GRAFANA_AUTH_GOOGLE_CLIENT_SECRET}

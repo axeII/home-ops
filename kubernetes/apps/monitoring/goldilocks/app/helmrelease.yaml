@@ -25,7 +25,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/appName: "goldilocks"
           hajimari.io/icon: "abacus"
         hosts:
@@ -36,4 +35,3 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "goldilocks-tls"

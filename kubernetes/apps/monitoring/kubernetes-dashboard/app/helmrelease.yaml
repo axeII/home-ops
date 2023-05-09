@@ -31,9 +31,9 @@ spec:
       - --token-ttl=43200
     ingress:
       enabled: true
-      className: traefik
+      className: nginx
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
+        cert-manager.io/cluster-issuer: letsencrypt-staging
         hajimari.io/icon: mdi:kubernetes
       hosts:
         - &host "kubernetes.${SECRET_DOMAIN}"

@@ -78,7 +78,6 @@ spec:
       enabled: true
       ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
         hajimari.io/icon: ip-network-outline
       hosts:
         - host: "netbox.${SECRET_DOMAIN}"
@@ -94,7 +93,6 @@ spec:
       tls:
         - hosts:
             - "netbox.${SECRET_DOMAIN}"
-          secretName: netbox-tls
     init:
       image:
         repository: docker.io/library/busybox
