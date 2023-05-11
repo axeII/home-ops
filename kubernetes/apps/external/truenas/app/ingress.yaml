@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/instance: *app
   annotations:
     hajimari.io/icon: "simple-icons:truenas"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 spec:
   ingressClassName: nginx
   rules:
