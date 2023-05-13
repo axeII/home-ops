@@ -21,3 +21,4 @@ resources:
   - ./metube/ks.yaml
   - ./kavita/ks.yaml
   - ./deluge/ks.yaml
+  - ./seafile/ks.yaml
