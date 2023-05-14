@@ -30,7 +30,7 @@ spec:
       enabled: true
       ingressClassName: nginx
       annotations:
-        hajimari.io/icon: "icloud"
+        hajimari.io/icon: "video-input-antenna"
       hosts:
         - host: &host "echo-server.${SECRET_DOMAIN}"
           paths:
