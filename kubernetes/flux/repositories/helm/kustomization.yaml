@@ -33,3 +33,4 @@ resources:
   - ./bootc-charts.yaml
   - ./kubernetes-dashboard.yaml
   - ./weave-gitops.yaml
+  - ./phybros-charts.yaml
