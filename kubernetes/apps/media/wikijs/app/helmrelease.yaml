@@ -23,9 +23,9 @@ spec:
     env:
       TZ: ${TIMEZONE}
       APP_URL: "https://docs.${SECRET_DOMAIN}"
-      DB_TYPE: postgres
-      DB_HOST: 192.168.69.107
-      DB_PORT: 5432
+      DB_TYPE: mysql
+      DB_HOST: 192.168.69.104
+      DB_PORT: 3306
       DB_NAME: wikijs
       DB_USER: wikijs
       DB_PASS: ${SECRET_WIKIJS_DATABASE_PASSWORD}
