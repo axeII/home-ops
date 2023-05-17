@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/mylar3
-      tag: version-v0.5.7
+      tag: version-v0.7.2
     env:
       TZ: ${TIMEZONE}
     service:
