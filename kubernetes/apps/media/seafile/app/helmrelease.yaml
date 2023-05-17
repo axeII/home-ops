@@ -24,8 +24,11 @@ spec:
       SEAFILE_SERVER_HOSTNAME: "files.${SECRET_DOMAIN}"
       SEAFILE_ADMIN_EMAIL: "${SECRET_MY_EMAIL}"
       SEAFILE_ADMIN_PASSWORD: "${SECRET_SEAFILE_ADMIN_PASSWORD}"
-      DB_HOST: seafile
-      DB_ROOT_PASSWD: seafilerootpass
+      MYSQL_SERVER: 192.168.69.104
+      MYSQL_USER: seafile
+      MYSQL_USER_PASSWORD: ${SECRET_SEAFILE_USER_PASSWORD}
+      MYSQL_PORT: 3306
+
 
     persistence:
       shared:
