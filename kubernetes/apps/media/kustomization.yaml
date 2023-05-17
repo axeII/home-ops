@@ -22,3 +22,4 @@ resources:
   - ./kavita/ks.yaml
   - ./deluge/ks.yaml
   - ./seafile/ks.yaml
+  - ./mylar/ks.yaml
