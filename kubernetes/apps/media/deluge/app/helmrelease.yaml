@@ -39,6 +39,7 @@ spec:
         ports:
           http:
             port: 8112
+
     ingress:
       main:
         enabled: true
@@ -53,6 +54,7 @@ spec:
         tls:
           hosts:
             - *host
+
     persistence:
       config:
         enabled: true
@@ -63,12 +65,14 @@ spec:
         mountPath: /media
         readOnly: false
     # hostname: torrent
+
     resources:
       requests:
         memory: 250Mi
         cpu: 25m
       limits:
         memory: 6000Mi
+
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
