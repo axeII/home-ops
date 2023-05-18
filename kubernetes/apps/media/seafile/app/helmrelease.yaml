@@ -57,11 +57,12 @@ spec:
     mariadb:
       enabled: false
 
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 568
-    podSecurityContext:
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
+    # FIXME: I should fix the permissions
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 568
+    # podSecurityContext:
+    #   fsGroup: 568
+    #   fsGroupChangePolicy: "OnRootMismatch"
+    #   supplementalGroups:
+    #     - 100
