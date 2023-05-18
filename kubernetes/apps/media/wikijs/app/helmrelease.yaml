@@ -48,9 +48,14 @@ spec:
             paths:
               - path: /
                 type: Prefix
+          - host: &host-custom "wiki.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
         tls:
           - hosts:
               - *host
+              - *host-custom
     resources:
       requests:
         memory: 150M
