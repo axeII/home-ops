@@ -47,7 +47,7 @@ spec:
         annotations:
           hajimari.io/icon: "mdi:download"
         hosts:
-          - host: &host torrent.${SECRET_DOMAIN}
+          - host: &host "torrent.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

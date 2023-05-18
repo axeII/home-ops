@@ -21,6 +21,7 @@ spec:
       repository: seafileltd/seafile-mc
       tag: 10.0.1
     env:
+      TIME_ZONE: ${TIMEZONE}
       SEAFILE_SERVER_HOSTNAME: "files.${SECRET_DOMAIN}"
       SEAFILE_ADMIN_EMAIL: "${SECRET_MY_EMAIL}"
       SEAFILE_ADMIN_PASSWORD: "${SECRET_SEAFILE_ADMIN_PASSWORD}"
