@@ -49,9 +49,6 @@ spec:
       customApps:
         - group: Infra
           apps:
-            - name: Pihole
-              url: "https://pihole.${SECRET_DOMAIN}"
-              icon: pi-hole
             - name: Promox
               url: "https://proxmox.${SECRET_DOMAIN}"
               icon: server
