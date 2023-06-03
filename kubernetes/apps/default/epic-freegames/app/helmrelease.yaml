@@ -25,6 +25,10 @@ spec:
     remediation:
       retries: 3
 
+  envFrom:
+    - secretRef:
+        name: epic-freegames
+
   values:
     image:
       repository: ghcr.io/claabs/epicgames-freegames-node
@@ -48,6 +52,11 @@ spec:
         tls:
           - hosts:
               - *host
+
+    controller:
+      type: statefulset
+      annotations:
+        reloader.stakater.com/auto: "true"
 
     volumeClaimTemplates:
       - name: config
