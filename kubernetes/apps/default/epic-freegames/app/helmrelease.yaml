@@ -58,12 +58,12 @@ spec:
       annotations:
         reloader.stakater.com/auto: "true"
 
-    volumeClaimTemplates:
-      - name: config
+    persistence:
+      data:
+        enabled: true
+        existingClaim: epic-freegames-config-v1
         mountPath: /usr/app/config
-        accessMode: ReadWriteOnce
-        size: 1Gi
-        storageClass: longhorn
+        retain: true
 
     probes:
       startup:
