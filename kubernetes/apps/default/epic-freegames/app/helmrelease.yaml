@@ -27,7 +27,7 @@ spec:
 
   envFrom:
     - secretRef:
-        name: epic-freegames
+        name: epic-freegames-secret
 
   values:
     image:
@@ -58,12 +58,20 @@ spec:
       annotations:
         reloader.stakater.com/auto: "true"
 
-    persistence:
-      data:
-        enabled: true
-        existingClaim: epic-freegames-config-v1
+
+    volumeClaimTemplates:
+      - name: config
         mountPath: /usr/app/config
-        retain: true
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        storageClass: ceph-block
+
+    # persistence:
+    #   data:
+    #     enabled: true
+    #     existingClaim: epic-freegames-config-v1
+    #     mountPath: /usr/app/config
+    #     retain: true
 
     probes:
       startup:
