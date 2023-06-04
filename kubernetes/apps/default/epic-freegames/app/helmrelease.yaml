@@ -64,7 +64,7 @@ spec:
         mountPath: /usr/app/config
         accessMode: ReadWriteOnce
         size: 1Gi
-        storageClass: ceph-block
+        storageClass: longhorn
 
     # persistence:
     #   data:
