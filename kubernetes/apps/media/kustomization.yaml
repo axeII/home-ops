@@ -24,3 +24,4 @@ resources:
   - ./seafile/ks.yaml
   - ./mylar/ks.yaml
   - ./ubooquity/ks.yaml
+  - ./flaresolverr/ks.yaml
