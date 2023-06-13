@@ -25,3 +25,4 @@ resources:
   - ./mylar/ks.yaml
   - ./ubooquity/ks.yaml
   - ./flaresolverr/ks.yaml
+  - ./kapowarr/ks.yaml
