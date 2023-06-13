@@ -22,7 +22,6 @@ resources:
   - ./kavita/ks.yaml
   - ./deluge/ks.yaml
   - ./seafile/ks.yaml
-  - ./mylar/ks.yaml
   - ./ubooquity/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./kapowarr/ks.yaml
