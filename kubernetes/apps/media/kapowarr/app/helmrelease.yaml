@@ -5,6 +5,10 @@ metadata:
   name: kapowarr
   namespace: media
 spec:
+  interval: 15m
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   chart:
     spec:
       chart: app-template
