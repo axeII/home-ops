@@ -64,6 +64,16 @@ spec:
               url: "https://comics.${SECRET_DOMAIN}/ubooquity"
               icon: thought-bubble
       globalBookmarks:
+        - group: Admin
+          bookmarks:
+            - name: Midjourney
+              url: "https://www.midjourney.com/app/"
+            - name: Unifi
+              url: "https://unifi"
+            - name: "NextDNS"
+              url: "https://my.nextdns.io/"
+            - name: "Tailscale"
+              url: "https://login.tailscale.com/admin/machines"
         - group: Daily
           bookmarks:
             - name: Phind
@@ -74,10 +84,6 @@ spec:
               url: "https://github.com"
             - name: InfoSecNews
               url: "https://allinfosecnews.com"
-            - name: Unifi
-              url: "https://unifi"
-            - name: "NextDNS"
-              url: "https://my.nextdns.io/"
             - name: "News"
               url: "https://www.newsminimalist.com/"
         - group: DevOps
@@ -86,8 +92,6 @@ spec:
               url: "https://github.com/axeII/home-ops"
             - name: TerraformCloud
               url: "https://app.terraform.io/"
-            - name: "Tailscale"
-              url: "https://login.tailscale.com/admin/machines"
             - name: Visual studio
               url: https://my.visualstudio.com"
             - name: Atlantis
