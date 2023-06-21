@@ -33,11 +33,9 @@ spec:
       tag: nightly-77b4eb3
     env:
       TZ: "${TIMEZONE}"
-      WHISPARR__INSTANCE_NAME: Whisparr
-      WHISPARR__PORT: &port 8989
-      WHISPARR__BRANCH: nightly
-      WHISPARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
-      WHISPARR__LOG_LEVEL: info
+      PUID: 1000
+      PGID: 1000
+      UMASK: 002
     envFrom:
       - secretRef:
           name: *app
@@ -45,7 +43,7 @@ spec:
       main:
         ports:
           http:
-            port: *port
+            port: 6969
     ingress:
       main:
         enabled: true
