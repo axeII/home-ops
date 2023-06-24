@@ -39,7 +39,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          # external-dns/is-public: "true"
           hajimari.io/name: "wiki.js"
           hajimari.io/icon: "wikipedia"
           hajimari.io/description: "A modern and powerful wiki app built on Node.js."
