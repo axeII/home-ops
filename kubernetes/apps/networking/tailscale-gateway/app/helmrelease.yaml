@@ -34,8 +34,7 @@ spec:
       SA_NAME: tailscale
       TS_USERSPACE: "true"
       TS_ROUTES: "192.168.69.0/24,192.168.88.0/24"
-      # TS_EXTRA_ARGS: "--advertise-exit-node"
-      TS_EXTRA_ARGS: "--snat-subnet-routes=false"
+      TS_EXTRA_ARGS: "--snat-subnet-routes=false --advertise-exit-node"
     envFrom:
       - secretRef:
           name: tailscale-auth
