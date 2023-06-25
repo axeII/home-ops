@@ -39,9 +39,9 @@ spec:
       tag: v1.6.1
     env:
       TZ: "${TZ}"
-      DATABASE_URL: "postgresql://kaizoku:${SECRET_KAIZOKU_DB_PASSWORD}@postgresql:5432/kaizoku"
+      DATABASE_URL: "postgresql://kaizoku:${SECRET_KAIZOKU_DB_PASSWORD}@postgresql.database.svc.cluster.local:5432/kaizoku"
       KAIZOKU_PORT: 3000
-      REDIS_HOST: redis-master
+      REDIS_HOST: redis-master.database.svc.cluster.local
       REDIS_PORT: 6379
       PUID: 1000
       PGID: 1000
