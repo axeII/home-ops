@@ -41,7 +41,7 @@ spec:
       TZ: "${TZ}"
       DATABASE_URL: "postgresql://kaizoku:${SECRET_KAIZOKU_DB_PASSWORD}@postgresql:5432/kaizoku"
       KAIZOKU_PORT: 3000
-      REDIS_HOST: redis
+      REDIS_HOST: redis-master
       REDIS_PORT: 6379
       PUID: 1000
       PGID: 1000
