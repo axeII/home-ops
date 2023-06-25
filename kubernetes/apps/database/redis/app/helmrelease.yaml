@@ -12,7 +12,7 @@ spec:
       version: 17.11.6
       sourceRef:
         kind: HelmRepository
-        name: chart-bitnami
+        name: bitnami
         namespace: flux-system
   maxHistory: 3
   install:
