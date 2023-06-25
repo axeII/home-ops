@@ -75,10 +75,11 @@ spec:
         storageClass: longhorn
 
     persistence:
-      media:
+      nfs-nas-media:
         enabled: true
-        existingClaim: downloads
-        mountPath: /data
+        existingClaim: media-nfs-share-pvc
+        mountPath: /media
+        readOnly: false
 
     # resources:
     #   requests:
