@@ -21,11 +21,13 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ---
 
+![image](https://axell.dev/favorite/my-home-lab/featured.jpg "My homelab")
+
 ## :wave: Overview
 
 Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision` I store all my ansible and terraform scripts my infrastructure. Some of them are used for k3s cluster some only for docker instances.
 
-I deciced for my cluster that instead of high disk load using etcd I switched to postgres. Just in case you would like to copy my cluster configuration keep this note in mind (feel free though!).  
+I deciced for my cluster that instead of high IO load using etcd, I am using the postgres database for storing critical data for my cluster and maintain it in Hight Availibity mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind (_feel free though!_). Here is great guide from Devin's template which can help to  spin up your own cluster at home. _Cool right?!_
 
 
 ## :art:&nbsp; Cluster components
@@ -70,6 +72,7 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 | Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc |
 <!-- textlint-enable -->
 
+I've made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
 
 ---
 
