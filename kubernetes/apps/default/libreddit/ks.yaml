@@ -5,7 +5,7 @@ metadata:
   name: cluster-apps-default-libreddit
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/default/hajimari/app
+  path: ./kubernetes/apps/default/libreddit/app
   prune: true
   sourceRef:
     kind: GitRepository
