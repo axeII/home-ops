@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -43,7 +42,7 @@ spec:
       repository: ghcr.io/midarrlabs/midarr-server
       tag: v3.1.0-beta.2
     env:
-      TZ: America/New_York
+      TZ: ${TIMEZONE}
       APP_URL: http://midarr.media.svc.cluster.local:4000
       RADARR_BASE_URL: radarr.media.svc.cluster.local
       SONARR_BASE_URL: sonarr.media.svc.cluster.local
@@ -62,20 +61,17 @@ spec:
         annotations:
           hajimari.io/icon: mdi:play-circle-outline
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_PUBLIC_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-            secretName: midarr-tls
     persistence:
-      media:
+      nfs-nas-media:
         enabled: true
-        type: nfs
-        server: osiris.286k.co
-        path: /pluto/media
+        existingClaim: media-nfs-share-pvc
         mountPath: /media
         readOnly: true
     resources:

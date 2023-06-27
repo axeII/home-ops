@@ -6,8 +6,8 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-longhorn
-  path: ./kubernetes/apps/media/sonarr/app
+    - name: cluster-apps-ingress-nginx
+  path: ./kubernetes/apps/media/midarr/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -15,7 +15,7 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: sonarr
+      name: midarr
       namespace: media
   interval: 30m
   retryInterval: 1m
