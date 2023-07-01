@@ -11,7 +11,7 @@ spec:
       version: 4.13.1
       sourceRef:
         kind: HelmRepository
-        name: runatlantis-charts
+        name: runatlantis
         namespace: flux-system
   maxHistory: 3
   install:
@@ -35,8 +35,8 @@ spec:
 
     ## To be used for mounting credential files (when using google provider).
     serviceAccountSecrets:
-      # credentials: <json file as base64 encoded string>
-      # credentials-staging: <json file as base64 encoded string>
+    # credentials: <json file as base64 encoded string>
+    # credentials-staging: <json file as base64 encoded string>
 
     image:
       repository: ghcr.io/runatlantis/atlantis
@@ -78,39 +78,31 @@ spec:
 
     ingress:
       enabled: true
-      ingressClassName: traefik
+      ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
         kubernetes.io/tls-acme: "true"
-        traefik.ingress.kubernetes.io/router.middlewares: traefik-ingress-sso@kubernetescrd
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/affinity: "true"
-        traefik.ingress.kubernetes.io/router.tls: "true"
-        # external-dns.alpha.kubernetes.io/target: "${SECRET_CLOUDFLARE_TUNNEL_ID}.cfargotunnel.com"
         hajimari.io/icon: simple-icons:terraform
-        hajimari.io/enable: "true"
       pathType: Prefix
       hosts:
         - host: &host atlantis.${SECRET_DOMAIN}
           paths:
             - /
       tls:
-        - secretName: atlantis-tls
-          hosts:
-            - *host
+        hosts:
+          - *host
 
     resources:
       requests:
-        memory: 1Gi
+        memory: 350Mi
         cpu: 100m
       limits:
         memory: 1Gi
-        cpu: 1000m
+        # cpu: 1000m
 
     volumeClaim:
       enabled: true
       dataStorage: 5Gi
-      storageClassName: ceph-block
+      storageClassName: longhorn
 
     environment:
       ATLANTIS_DEFAULT_TF_VERSION: v1.3.8
