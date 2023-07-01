@@ -13,5 +13,5 @@ spec:
     name: home-kubernetes
   wait: true
   dependsOn:
-    - name: apps-cert-manager
+    - name: cluster-apps-cert-manager
     # - name: apps-traefik-forward-auth
