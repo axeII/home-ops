@@ -109,8 +109,8 @@ spec:
       ATLANTIS_WRITE_GIT_CREDS: "true"
       # ATLANTIS_GH_APP_KEY_FILE: /config/github.pem
 
-    loadEnvFromSecrets:
-      - &secret atlantis-env-secrets
+    # loadEnvFromSecrets:
+    #   - &secret atlantis-env-secrets
 
     containerSecurityContext:
       allowPrivilegeEscalation: false
@@ -122,9 +122,9 @@ spec:
       #   by setting a value for metrics.prometheus.endpoint
       enabled: false
 
-    podTemplate:
-      annotations:
-        secret.reloader.stakater.com/reload: *secret
+    # podTemplate:
+    #   annotations:
+    #     secret.reloader.stakater.com/reload: *secret
 
     readinessProbe:
       periodSeconds: 5
