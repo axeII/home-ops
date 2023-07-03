@@ -81,7 +81,7 @@ spec:
       ingressClassName: nginx
       annotations:
         hajimari.io/icon: simple-icons:terraform
-      osts:
+      hosts:
         - host: &host atlantis.${SECRET_DOMAIN}
           paths:
             - path: /
