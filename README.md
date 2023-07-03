@@ -27,8 +27,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision` I store all my ansible and terraform scripts my infrastructure. Some of them are used for k3s cluster some only for docker instances.
 
-I deciced for my cluster that instead of high IO load using etcd, I am using the postgres database for storing critical data for my cluster and maintain it in Hight Availibity mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind (_feel free though!_). Here is great guide from Devin's template which can help to  spin up your own cluster at home. _Cool right?!_
-
+I deciced for my cluster that instead of high IO load using etcd, I am using the postgres database for storing critical data for my cluster and maintain it in Hight Availibity mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind. Here is great guide from Devin's [template](https://github.com/onedr0p/flux-cluster-template) which can help to spin up your own cluster at home 💪.
 
 ## :art:&nbsp; Cluster components
 
