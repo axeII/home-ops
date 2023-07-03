@@ -82,10 +82,9 @@ spec:
       annotations:
         hajimari.io/icon: simple-icons:terraform
       hosts:
-        - host: &host atlantis.${SECRET_DOMAIN}
+        - host: &host "atlantis.${SECRET_DOMAIN}"
           paths:
-            - path: /
-              pathType: Prefix
+            - /
       tls:
         - hosts:
             - *host
