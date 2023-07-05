@@ -27,6 +27,7 @@ spec:
         annotations:
           hajimari.io/appName: "goldilocks"
           hajimari.io/icon: "abacus"
+          hajimari.io/group: "monitoring"
         hosts:
           - host: &host "goldilocks.${SECRET_DOMAIN}"
             paths:

@@ -35,6 +35,7 @@ spec:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-staging
         hajimari.io/icon: mdi:kubernetes
+        hajimari.io/group: "monitoring"
       hosts:
         - &host "kubernetes.${SECRET_DOMAIN}"
       tls:
