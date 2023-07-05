@@ -47,22 +47,11 @@ spec:
           searchUrl: https://www.youtube.com/results?search_query={query}
           url: https://www.youtube.com
       customApps:
-        - group: Infra
+        - group: monitoring
           apps:
-            - name: Promox
-              url: "https://proxmox.${SECRET_DOMAIN}"
-              icon: server
             - name: Status
               url: "https://status.${SECRET_DOMAIN}"
               icon: access-point
-        - group: Media
-          apps:
-            - name: Plex.tv
-              url: "https://app.plex.tv"
-              icon: plex
-            - name: Comics
-              url: "https://comics.${SECRET_DOMAIN}/ubooquity"
-              icon: thought-bubble
       globalBookmarks:
         - group: Admin
           bookmarks:

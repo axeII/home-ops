@@ -34,6 +34,7 @@ spec:
       className: nginx
       annotations:
         hajimari.io/icon: sawtooth-wave
+        hajimari.io/group: "monitoring"
       hosts:
         - host: &host "gitops.${SECRET_DOMAIN}"
           paths:

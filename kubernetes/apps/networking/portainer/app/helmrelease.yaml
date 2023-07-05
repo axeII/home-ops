@@ -28,6 +28,7 @@ spec:
       annotations:
         hajimari.io/appName: "portainer"
         hajimari.io/icon: "pier-crane"
+        hajimari.io/group: "monitoring"
       hosts:
         - host: &host "portainer.${SECRET_DOMAIN}"
           paths:
