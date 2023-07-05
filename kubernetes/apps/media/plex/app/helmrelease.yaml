@@ -55,6 +55,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: "plex"
+          hajimari.io/group: "media"
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
           nginx.ingress.kubernetes.io/configuration-snippet: |
             location = / {

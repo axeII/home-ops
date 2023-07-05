@@ -44,6 +44,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: "music-box"
+          hajimari.io/group: "media"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:

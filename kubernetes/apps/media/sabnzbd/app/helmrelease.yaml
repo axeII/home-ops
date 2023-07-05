@@ -53,6 +53,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: "download"
+          hajimari.io/group: "downloader"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:

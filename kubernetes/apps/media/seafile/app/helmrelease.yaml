@@ -45,6 +45,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: "simple-icons:icloud"
+          hajimari.io/group: "media"
         hosts:
           - host: &host "files.${SECRET_DOMAIN}"
             paths:

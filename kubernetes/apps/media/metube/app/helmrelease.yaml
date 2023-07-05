@@ -45,6 +45,7 @@ spec:
         annotations:
           kubernetes.io/tls-acme: "true"
           hajimari.io/icon: "simple-icons:youtube"
+          hajimari.io/group: "downloader"
         hosts:
           - host: &host "metube.${SECRET_DOMAIN}"
             paths:

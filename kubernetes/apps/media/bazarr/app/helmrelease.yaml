@@ -45,6 +45,7 @@ spec:
         annotations:
           kubernetes.io/tls-acme: "true"
           hajimari.io/icon: "subtitles"
+          hajimari.io/group: "media"
         hosts:
           - host: "bazarr.${SECRET_DOMAIN}"
             paths:

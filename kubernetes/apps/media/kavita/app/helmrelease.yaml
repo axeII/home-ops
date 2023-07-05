@@ -38,6 +38,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: "notebook-heart"
+          hajimari.io/group: "media"
         hosts:
           - host: &host "kavita.${SECRET_DOMAIN}"
             paths:
