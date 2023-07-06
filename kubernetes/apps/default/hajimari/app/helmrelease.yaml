@@ -110,19 +110,19 @@ spec:
         - group: Reddit
           bookmarks:
             - name: "/r/sysadmin"
-              url: "https://www.reddit.com/r/sysadmin/"
+              url: "https://libreddit.juno.moe/r/sysadmin/"
             - name: "/r/selfhosted"
-              url: "https://www.reddit.com/r/selfhosted/"
+              url: "https://libreddit.juno.moe/r/selfhosted/"
             - name: "/r/kubernetes"
-              url: "https://reddit.com/r/kubernetes/"
+              url: "https://libreddit.juno.moe/r/kubernetes/"
             - name: "/r/apple"
-              url: "https://reddit.com/r/apple/"
+              url: "https://libreddit.juno.moe/r/apple/"
             - name: "/r/programming"
-              url: "https://reddit.com/r/programming/"
+              url: "https://libreddit.juno.moe/r/programming/"
             - name: "/r/hacking"
-              url: "https://reddit.com/r/hacking/"
+              url: "https://libreddit.juno.moe/r/hacking/"
             - name: "/r/oscp"
-              url: "https://reddit.com/r/oscp/"
+              url: "https://libreddit.juno.moe/r/oscp/"
         - group: Tech
           bookmarks:
             - name: Hacker News
