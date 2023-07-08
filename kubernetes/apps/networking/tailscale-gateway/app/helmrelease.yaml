@@ -41,8 +41,8 @@ spec:
           name: tailscale-auth
 
     service:
-      type: LoadBalancer
       main:
+        type: LoadBalancer
         ports:
           http:
             # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
