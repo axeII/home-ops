@@ -35,3 +35,10 @@ ubuntu:
     - socat
     - python3-kubernetes
     - python3-yaml
+    - apt-transport-https
+    - ca-certificates
+    - conntrack
+    - curl
+    - dirmngr
+    - gdisk
+    - gnupg
