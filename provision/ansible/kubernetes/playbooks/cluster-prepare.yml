@@ -139,6 +139,15 @@
             state: permissive
             policy: targeted
           when: ansible_facts['distribution'] == 'Fedora'
+        - name: Create hushlogin file to silence output during ssh login
+          ansible.builtin.file:
+            dest: /home/k3s/.hushlogin
+            state: touch
+            owner: "{% raw %}{{ ansible_user }}{% endraw %}"
+            group: "{% raw %}{{ ansible_user }}{% endraw %}"
+            mode: "0644"
+            modification_time: preserve
+            access_time: preserve
       notify: Reboot
 
   handlers:
