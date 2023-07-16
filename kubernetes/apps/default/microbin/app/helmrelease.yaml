@@ -1,0 +1,111 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app microbin
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controller:
+      type: statefulset
+      annotations:
+        reloader.stakater.com/auto: "true"
+    fullNameOverride: *app
+    image:
+      repository: docker.io/danielszabo99/microbin
+      tag: 2.0.4
+    env:
+      MICROBIN_ADMIN_USERNAME: admin
+      MICROBIN_ADMIN_PASSWORD: ${SECRET_MICRO_ADMIN_PASS}
+      MICROBIN_EDITABLE: true
+      MICROBIN_HIDE_FOOTER: false
+      MICROBIN_HIDE_HEADER: false
+      MICROBIN_HIDE_LOGO: false
+      MICROBIN_NO_LISTING: false
+      MICROBIN_HIGHLIGHTSYNTAX: true
+      MICROBIN_PORT: 8080
+      MICROBIN_BIND: "0.0.0.0"
+      MICROBIN_PRIVATE: true
+      MICROBIN_PURE_HTML: false
+      MICROBIN_DATA_DIR: "micronbin_data"
+      MICROBIN_JSON_DB: false
+      MICROBIN_PUBLIC_PATH: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+      MICROBIN_READONLY: false
+      MICROBIN_SHOW_READ_STATS: true
+      MICROBIN_THREADS: 1
+      MICROBIN_GC_DAYS: 90
+      MICROBIN_ENABLE_BURN_AFTER: true
+      MICROBIN_DEFAULT_BURN_AFTER: 0
+      MICROBIN_WIDE: true
+      MICROBIN_QR: true
+      MICROBIN_ETERNAL_PASTA: false
+      MICROBIN_ENABLE_READONLY: true
+      MICROBIN_DEFAULT_EXPIRY: "24hour"
+      MICROBIN_NO_FILE_UPLOAD: false
+      MICROBIN_HASH_IDS: false
+      MICROBIN_ENCRYPTION_CLIENT_SIDE: true
+      MICROBIN_ENCRYPTION_SERVER_SIDE: true
+      MICROBIN_MAX_FILE_SIZE_ENCRYPTED_MB: 2048
+      MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB: 2048
+      MICROBIN_DISABLE_TELEMETRY: true
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8080
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          hajimari.io/icon: simple-icons:pastebin
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    # probes:
+    #   liveness: &probes
+    #     enabled: true
+    #     custom: true
+    #     spec:
+    #       httpGet:
+    #         path: /settings
+    #         port: *port
+    #       initialDelaySeconds: 0
+    #       periodSeconds: 10
+    #       timeoutSeconds: 1
+    #       failureThreshold: 3
+    #   readiness: *probes
+    #   startup:
+    #     enabled: false
+
+    # podAnnotations:
+    #   reloader.stakater.com/auto: "true"
+    #   setGateway: "true"
+
+    resources:
+      requests:
+        cpu: 5m
+        memory: 50Mi
+      limits:
+        memory: 250Mi
