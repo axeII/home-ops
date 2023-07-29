@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: MegaLinter
-        uses: megalinter/megalinter/flavors/terraform@a7b1a3af0f3bd4de4db855969d27e224005665a6 # v7
+        uses: megalinter/megalinter/flavors/terraform@63776c4389c474e1a6b9faa27bc8b9500fdff95a # v7
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'workflow_dispatch' }}
           PRINT_ALPACA: false
