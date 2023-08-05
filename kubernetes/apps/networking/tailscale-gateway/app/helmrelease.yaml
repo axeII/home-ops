@@ -43,6 +43,9 @@ spec:
     service:
       main:
         type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
+        externalTrafficPolicy: Local
         ports:
           http:
             # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
