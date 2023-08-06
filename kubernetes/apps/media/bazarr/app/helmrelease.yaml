@@ -30,7 +30,7 @@ spec:
       type: statefulset
     image:
       repository: ghcr.io/onedr0p/bazarr
-      tag: 1.2.1@sha256:ec73f87c96b7480273775d0f0541a58f2c1ead58c675be3effac0a4e9021256f
+      tag: 1.2.4@sha256:80fbe89f5806015d67aa78c60bf64c068998507d08db5ea05ac7b9916dabb880
     env:
       TZ: "${TIMEZONE}"
     service:
