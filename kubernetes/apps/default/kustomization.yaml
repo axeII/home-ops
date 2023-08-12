@@ -6,3 +6,4 @@ resources:
   - ./echo-server/ks.yaml
   - ./hajimari/ks.yaml
   - ./libreddit/ks.yaml
+  - ./semaphore/ks.yaml
