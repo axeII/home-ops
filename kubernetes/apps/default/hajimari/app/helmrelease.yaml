@@ -63,6 +63,8 @@ spec:
               url: "https://my.nextdns.io/"
             - name: "Tailscale"
               url: "https://login.tailscale.com/admin/machines"
+            - name: "SMS Manager"
+              url: "https://app.smsmanager.com"
         - group: Daily
           bookmarks:
             - name: Phind
