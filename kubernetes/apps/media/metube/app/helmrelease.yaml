@@ -27,7 +27,7 @@ spec:
       type: statefulset
     image:
       repository: ghcr.io/alexta69/metube
-      tag: latest
+      tag: "2023-08-19"
       imagePullPolicy: Always
     env:
       TZ: "${TIMEZONE}"
