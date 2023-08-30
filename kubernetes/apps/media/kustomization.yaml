@@ -16,7 +16,6 @@ resources:
   - ./tautulli/ks.yaml
   - ./whisparr/ks.yaml
   - ./unpackerr/ks.yaml
-  - ./wikijs/ks.yaml
   - ./plex/ks.yaml
   - ./metube/ks.yaml
   - ./kavita/ks.yaml
