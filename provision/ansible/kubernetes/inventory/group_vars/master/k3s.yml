@@ -9,7 +9,6 @@ k3s_control_node: true
 k3s_server:
   node-ip: "{{ ansible_host }}"
   datastore-endpoint: "{{ database_endpoint }}"
-  # datastore-endpoint: "postgres://etcd:verybadpass@192.168.69.107:5432/postgres?sslmode=disable"
   tls-san:
     - "{{ kubevip_address }}"
   # Disable Docker - this will use the default containerd CRI
