@@ -67,10 +67,12 @@ spec:
               url: "https://app.smsmanager.com"
         - group: Daily
           bookmarks:
-            - name: Phind
-              url: "https://www.phind.com"
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
+            - name: Bard
+              url: "https://bard.google.com"
+            - name: Phind
+              url: "https://www.phind.com"
             - name: GitHub
               url: "https://github.com"
             - name: InfoSecNews
