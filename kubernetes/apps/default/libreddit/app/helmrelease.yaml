@@ -35,6 +35,7 @@ spec:
       LIBREDDIT_DEFAULT_WIDE: on
       LIBREDDIT_DEFAULT_USE_HLS: on
       LIBREDDIT_DEFAULT_HIDE_HLS_NOTIFICATION: on
+      PUSHSHIFT_FRONTEND: "https://reveddit.com"
     service:
       main:
         ports:
