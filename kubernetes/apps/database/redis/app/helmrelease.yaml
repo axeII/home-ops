@@ -30,7 +30,7 @@ spec:
       redis:
         password: ${SECRET_REDIS_PASSWORD}
     auth:
-      enabled: true
+      enabled: false
     master:
       persistence:
         enabled: false
