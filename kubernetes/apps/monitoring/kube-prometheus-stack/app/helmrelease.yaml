@@ -40,41 +40,43 @@ spec:
         receivers:
           - name: 'null'
           - name: 'discord'
-            slack_configs:
-              - channel: '#prometheus'
-                icon_url: https://avatars3.githubusercontent.com/u/3380462
-                username: 'Prometheus'
-                send_resolved: true
+            discord_configs:
+              - webhook_url: ${SECRET_DISCORD_PROMETHEUS_WH_URL}
                 title: |-
-                  [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }}{{ else }}{{ .CommonLabels.alertname }}{{ end }}
-                text: >-
-                  {{ range .Alerts -}}
-                    **Alert:** {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-                  **Description:** {{ if ne .Annotations.description ""}}{{ .Annotations.description }}{{else}}N/A{{ end }}
-                  **Details:**
-                    {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-                    {{ end }}
-                  {{ end }}
+                  [{{ .Status | toUpper }}:{{ if eq .Status "firing" }}{{ .Alerts.Firing | len }}{{ else }}{{ .Alerts.Resolved | len }}{{ end }}]
+                message: |-
+                  {{- range .Alerts }}
+                    **{{ .Labels.alertname }} {{ if ne .Labels.severity "" }}({{ .Labels.severity | title }}){{ end }} **
+                    {{- if ne .Annotations.description "" }}
+                      **Description:** {{ .Annotations.description }}
+                    {{- else if ne .Annotations.summary "" }}
+                      **Summary:** {{ .Annotations.summary }}
+                    {{- else if ne .Annotations.message "" }}
+                      **Message:** {{ .Annotations.message }}
+                    {{- else }}
+                      **Description:** N/A
+                    {{- end }}
+                  {{- end }}
         route:
-          group_by: ['alertname', 'job']
-          group_wait: 30s
+          group_by:
+            - alertname
           group_interval: 5m
-          repeat_interval: 6h
-          receiver: 'discord'
+          group_wait: 30s
+          receiver: discord
+          repeat_interval: 12h
           routes:
-            - receiver: 'null'
-              match:
+            - match:
                 alertname: Watchdog
-            - receiver: 'discord'
-              match_re:
-                severity: critical|warning|error
-              continue: true
-        inhibit_rules:
-          - source_match:
-              severity: 'critical'
-            target_match:
-              severity: 'warning'
-            equal: ['alertname', 'namespace']
+              receiver: "null"
+            - match:
+                severity: critical
+              receiver: discord
+            - match:
+                alertname: CephNodeNetworkPacketDrops
+              receiver: "null"
+            - match:
+                alertname: InfoInhibitor
+              receiver: "null"
       ingress:
         enabled: true
         pathType: Prefix
@@ -93,10 +95,8 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
-
     kube-state-metrics:
       fullnameOverride: kube-state-metrics
-
     grafana:
       enabled: false
       forceDeployDashboards: true
@@ -105,7 +105,6 @@ spec:
           multicluster:
             etcd:
               enabled: true
-
     kubelet:
       enabled: true
       serviceMonitor:
@@ -114,10 +113,8 @@ spec:
             sourceLabels:
               - node
             targetLabel: instance
-
     kubeApiServer:
       enabled: true
-
     kubeControllerManager:
       enabled: true
       endpoints:
@@ -132,7 +129,6 @@ spec:
         enabled: true
         https: true
         insecureSkipVerify: true
-
     kubeScheduler:
       enabled: true
       endpoints:
@@ -147,25 +143,14 @@ spec:
         enabled: true
         https: true
         insecureSkipVerify: true
-
     kubeProxy:
       enabled: true
       endpoints:
         - 192.168.69.110
         - 192.168.69.109
         - 192.168.69.108
-
     kubeEtcd:
       enabled: false
-      endpoints:
-        - 192.168.69.110
-        - 192.168.69.109
-        - 192.168.69.108
-      service:
-        enabled: true
-        port: 2381
-        targetPort: 2381
-
     prometheusOperator:
       prometheusConfigReloader:
         resources:
@@ -174,7 +159,6 @@ spec:
             memory: 50Mi
           limits:
             memory: 100Mi
-
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
@@ -187,7 +171,6 @@ spec:
               sourceLabels:
                 - __meta_kubernetes_pod_node_name
               targetLabel: kubernetes_node
-
     prometheus:
       ingress:
         enabled: true
@@ -206,10 +189,8 @@ spec:
           cpu: 250m
         limits:
           memory: 2048Mi
-
       thanosService:
         enabled: false
-
       prometheusSpec:
         replicas: 1
         replicaExternalLabelName: "replica"
