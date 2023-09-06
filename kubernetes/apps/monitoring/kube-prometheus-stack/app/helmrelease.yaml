@@ -35,13 +35,12 @@ spec:
     alertmanager:
       config:
         global:
-          slack_api_url: "${SECRET_ALERT_MANAGER_DISCORD_WEBHOOK}"
           resolve_timeout: 5m
         receivers:
           - name: 'null'
           - name: 'discord'
             discord_configs:
-              - webhook_url: ${SECRET_DISCORD_PROMETHEUS_WH_URL}
+              - webhook_url: ${SECRET_ALERT_MANAGER_DISCORD_WEBHOOK}
                 title: |-
                   [{{ .Status | toUpper }}:{{ if eq .Status "firing" }}{{ .Alerts.Firing | len }}{{ else }}{{ .Alerts.Resolved | len }}{{ end }}]
                 message: |-
