@@ -50,7 +50,7 @@ spec:
           http:
             # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
             port: &port 65142
-            nodePort: 65142
+            # nodePort: 65142
 
     podSecurityContext:
       runAsUser: 1000
