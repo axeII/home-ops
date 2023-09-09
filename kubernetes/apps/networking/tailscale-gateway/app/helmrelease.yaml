@@ -44,7 +44,7 @@ spec:
       main:
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
+          metallb.universe.tf/loadBalancerIPs: 192.168.69.102
         externalTrafficPolicy: Local
         ports:
           http:
