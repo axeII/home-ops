@@ -69,6 +69,8 @@ spec:
           bookmarks:
             - name: k8s-at-home-search
               url: "https://whazor.github.io/k8s-at-home-search/"
+            - name: Artifacthub
+              url: "https://artifacthub.io/"
             - name: Bard
               url: "https://bard.google.com"
             - name: Phind
