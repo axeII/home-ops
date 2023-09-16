@@ -15,7 +15,7 @@ spec:
     path: /mnt/ThiccBoi/media
   mountOptions:
     - nfsvers=4.2
-    - nconnect=8
+    - nconnect=4
     - hard
     - noatime
     - rsize=131072
