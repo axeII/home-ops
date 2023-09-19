@@ -9,3 +9,4 @@ resources:
   - ./reloader/ks.yaml
   - ./reflector/ks.yaml
   - ./nvidia-device-plugin/ks.yaml
+  - ./democratic-csi/ks.yaml
