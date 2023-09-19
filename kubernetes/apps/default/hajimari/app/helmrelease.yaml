@@ -145,6 +145,8 @@ spec:
               url: "https://www.greynoise.io/"
             - name: GrayHatWarFare
               url: "https://www.greyhatwarfare.com/"
+            - name: GPP Tools
+              url: "https://bgp.tools"
     ingress:
       main:
         enabled: true
