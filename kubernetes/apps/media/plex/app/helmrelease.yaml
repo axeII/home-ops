@@ -26,7 +26,7 @@ spec:
     runtimeClassName: nvidia
     image:
       repository: ghcr.io/onedr0p/plex
-      tag: 1.32.5.7349-8f4248874@sha256:e2fa39779d5fe7f10ee92b9c2fc492113c3a397d3ce5032152e0cb6d557a295c
+      tag: 1.32.5.7516-8f4248874@sha256:c38bc4f71821fb9b543c772176537b55994c5e885c25b099441bf9fd1b0767d7
     env:
       # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
       TZ: "${TZ}"
