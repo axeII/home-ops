@@ -135,10 +135,6 @@ spec:
               url: "https://news.ycombinator.com/"
             - name: Shodan
               url: "https://shodan.io"
-            - name: The Verge
-              url: "https://theverge.com/"
-            - name: MIT Technology Review
-              url: "https://www.technologyreview.com/"
             - name: Intelx
               url: "https://intelx.io/"
             - name: Greynoise
@@ -147,6 +143,12 @@ spec:
               url: "https://www.greyhatwarfare.com/"
             - name: GPP Tools
               url: "https://bgp.tools"
+            - name: BGP View
+              url: "https://bgpview.io"
+            - name: "Bookhatrix"
+              url: "https://book.hacktricks.xyz"
+            - name: "Pentest-tools"
+              url: "https://offsec.tools/"
     ingress:
       main:
         enabled: true
