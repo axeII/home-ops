@@ -115,20 +115,20 @@ spec:
               url: "https://www.padi.com/dive-sites"
         - group: Reddit
           bookmarks:
-            - name: "/r/sysadmin"
-              url: "https://libreddit.juno.moe/r/sysadmin/"
+            - name: "/r/NonCredibleDefense"
+              url: "https://libreddit.juno.moe/r/NonCredibleDefense/"
             - name: "/r/selfhosted"
               url: "https://libreddit.juno.moe/r/selfhosted/"
             - name: "/r/kubernetes"
               url: "https://libreddit.juno.moe/r/kubernetes/"
-            - name: "/r/apple"
-              url: "https://libreddit.juno.moe/r/apple/"
-            - name: "/r/programming"
-              url: "https://libreddit.juno.moe/r/programming/"
-            - name: "/r/hacking"
-              url: "https://libreddit.juno.moe/r/hacking/"
-            - name: "/r/oscp"
-              url: "https://libreddit.juno.moe/r/oscp/"
+            - name: "/r/hoggit"
+              url: "https://libreddit.juno.moe/r/hoggit/"
+            - name: "/r/MacOS"
+              url: "https://libreddit.juno.moe/r/MacOS/"
+            - name: "/r/ChatGPT"
+              url: "https://libreddit.juno.moe/r/ChatGPT/"
+            - name: "/r/plex"
+              url: "https://libreddit.juno.moe/r/plex/"
         - group: Tech
           bookmarks:
             - name: Hacker News
