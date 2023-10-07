@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/unpackerr
-      tag: 0.12.0@sha256:05425c80a4e6682d098e29d8f1c2ba79bdf8bffd79c3fe139d3f16cfe6f90c7b
+      tag: 0.12.0@sha256:952bce04ef8229681fc74976b722416bc5b9000434014ca26d7bfae625ee681b
     env:
       TZ: "${TIMEZONE}"
       UN_LIDARR_0_URL: https://lidarr.${SECRET_DOMAIN}
