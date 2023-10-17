@@ -7,3 +7,4 @@ resources:
   - ./hajimari/ks.yaml
   - ./libreddit/ks.yaml
   - ./semaphore/ks.yaml
+  - ./shiori/ks.yaml
