@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/deluge
-      tag: latest@sha256:c2c384624cb3b58ce759e975e0312752211fa05288fb6aa869db30b316b49615
+      tag: latest@sha256:1481f43aedfc2af1fa71142fb0ae505a1beefc7ee1386956532c57d275c6f874
     env:
       TZ: "${TIMEZONE}"
       PUID: "1000"
