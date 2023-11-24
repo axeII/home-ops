@@ -12,7 +12,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "192.168.69.69"
-    path: /mnt/ThiccBoi/media
+    path: /mnt/ThiccBoi/SiccBoi/data/media
   mountOptions:
     - nfsvers=4.2
     - nconnect=4
