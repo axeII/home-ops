@@ -8,3 +8,4 @@ resources:
   - ./libreddit/ks.yaml
   - ./semaphore/ks.yaml
   - ./shiori/ks.yaml
+  - ./invidious/ks.yaml
