@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  namespace: media
+  namespace: default
   name: appdata
 spec:
   accessModes:
