@@ -19,6 +19,9 @@
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prIgnoreNotification"],
+  "ignorePaths": [
+    "**archive/**"
+  ],
   "rebaseWhen": "conflicted",
   "schedule": ["every saturday"],
   "pre-commit": {
