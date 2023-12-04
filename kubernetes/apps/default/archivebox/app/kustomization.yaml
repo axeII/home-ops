@@ -4,3 +4,4 @@ resources:
   - ./helmrelease.yaml
   - ./secret.sops.yaml
   - ./appdata.yaml
+  - ./config-pvc.yaml
