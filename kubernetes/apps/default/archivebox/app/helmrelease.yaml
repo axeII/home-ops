@@ -130,7 +130,8 @@ spec:
 
     volumeClaimTemplates:
       - name: config
-        mountPath: /sonic
+        globalMounts:
+          - path: /sonic
         accessMode: ReadWriteOnce
         size: 2Gi
         storageClass: longhorn
