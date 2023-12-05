@@ -71,10 +71,8 @@ spec:
               url: "https://whazor.github.io/k8s-at-home-search/"
             - name: Artifacthub
               url: "https://artifacthub.io/"
-            - name: Bard
-              url: "https://bard.google.com"
-            - name: Phind
-              url: "https://www.phind.com"
+            - name: "Loki logs"
+              url: "https://grafana.${SECRET_DOMAIN}/explore"
             - name: GitHub
               url: "https://github.com"
             - name: InfoSecNews
@@ -116,19 +114,19 @@ spec:
         - group: Reddit
           bookmarks:
             - name: "/r/NonCredibleDefense"
-              url: "https://libreddit.juno.moe/r/NonCredibleDefense/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
             - name: "/r/selfhosted"
-              url: "https://libreddit.juno.moe/r/selfhosted/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/selfhosted/"
             - name: "/r/kubernetes"
-              url: "https://libreddit.juno.moe/r/kubernetes/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/kubernetes/"
             - name: "/r/virtualreality"
-              url: "https://libreddit.juno.moe/r/virtualreality/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/virtualreality/"
             - name: "/r/MacOS"
-              url: "https://libreddit.juno.moe/r/MacOS/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/MacOS/"
             - name: "/r/ChatGPT"
-              url: "https://libreddit.juno.moe/r/ChatGPT/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/ChatGPT/"
             - name: "/r/plex"
-              url: "https://libreddit.juno.moe/r/plex/"
+              url: "https://libreddit.${SECRET_DOMAIN}/r/plex/"
         - group: Tech
           bookmarks:
             - name: Hacker News
