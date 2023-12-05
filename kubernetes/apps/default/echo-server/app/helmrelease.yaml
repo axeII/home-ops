@@ -38,6 +38,7 @@ spec:
       tls:
         - hosts:
             - *host
+    # TODO: remove resouces specific so it's Best effort for QoS
     resources:
       requests:
         cpu: 50m

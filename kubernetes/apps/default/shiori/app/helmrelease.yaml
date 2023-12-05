@@ -57,3 +57,4 @@ spec:
       config:
         enabled: true
         existingClaim: shiori-data-pvc
+  # TODO: Adds resources requests and limits
