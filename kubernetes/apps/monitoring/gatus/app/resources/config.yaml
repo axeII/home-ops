@@ -11,36 +11,31 @@ ui:
   title: Status | Gatus
   header: Status
 alerting:
-  pushover:
-    application-token: ${CUSTOM_PUSHOVER_TOKEN}
-    user-key: ${CUSTOM_PUSHOVER_USER_KEY}
-    default-alert:
-      description: health-check failed
-      send-on-resolved: true
-      failure-threshold: 5
-      success-threshold: 2
+  discord:
+    webhook-url: ${SECRET_GATUS_DISCORD_WEBHOOK}
 connectivity:
   checker:
     target: 1.1.1.1:53
     interval: 1m
-endpoints:
-  - name: status
-    group: external
-    url: https://status.devbu.io
-    interval: 1m
-    client:
-      dns-resolver: tcp://1.1.1.1:53
-    conditions:
-      - "[STATUS] == 200"
-    alerts:
-      - type: pushover
-  - name: flux-webhook
-    group: external
-    url: https://flux-webhook.devbu.io
-    interval: 1m
-    client:
-      dns-resolver: tcp://1.1.1.1:53
-    conditions:
-      - "[STATUS] == 404"
-    alerts:
-      - type: pushover
+# TODO: add these when they are ready
+# endpoints:
+  # - name: status
+  #   group: external
+  #   url: https://status
+  #   interval: 1m
+  #   client:
+  #     dns-resolver: tcp://1.1.1.1:53
+  #   conditions:
+  #     - "[STATUS] == 200"
+  #   alerts:
+  #     - type: pushover
+  # - name: flux-webhook
+  #   group: external
+  #   url: https://flux-webhook
+  #   interval: 1m
+  #   client:
+  #     dns-resolver: tcp://1.1.1.1:53
+  #   conditions:
+  #     - "[STATUS] == 404"
+  #   alerts:
+  #     - type: pushover
