@@ -27,12 +27,13 @@ spec:
       tag: 0.12.0@sha256:354aa32097c9113f92b2aa5a42bc8606f4fafbf94a8285143ce883ce390a93a2
     env:
       TZ: "${TIMEZONE}"
-      UN_LIDARR_0_URL: https://lidarr.${SECRET_DOMAIN}
-      UN_LIDARR_0_PATHS_0: /complete/lidarr
-      UN_RADARR_0_URL: https://radarr.${SECRET_DOMAIN}
-      UN_RADARR_0_PATHS_0: /complete/radarr
-      UN_SONARR_0_URL: https://sonarr.${SECRET_DOMAIN}
-      UN_SONARR_0_PATHS_0: /complete/sonarr
+      UN_LIDARR_0_URL: http://lidarr:8686
+      UN_LIDARR_0_PATHS_0: /media/downloads
+      UN_RADARR_0_URL: http://radarr:7878
+      UN_RADARR_0_PATHS_0: /media/downloads
+      UN_SONARR_0_URL: http://sonarr:8989
+      UN_SONARR_0_PATHS_0: /media/downloads
+      UN_READARR_0_URL: http://readarr:8787
     envFrom:
       - secretRef:
           name: *app
