@@ -61,10 +61,10 @@ spec:
               - *host-release
               - *host-custom
     securityContext:
-      runAsUser: 0
-      runAsGroup: 0
+      runAsUser: ${USER_ID}
+      runAsGroup: ${USER_ID}
     podSecurityContext:
-      fsGroup: 568
+      fsGroup: ${USER_ID}
       fsGroupChangePolicy: "OnRootMismatch"
       supplementalGroups:
         - 100
