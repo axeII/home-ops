@@ -12,4 +12,4 @@ data:
   SHARED_IP: my-shared-ip
   NFS_BACKUP: "nfs://192.168.69.69:/mnt/ThiccBoi/k3s"
   TIMEZONE: "Europe/Berlin"
-  USER_ID: 65534
+  USER_ID: "65534"
