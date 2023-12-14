@@ -67,9 +67,9 @@ spec:
               - *host-release
               - *host-custom
     podSecurityContext:
-      runAsUser: 65534
-      runAsGroup: 65534
-      fsGroup: 65534
+      runAsUser: ${USER_ID}
+      runAsGroup: ${USER_ID}
+      fsGroup: ${USER_ID}
       fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
