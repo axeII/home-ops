@@ -10,4 +10,5 @@ resources:
   - ./unifi-poller/ks.yaml
   - ./goldilocks/ks.yaml
   - ./kubernetes-dashboard/ks.yaml
+  - ./gatus/ks.yaml
   # - thanos

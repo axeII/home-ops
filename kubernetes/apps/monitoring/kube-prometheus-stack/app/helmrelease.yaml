@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 55.4.1
+      version: 46.8.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -197,7 +197,7 @@ spec:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
-        # scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
         retention: 2d
         retentionSize: "5GB"
         enableAdminAPI: true
