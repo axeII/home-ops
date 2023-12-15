@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 45.27.2
+      version: 46.0.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -181,7 +181,6 @@ spec:
         tls:
           - hosts:
               - "prometheus.${SECRET_DOMAIN}"
-            secretName: prom-server-cert
       resources:
         requests:
           memory: 512Mi
