@@ -45,9 +45,9 @@ spec:
       main:
         enabled: false
     podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
+      runAsUser: ${USER_ID}
+      runAsGroup: ${USER_ID}
+      fsGroup: ${USER_ID}
       fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
