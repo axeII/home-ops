@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: media
+resources:
+  - ./pvc.yaml
+  - ./secret.sops.yaml
+  - ./helmrelease.yaml
+configMapGenerator:
+  - name: recyclarr-configmap
+    files:
+      - ./configs/recyclarr.yml
+generatorOptions:
+  disableNameSuffixHash: true
+labels:
+  - pairs:
+      app.kubernetes.io/name: recyclarr
+      app.kubernetes.io/instance: recyclarr
