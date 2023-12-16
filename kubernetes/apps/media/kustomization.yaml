@@ -24,3 +24,4 @@ resources:
   - ./flaresolverr/ks.yaml
   - ./kapowarr/ks.yaml
   - ./kaizoku/ks.yaml
+  - ./recyclarr/ks.yaml
