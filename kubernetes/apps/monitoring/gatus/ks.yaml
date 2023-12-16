@@ -10,10 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cloudnative-pg-cluster
-    - name: external-secrets-stores
-  path: ./kubernetes/main/apps/monitoring/gatus/app
+  path: ./kubernetes/apps/monitoring/gatus/app
   prune: true
   sourceRef:
     kind: GitRepository
