@@ -56,19 +56,25 @@ spec:
     datasources:
       datasources.yaml:
         apiVersion: 1
-        datasources:
-          - access: proxy
-            # isDefault: true
-            name: Prometheus
-            type: prometheus
-            url: http://prometheus-prometheus:9090
-          - access: proxy
-            name: Loki
-            type: loki
-            url: http://loki:3100
         deleteDatasources:
           - name: Loki
             orgId: 1
+        datasources:
+          - name: Prometheus
+            access: proxy
+            isDefault: true
+            type: prometheus
+            url: http://prometheus-prometheus:9090
+          - name: Loki
+            access: proxy
+            type: loki
+            url: http://loki:3100
+          # - name: Alertmanager
+          #   type: alertmanager
+          #   access: proxy
+          #   url: http://kube-prometheus-stack-alertmanager.observability.svc.cluster.local:9093
+          #   jsonData:
+          #     implementation: prometheus
     deploymentStrategy:
       type: Recreate
     env:
