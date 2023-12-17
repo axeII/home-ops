@@ -63,6 +63,7 @@ spec:
             type: prometheus
             url: http://prometheus-prometheus:9090
           - access: proxy
+            isDefault: false
             name: Loki
             type: loki
             url: http://loki:3100
