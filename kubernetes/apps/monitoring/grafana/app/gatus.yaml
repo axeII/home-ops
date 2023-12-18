@@ -14,3 +14,5 @@ data:
         interval: 1m
         conditions: ["[STATUS] == 200"]
         alerts: [{ type: pushover }]
+        client:
+          dns-resolver: "udp://192.168.69.106:53"
