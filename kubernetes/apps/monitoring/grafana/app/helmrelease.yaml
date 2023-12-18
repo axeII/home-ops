@@ -57,20 +57,16 @@ spec:
       datasources.yaml:
         apiVersion: 1
         deleteDatasources:
-          - name: Loki
-            orgId: 1
+          - { name: Prometheus, orgId: 1 }
         datasources:
           - name: Prometheus
-            access: proxy
-            # isDefault: true
-            editable: true
             type: prometheus
-            url: http://prometheus-prometheus:9090
-          - name: Loki
+            uid: prometheus
             access: proxy
-            editable: true
-            type: loki
-            url: http://loki:3100
+            url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+            jsonData:
+              prometheusType: Prometheus
+            isDefault: true
           # - name: Alertmanager
           #   type: alertmanager
           #   access: proxy
