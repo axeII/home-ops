@@ -81,6 +81,7 @@ spec:
         apiVersion: 1
         deleteDatasources:
           - { name: Prometheus, orgId: 1 }
+          - { name: Loki, orgId: 1 }
         datasources:
           - name: Prometheus
             type: prometheus
@@ -159,7 +160,7 @@ spec:
       enabled: true
     ingress:
       enabled: true
-      ingressClassName: internal
+      ingressClassName: nginx
       annotations:
         hajimari.io/icon: simple-icons:grafana
       hosts:
