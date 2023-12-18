@@ -90,7 +90,8 @@ spec:
             url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
             jsonData:
               prometheusType: Prometheus
-            isDefault: true
+            # FIXME: grafana keeps failing because of this
+            # isDefault: true
     dashboards:
       default:
         cloudflared:
