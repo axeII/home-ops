@@ -13,4 +13,7 @@ data:
         url: https://grafana.${SECRET_DOMAIN}
         interval: 1m
         conditions: ["[STATUS] == 200"]
-        alerts: [{ type: pushover }]
+        alerts:
+        - type: discord
+          description: "healthcheck failed"
+          send-on-resolved: true
