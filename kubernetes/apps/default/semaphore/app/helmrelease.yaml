@@ -30,7 +30,6 @@ spec:
       annotations:
         reloader.stakater.com/auto: "true"
     image:
-      # https://github.com/ansible-semaphore/semaphore/issues/1149
       repository: ghcr.io/onedr0p/semaphore
       tag: v2.8.92@sha256:190f4db70247dd803119a6ace75f2064559190afb41203ab78697731d067a4a0
     env:
@@ -38,28 +37,7 @@ spec:
       SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
       SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
       SEMAPHORE_DB_DIALECT: postgres
-      SEMAPHORE_DB:
-        valueFrom:
-          secretKeyRef:
-            name: &db_secret database-semaphore-user
-            key: DATABASE_NAME
-      SEMAPHORE_DB_USER:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: LOGIN
-      SEMAPHORE_DB_PASS:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: PASSWORD
-      SEMAPHORE_DB_HOST:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: HOST
-      SEMAPHORE_DB_PORT:
-        value: 5432
+      SEMAPHORE_DB_PORT: 5432
     envFrom:
       - secretRef:
           name: semaphore-secret
