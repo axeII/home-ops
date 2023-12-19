@@ -130,7 +130,7 @@ spec:
       storageClassName: longhorn
       accessModes:
         - ReadWriteOnce
-      size: 4Gi
+      size: 6Gi
       finalizers:
         - kubernetes.io/pvc-protection
     plugins:
