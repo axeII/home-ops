@@ -64,11 +64,15 @@ spec:
         datasources:
           - name: Prometheus
             access: proxy
+            editable: true
+            readOnly: false
             # isDefault: true
             type: prometheus
             url: http://prometheus-prometheus:9090
           - name: Loki
             access: proxy
+            readOnly: false
+            editable: true
             type: loki
             url: http://loki:3100
           # - name: Alertmanager
