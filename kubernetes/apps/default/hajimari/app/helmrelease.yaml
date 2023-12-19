@@ -58,7 +58,7 @@ spec:
             - name: Midjourney
               url: "https://www.midjourney.com/app/"
             - name: Unifi
-              url: "https://unifi"
+              url: "https://unifi.ui.com/consoles"
             - name: "NextDNS"
               url: "https://my.nextdns.io/"
             - name: "Tailscale"
