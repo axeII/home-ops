@@ -13,6 +13,8 @@ data:
         url: https://grafana.${SECRET_DOMAIN}
         interval: 1m
         conditions: ["[STATUS] == 200"]
+        client:
+          dns-resolver: udp://192.168.69.106:53
         alerts:
         - type: discord
           description: "healthcheck failed"
