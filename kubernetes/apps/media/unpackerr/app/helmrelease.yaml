@@ -29,7 +29,7 @@ spec:
       TZ: "${TIMEZONE}"
       UN_LIDARR_0_URL: http://lidarr:8686
       UN_LIDARR_0_PATHS_0: /media/downloads
-      UN_RADARR_0_URL: http://radarr:7878
+      UN_RADARR_0_URL: http://radarr:80
       UN_RADARR_0_PATHS_0: /media/downloads
       UN_SONARR_0_URL: http://sonarr:8989
       UN_SONARR_0_PATHS_0: /media/downloads
