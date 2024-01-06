@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-gatus-ep
+  name: plex-gatus-ep
   namespace: monitoring
   labels:
     gatus.io/enabled: "true"
 data:
   config.yaml: |
     endpoints:
-      - name: grafana
+      - name: plex
         url: https://plex.${SECRET_DOMAIN}
         group: media
         interval: 1m
