@@ -1,0 +1,72 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: actual
+  namespace: finance
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: ${USER_ID}
+            runAsGroup: ${APP_GID}
+            fsGroup: ${APP_GID}
+            fsGroupChangePolicy: "OnRootMismatch"
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/actualbudget/actual-server
+              tag: 23.12.1@sha256:a7b96c3ee7f584302d05e83212845cff136b732f67484ed23def8cdf182ed54f
+
+    service:
+      main:
+        ports:
+          http:
+            port: 5006
+
+    ingress:
+      main:
+        enabled: true
+        # className: "internal-nginx"
+        className: "nginx"
+        hosts:
+          - host: finance.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - finance.${SECRET_DOMAIN}
+    persistence:
+      data:
+        enabled: true
+        existingClaim: actual-pvc
+        advancedMounts:
+          main:
+            main:
+              - path: /data
