@@ -113,6 +113,8 @@ spec:
               url: "https://www.padi.com/dive-sites"
         - group: Reddit
           bookmarks:
+            - name: "/r/midjourney"
+              url: "https://libreddit.juno.moe/r/midjourney"
             - name: "/r/NonCredibleDefense"
               url: "https://libreddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
             - name: "/r/selfhosted"
