@@ -31,8 +31,8 @@ spec:
           enableServiceLinks: false
           securityContext:
             runAsUser: ${USER_ID}
-            runAsGroup: ${APP_GID}
-            fsGroup: ${APP_GID}
+            runAsGroup: ${USER_ID}
+            fsGroup: ${USER_ID}
             fsGroupChangePolicy: "OnRootMismatch"
 
         containers:
