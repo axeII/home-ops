@@ -1,7 +1,7 @@
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
-plex:
+metadata:
   name: cluster-apps-actual
   namespace: flux-system
 spec:
