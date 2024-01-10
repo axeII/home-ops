@@ -10,3 +10,4 @@ resources:
   - ./shiori/ks.yaml
   - ./invidious/ks.yaml
   - ./archivebox/ks.yaml
+  - ./whoogle/ks.yaml
