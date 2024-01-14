@@ -1,8 +1,5 @@
 ---
 - Cloud-Access:
-    - Linode:
-        - icon: linode.png
-          href: https://cloud.linode.com/
     - Cloudflare:
         - icon: cloudflare.png
           href: https://www.cloudflare.com/
@@ -17,11 +14,13 @@
         - href: 'https://outlook.com'
 - Media:
     - YouTube:
-        - href: 'https://youtube.com/feed/subscriptions'
-    - Spotify:
-        - href: 'http://open.spotify.com'
+        - href: 'https://yt.${SECRET_DOMAIN}'
+    - Whoogle:
+        - href: 'https://whoogle.${SECRET_DOMAIN}'
+    - HackerNews:
+        - href: 'https://news.ycombinator.com/'
 - Git:
     - k8s-at-home:
         - href: 'https://nanne.dev/k8s-at-home-search/'
     - home-cluster:
-        - href: 'https://github.com/haraldkoch/kochhaus-home'
+        - href: 'https://github.com/axeII/home-ops'

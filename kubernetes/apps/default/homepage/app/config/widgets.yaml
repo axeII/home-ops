@@ -1,7 +1,7 @@
 ---
 - search:
-    provider: [google, duckduckgo]
-    focus: false
+    provider: custom
+    url: https://whoogle.${SECRET_DOMAIN/?q=
     target: _blank
 - greeting:
     text_size: xl
