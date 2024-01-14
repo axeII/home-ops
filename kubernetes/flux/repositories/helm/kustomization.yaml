@@ -36,3 +36,4 @@ resources:
   - ./weave-gitops.yaml
   - ./phybros-charts.yaml
   - ./runatlantis.yaml
+  - ./democratic-csi.yaml
