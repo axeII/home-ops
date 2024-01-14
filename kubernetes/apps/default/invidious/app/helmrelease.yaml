@@ -63,7 +63,13 @@ spec:
         annotations:
           hajimari.io/icon: mdi:youtube
         hosts:
-          - host: &host-release "yt.${SECRET_DOMAIN}"
+          - host: &host-release "invidious.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+          - host: &host-custom "yt.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -72,3 +78,4 @@ spec:
         tls:
           - hosts:
               - *host-release
+              - *host-custom
