@@ -9,6 +9,7 @@
     ":automergeBranch"
   ],
   "dependencyDashboard": true,
+  "pruneStaleBranches": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": [
     "prEditedNotification",
