@@ -1,7 +1,7 @@
 ---
 - search:
     provider: custom
-    url: https://whoogle.${SECRET_DOMAIN/?q=
+    url: https://kagi.com/search?q=
     target: _blank
 - greeting:
     text_size: xl
