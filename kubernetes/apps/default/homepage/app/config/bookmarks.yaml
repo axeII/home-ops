@@ -21,6 +21,6 @@
         - href: 'https://news.ycombinator.com/'
 - Git:
     - k8s-at-home:
-        - href: 'https://nanne.dev/k8s-at-home-search/'
+        - href: 'https://kubesearch.dev'
     - home-cluster:
         - href: 'https://github.com/axeII/home-ops'
