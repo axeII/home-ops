@@ -1,0 +1,251 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: homepage-config
+    labels:
+        app.kubernetes.io/name: homepage
+data:
+    settings.yaml: |
+        ---
+        title: Dashboard
+        background: /images/background.jpg
+        backgroundOpacity: 0.5
+        theme: dark
+        color: slate
+        target: _self
+    widgets.yaml: |
+        ---
+        - kubernetes:
+            cluster:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+              label: "cluster"
+            nodes:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+        - resources:
+            backend: kubernetes
+            expanded: true
+            cpu: true
+            memory: true
+            label: "hydrogen"
+        # - unifi_console:
+        #     url: https://unifi
+        #     username: ${USERNAME}
+        #     password: ${SECRET_UNIFI_PASSWORD}
+        - search:
+            provider: custom
+            target: _self
+            url: https://whoogle.${SECRET_DOMAIN}}/search?q=
+        - greeting:
+            text_size: xl
+            text: "Greetings Citizen!"
+        - openmeteo:
+            label: Home # optional
+            latitude: ${LATITUDE}
+            longitude: ${LONGITUDE}
+            units: metric # or metric
+            cache: 5 # Time in minutes to cache API responses, to stay within limits
+        - datetime:
+            text_size: xl
+            format:
+              dateStyle: long
+              timeStyle: short
+              hourCycle: h23
+    services.yaml: |
+        ---
+        - Home:
+            - Portainer:
+                href: https://portainer.carbon.${SECRET_DOMAIN}
+                icon: portainer.png
+                description: Deploy, configure, troubleshoot and secure containers
+                widget:
+                  type: portainer
+                  url: https://portainer.carbon.${SECRET_DOMAIN}
+                  env: 2
+                  key: ${SECRET_PORTAINER_KEY}
+            - Unifi:
+                href: https://unifi.carbon.${SECRET_DOMAIN}
+                icon: unifi.png
+                description: Unifi console
+            - Whoogle:
+                href: https://whoogle.${SECRET_DOMAIN}
+                icon: whooglesearch.png
+                description: Ad-free, privacy-respecting metasearch engine
+        - Cloud:
+            # - Immich:
+            #     href: https://immich.${SECRET_DOMAIN}
+            #     icon: immich.png
+            #     description: High performance self-hosted photo and video backup solution
+            #     namespace: cloud
+            #     app: immich
+            #     podSelector: >-
+            #       app.kubernetes.io/instance in (
+            #           immich-machine-learning,
+            #           immich-microservices,
+            #           immich-server,
+            #           immich-web
+            #       )
+            #     widget:
+            #       type: immich
+            #       url: https://immich.${SECRET_DOMAIN}
+            #       key: ${SECRET_IMMICH_KEY}
+        - Media:
+            - Invidious:
+                href: https://invidious.${SECRET_DOMAIN}
+                icon: invidious.png
+                description: An alternative front-end to YouTube
+            # - Plex:
+            #     href: https://plex.${SECRET_DOMAIN}
+            #     icon: jellyfin.png
+            #     description: Mediaserver
+            #     widget:
+            #       type: jellyfin
+            #       url: https://jellyfin.${SECRET_DOMAIN}
+            #       key: ${SECRET_JELLYFIN_KEY}
+            - Kavita:
+                href: https://kavita.${SECRET_DOMAIN}
+                icon: kavita.png
+                description: Kavita is a fast, feature rich, cross platform reading server
+            - Stump:
+                href: https://stump.${SECRET_DOMAIN}
+                icon: /icons/stump.png
+                description: Comics, manga and digital book server
+        - Media Management:
+          - Overseerr:
+              href: https://overseerr.${SECRET_DOMAIN}
+              icon: jellyseerr.png
+              description: Request server for Plex
+              widget:
+                type: overseerr
+                url: https://overseerr.${SECRET_DOMAIN}
+                key: ${SECRET_OVERSEERR_KEY}
+          - Metube:
+              href: https://metube.${SECRET_DOMAIN}
+              icon: metube.png
+              description: Web GUI for youtube-dl
+          - qBittorrent:
+              href: https://torrent.${SECRET_DOMAIN}
+              icon: deluge.png
+              description: Torrent client
+              widget:
+                type: deluge
+                url: https://torrent.${SECRET_DOMAIN}
+                username: admin
+                password: ${SECRET_QBITTORRENT_PASSWORD}
+          - Prowlarr:
+              href: https://prowlarr.${SECRET_DOMAIN}
+              icon: prowlarr.png
+              description: TODO
+              widget:
+                type: prowlarr
+                url: https://prowlarr.${SECRET_DOMAIN}
+                key: ${SECRET_PROWLARR_KEY}
+          - Radarr:
+              href: https://radarr.${SECRET_DOMAIN}
+              icon: radarr.png
+              description: TODO
+              widget:
+                type: radarr
+                url: https://radarr.${SECRET_DOMAIN}
+                key: ${SECRET_RADARR_KEY}
+          - Sonarr:
+              href: https://sonarr.${SECRET_DOMAIN}
+              icon: sonarr.png
+              description: TODO
+              widget:
+                type: sonarr
+                url: https://sonarr.${SECRET_DOMAIN}
+                key: ${SECRET_SONARR_KEY}
+        - Selfhosted:
+            - Libreddit:
+                href: https://libreddit.${SECRET_DOMAIN}
+                icon: libreddit.png
+                description: Private front-end for Reddit
+            - OpenSpeedTest:
+                href: https://openspeedtest.${SECRET_DOMAIN}
+                icon: openspeedtest.png
+                description: HTML5 Network Performance Estimation Tool
+            - PairDrop:
+                href: https://pairdrop.${SECRET_DOMAIN}
+                icon: /icons/pairdrop.png
+                description: Sublime alternative to AirDrop that works on all platforms
+            - RxResume:
+                href: https://rxresume.${SECRET_DOMAIN}
+                icon: /icons/rxresume.png
+                description: Resume Builder
+            - Sharry:
+                href: https://sharry.${SECRET_DOMAIN}
+                icon: /icons/sharry.png
+                description: Share files with others in a simple way
+            - Whoogle:
+                href: https://whoogle.${SECRET_DOMAIN}
+                icon: whooglesearch.png
+                description: Ad-free, privacy-respecting metasearch engine
+        - Utilities:
+            - Kubernetes:
+                href: https://kubernetes.${SECRET_DOMAIN}
+                icon: kubernetes-dashboard.png
+                description: Kubernetes Dashboard
+            - Goldilocks:
+                href: https://goldilocks.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
+                description: Helps identify a starting point for resource requests and limits
+            - Grafana:
+                href: https://grafana.${SECRET_DOMAIN}
+                icon: grafana.png
+                description: Metric Monitoring
+            - Weave:
+                href: https://gitops.${SECRET_DOMAIN}
+                icon: /icons/weave.svg
+                description: GitOps for K8s
+            - Status:
+                href: https://gatus.${SECRET_DOMAIN}
+                # icon: uptime-kuma.png
+                description: A self-hosted monitoring tool
+    bookmarks.yaml: |
+        ---
+          - Developer:
+            - Github:
+              - icon: github-light.png
+                href: https://github.com/
+            - Mullvad:
+              - icon: mullvad.png
+                href: https://mullvad.net/en/check
+
+          - Cloud-Access:
+              - Cloudflare:
+                  - icon: cloudflare.png
+                    href: https://www.cloudflare.com/
+          - Communitcate:
+              - Discord:
+                  - href: 'https://discord.com/app'
+              - Gmail:
+                  - href: 'http://gmail.com'
+              - Google Calendar:
+                  - href: 'https://calendar.google.com'
+              - Outlook:
+                  - href: 'https://outlook.com'
+          - Media:
+              - YouTube:
+                  - href: 'https://yt.${SECRET_DOMAIN}'
+              - Whoogle:
+                  - href: 'https://whoogle.${SECRET_DOMAIN}'
+              - HackerNews:
+                  - href: 'https://news.ycombinator.com/'
+          - Git:
+              - k8s-at-home:
+                  - href: 'https://kubesearch.dev'
+              - home-cluster:
+                  - href: 'https://github.com/axeII/home-ops'
+
+    kubernetes.yaml: |
+        ---
+          mode: cluster
+    docker.yaml: |
+        ---
