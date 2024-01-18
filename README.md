@@ -25,9 +25,9 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision` I store all my ansible and terraform scripts my infrastructure. Some of them are used for k3s cluster some only for docker instances.
+Welcome to my HomeOps setup. Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Terraform and Ansible, it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision`, I store all my Ansible and Terraform scripts for my infrastructure. Some of them are used for the k3s cluster, while some are only for Docker instances.
 
-I deciced for my cluster that instead of high IO load using etcd, I am using the postgres database for storing critical data for my cluster and maintain it in Hight Availibity mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind. Here is great guide from Devin's [template](https://github.com/onedr0p/flux-cluster-template) which can help to spin up your own cluster at home 💪.
+For my cluster, I decided to use the PostgreSQL database instead of high IO load using etcd. I store critical data for my cluster in the PostgreSQL database and maintain it in High Availability mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind. Here is a great guide from Devin's [template](https://github.com/onedr0p/flux-cluster-template) which can help you spin up your own cluster at home 💪.
 
 ## :art:&nbsp; Cluster components
 
@@ -76,4 +76,4 @@ I've made a blog post about HW, what were my choices... which ones were good and
 
 ## :handshake:&nbsp; Thanks
 
-I am proud to be memeber k8s-at-home community! A lot of help and inspiration for my k8s cluster came from this community. Without their help and inspiration I would not be where I am now. Thank you guys :heart:. Definately checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) and join the [community](https://k8s-at-home.com).
+I am proud to be a member of the k8s-at-home community! I received a lot of help and inspiration for my Kubernetes cluster from this community which helped a lot, Thank you, guys! :heart: Definitely check out their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) - and join the [community](https://k8s-at-home.com).
