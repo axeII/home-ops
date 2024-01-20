@@ -39,13 +39,13 @@ spec:
           - flux-system
           - external
       name: "Ales"
-      defaultSearchProvider: YouTube
+      defaultSearchProvider: Whoogle
       searchProviders:
-        - name: YouTube
+        - name: Whoogle
           token: 'y'
-          icon: simple-icons:youtube
-          searchUrl: https://www.youtube.com/results?search_query={query}
-          url: https://www.youtube.com
+          icon: simple-icons:google
+          searchUrl: https://whoogle.${SECRET_DOMAIN}/search?q=
+          url: https://whoogle.${SECRET_DOMAIN}
       customApps:
         - group: monitoring
           apps:
