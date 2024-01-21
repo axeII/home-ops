@@ -42,9 +42,9 @@ spec:
       defaultSearchProvider: Whoogle
       searchProviders:
         - name: Whoogle
-          token: 'y'
+          token: "y"
           icon: simple-icons:google
-          searchUrl: https://whoogle.${SECRET_DOMAIN}/search?q=
+          searchUrl: https://whoogle.${SECRET_DOMAIN}/search?q={query}
           url: https://whoogle.${SECRET_DOMAIN}
       customApps:
         - group: monitoring
