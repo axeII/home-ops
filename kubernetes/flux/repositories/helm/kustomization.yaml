@@ -9,6 +9,7 @@ resources:
   - ./ealenn.yaml
   - ./emberstack.yaml
   - ./external-dns.yaml
+  - ./external-secrets.yaml
   - ./grafana.yaml
   - ./hajimari.yaml
   - ./infracloudio.yaml
