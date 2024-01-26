@@ -5,7 +5,6 @@ resources:
   - ./namespace.yaml
   - ./media-nfs-share.yaml
   - ./bazarr/ks.yaml
-  - ./lidarr/ks.yaml
   - ./overseerr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
