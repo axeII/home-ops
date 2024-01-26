@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-microbin
+  namespace: flux-system
+spec:
+  path: ./kubernetes/apps/default/microbin/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: microbin
+      namespace: default
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
