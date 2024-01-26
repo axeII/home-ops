@@ -25,4 +25,4 @@ resources:
   - ./kapowarr/ks.yaml
   - ./kaizoku/ks.yaml
   - ./recyclarr/ks.yaml
-  - ./midarr/ks.yaml
+  # - ./midarr/ks.yaml # waiting for https://github.com/midarrlabs/midarr-server/issues/396
