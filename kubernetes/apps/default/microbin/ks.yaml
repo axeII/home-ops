@@ -5,7 +5,7 @@ metadata:
   name: cluster-apps-microbin
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/default/hajimari/app
+  path: ./kubernetes/apps/default/microbin/app
   prune: true
   sourceRef:
     kind: GitRepository
