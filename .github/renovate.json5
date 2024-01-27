@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "docker:enableMajor",
     ":disableRateLimiting",
     ":dependencyDashboard",
@@ -9,7 +9,6 @@
     ":automergeBranch"
   ],
   "dependencyDashboard": true,
-  "pruneStaleBranches": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": [
     "prEditedNotification",
@@ -24,28 +23,35 @@
   ],
   "flux": {
     "fileMatch": [
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
   },
   "kubernetes": {
     "fileMatch": [
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
   },
   "kustomize": {
     "fileMatch": [
-      "(^|/)kustomization\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)kustomization\\.ya?ml(\\.j2)?$"
+    ]
+  },
+  "pip_requirements": {
+    "fileMatch": [
+      "(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(\\.j2)?$"
+    ]
+  },
+  "ansible-galaxy": {
+    "fileMatch": [
+      "(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(\\.j2)?$"
     ]
   },
   // commit message topics
@@ -56,12 +62,14 @@
   "packageRules": [
     // automerge
     {
-      "description": "Auto merge Github Actions",
+      "description": [
+        "Auto merge Github Actions"
+      ],
       "matchManagers": [
         "github-actions"
       ],
       "automerge": true,
-      "automergeType": "pr",
+      "automergeType": "branch",
       "ignoreTests": true,
       "matchUpdateTypes": [
         "patch"
@@ -69,7 +77,9 @@
     },
     // groups
     {
-      "description": "Flux Group",
+      "description": [
+        "Flux Group"
+      ],
       "groupName": "Flux",
       "matchPackagePatterns": [
         "flux"
@@ -84,24 +94,11 @@
       },
       "separateMinorPatch": true
     },
-    {
-      "description": "System Upgrade Controller Group",
-      "groupName": "System Upgrade Controller",
-      "matchPackagePatterns": [
-        "rancher/system-upgrade-controller"
-      ],
-      "matchDatasources": [
-        "docker",
-        "github-releases"
-      ],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true
-    },
     // custom versioning
     {
-      "description": "Use custom versioning for k0s/k3s",
+      "description": [
+        "Use custom versioning for k0s/k3s"
+      ],
       "matchDatasources": [
         "github-releases"
       ],
@@ -358,24 +355,18 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Process various other dependencies",
+      "description": [
+        "Process custom dependencies"
+      ],
       "fileMatch": [
         "(^|/).taskfiles/.+\\.ya?ml$",
-        "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)k0s-config.ya?ml(\\.j2)?(\\.j2)?$"
+        "(^|/)ansible/.+\\.ya?ml(\\.j2)?$",
+        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
       ],
       "matchStrings": [
-        // Example: `k3s_release_version: "v1.27.3+k3s1"`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n",
-        // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)\/(?<currentValue>[^/]+)\/[^/]+\n",
-        // Example: apiVersion=helm.cattle.io/v1 kind=HelmChart
-        "datasource=(?<datasource>\\S+)\n.*?repo: (?<registryUrl>\\S+)\n.*?chart: (?<depName>\\S+)\n.*?version: (?<currentValue>\\S+)\n"
+        "(?m:# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+?: \"?(?<currentValue>\\S+?)\"?$)"
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}"
     }
   ]
 }
