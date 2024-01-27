@@ -11,3 +11,4 @@ resources:
   - ./invidious/ks.yaml
   - ./archivebox/ks.yaml
   - ./whoogle/ks.yaml
+  - ./microbin/.ks.yaml
