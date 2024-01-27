@@ -1,15 +1,37 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/kubernetes/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/kubernetes/inventory"
+  ANSIBLE_REQUIREMENTS_FILE: "{{.ANSIBLE_DIR}}/requirements.yaml"
+  ANSIBLE_PIP_REQUIREMENTS_FILE: "{{.ANSIBLE_DIR}}/requirements.txt"
 
 env:
   ANSIBLE_CONFIG: "{{.ROOT_DIR}}/ansible.cfg"
   K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
 
-vars:
-  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/kubernetes/playbooks"
-  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/kubernetes/inventory"
-
 tasks:
+
+  deps:
+    desc: Set up Ansible dependencies
+    deps: [":workstation:venv"]
+    cmds:
+      - '{{.VIRTUAL_ENV}}/bin/python3 -m pip install --upgrade --requirement "{{.ANSIBLE_PIP_REQUIREMENTS_FILE}}"'
+      - '{{.VIRTUAL_ENV}}/bin/ansible-galaxy install --role-file "{{.ANSIBLE_REQUIREMENTS_FILE}}" {{if eq .force "true"}}--force{{end}}'
+    preconditions:
+      - { msg: "Missing Ansible requirements file", sh: "test -f {{.ANSIBLE_REQUIREMENTS_FILE}}" }
+      - { msg: "Missing Pip requirements file", sh: "test -f {{.ANSIBLE_PIP_REQUIREMENTS_FILE}}" }
+    sources:
+      - "{{.ANSIBLE_REQUIREMENTS_FILE}}"
+      - "{{.ANSIBLE_PIP_REQUIREMENTS_FILE}}"
+    generates:
+      - "{{.VIRTUAL_ENV}}/bin/ansible"
+      - "{{.VIRTUAL_ENV}}/bin/ansible-galaxy"
+    vars:
+      force: '{{.force | default "true"}}'
+
 
   init:
     desc: Install / Upgrade Ansible galaxy deps
@@ -24,6 +46,19 @@ tasks:
     dir: "{{.ANSIBLE_DIR}}"
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --list-hosts
+
+  run:
+    desc: Run an Ansible playbook for configuring a cluster
+    summary: |
+      Args:
+        playbook: Playbook to run (required)
+    prompt: Run Ansible playbook '{{.playbook}}'... continue?
+    deps: ["deps"]
+    cmd: "{{.VIRTUAL_ENV}}/bin/ansible-playbook --inventory {{.ANSIBLE_INVENTORY_FILE}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.playbook}}.yaml {{.CLI_ARGS}}"
+    requires:
+      vars: ["playbook"]
+    preconditions:
+      - { msg: "Missing Ansible inventory file", sh: "test -f {{.ANSIBLE_INVENTORY_FILE}}" }
 
   prepare:
     desc: Prepare all the k8s nodes for running k3s

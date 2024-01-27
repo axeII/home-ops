@@ -18,7 +18,7 @@ includes:
   cluster: .taskfiles/ClusterTasks.yml
   precommit: .taskfiles/PrecommitTasks.yml
   terraform: .taskfiles/TerraformTasks.yml
-  docker: .taskfiles/DockerTasks.yml
+  kubernetes: .taskfiles/KubernetesTasks.yml
 
 tasks:
 
