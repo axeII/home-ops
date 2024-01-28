@@ -6,8 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   ingressClassName: nginx
-  annotations:
-    hajimari.io/enable: false
   rules:
     - host: &host "flux-receiver.${SECRET_DOMAIN}"
       http:
