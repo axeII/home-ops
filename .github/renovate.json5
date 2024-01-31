@@ -60,11 +60,25 @@
   "commitMessageSuffix": "",
   // package rules
   "packageRules": [
+    {
+      "description": "Auto merge container digests",
+      "matchDatasources": [
+        "docker"
+      ],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "matchPackagePrefixes": [
+        "ghcr.io/onedr0p",
+        "ghcr.io/bjw-s"
+      ],
+      "ignoreTests": true
+    },
     // automerge
     {
-      "description": [
-        "Auto merge Github Actions"
-      ],
+      "description": "Auto merge Github Actions",
       "matchManagers": [
         "github-actions"
       ],
@@ -77,9 +91,7 @@
     },
     // groups
     {
-      "description": [
-        "Flux Group"
-      ],
+      "description": "Flux Group",
       "groupName": "Flux",
       "matchPackagePatterns": [
         "flux"
@@ -96,9 +108,7 @@
     },
     // custom versioning
     {
-      "description": [
-        "Use custom versioning for k0s/k3s"
-      ],
+      "description": "Use custom versioning for k0s/k3s",
       "matchDatasources": [
         "github-releases"
       ],
@@ -355,9 +365,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": [
-        "Process custom dependencies"
-      ],
+      "description": "Process custom dependencies",
       "fileMatch": [
         "(^|/).taskfiles/.+\\.ya?ml$",
         "(^|/)ansible/.+\\.ya?ml(\\.j2)?$",
