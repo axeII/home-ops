@@ -18,8 +18,11 @@
     "**archive/**"
   ],
   "rebaseWhen": "conflicted",
+  "timezone": "Europe/Berlin",
   "schedule": [
-    "on saturday"
+    "after 10pm every weekday",
+    "before 5am every weekday",
+    "every weekend"
   ],
   "flux": {
     "fileMatch": [
@@ -66,15 +69,15 @@
         "docker"
       ],
       "automerge": true,
-      "automergeType": "branch",
+      "automergeType": "pr",
       "matchUpdateTypes": [
         "digest"
       ],
       "matchPackagePrefixes": [
         "ghcr.io/onedr0p",
         "ghcr.io/bjw-s"
-      ],
-      "ignoreTests": true
+      ]
+      // "ignoreTests": true
     },
     // automerge
     {
@@ -83,8 +86,8 @@
         "github-actions"
       ],
       "automerge": true,
-      "automergeType": "branch",
-      "ignoreTests": true,
+      "automergeType": "pr",
+      // "ignoreTests": true,
       "matchUpdateTypes": [
         "patch"
       ]
@@ -108,13 +111,12 @@
     },
     // custom versioning
     {
-      "description": "Use custom versioning for k0s/k3s",
+      "description": "Use custom versioning for k3s",
       "matchDatasources": [
         "github-releases"
       ],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>\\+k.s)\\.?(?<build>\\d+)$",
+      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>\\+k3s)\\.?(?<build>\\d+)$",
       "matchPackagePatterns": [
-        "k0s",
         "k3s"
       ]
     },
