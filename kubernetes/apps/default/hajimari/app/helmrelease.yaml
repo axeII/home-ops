@@ -46,12 +46,6 @@ spec:
           icon: simple-icons:google
           searchUrl: https://whoogle.${SECRET_DOMAIN}/search?q={query}
           url: https://whoogle.${SECRET_DOMAIN}
-      customApps:
-        - group: monitoring
-          apps:
-            - name: Status
-              url: "https://status.${SECRET_DOMAIN}"
-              icon: access-point
       globalBookmarks:
         - group: Admin
           bookmarks:
