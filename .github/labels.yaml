@@ -21,3 +21,6 @@
 - { name: "type/break", color: "f6412d" }
 # Uncategorized
 - { name: "hold/upstream", color: "ee0701" }
+# Status
+- { name: "status/blocked", color: "d06851" }
+- { name: "status/active", color: "519fd0" }
