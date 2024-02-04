@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: gatus
@@ -29,7 +29,7 @@ spec:
   values:
     initContainers:
       01-init-db:
-        image: ghcr.io/onedr0p/postgres-init:14.10
+        image: ghcr.io/onedr0p/postgres-init:16.1
         imagePullPolicy: IfNotPresent
         envFrom: &envFrom
           - secretRef:

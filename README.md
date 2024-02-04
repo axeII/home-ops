@@ -25,9 +25,9 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 ## :wave: Overview
 
-Welcome to my HomeOps setup. Here I perform DevOps best practicies but at home. Checkout the hardware section where I describe what sort of hardware I am using. Thanks to terraform and ansible it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision` I store all my ansible and terraform scripts my infrastructure. Some of them are used for k3s cluster some only for docker instances.
+Welcome to my HomeOps setup. Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Terraform and Ansible, it's very easy for me to manage my home infrastructure and the cluster. Under the folder `provision`, I store all my Ansible and Terraform scripts for my infrastructure. Some of them are used for the k3s cluster, while some are only for Docker instances.
 
-I deciced for my cluster that instead of high IO load using etcd, I am using the postgres database for storing critical data for my cluster and maintain it in Hight Availibity mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind. Here is great guide from Devin's [template](https://github.com/onedr0p/flux-cluster-template) which can help to spin up your own cluster at home 💪.
+For my cluster, I decided to use the PostgreSQL database instead of high IO load using etcd. I store critical data for my cluster in the PostgreSQL database and maintain it in High Availability mode. That's just in case you would like to copy my cluster configuration, then keep this note in mind. Here is a great guide from Devin's [template](https://github.com/onedr0p/flux-cluster-template) which can help you spin up your own cluster at home 💪.
 
 ## :art:&nbsp; Cluster components
 
@@ -37,7 +37,7 @@ I deciced for my cluster that instead of high IO load using etcd, I am using the
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
 - [metallb](https://metallb.universe.tf/) - bare metal load balancer
-- [kube-vip](https://kube-vip.chipzoller.dev/) - layer 2 load balancer for the Kubernetes control plane
+- [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
 - [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
 - [traefik](https://traefik.io/): Provides ingress cluster services.
 - [botkube](https://github.com/infracloudio/botkube) Bot that helps me to monitor the cluster with notifications.
@@ -59,15 +59,15 @@ Following tools I use to setup infrastructure:
 My homelab runs on the following hardware (all k8s nodes are running on ubuntu 20.04):
 
 <!-- textlint-disable -->
-| Device                                  | OS Disk Size | Data Disk Size       | Ram  | Purpose                                          |
-|-----------------------------------------|--------------|----------------------|------|--------------------------------------------------|
-| Udoo Bolt V8 AMD Ryzen | 250GB NVMe    | N/A                  | 32GB  | k3s node                                       |
-| Intel NUC                         | 250GB NVMe   | 1TB HDD             | 32GB | k3s node                                       |
-| AMD GPU Server                 | 250GB NVMe      | 1TB SSD | 32GB  |   k3s node with nvidia GPU |
-| TRUENAS                 | ZFS raidz 1 40TB       | 4x10TB HDD | 32GB  |   Storage |
-| Unifi UDM Pro                | SSD 14GB       | HDD 1TB | 4GB  | Router and security Gateway  |
-| Unifi Switch 16 PoE                | N/A       | N/A | N/A | Switch with 802.3at PoE+ ports |
-| Offsite Machine  | 60 GB | 8TB | 8GB | for backups and storage datababase,redis etc |
+| Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                                      |
+|------------------------|------------------|----------------|------|----------------------------------------------|
+| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | k3s node                                     |
+| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | k3s node                                     |
+| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with nvidia GPU                     |
+| TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                                      |
+| Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway                  |
+| Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports               |
+| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and storage datababase,redis etc |
 <!-- textlint-enable -->
 
 I've made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
@@ -76,4 +76,5 @@ I've made a blog post about HW, what were my choices... which ones were good and
 
 ## :handshake:&nbsp; Thanks
 
-I am proud to be memeber k8s-at-home community! A lot of help and inspiration for my k8s cluster came from this community. Without their help and inspiration I would not be where I am now. Thank you guys :heart:. Definately checkout their clusters - [awesome-home-kubernetes](https://github.com/k8s-at-home/awesome-home-kubernetes) and join the [community](https://k8s-at-home.com).
+I am proud to be a member of the k8s-at-home community! I received a lot of help and inspiration for my Kubernetes cluster from this community which helped a lot. Thanks! :heart:
+If you are interested in running your own k8s cluster at home, I highly recommend you to check out the [k8s-at-home](https://k8s-at-home.com) website.

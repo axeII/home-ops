@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: plex-gatus-ep
+  namespace: monitoring
+  labels:
+    gatus.io/enabled: "true"
+data:
+  config.yaml: |
+    endpoints:
+      - name: plex
+        url: http://192.168.69.108:32400/web/index.html
+        group: media
+        interval: 1m
+        conditions: ["[STATUS] == 200"]
+        alerts:
+        - type: discord
+          description: "healthcheck failed"
+          send-on-resolved: true

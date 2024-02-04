@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: grafana
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 6.61.2
+      version: 7.2.4
       #TODO: upgrade to version: 7.1.0
       interval: 5m
       sourceRef:

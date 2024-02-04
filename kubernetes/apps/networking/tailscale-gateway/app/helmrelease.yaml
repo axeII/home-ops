@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app tailscale-gateway
@@ -27,7 +27,7 @@ spec:
 
     image:
       repository: ghcr.io/tailscale/tailscale
-      tag: v1.56.1
+      tag: v1.58.2
     env:
       TZ: ${TIMEZONE}
       TS_KUBE_SECRET: "tailscale-auth"

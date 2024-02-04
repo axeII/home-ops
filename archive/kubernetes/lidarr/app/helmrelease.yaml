@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: lidarr
@@ -31,8 +31,14 @@ spec:
       tag: 1.0.2.2592-ls101
     env:
       TZ: "${TIMEZONE}"
+      LIDARR__INSTANCE_NAME: Lidarr
+      # LIDARR__PORT: &port 80
+      LIDARR__LOG_LEVEL: info
       PUID: 0
       PGID: 0
+    envFrom:
+      - secretRef:
+          name: lidarr-secret
     service:
       main:
         ports:
@@ -50,14 +56,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
-          - host: &host-custom "lidarr.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
         tls:
           - hosts:
               - *host-release
-              - *host-custom
     podSecurityContext:
       runAsUser: 0
       runAsGroup: 0

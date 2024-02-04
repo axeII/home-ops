@@ -1,0 +1,7 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/kustomization_v1.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kube-system
+resources:
+  - ./onepassword

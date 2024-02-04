@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: metube
@@ -27,7 +27,7 @@ spec:
       type: statefulset
     image:
       repository: ghcr.io/alexta69/metube
-      tag: "2023-08-19"
+      tag: 2024-01-05@sha256:a9410ec7912dc0fe5b6a2b1b8c5528f573a407bf3a749f41463e9350d0674424
       imagePullPolicy: Always
     env:
       TZ: "${TIMEZONE}"

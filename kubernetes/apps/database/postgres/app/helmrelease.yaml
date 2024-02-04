@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: postgresql
@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: postgresql
-      version: 12.11.1
+      version: 13.4.1
       sourceRef:
         kind: HelmRepository
         name: bitnami

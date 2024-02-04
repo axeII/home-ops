@@ -5,3 +5,4 @@ resources:
   - ./config-pvc.yaml
   - ./helmrelease.yaml
   - ./secret.sops.yaml
+  - ./gatus.yaml

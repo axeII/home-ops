@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: deluge
@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/deluge
-      tag: latest@sha256:e0580b14db027972acb1875b1650f94706ad135d3b7ade12a9d0a389ff76ce04
+      tag: latest@sha256:0e74f6fa3363e24223717ef7e422e17ea3ea03e15b91dc375d0c6051c1fb9b6f
     env:
       TZ: "${TIMEZONE}"
       PUID: "1000"
