@@ -41,10 +41,10 @@ data:
         - search:
             provider: custom
             target: _self
-            url: https://whoogle.${SECRET_DOMAIN}}/search?q=
+            url: https://whoogle.${SECRET_DOMAIN}/search?q=
         - greeting:
             text_size: xl
-            text: "Greetings Citizen!"
+            text: "Hello Akira!"
         - openmeteo:
             label: Home # optional
             latitude: ${LATITUDE}
@@ -70,44 +70,29 @@ data:
                   env: 2
                   key: ${SECRET_PORTAINER_KEY}
             - Unifi:
-                href: https://unifi.carbon.${SECRET_DOMAIN}
+                href: https://unifi
                 icon: unifi.png
                 description: Unifi console
             - Whoogle:
                 href: https://whoogle.${SECRET_DOMAIN}
                 icon: whooglesearch.png
                 description: Ad-free, privacy-respecting metasearch engine
-        - Cloud:
-            # - Immich:
-            #     href: https://immich.${SECRET_DOMAIN}
-            #     icon: immich.png
-            #     description: High performance self-hosted photo and video backup solution
-            #     namespace: cloud
-            #     app: immich
-            #     podSelector: >-
-            #       app.kubernetes.io/instance in (
-            #           immich-machine-learning,
-            #           immich-microservices,
-            #           immich-server,
-            #           immich-web
-            #       )
-            #     widget:
-            #       type: immich
-            #       url: https://immich.${SECRET_DOMAIN}
-            #       key: ${SECRET_IMMICH_KEY}
+            - Longhorn:
+                href: https://longhorn.${SECRET_DOMAIN}
+                icon: longhorn.png
+                description: Cluster Storage
         - Media:
             - Invidious:
                 href: https://invidious.${SECRET_DOMAIN}
                 icon: invidious.png
                 description: An alternative front-end to YouTube
-            # - Plex:
-            #     href: https://plex.${SECRET_DOMAIN}
-            #     icon: jellyfin.png
-            #     description: Mediaserver
-            #     widget:
-            #       type: jellyfin
-            #       url: https://jellyfin.${SECRET_DOMAIN}
-            #       key: ${SECRET_JELLYFIN_KEY}
+            - Plex:
+                href: https://plex.${SECRET_DOMAIN}
+                description: Mediaserver
+                widget:
+                  type: plex
+                  url: https://192.168.69.101:32400
+                  key: ${SECRET_PLEX_KEY}
             - Kavita:
                 href: https://kavita.${SECRET_DOMAIN}
                 icon: kavita.png
@@ -129,7 +114,7 @@ data:
               href: https://metube.${SECRET_DOMAIN}
               icon: metube.png
               description: Web GUI for youtube-dl
-          - qBittorrent:
+          - Torrent:
               href: https://torrent.${SECRET_DOMAIN}
               icon: deluge.png
               description: Torrent client
@@ -175,10 +160,6 @@ data:
                 href: https://pairdrop.${SECRET_DOMAIN}
                 icon: /icons/pairdrop.png
                 description: Sublime alternative to AirDrop that works on all platforms
-            - RxResume:
-                href: https://rxresume.${SECRET_DOMAIN}
-                icon: /icons/rxresume.png
-                description: Resume Builder
             - Sharry:
                 href: https://sharry.${SECRET_DOMAIN}
                 icon: /icons/sharry.png
@@ -196,27 +177,36 @@ data:
                 href: https://goldilocks.${SECRET_DOMAIN}
                 icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
                 description: Helps identify a starting point for resource requests and limits
-            - Grafana:
-                href: https://grafana.${SECRET_DOMAIN}
-                icon: grafana.png
-                description: Metric Monitoring
             - Weave:
                 href: https://gitops.${SECRET_DOMAIN}
                 icon: /icons/weave.svg
                 description: GitOps for K8s
-            - Status:
-                href: https://gatus.${SECRET_DOMAIN}
-                # icon: uptime-kuma.png
-                description: A self-hosted monitoring tool
+        - Monitoring:
+            - healthchecks:
+                href: https://status.${SECRET_DOMAIN}
+                icon: healthchecks.png
+                description: Service Monitoring
+            - Grafana:
+                href: https://grafana.${SECRET_DOMAIN}
+                icon: grafana.png
+                description: Metric Monitoring
+            - Alertmanager:
+                href: https://alertmanager.${SECRET_DOMAIN}
+                icon: alertmanager.png
+                description: Metric Altering
+            - Prometheus:
+                href: https://prometheus.${SECRET_DOMAIN}
+                icon: prometheus.png
+                description: Metric Database
     bookmarks.yaml: |
         ---
           - Developer:
             - Github:
               - icon: github-light.png
                 href: https://github.com/
-            - Mullvad:
-              - icon: mullvad.png
-                href: https://mullvad.net/en/check
+            - Resume:
+              - icon: resume.png
+                href: https://rxresume.me
 
           - Cloud-Access:
               - Cloudflare:
@@ -227,15 +217,9 @@ data:
                   - href: 'https://discord.com/app'
               - Gmail:
                   - href: 'http://gmail.com'
-              - Google Calendar:
-                  - href: 'https://calendar.google.com'
-              - Outlook:
-                  - href: 'https://outlook.com'
           - Media:
               - YouTube:
                   - href: 'https://yt.${SECRET_DOMAIN}'
-              - Whoogle:
-                  - href: 'https://whoogle.${SECRET_DOMAIN}'
               - HackerNews:
                   - href: 'https://news.ycombinator.com/'
           - Git:
