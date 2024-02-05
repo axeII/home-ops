@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./gpu-class.yaml
+  - ../../../../templates/gatus
