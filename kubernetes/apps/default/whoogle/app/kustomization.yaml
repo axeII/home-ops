@@ -6,3 +6,4 @@ namespace: default
 resources:
   - ./gatus.yaml
   - ./helmrelease.yaml
+  - ../../../../templates/gatus
