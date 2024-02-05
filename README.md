@@ -1,4 +1,4 @@
-# home-ops
+# Home Operations
 
 <div align="center">
 
