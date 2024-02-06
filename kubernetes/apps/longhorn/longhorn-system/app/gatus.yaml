@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: longhorn-gatus-ep
+  namespace: monitoring
+  labels:
+    gatus.io/enabled: "true"
+data:
+  config.yaml: |
+    endpoints:
+      - name: longhorn
+        url: https://longhorn.${SECRET_DOMAIN}
+        group: storage
+        interval: 1m
+        conditions: ["[STATUS] == 200"]
+        client:
+          dns-resolver: udp://192.168.69.106:53
+        alerts:
+        - type: discord
+          description: "healthcheck failed"
+          send-on-resolved: true
