@@ -18,3 +18,8 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 3m
+  postBuild:
+    substitute:
+      APP: &app grafana
+      GROUP: monitoring
+      GATUS_SUBDOMAIN: *app
