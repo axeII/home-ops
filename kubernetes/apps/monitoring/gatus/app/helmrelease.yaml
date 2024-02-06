@@ -44,6 +44,9 @@ spec:
               RESOURCE: both
               UNIQUE_FILENAMES: true
               METHOD: LIST
+            envFrom: &envFrom
+              - secretRef:
+                  name: gatus-secret
             resources: &configSyncResources
               requests:
                 cpu: 10m
@@ -60,9 +63,7 @@ spec:
               TZ: ${TIMEZONE}
               GATUS_CONFIG_PATH: /config
               CUSTOM_WEB_PORT: &port 80
-            envFrom:
-              - secretRef:
-                  name: gatus-secret
+            envFrom: *envFrom
             resources:
               requests:
                 cpu: 10m
@@ -78,6 +79,7 @@ spec:
               RESOURCE: both
               UNIQUE_FILENAMES: true
               METHOD: WATCH
+            envFrom: *envFrom
             resources: *configSyncResources
         pod:
           securityContext:
