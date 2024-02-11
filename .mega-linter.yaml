@@ -1,2 +1,2 @@
 IGNORE:
-  - "**/.github/workflows/*"
+  - ".github/workflows/*"
