@@ -13,7 +13,7 @@
 - { name: "renovate/github-release",    color: "027fa0" }
 - { name: "renovate/helm",              color: "027fa0" }
 - { name: "renovate/terraform",         color: "027fa0" }
-- { name: "renovate/pip",               color: "aaffe5" }
+- { name: "renovate/pip",               color: "027fa0" }
 # Semantic Type
 - { name: "type/patch",                 color: "ffec19" }
 - { name: "type/minor",                 color: "ff9800" }
