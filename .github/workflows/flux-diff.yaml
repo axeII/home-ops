@@ -93,11 +93,13 @@ jobs:
 
       - name: Generate Diff
         id: diff
-        run: | # shellcheck disable=SC2129
-          cat diff.patch
-          echo "diff<<EOF" >> $GITHUB_OUTPUT
-          cat diff.patch >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+        run: |
+            cat diff.patch
+            {
+                echo "diff<<EOF"
+                cat diff.patch
+                echo "EOF"
+            } >> $GITHUB_OUTPUT
 
       - if: ${{ steps.diff.outputs.diff != '' }}
         name: Add comment
