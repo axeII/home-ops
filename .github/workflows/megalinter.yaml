@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 0
+
       - name: MegaLinter
         uses: megalinter/megalinter/flavors/terraform@688bc7466d7ab4faa83d614c2e6f9acf42b674dc # v7
         env:
@@ -35,8 +36,8 @@ jobs:
           TERRAFORM_TFLINT_CONFIG_FILE: .tflint.hcl
           YAML_YAMLLINT_CONFIG_FILE: .yamllint.yaml
           SHELLCHECK_OPTS: "-e SC2086"
+
       - name: Archive production artifacts
-        if: ${{ success() }} || ${{ failure() }}
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: MegaLinter reports
