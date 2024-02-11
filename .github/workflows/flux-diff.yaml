@@ -91,6 +91,7 @@ jobs:
             --sources "home-kubernetes"
             --output-file diff.patch
 
+      # shellcheck disable=SC2129
       - name: Generate Diff
         id: diff
         run: |
