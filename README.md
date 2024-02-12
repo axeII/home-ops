@@ -12,10 +12,14 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 <br/>
 <br/>
 
-[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60&style=for-the-badge)](https://discord.com/invite/S9yWcJVEMQ)
-[![k3s](https://img.shields.io/badge/k3s-v1.25.7-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://k3s.io/)
+
+[![Discord](https://img.shields.io/discord/673534664354430999?style=for-the-badge&label&logo=discord&logoColor=white&color=blue)](https://discord.gg/home-operations)&nbsp;&nbsp;
+[![Kubernetes](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FaxeII%2Fhome-ops%2Fmain%2Fkubernetes%2Fapps%2Fsystem-upgrade%2Fks.yaml&query=%24.spec.postBuild.substitute.KUBE_VERSION&style=for-the-badge&logo=kubernetes&logoColor=white&label=%20)](https://k3s.io/)&nbsp;&nbsp;
+[![Renovate](https://img.shields.io/github/actions/workflow/status/axeII/home-ops/renovate.yaml?branch=main&label=&logo=renovatebot&style=for-the-badge&color=blue)](https://github.com/axeII/home-ops/actions/workflows/renovate.yaml)
+
+</br>
+
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
-[![renovate](https://img.shields.io/badge/renovate-enabled?style=for-the-badge&logo=renovatebot&logoColor=white&color=brightgreen)](https://github.com/renovatebot/renovate)
 
 </div>
 
