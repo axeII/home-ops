@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app minecraft
+spec:
+  interval: 30m
+  chart:
+    spec:
+      # renovate: registryUrl=https://itzg.github.io/minecraft-server-charts/
+      chart: minecraft
+      version: 4.15.0
+      sourceRef:
+        kind: HelmRepository
+        name: minecraft-server
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
+  values:
+    deploymentAnnotations:
+      secret.reloader.stakater.com/reload: &secret minecraft-secret
+    image:
+      repository: ghcr.io/itzg/minecraft-server
+      tag: java17
+    resources:
+      requests:
+        cpu: 500m
+      limits:
+        memory: 8Gi
+    securityContext:
+      runAsUser: &uid 568
+      fsGroup: *uid
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
+    startupProbe:
+      enabled: false
+    extraEnv:
+      TZ: "${TIMEZONE}"
+      ENABLE_AUTOPAUSE: FALSE
+    persistence:
+      dataDir:
+        enabled: true
+        storageClass: longhorn
+        Size: 5G
+    serviceAnnotations:
+      metallb.universe.tf/loadBalancerIPs: ${SVC_MINECRAFT_ADDR}
+      # io.cilium/lb-ipam-ips: "${}"
+      # mc-router.itzg.me/externalServerName: "mcsv.${SECRET_DOMAIN}"
+    minecraftServer:
+      eula: true
+      version: 1.20.2
+      type: SPIGOT
+      forceReDownload: true
+      jvmXXOpts: "-XX:MaxRAMPercentage=75"
+      memory: 8192M
+      difficulty: normal
+      spawnProtection: 0
+      maxTickTime: -1
+      gameMode: survival
+      pvp: false
+      onlineMode: false
+      whitelist: "akira"
+      ops: "akira"
+      motd: "We have cookies"
+      worldSaveName: Empire
+      viewDistance: 12
+      spigetResources:
+        - 36618 #Prom Exporter
+      rcon:
+        enabled: true
+        serviceType: ClusterIP
+      serviceType: LoadBalancer
+      extraPorts:
+        - name: metrics
+          containerPort: 9225
+          protocol: TCP
+          service:
+            enabled: true
+            embedded: false
+            type: ClusterIP
+            port: 9225
+          ingress:
+            enabled: false
+        - name: map
+          containerPort: 8123
+          protocol: TCP
+          service:
+            enabled: true
+            embedded: false
+            type: ClusterIP
+            port: 8123
+          ingress:
+            ingressClassName: nginx
+            enabled: true
+            hosts:
+              - name: &host "minecraft.${SECRET_DOMAIN}"
+                path: /
+            tls:
+              - secretName: *host
+                hosts:
+                  - *host
+  valuesFrom:
+    - kind: Secret
+      name: *secret
+      valuesKey: RCON_PASSWORD
+      targetPath: minecraftServer.rcon.password
