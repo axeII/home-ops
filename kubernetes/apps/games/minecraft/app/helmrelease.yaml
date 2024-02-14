@@ -41,7 +41,7 @@ spec:
       limits:
         memory: 8Gi
     securityContext:
-      runAsUser: &uid 568
+      runAsUser: &uid 1000
       fsGroup: *uid
     livenessProbe:
       enabled: false
