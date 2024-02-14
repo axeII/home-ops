@@ -114,6 +114,16 @@ spec:
               - secretName: *host
                 hosts:
                   - *host
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - k8s-2
+
   valuesFrom:
     - kind: Secret
       name: *secret
