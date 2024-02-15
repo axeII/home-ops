@@ -23,11 +23,6 @@
   "onboarding": false,
   "requireConfig": "optional",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "schedule": [
-    "after 10pm every weekday",
-    "before 5am every weekday",
-    "every weekend"
-  ],
   "suppressNotifications": [
     "prEditedNotification",
     "prIgnoreNotification"
