@@ -14,7 +14,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 
 [![Discord](https://img.shields.io/discord/673534664354430999?style=for-the-badge&label&logo=discord&logoColor=white&color=blue)](https://discord.gg/home-operations)&nbsp;&nbsp;
-[![Kubernetes](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FaxeII%2Fhome-ops%2Fmain%2Fkubernetes%2Fapps%2Fsystem-upgrade%2Fks.yaml&query=%24.spec.postBuild.substitute.KUBE_VERSION&style=for-the-badge&logo=kubernetes&logoColor=white&label=%20)](https://k3s.io/)&nbsp;&nbsp;
+[![Kubernetes](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FaxeII%2Fhome-ops%2Fmain%2Fkubernetes%2Fapps%2Fsystem-upgrade%2Fk3s%2Fks.yaml&query=%24.spec.postBuild.substitute.KUBE_VERSION&style=for-the-badge&logo=kubernetes&logoColor=white&label=%20)](https://k3s.io/)&nbsp;&nbsp;
 [![Renovate](https://img.shields.io/github/actions/workflow/status/axeII/home-ops/renovate.yaml?branch=main&label=&logo=renovatebot&style=for-the-badge&color=blue)](https://github.com/axeII/home-ops/actions/workflows/renovate.yaml)
 
 </br>
@@ -75,7 +75,7 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 <!-- textlint-enable -->
 
 I've made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
-Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)! 
+Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)!
 
 ---
 
