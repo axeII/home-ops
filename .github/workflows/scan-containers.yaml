@@ -45,7 +45,7 @@ jobs:
         run: |
           containers=$(.github/scripts/container-parser.sh --file "${{ matrix.file }}")
           echo "${containers}"
-          echo ::set-output name=containers::${containers}
+          echo "containers=${containers}" >> $GITHUB_OUTPUT
     outputs:
       containers: ${{ steps.containers.outputs.containers }}
   scan-containers:
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - name: Scan Container
-        uses: aquasecurity/trivy-action@d43c1f16c00cfd3978dde6c07f4bbcf9eb6993ca # 0.16.1
+        uses: aquasecurity/trivy-action@84384bd6e777ef152729993b8145ea352e9dd3ef # 0.17.0
         with:
           image-ref: ${{ matrix.containers }}
           vuln-type: os,library
@@ -67,6 +67,6 @@ jobs:
           format: sarif
           output: trivy-results.sarif
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@0b21cf2492b6b02c465a3e5d7c473717ad7721ba # v3
+        uses: github/codeql-action/upload-sarif@e675ced7a7522a761fc9c8eb26682c8b27c42b2b # v3
         with:
           sarif_file: trivy-results.sarif

@@ -1,4 +1,4 @@
-# home-ops
+# Home Operations
 
 <div align="center">
 
@@ -63,14 +63,15 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 |------------------------|------------------|----------------|------|----------------------------------------------|
 | Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | k3s node                                     |
 | Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | k3s node                                     |
-| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with nvidia GPU                     |
+| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with Nvidia GPU                     |
 | TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                                      |
 | Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway                  |
 | Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports               |
-| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and storage datababase,redis etc |
+| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage              |
 <!-- textlint-enable -->
 
 I've made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
+Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)! 
 
 ---
 

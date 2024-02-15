@@ -1,10 +1,11 @@
 ---
 web:
   port: ${CUSTOM_WEB_PORT}
-storage:
-  type: postgres
-  path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
-  caching: true
+# Disabling storage for now
+# storage:
+#   type: postgres
+#   path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
+#   caching: true
 metrics: true
 debug: false
 ui:
@@ -19,6 +20,7 @@ connectivity:
     interval: 1m
 endpoints:
   - name: status
+    group: monitoring
     url: https://status.${SECRET_DOMAIN}
     interval: 1m
     conditions: ["[STATUS] == 200"]

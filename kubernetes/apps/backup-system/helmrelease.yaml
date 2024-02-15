@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: velero
-      version: 5.2.2
+      version: 5.3.0
       sourceRef:
         kind: HelmRepository
         name: vmware-tanzu-charts
@@ -20,7 +20,7 @@ spec:
       secret.reloader.stakater.com/reload: velero-s3-secret
     image:
       repository: velero/velero
-      tag: v1.12.3
+      tag: v1.13.0
     configuration:
       extraEnvVars:
         TZ: "Europe/Paris"
@@ -81,7 +81,7 @@ spec:
     deployNodeAgent: false
     initContainers:
       - name: velero-plugin-for-aws
-        image: velero/velero-plugin-for-aws:v1.8.2@sha256:edfb14403fc4ee45ac99f34930125869a06465c44ffacaf57e351e477e2c6b53
+        image: velero/velero-plugin-for-aws:v1.9.0@sha256:198955f28c21fbf8d5e3a343a7660684f12bdd62d6f27c74ed3ca6cf31c87cec
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
