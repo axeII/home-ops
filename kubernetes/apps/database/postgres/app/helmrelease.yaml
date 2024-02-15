@@ -30,7 +30,7 @@ spec:
   values:
     image:
       repository: bitnami/postgresql
-      tag: 15.6.0
+      tag: 16.2.0
     auth:
       enablePostgresUser: true
       postgresPassword: ${SECRET_POSTGRES_ADMIN_PASS}
