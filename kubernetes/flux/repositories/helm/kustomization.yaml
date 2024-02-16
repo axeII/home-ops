@@ -37,3 +37,4 @@ resources:
   - ./weave-gitops.yaml
   - ./phybros-charts.yaml
   - ./runatlantis.yaml
+  - ./cilium.yaml

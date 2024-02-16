@@ -35,12 +35,11 @@ For my cluster, I decided to use the PostgreSQL database instead of high IO load
 
 ## :art:&nbsp; Cluster components
 
-- [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
+- [cillium](https://github.com/cilium/cilium) - CNI for k8s
 - [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
 - [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
-- [metallb](https://metallb.universe.tf/) - bare metal load balancer
 - [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
 - [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
 - [traefik](https://traefik.io/): Provides ingress cluster services.
@@ -63,15 +62,15 @@ Following tools I use to setup infrastructure:
 My homelab runs on the following hardware (all k8s nodes are running on ubuntu 20.04):
 
 <!-- textlint-disable -->
-| Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                                      |
-|------------------------|------------------|----------------|------|----------------------------------------------|
-| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | k3s node                                     |
-| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | k3s node                                     |
-| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with Nvidia GPU                     |
-| TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                                      |
-| Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway                  |
-| Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports               |
-| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage              |
+| Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                         |
+|------------------------|------------------|----------------|------|---------------------------------|
+| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | k3s node                        |
+| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | k3s node                        |
+| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with Nvidia GPU        |
+| TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                         |
+| Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway     |
+| Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports  |
+| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage |
 <!-- textlint-enable -->
 
 I've made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
