@@ -62,7 +62,7 @@
       run_once: true
       ansible.builtin.fetch:
         src: "/etc/rancher/k3s/k3s.yaml"
-        dest: "{{ repo_abs_path.stdout }}/provision/kubeconfig"
+        dest: "{{ repo_abs_path.stdout }}/kubeconfig"
         flat: true
       when:
         - k3s_control_node is defined
