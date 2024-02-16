@@ -41,7 +41,7 @@ jobs:
           args+=(--search "-label:hold")
           args+=(--search "-label:type/major")
           args+=(--search "-label:type/minor")
-          args+=(--search "author:app/renovate")
+          args+=(--search "author:bot-akira")
           if [ "${{ github.event.inputs.labels }}" != "any" ]; then
               IFS=',' read -ra labels <<< "${{ github.event.inputs.labels }}"
               for label in "${labels[@]}"; do
