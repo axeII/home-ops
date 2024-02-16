@@ -38,7 +38,7 @@ jobs:
         run: |
           args=()
           args+=(--state open)
-          args+=(--search "-label:status/blocked")
+          args+=(--search "-label:hold")
           args+=(--search "-label:type/major")
           args+=(--search "-label:type/minor")
           args+=(--search "author:app/renovate")
