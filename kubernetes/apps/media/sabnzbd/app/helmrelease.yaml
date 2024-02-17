@@ -3,36 +3,32 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app sabnzbd
-  namespace: media
 spec:
   interval: 15m
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-
   install:
     createNamespace: true
     remediation:
       retries: 5
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   upgrade:
     remediation:
       retries: 5
-
   values:
     image:
       repository: ghcr.io/onedr0p/sabnzbd
       tag: 4.2.2@sha256:5b1f15c8d25afa2342505492486361d4ecf14449e1453aeea45cd7c1e5eeb63a
-
     env:
-      TZ: "Europe/Paris"
+      TZ: ${TIMEZONE}
       SABNZBD__PORT: &port 80
       SABNZBD__HOST_WHITELIST_ENTRIES: >-
         sabnzbd,
@@ -41,17 +37,38 @@ spec:
         sabnzbd.media.svc.cluster,
         sabnzbd.media.svc.cluster.local,
         sabnzbd.${SECRET_DOMAIN}
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: &path /api?mode=version
+            port: *port
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
+        enabled: false
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        memory: 8Gi
     service:
       main:
         ports:
           http:
             port: *port
-
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gatus.io/enabled: "true"
+          gatus.io/path: *path
           hajimari.io/icon: "download"
           hajimari.io/group: "downloader"
         hosts:
@@ -62,7 +79,6 @@ spec:
         tls:
           - hosts:
               - *host
-
     podSecurityContext:
       runAsUser: 568
       runAsGroup: 568
@@ -70,7 +86,6 @@ spec:
       fsGroupChangePolicy: "OnRootMismatch"
       supplementalGroups:
         - 100
-
     persistence:
       config:
         enabled: true
@@ -93,12 +108,6 @@ spec:
         server: "192.168.69.69"
         path: /mnt/ThiccBoi/media
         mountPath: /media
-    resources:
-      requests:
-        memory: 250Mi
-        cpu: 500m
-      limits:
-        memory: 7500Mi
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
