@@ -2,14 +2,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: plex
-  namespace: media
+  name: &app plex
 spec:
   interval: 5m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -29,12 +28,24 @@ spec:
       tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
     env:
       # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
-      TZ: "${TZ}"
+      TZ: "${TIMEZONE}"
       ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
       PLEX_UID: 0
       PLEX_GID: 0
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: &path /identity
+            port: &port 32400
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
     podSecurityContext:
       runAsUser: 0
       runAsGroup: 0
@@ -54,6 +65,8 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gatus.io/enabled: "true"
+          gatus.io/path: *path
           hajimari.io/icon: "plex"
           hajimari.io/group: "media"
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
@@ -85,18 +98,6 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
-    probes:
-      liveness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-          httpGet:
-            path: /identity
-            port: *port
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

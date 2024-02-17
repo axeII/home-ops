@@ -2,22 +2,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-plex
+  name: &app plex
   namespace: flux-system
 spec:
+  targetNamespace: media
   dependsOn:
-    - name: cluster-apps-local-path-provisioner
-    # - name: cluster-apps-nvidia
+    - name: path-provisioner
+    - name: nvidia
   path: ./kubernetes/apps/media/plex/app
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
-      name: plex
-      namespace: media
+  wait: true
   interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
