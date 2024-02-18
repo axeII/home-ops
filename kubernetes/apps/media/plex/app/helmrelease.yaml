@@ -29,7 +29,7 @@ spec:
       tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
     env:
       # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
-      TZ: "${TZ}"
+      TZ: "${TIMEZONE}"
       ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
       PLEX_UID: 0
       PLEX_GID: 0
