@@ -67,6 +67,7 @@ spec:
         enabled: true
         className: "nginx"
         annotations:
+          gatus.io/enabled: "true"
           hajimari.io/icon: mdi:google
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
