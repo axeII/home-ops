@@ -31,9 +31,9 @@ spec:
       path: /
       tls: true
       annotations:
+        gatus.io/enabled: "true"
         hajimari.io/icon: "cow"
         hajimari.io/appName: "longhorn"
-
 # resources:
 #   requests:
 #     cpu: "100m"
