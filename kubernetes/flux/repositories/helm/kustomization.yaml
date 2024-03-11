@@ -38,3 +38,4 @@ resources:
   - ./phybros-charts.yaml
   - ./runatlantis.yaml
   - ./postfinance.yaml
+  - ./xenitab.yaml
