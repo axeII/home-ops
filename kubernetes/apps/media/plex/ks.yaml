@@ -9,6 +9,7 @@ spec:
   dependsOn:
     - name: path-provisioner
     - name: nvidia
+    - name: longhorn
   path: ./kubernetes/apps/media/plex/app
   prune: false
   sourceRef:

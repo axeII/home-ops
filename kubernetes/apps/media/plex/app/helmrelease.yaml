@@ -16,11 +16,6 @@ spec:
       interval: 5m
   install:
     createNamespace: true
-  dependsOn:
-    - name: nvidia-device-plugin
-      namespace: kube-system
-    - name: longhorn
-      namespace: longhorn-system
   values:
     runtimeClassName: nvidia
     image:
