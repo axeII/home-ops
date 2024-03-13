@@ -4,7 +4,7 @@ kind: HelmRelease
 metadata:
   name: &app plex
 spec:
-  interval: 5m
+  interval: 15m
   chart:
     spec:
       chart: app-template
@@ -13,38 +13,64 @@ spec:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 5m
   install:
-    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
-    runtimeClassName: nvidia
-    image:
-      repository: ghcr.io/onedr0p/plex
-      tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
-    env:
-      # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
-      TZ: "${TIMEZONE}"
-      ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
-      PLEX_UID: 0
-      PLEX_GID: 0
-      NVIDIA_VISIBLE_DEVICES: all
-      NVIDIA_DRIVER_CAPABILITIES: all
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          httpGet:
-            path: &path /identity
-            port: &port 32400
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-    podSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
+    controllers:
+      main:
+        containers:
+          main:
+            runtimeClassName: nvidia
+            image:
+              repository: ghcr.io/onedr0p/plex
+              tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
+            env:
+              TZ: "${TIMEZONE}"
+              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
+              PLEX_UID: 0
+              PLEX_GID: 0
+              NVIDIA_VISIBLE_DEVICES: all
+              NVIDIA_DRIVER_CAPABILITIES: all
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: &path /identity
+                    port: &port 32400
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 10Gi
+        pod:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - k8s-2
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
+            privileged: true
     hostNetwork: true
     service:
       main:
@@ -79,8 +105,6 @@ spec:
         tls:
           - hosts:
               - *host
-    securityContext:
-      privileged: true
     persistence:
       config:
         enabled: true
@@ -93,12 +117,3 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                    - k8s-2
