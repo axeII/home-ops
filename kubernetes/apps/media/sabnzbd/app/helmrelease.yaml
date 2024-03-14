@@ -77,6 +77,11 @@ spec:
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
               - 100
+    service:
+      main:
+        ports:
+          http:
+            port: *port
     ingress:
       main:
         enabled: true
@@ -106,8 +111,3 @@ spec:
         mountPath: /media
       tmp:
         type: emptyDir
-    service:
-      main:
-        ports:
-          http:
-            port: *port

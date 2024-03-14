@@ -71,16 +71,21 @@ spec:
             runAsGroup: 0
             fsGroup: 0
             privileged: true
-    hostNetwork: true
+    # hostNetwork: true
+    # service:
+    #   main:
+    #     type: LoadBalancer
+    #     annotations:
+    #       metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
+    #     externalTrafficPolicy: Local
+    #     ports:
+    #       http:
+    #         port: &port 32400
     service:
       main:
-        type: LoadBalancer
-        annotations:
-          metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
-        externalTrafficPolicy: Local
         ports:
           http:
-            port: &port 32400
+            port: *port
     ingress:
       main:
         enabled: true
