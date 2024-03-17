@@ -8,7 +8,7 @@ spec:
   dependsOn:
     - name: cluster-apps-sonarr
     - name: cluster-apps-radarr
-    - name: cluster-apps-longhorn
+    - name: longhorn
     # - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/media/recyclarr/app
   prune: true
