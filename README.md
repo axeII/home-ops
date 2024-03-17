@@ -31,8 +31,6 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Ansible, it's very easy for me to manage my home infrastructure and the cluster.  I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Terraform](https://github.com/hashicorp/terraform), [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
 
----
-
 ## ⛵ Kubernetes
 
 There is a template over at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you wanted to try and follow along with some of the practices I use here.
@@ -82,7 +80,7 @@ This Git repository contains the following directories under [kubernetes](./kube
 ```
 
 
-## :file_cabinet: Hardware
+### :file_cabinet: Hardware
 
 My homelab runs on the following hardware (all k8s nodes are running on ubuntu 20.04):
 
@@ -98,12 +96,11 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 | Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage |
 <!-- textlint-enable -->
 
-### Blog post
+### 📰 Blog post
 
 Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)!
 I also have made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
 
----
 
 ## 🤝 Gratitude and Thanks
 
@@ -114,7 +111,6 @@ If you are interested in running your own k8s cluster at home, I highly recommen
 
 Be sure to check out [kubesearch.dev](https://kubesearch.dev) for ideas on how to deploy applications or get ideas on what you may deploy.
 
----
 ## 🔏 License
 
 See [LICENSE](./LICENSE).
