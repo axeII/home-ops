@@ -1,7 +1,6 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Cluster Installation
+  hosts: master
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -13,34 +12,18 @@
     - name: Check if cluster is installed
       check_mode: false
       ansible.builtin.stat:
-        path: "/etc/rancher/k3s/config.yaml"
-      register: k3s_check_installed
+        path: /etc/rancher/k3s/config.yaml
+      register: k3s_installed
 
-    - name: Set manifest facts
+    - name: Ignore manifests templates and urls if the cluster is already installed
+      when: k3s_installed.stat.exists
       ansible.builtin.set_fact:
         k3s_server_manifests_templates: []
         k3s_server_manifests_urls: []
-      when: k3s_check_installed.stat.exists
 
-    - name: Stop and disable systemd-resolved
-      ansible.builtin.service:
-        name: systemd-resolved.service
-        daemon_reload: false
-        enabled: false
-        state: stopped
-
-    - name: Remove resovl.conf symlink
-      ansible.builtin.file:
-        path: "/etc/resolv.conf"
-        state: absent
-
-    - name: Set statics domain name servers
-      ansible.builtin.blockinfile:
-        mode: 0644
-        create: true
-        path: /etc/resolv.conf
-        block: |
-          nameserver 192.168.69.99
+    - name: Prevent downgrades
+      when: k3s_installed.stat.exists
+      ansible.builtin.include_tasks: tasks/version-check.yaml
 
     - name: Install Kubernetes
       ansible.builtin.include_role:
@@ -49,91 +32,30 @@
       vars:
         k3s_state: installed
 
-    - name: Get absolute path to this Git repository
-      delegate_to: localhost
-      become: false
-      run_once: true
-      check_mode: false
-      ansible.builtin.command: |-
-        git rev-parse --show-toplevel
-      register: repo_abs_path
+    - name: Kubeconfig
+      ansible.builtin.include_tasks: tasks/kubeconfig.yaml
 
-    - name: Copy kubeconfig to provision folder
-      run_once: true
-      ansible.builtin.fetch:
-        src: "/etc/rancher/k3s/k3s.yaml"
-        dest: "{{ repo_abs_path.stdout }}/kubeconfig"
-        flat: true
+    - name: Wait for custom manifests to rollout
       when:
-        - k3s_control_node is defined
-        - k3s_control_node
+        - k3s_primary_control_node
+        - (k3s_server_manifests_templates | length > 0
+            or k3s_server_manifests_urls | length > 0)
+      kubernetes.core.k8s_info:
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        kind: "{{ item.kind }}"
+        name: "{{ item.name }}"
+        namespace: "{{ item.namespace | default('') }}"
+        wait: true
+        wait_sleep: 10
+        wait_timeout: 360
+      loop:
+        - { name: cilium, kind: HelmChart, namespace: kube-system }
+        - { name: kube-vip, kind: DaemonSet, namespace: kube-system }
 
-    - name: Update kubeconfig with the correct IPv4 address
-      delegate_to: localhost
-      become: false
-      run_once: true
-      ansible.builtin.replace:
-        path: "{{ repo_abs_path.stdout }}/provision/kubeconfig"
-        regexp: "https://127.0.0.1:6443"
-        replace: "https://{{ k3s_registration_address }}:6443"
+    - name: Cilium
+      when: k3s_primary_control_node
+      ansible.builtin.include_tasks: tasks/cilium.yaml
 
-    # - name: Resource Readiness Check
-    #   run_once: true
-    #   kubernetes.core.k8s_info:
-    #     kubeconfig: /etc/rancher/k3s/k3s.yaml
-    #     kind: "{{ item.kind }}"
-    #     name: "{{ item.name }}"
-    #     namespace: "{{ item.namespace | default('') }}"
-    #     wait: true
-    #     wait_sleep: 10
-    #     wait_timeout: 360
-    #   loop:
-    #     - kind: Deployment
-    #       name: tigera-operator
-    #       namespace: tigera-operator
-    #     - kind: DaemonSet
-    #       name: kube-vip
-    #       namespace: kube-system
-    #     - kind: Installation
-    #       name: default
-    #     - kind: CustomResourceDefinition
-    #       name: alertmanagerconfigs.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: alertmanagers.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: podmonitors.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: probes.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: prometheuses.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: prometheusrules.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: servicemonitors.monitoring.coreos.com
-    #     - kind: CustomResourceDefinition
-    #       name: thanosrulers.monitoring.coreos.com
-    #   when:
-    #     - k3s_server_manifests_templates | length > 0
-    #         or k3s_server_manifests_urls | length > 0
-    #     - k3s_control_node is defined
-    #     - k3s_control_node
-
-    # Cleaning up the manifests from the /var/lib/rancher/k3s/server/manifests
-    # directory is needed because k3s has an awesome "feature" to always deploy
-    # these on restarting the k3s systemd service. Removing them does NOT
-    # uninstall the manifests.
-
-    # Removing them means we can manage the lifecycle of these components
-    # outside of the /var/lib/rancher/k3s/server/manifests directory
-
-    - name: Remove deployed manifest templates
-      ansible.builtin.file:
-        path: "{{ k3s_server_manifests_dir }}/{{ item | basename | regex_replace('\\.j2$', '') }}"
-        state: absent
-      loop: "{{ k3s_server_manifests_templates | default([]) }}"
-
-    - name: Remove deployed manifest urls
-      ansible.builtin.file:
-        path: "{{ k3s_server_manifests_dir }}/{{ item.filename }}"
-        state: absent
-      loop: "{{ k3s_server_manifests_urls | default([]) }}"
+    - name: Cruft
+      when: k3s_primary_control_node
+      ansible.builtin.include_tasks: tasks/cruft.yaml

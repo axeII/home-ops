@@ -1,7 +1,6 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Reboot
+  hosts: master
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -13,3 +12,4 @@
     - name: Reboot
       ansible.builtin.reboot:
         msg: Rebooting nodes
+        reboot_timeout: 3600

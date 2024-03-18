@@ -1,7 +1,6 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Prepare System
+  hosts: master
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -9,97 +8,96 @@
     - name: Pausing for 5 seconds...
       ansible.builtin.pause:
         seconds: 5
+    - name: Populate service facts
+      ansible.builtin.service_facts:
   tasks:
     - name: Locale
       block:
         - name: Locale | Set timezone
           community.general.timezone:
             name: "{{ timezone | default('Etc/UTC') }}"
-    - name: Networking
+
+    - name: Packages
       block:
-        - name: Networking | Set hostname to inventory hostname
+        - name: Packages | Install
+          ansible.builtin.apt:
+            name: apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,
+              iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,net-tools,nfs-common,
+              nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,
+              smartmontools,socat,software-properties-common,unzip,util-linux
+            install_recommends: false
+
+    - name: Network Configuration
+      notify: Reboot
+      block:
+        - name: Network Configuration | Set hostname
           ansible.builtin.hostname:
             name: "{{ inventory_hostname }}"
-        - name: Networking | Update /etc/hosts to include inventory hostname
-          ansible.builtin.blockinfile:
-            path: /etc/hosts
-            block: |
-              127.0.1.1   {{ inventory_hostname }}
+        - name: Network Configuration | Update hosts
+          ansible.builtin.copy:
+            content: |
+              127.0.0.1 localhost
+              127.0.1.1 {{ inventory_hostname }}
+
+              # The following lines are desirable for IPv6 capable hosts
+              ::1     localhost ip6-localhost ip6-loopback
+              ff02::1 ip6-allnodes
+              ff02::2 ip6-allrouters
+            dest: /etc/hosts
+            mode: preserve
+        # https://github.com/onedr0p/cluster-template/discussions/635
+        - name: Network Configuration | Remove immutable flag from /etc/resolv.conf
+          ansible.builtin.file:
+            attributes: -i
+            path: /etc/resolv.conf
+        - name: Network Configuration | Remove /etc/resolv.conf
+          ansible.builtin.file:
+            attributes: -i
+            path: /etc/resolv.conf
+            state: absent
+        - name: Network Configuration | Add custom /etc/resolv.conf
+          ansible.builtin.copy:
+            attributes: +i
+            mode: '0644'
+            dest: /etc/resolv.conf
+            content: |
+              nameserver 45.90.28.55
+              nameserver 45.90.30.55
+
     - name: Add k3s to sudoers
       ansible.builtin.copy:
         content: "k3s ALL=(ALL:ALL) NOPASSWD:ALL"
         dest: "/etc/sudoers.d/k3s_nopasswd"
         mode: "0440"
-      # when: ansible_facts['distribution'] == 'Ubuntu'
-    - name: Packages | Fedora
+
+    - name: System Configuration
+      notify: Reboot
       block:
-        - name: Packages | Install required packages
-          ansible.builtin.dnf:
-            name: "{{ fedora.packages | default([]) }}"
-            state: present
-            update_cache: true
-        - name: Packages | Remove leaf packages
-          ansible.builtin.dnf:
-            autoremove: true
-      when: ansible_facts['distribution'] == 'Fedora'
-    - name: Packages | Ubuntu
-      block:
-        - name: Packages | Install required packages
-          ansible.builtin.apt:
-            name: "{{ ubuntu.packages | default([]) }}"
-            state: present
-            update_cache: true
-        - name: Packages | Remove leaf packages
-          ansible.builtin.apt:
-            autoremove: true
-        - name: Packages | RasPi packages
-          ansible.builtin.apt:
-            name: ["linux-modules-extra-raspi"]
-            install_recommends: false
-          notify: Reboot
-          when: "'raspi' in ansible_kernel"
-      when: ansible_facts['distribution'] == 'Ubuntu'
-    - name: User Configuration
-      block:
-        - name: User Configuration | Add additional SSH public keys
-          ansible.posix.authorized_key:
-            user: "{{ ansible_user }}"
-            key: "{{ item }}"
-          loop: "{{ public_ssh_keys | default([]) }}"
-    - name: System Configuration (1)
-      block:
-        - name: System Configuration (1) | Disable firewalld | Fedora
+        - name: System Configuration | Disable apparmor
+          when: ansible_facts.services['apparmor.service'] is defined
           ansible.builtin.systemd:
-            service: firewalld.service
-            enabled: false
-            masked: true
+            name: apparmor
             state: stopped
-          when: ansible_facts['distribution'] == 'Fedora'
-        - name: System Configuration (1) | Disable ufw | Ubuntu
-          ansible.builtin.systemd:
-            service: ufw.service
-            enabled: false
             masked: true
-            state: stopped
-          when: ansible_facts['distribution'] == 'Ubuntu'
-        - name: System Configuration (1) | Enable fstrim
-          ansible.builtin.systemd:
-            service: fstrim.timer
-            enabled: true
-    - name: System Configuration (2)
-      block:
-        - name: System Configuration (2) | Enable kernel modules now
-          community.general.modprobe:
+        - name: System Configuration | Disable swap
+          ansible.posix.mount:
             name: "{{ item }}"
-            state: present
-          loop: [br_netfilter, ip_vs, ip_vs_rr, overlay, rbd]
-        - name: System Configuration (2) | Enable kernel modules on boot
+            fstype: swap
+            state: absent
+          loop: ["none", "swap"]
+        - name: System Configuration | Create Kernel modules
           ansible.builtin.copy:
-            mode: 0644
-            content: "{{ item }}"
             dest: "/etc/modules-load.d/{{ item }}.conf"
-          loop: [br_netfilter, ip_vs, ip_vs_rr, overlay, rbd]
-        - name: System Configuration (2) | Set sysctls
+            mode: "0644"
+            content: "{{ item }}"
+          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
+          register: modules_status
+        - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
+          when: modules_status.changed
+          ansible.builtin.systemd:
+            name: systemd-modules-load
+            state: restarted
+        - name: System Configuration | Sysctl
           ansible.posix.sysctl:
             name: "{{ item.key }}"
             value: "{{ item.value }}"
@@ -108,47 +106,9 @@
           with_dict: "{{ sysctl_config }}"
           vars:
             sysctl_config:
-              net.ipv4.ip_forward: 1
-              net.ipv4.conf.all.forwarding: 1
-              net.ipv4.conf.all.rp_filter: 0
-              net.ipv4.conf.default.rp_filter: 0
-              net.ipv6.conf.all.forwarding: 1
-              net.bridge.bridge-nf-call-iptables: 1
-              net.bridge.bridge-nf-call-ip6tables: 1
+              fs.inotify.max_queued_events: 65536
               fs.inotify.max_user_watches: 524288
-              fs.inotify.max_user_instances: 512
-        - name: System Configuration (2) | Disable swap | Fedora
-          ansible.builtin.dnf:
-            name: zram-generator-defaults
-            state: absent
-          when: ansible_facts['distribution'] == 'Fedora'
-        - name: System Configuration (2) | Disable swap at runtime | Ubuntu
-          ansible.builtin.command: swapoff -a
-          when:
-            - ansible_facts['distribution'] == 'Ubuntu'
-            - ansible_swaptotal_mb > 0
-        - name: System Configuration (2) | Disable swap at boot | Ubuntu
-          ansible.posix.mount:
-            name: "{{ item }}"
-            fstype: swap
-            state: absent
-          loop: ["none", "swap"]
-          when: ansible_facts['distribution'] == 'Ubuntu'
-        - name: System Configuration (2) | Permissive SELinux | Fedora
-          ansible.posix.selinux:
-            state: permissive
-            policy: targeted
-          when: ansible_facts['distribution'] == 'Fedora'
-        - name: Create hushlogin file to silence output during ssh login
-          ansible.builtin.file:
-            dest: /home/k3s/.hushlogin
-            state: touch
-            owner: "{% raw %}{{ ansible_user }}{% endraw %}"
-            group: "{% raw %}{{ ansible_user }}{% endraw %}"
-            mode: "0644"
-            modification_time: preserve
-            access_time: preserve
-      notify: Reboot
+              fs.inotify.max_user_instances: 8192
 
   handlers:
     - name: Reboot
