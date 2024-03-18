@@ -1,6 +1,6 @@
 ---
 - name: Prepare System
-  hosts: master
+  hosts: controllers
   become: true
   gather_facts: true
   any_errors_fatal: true
