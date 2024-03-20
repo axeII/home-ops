@@ -1,26 +1,17 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
-kind: HelmRelease
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
 metadata:
   name: cilium
+  namespace: kube-system
 spec:
-  interval: 30m
-  chart:
-    spec:
-      chart: cilium
-      version: 1.15.2
-      sourceRef:
-        kind: HelmRepository
-        name: cilium
-        namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  values:
+  repo: https://helm.cilium.io/
+  chart: cilium
+  # renovate: datasource=helm depName=cilium repository=https://helm.cilium.io
+  version: 1.15.2
+  targetNamespace: kube-system
+  bootstrap: true
+  valuesContent: |-
     autoDirectNodeRoutes: true
     bgpControlPlane:
       enabled: true
@@ -44,7 +35,7 @@ spec:
       enabled: false
     ipam:
       mode: kubernetes
-    ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"
+    ipv4NativeRoutingCIDR: "10.69.0.0/16"
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444
     kubeProxyReplacement: true
@@ -58,23 +49,6 @@ spec:
     operator:
       replicas: 1
       rollOutPods: true
-      prometheus:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-      dashboards:
-        enabled: true
-        annotations:
-          grafana_folder: Cilium
-    prometheus:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        trustCRDsExist: true
-    dashboards:
-      enabled: true
-      annotations:
-        grafana_folder: Cilium
     rollOutCiliumPods: true
     routingMode: native
     securityContext:
