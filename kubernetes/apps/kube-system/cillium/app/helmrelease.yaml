@@ -41,6 +41,10 @@ spec:
       socketPath: /var/run/k3s/containerd/containerd.sock
     # NOTE: devices might need to be set if you have more than one active NIC on your hosts
     # devices: eno+ eth+
+    devices:
+      - eno+
+      - enp6s+
+      - bond+
     endpointRoutes:
       enabled: true
     hubble:
