@@ -39,3 +39,4 @@ resources:
   - ./runatlantis.yaml
   - ./postfinance.yaml
   - ./xenitab.yaml
+  - ./cilium.yaml

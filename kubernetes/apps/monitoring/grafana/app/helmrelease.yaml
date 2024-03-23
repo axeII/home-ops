@@ -36,10 +36,6 @@ spec:
             type: file
     dashboards:
       default:
-        calico-felix:
-          datasource: Prometheus
-          gnetId: 12175
-          revision: 5
         flux-cluster:
           datasource: Prometheus
           url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/grafana/dashboards/cluster.json

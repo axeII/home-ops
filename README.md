@@ -42,12 +42,11 @@ For my cluster, I decided to use the PostgreSQL database instead of high IO load
 
 ### Core Components
 
-- [calico](https://www.tigera.io/project-calico/) - CNI (container network interface)
+- [cillium](https://github.com/cilium/cilium) - CNI for k8s
 - [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
 - [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
-- [metallb](https://metallb.universe.tf/) - bare metal load balancer
 - [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
 - [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
 - [traefik](https://traefik.io/): Provides ingress cluster services.

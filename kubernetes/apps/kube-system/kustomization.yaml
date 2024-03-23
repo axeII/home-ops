@@ -12,3 +12,4 @@ resources:
   - ./external-secrets/ks.yaml
   - ./spegel/ks.yaml
   - ./kubelet-csr-approver/ks.yaml
+  - ./cillium/ks.yaml
