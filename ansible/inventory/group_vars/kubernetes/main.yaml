@@ -1,6 +1,6 @@
 ---
 k3s_become: true
-k3s_etcd_datastore: true
+k3s_etcd_datastore: false
 k3s_install_hard_links: true
 k3s_registration_address: "192.168.69.254"
 k3s_registries:
