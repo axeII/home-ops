@@ -1,6 +1,6 @@
 ---
 - name: Database nuke
-  hosts: database
+  hosts: databases
   become: true
   gather_facts: true
   any_errors_fatal: true
