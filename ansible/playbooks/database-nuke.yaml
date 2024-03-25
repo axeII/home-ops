@@ -1,5 +1,5 @@
 ---
-- name: Create database
+- name: Database nuke
   hosts: databases
   become: true
   gather_facts: true
@@ -10,8 +10,8 @@
         name: psycopg2-binary
         state: present
 
-    - name: Prepare database
+    - name: Drop database
       community.postgresql.postgresql_db:
-        name: etcd
-        session_role: etcd
+        name: db_etcd
+        state: absent
       become_user: postgres
