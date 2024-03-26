@@ -10,8 +10,8 @@
         name: psycopg2-binary
         state: present
 
-    - name: Drop database
-      community.postgresql.postgresql_db:
+    - name: Drop the database
+      become_user: postgres
+      postgresql_db:
         name: db_etcd
         state: absent
-      become_user: postgres
