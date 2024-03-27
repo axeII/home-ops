@@ -71,7 +71,6 @@ spec:
             include:
               - default
               - kube-system
-              - metallb-system
               - monitoring
               - networking
           events:
@@ -92,7 +91,6 @@ spec:
             include:
               - default
               - flux-system
-              - metallb-system
               - kube-system
               - system-upgrade
               - monitoring
