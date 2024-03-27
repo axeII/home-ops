@@ -5,10 +5,10 @@ resources:
   - ./namespace.yaml
   - ./echo-server/ks.yaml
   - ./hajimari/ks.yaml
-  - ./libreddit/ks.yaml
-  - ./semaphore/ks.yaml
-  - ./shiori/ks.yaml
-  - ./invidious/ks.yaml
-  - ./archivebox/ks.yaml
-  - ./whoogle/ks.yaml
-  - ./microbin/ks.yaml
+  #- ./libreddit/ks.yaml
+  #- ./semaphore/ks.yaml
+  #- ./shiori/ks.yaml
+  #- ./invidious/ks.yaml
+  #- ./archivebox/ks.yaml
+  #- ./whoogle/ks.yaml
+  #- ./microbin/ks.yaml
