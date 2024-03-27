@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: ingress-nginx-internal
+  name: ingress-nginx
   namespace: network
 spec:
   interval: 30m
@@ -22,7 +22,7 @@ spec:
     remediation:
       retries: 3
   values:
-    fullnameOverride: ingress-nginx-internal
+    # fullnameOverride: ingress-nginx-internal
     controller:
       replicaCount: 1
       service:
@@ -30,15 +30,15 @@ spec:
           io.cilium/lb-ipam-ips: "192.168.69.105"
         externalTrafficPolicy: Cluster
       ingressClassResource:
-        name: internal
+        # name: internal
         default: true
-        controllerValue: k8s.io/internal
-      admissionWebhooks:
-        objectSelector:
-          matchExpressions:
-            - key: ingress-class
-              operator: In
-              values: ["internal"]
+        # controllerValue: k8s.io/internal
+      # admissionWebhooks:
+      #   objectSelector:
+      #     matchExpressions:
+      #       - key: ingress-class
+      #         operator: In
+      #         values: ["internal"]
       config:
         client-body-buffer-size: 100M
         client-body-timeout: 120
@@ -65,7 +65,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-staging-tls"
       # TODO: uncomment this when migratting to dual ingress setup
       # topologySpreadConstraints:
       #   - maxSkew: 1
