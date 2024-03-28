@@ -65,7 +65,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-staging-tls"
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
       # TODO: uncomment this when migratting to dual ingress setup
       # topologySpreadConstraints:
       #   - maxSkew: 1
