@@ -53,8 +53,8 @@ spec:
             # nodePort: 65142
 
     podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
+      runAsUser: 0
+      runAsGroup: 0
 
     ingress:
       main:
@@ -71,10 +71,10 @@ spec:
                     - k8s-1
                     - k8s-0
 
-    # probes:
-    #   liveness:
-    #     enabled: false
-    #   readiness:
-    #     enabled: false
-    #   startup:
-    #     enabled: false
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
