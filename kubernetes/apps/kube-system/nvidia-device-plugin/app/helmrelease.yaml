@@ -1,5 +1,3 @@
-# https://github.com/NVIDIA/k8s-device-plugin
-# Possibly switch to https://github.com/NVIDIA/gpu-operator
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
@@ -15,7 +13,7 @@ spec:
       version: 0.14.5
       sourceRef:
         kind: HelmRepository
-        name: nvidia-device-plugin
+        name: nvdp
         namespace: flux-system
       interval: 15m
   # https://github.com/NVIDIA/k8s-device-plugin/blob/main/deployments/helm/nvidia-device-plugin/values.yaml
@@ -24,5 +22,16 @@ spec:
       repository: nvcr.io/nvidia/k8s-device-plugin
       tag: v0.14.5
     runtimeClassName: nvidia
-    nodeSelector:
-      feature.node.kubernetes.io/custom-nvidia-gpu: "true"
+    config:
+      map:
+        default: |-
+          version: v1
+          flags:
+            migStrategy: none
+          sharing:
+            timeSlicing:
+              renameByDefault: false
+              failRequestsGreaterThanOne: false
+              resources:
+                - name: nvidia.com/gpu
+                  replicas: 6
