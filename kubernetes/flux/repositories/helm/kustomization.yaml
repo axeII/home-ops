@@ -39,3 +39,4 @@ resources:
   - ./postfinance.yaml
   - ./xenitab.yaml
   - ./cilium.yaml
+  - ./nvdp.yaml
