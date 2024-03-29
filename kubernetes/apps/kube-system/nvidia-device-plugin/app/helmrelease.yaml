@@ -8,19 +8,28 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://nvidia.github.io/k8s-device-plugin
       chart: nvidia-device-plugin
       version: 0.14.5
       sourceRef:
         kind: HelmRepository
-        name: nvdp
+        name: nvidia-dvp
         namespace: flux-system
       interval: 15m
-  # https://github.com/NVIDIA/k8s-device-plugin/blob/main/deployments/helm/nvidia-device-plugin/values.yaml
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
     image:
       repository: nvcr.io/nvidia/k8s-device-plugin
       tag: v0.14.5
+    nodeSelector:
+      nvidia.feature.node.kubernetes.io/gpu: "true"
     runtimeClassName: nvidia
     config:
       map:
