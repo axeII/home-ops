@@ -7,7 +7,7 @@ metadata:
 spec:
   targetNamespace: media
   dependsOn:
-    - name: local-path-provisioner
+    - name: cluster-apps-local-path-provisioner
     - name: nvidia-device-plugin
     - name: longhorn
   path: ./kubernetes/apps/media/plex/app
