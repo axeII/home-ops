@@ -8,7 +8,7 @@ resources:
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./reflector/ks.yaml
-#  - ./nvidia-device-plugin/ks.yaml
+  - ./nvidia-device-plugin/ks.yaml
   - ./external-secrets/ks.yaml
   - ./spegel/ks.yaml
   - ./kubelet-csr-approver/ks.yaml
