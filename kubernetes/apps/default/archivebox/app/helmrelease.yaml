@@ -58,6 +58,7 @@ spec:
               MEDIA_MAX_SIZE: 1024m
               SAVE_ARCHIVE_DOT_ORG: "True"
               PUBLIC_ADD_VIEW: "True" # allow public additions, required for firefox extension
+              CHROME_HEADLESS: "False"
               # REVERSE_PROXY_USER_HEADER: X-authentik-username
               # REVERSE_PROXY_WHITELIST: ${CLUSTER_CIDR}
             resources:
