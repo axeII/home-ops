@@ -87,7 +87,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: ingress
+        className: nginx
         annotations:
           gatus.io/enable: "true"
           hajimari.io/icon: mdi:movie-search
