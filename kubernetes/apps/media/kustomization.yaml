@@ -5,7 +5,7 @@ resources:
   - ./namespace.yaml
   - ./media-nfs-share.yaml
   #- ./bazarr/ks.yaml
-  #- ./overseerr/ks.yaml
+  - ./overseerr/ks.yaml
   #- ./prowlarr/ks.yaml
   #- ./radarr/ks.yaml
   #- ./radarr-uhd/ks.yaml
@@ -14,14 +14,14 @@ resources:
   #- ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
   #- ./whisparr/ks.yaml
-  #- ./unpackerr/ks.yaml
+  - ./unpackerr/ks.yaml
   - ./plex/ks.yaml
   - ./metube/ks.yaml
   #- ./kavita/ks.yaml
   #- ./deluge/ks.yaml
   #- ./ubooquity/ks.yaml
-  #- ./flaresolverr/ks.yaml
+  - ./flaresolverr/ks.yaml
   #- ./kapowarr/ks.yaml
   #- ./kaizoku/ks.yaml
-  #- ./recyclarr/ks.yaml
+  - ./recyclarr/ks.yaml
   ## - ./midarr/ks.yaml # waiting for https://github.com/midarrlabs/midarr-server/issues/396
