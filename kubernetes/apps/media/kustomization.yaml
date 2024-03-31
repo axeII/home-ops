@@ -4,24 +4,24 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./media-nfs-share.yaml
-  #- ./bazarr/ks.yaml
+  - ./bazarr/ks.yaml
   - ./overseerr/ks.yaml
   - ./prowlarr/ks.yaml
-  #- ./radarr/ks.yaml
-  #- ./radarr-uhd/ks.yaml
-  #- ./readarr/ks.yaml
+  - ./radarr/ks.yaml
+  #- ./radarr-uhd/ks.yaml #FIXME: Do I need this?
+  - ./readarr/ks.yaml
   - ./sabnzbd/ks.yaml
-  #- ./sonarr/ks.yaml
+  - ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
-  #- ./whisparr/ks.yaml
+  - ./whisparr/ks.yaml
   - ./unpackerr/ks.yaml
   - ./plex/ks.yaml
   - ./metube/ks.yaml
-  #- ./kavita/ks.yaml
-  #- ./deluge/ks.yaml
+  #- ./kavita/ks.yaml #TODO: Migrate to Stamp
+  #- ./deluge/ks.yaml #TODO: Migrate to Transmission
   - ./ubooquity/ks.yaml
   - ./flaresolverr/ks.yaml
-  #- ./kapowarr/ks.yaml
-  #- ./kaizoku/ks.yaml
+  - ./kapowarr/ks.yaml
+  #- ./kaizoku/ks.yaml #TODO: Archive
   - ./recyclarr/ks.yaml
   # - ./midarr/ks.yaml # waiting for https://github.com/midarrlabs/midarr-server/issues/396
