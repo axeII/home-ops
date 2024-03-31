@@ -6,7 +6,7 @@ resources:
   - ./media-nfs-share.yaml
   #- ./bazarr/ks.yaml
   - ./overseerr/ks.yaml
-  #- ./prowlarr/ks.yaml
+  - ./prowlarr/ks.yaml
   #- ./radarr/ks.yaml
   #- ./radarr-uhd/ks.yaml
   #- ./readarr/ks.yaml
@@ -19,9 +19,9 @@ resources:
   - ./metube/ks.yaml
   #- ./kavita/ks.yaml
   #- ./deluge/ks.yaml
-  #- ./ubooquity/ks.yaml
+  - ./ubooquity/ks.yaml
   - ./flaresolverr/ks.yaml
   #- ./kapowarr/ks.yaml
   #- ./kaizoku/ks.yaml
   - ./recyclarr/ks.yaml
-  ## - ./midarr/ks.yaml # waiting for https://github.com/midarrlabs/midarr-server/issues/396
+  # - ./midarr/ks.yaml # waiting for https://github.com/midarrlabs/midarr-server/issues/396
