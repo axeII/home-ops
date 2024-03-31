@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: archivebox-config-v1
   namespace: default
-  name: appdata
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-path
   resources:
     requests:
-      storage: 15Gi
+      storage: 2Gi
+  storageClassName: longhorn
