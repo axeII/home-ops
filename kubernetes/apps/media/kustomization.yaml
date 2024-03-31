@@ -16,7 +16,7 @@ resources:
   #- ./whisparr/ks.yaml
   #- ./unpackerr/ks.yaml
   - ./plex/ks.yaml
-  #- ./metube/ks.yaml
+  - ./metube/ks.yaml
   #- ./kavita/ks.yaml
   #- ./deluge/ks.yaml
   #- ./ubooquity/ks.yaml
