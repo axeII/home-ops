@@ -109,7 +109,7 @@ spec:
         enabled: true
         type: nfs
         server: "192.168.69.69"
-        path: /mnt/ThiccBoi/media
+        path: /mnt/ThiccBoi/SiccBoi/data/media
         mountPath: /media
       tmp:
         type: emptyDir
