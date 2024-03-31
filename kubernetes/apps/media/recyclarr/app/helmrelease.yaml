@@ -2,19 +2,17 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: recyclarr
-  namespace: media
+  name: &app recyclarr
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
@@ -22,47 +20,60 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    controller:
-      type: cronjob
-      annotations:
-        reloader.stakater.com/auto: "true"
-      cronjob:
-        schedule: "@daily"
-    image:
-      repository: ghcr.io/recyclarr/recyclarr
-      tag: 6.0.2
-    args:
-      - sync
-    env:
-      TZ: ${TIMEZONE}
-    envFrom:
-      - secretRef:
-          name: recyclarr-secret
-    service:
+    controllers:
       main:
-        enabled: false
-    podSecurityContext:
-      runAsUser: ${USER_ID}
-      runAsGroup: ${USER_ID}
-      fsGroup: ${USER_ID}
-      fsGroupChangePolicy: OnRootMismatch
+        type: cronjob
+        cronjob:
+          schedule: "@daily"
+          timeZone: &timeZone ${TIMEZONE}
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+        containers:
+          main:
+            image:
+              repository: ghcr.io/recyclarr/recyclarr
+              tag: 6.0.2@sha256:02add40feae0569401b5020528e06419b47046723d0bb4bef1e82325e9eefdad
+            args:
+              - sync
+            env:
+              COMPlus_EnableDiagnostics: 0
+              TZ: *timeZone
+            envFrom:
+              - secretRef:
+                  name: recyclarr-secret
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         enabled: true
-        existingClaim: recyclarr-config
+        type: nfs
+        server: 192.168.69.69
+        path: /mnt/ThiccBoi/SiccBoi/data/recyclarr
       config-file:
-        enabled: true
         type: configMap
         name: recyclarr-configmap
-        mountPath: /config/recyclarr.yml
-        subPath: recyclarr.yml
-        readOnly: true
-    resources:
-      requests:
-        cpu: 10m
-        memory: 50Mi
-      limits:
-        memory: 200Mi
+        globalMounts:
+          - path: /config/recyclarr.yml
+            subPath: recyclarr.yml
+            readOnly: true
+    service:
+      main:
+        enabled: false
