@@ -10,9 +10,9 @@ resources:
   #- ./radarr/ks.yaml
   #- ./radarr-uhd/ks.yaml
   #- ./readarr/ks.yaml
-  #- ./sabnzbd/ks.yaml
+  - ./sabnzbd/ks.yaml
   #- ./sonarr/ks.yaml
-  #- ./tautulli/ks.yaml
+  - ./tautulli/ks.yaml
   #- ./whisparr/ks.yaml
   #- ./unpackerr/ks.yaml
   - ./plex/ks.yaml
