@@ -45,7 +45,7 @@ spec:
           main:
             image:
               repository: docker.io/archivebox/archivebox
-              tag: dev@sha256:9e39d08510fd2db0761f7d3fafa376dbd1a9562b59f9c6b725c003d929861a19
+              tag: 0.7.4@sha256:7959bdc8bb95757abd3b9b3d0832efbc22e4d63376c3611fb19c9de754f6f46d
             command: [/bin/bash]
             args: ["-c", "archivebox server --quick-init 0.0.0.0:8000"]
             env:
@@ -58,8 +58,6 @@ spec:
               MEDIA_MAX_SIZE: 1024m
               SAVE_ARCHIVE_DOT_ORG: "True"
               PUBLIC_ADD_VIEW: "True" # allow public additions, required for firefox extension
-              CHROME_HEADLESS: "False"
-              CHROME_USER_DATA_DIR: /tmp/chrome-profile
               # REVERSE_PROXY_USER_HEADER: X-authentik-username
               # REVERSE_PROXY_WHITELIST: ${CLUSTER_CIDR}
             resources:
