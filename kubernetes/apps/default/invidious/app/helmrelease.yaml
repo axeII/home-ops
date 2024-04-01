@@ -47,6 +47,22 @@ spec:
               repository: quay.io/invidious/invidious
               tag: latest@sha256:b46c32a88d7038b18226e62e59349c50541c1c80345111bf1cf8033861e8780d
             envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    # Consider path /feed/trending
+                    path: &path /preferences
+                    port: &port 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
             resources:
               requests:
                 cpu: 50m
@@ -55,13 +71,15 @@ spec:
       main:
         ports:
           http:
-            port: 3000
+            port: *port
     ingress:
       main:
         enabled: true
         className: nginx
         annotations:
           hajimari.io/icon: mdi:youtube
+          gatus.io/enable: "true"
+          gatus.io/path: *path
         hosts:
           - host: &host-release "invidious.${SECRET_DOMAIN}"
             paths:
