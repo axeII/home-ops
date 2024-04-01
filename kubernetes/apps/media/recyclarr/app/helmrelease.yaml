@@ -65,6 +65,7 @@ spec:
       config:
         enabled: true
         existingClaim: recyclarr-config
+        # FIXME: Remove this
         # type: nfs
         # server: 192.168.69.69
         # path: /mnt/ThiccBoi/SiccBoi/data/recyclarr
