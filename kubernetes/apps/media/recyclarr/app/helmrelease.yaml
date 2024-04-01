@@ -64,9 +64,10 @@ spec:
     persistence:
       config:
         enabled: true
-        type: nfs
-        server: 192.168.69.69
-        path: /mnt/ThiccBoi/SiccBoi/data/recyclarr
+        existingClaim: recyclarr-config
+        # type: nfs
+        # server: 192.168.69.69
+        # path: /mnt/ThiccBoi/SiccBoi/data/recyclarr
       config-file:
         type: configMap
         name: recyclarr-configmap
