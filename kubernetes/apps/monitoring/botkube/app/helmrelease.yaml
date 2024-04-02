@@ -54,6 +54,23 @@ spec:
   values:
     settings:
       clusterName: home-kubernetes
+    config:
+      provider:
+        endpoint:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: endpoint
+        identifier:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: identifier
+        apiKey:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: apiKey
 
     communications:
       default-group:
@@ -152,16 +169,3 @@ spec:
       k8s-err-with-logs-events:
         botkube/kubernetes:
           enabled: true
-  valuesFrom:
-    - targetPath: communications.default-group.discord.token
-      kind: Secret
-      name: botkube-secrets
-      valuesKey: BOTKUBE_DISCORD_TOKEN
-    - targetPath: communications.default-group.discord.botID
-      kind: Secret
-      name: botkube-secrets
-      valuesKey: BOTKUBE_DISCORD_BOT_ID
-    - targetPath: communications.default-group.discord.channels.default.id
-      kind: Secret
-      name: botkube-secrets
-      valuesKey: BOTKUBE_DISCORD_CHANNEL_ID
