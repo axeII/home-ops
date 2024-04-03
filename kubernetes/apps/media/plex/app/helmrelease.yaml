@@ -25,14 +25,12 @@ spec:
       main:
         containers:
           main:
-            runtimeClassName: nvidia
             image:
               repository: ghcr.io/onedr0p/plex
               tag: 1.40.0.7998-c29d4c0c8@sha256:7c4501799f0d5f4f94fcb95a8a47b883528354c779a182a9ae4af118a1fc6b10
             env:
               TZ: "${TIMEZONE}"
-              # ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN}"
+              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
               PLEX_UID: 0
               PLEX_GID: 0
               NVIDIA_VISIBLE_DEVICES: all
@@ -63,27 +61,22 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: kubernetes.io/hostname
+                      - key: nvidia.com/gpu
                         operator: In
                         values:
-                          - k8s-2
+                          - "true"
           securityContext:
             runAsUser: 0
             runAsGroup: 0
             fsGroup: 0
             privileged: true
     # hostNetwork: true
-    # service:
-    #   main:
-    #     type: LoadBalancer
-    #     annotations:
-    #       metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
-    #     externalTrafficPolicy: Local
-    #     ports:
-    #       http:
-    #         port: &port 32400
     service:
       main:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: ${PLEX_IP}
+        externalTrafficPolicy: Local
         ports:
           http:
             port: *port
@@ -125,3 +118,4 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
+  runtimeClassName: nvidia
