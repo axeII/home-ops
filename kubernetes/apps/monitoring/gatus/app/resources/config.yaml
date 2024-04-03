@@ -27,8 +27,12 @@ endpoints:
     client:
       dns-resolver: udp://192.168.69.106:53
     alerts:
-      - type: discord
-        description: "healthcheck failed"
+      - type: slack
+        description: "healthcheck failed 3 times in a row"
+        send-on-resolved: true
+      - type: slack
+        failure-threshold: 5
+        description: "healthcheck failed 5 times in a row"
         send-on-resolved: true
   # - name: flux-webhook
   #   group: external
