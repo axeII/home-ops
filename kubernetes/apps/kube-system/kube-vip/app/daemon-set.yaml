@@ -21,7 +21,7 @@ spec:
           args: ["manager"]
           env:
             - name: address
-              value: "#{ bootstrap_controllers_vip }#"
+              value: "192.168.69.254"
             - name: vip_arp
               value: "true"
             - name: lb_enable
