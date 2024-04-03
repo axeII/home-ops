@@ -62,7 +62,10 @@ spec:
                     dns-resolver: udp://192.168.69.106:53
                   conditions:
                     - "[STATUS] == {{ GATUS_STATUS_CODE }}"
-                  alerts:
-                  - type: discord
-                    description: "healthcheck failed"
+                  - type: slack
+                    description: "healthcheck failed 3 times in a row"
+                    send-on-resolved: true
+                  - type: slack
+                    failure-threshold: 5
+                    description: "healthcheck failed 5 times in a row"
                     send-on-resolved: true

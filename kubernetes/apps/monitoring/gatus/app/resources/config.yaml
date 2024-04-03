@@ -12,8 +12,8 @@ ui:
   title: Status | Gatus
   header: Status
 alerting:
-  discord:
-    webhook-url: ${SECRET_GATUS_DISCORD_WEBHOOK}
+  slack:
+    webhook-url: ${SECRET_KPS_SLACK_WEBHOOK}
 connectivity:
   checker:
     target: 1.1.1.1:53
