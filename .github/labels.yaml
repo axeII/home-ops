@@ -17,11 +17,10 @@
 # Semantic Type
 - { name: "type/patch",                 color: "ffec19" }
 - { name: "type/minor",                 color: "ff9800" }
-- { name: "type/major",                 color: "f6412d" }
+- { name: "type/major",                 color: "f14183" }
 - { name: "type/break",                 color: "f6412d" }
 - { name: "type/digest",                color: "ffeC19" }
 # Uncategorized
 - { name: "hold",                       color: "ee0701" }
 # Status
-- { name: "status/blocked",             color: "d06851" }
 - { name: "status/priority",            color: "519fd0" }

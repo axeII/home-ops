@@ -27,7 +27,7 @@ spec:
 
     image:
       repository: ghcr.io/tailscale/tailscale
-      tag: v1.58.2
+      tag: v1.62.1
     env:
       TZ: ${TIMEZONE}
       TS_KUBE_SECRET: "tailscale-auth"
@@ -42,10 +42,10 @@ spec:
 
     service:
       main:
-        type: LoadBalancer
-        annotations:
-          metallb.universe.tf/loadBalancerIPs: 192.168.69.102
-        externalTrafficPolicy: Local
+        # type: LoadBalancer
+        # annotations:
+        # metallb.universe.tf/loadBalancerIPs: 192.168.69.102
+        # externalTrafficPolicy: Local
         ports:
           http:
             # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
@@ -53,8 +53,8 @@ spec:
             # nodePort: 65142
 
     podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
+      runAsUser: 0
+      runAsGroup: 0
 
     ingress:
       main:
@@ -65,15 +65,16 @@ spec:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
-                - key: nvidia.com/gpu
+                - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - "false"
+                    - k8s-1
+                    - k8s-0
 
-    # probes:
-    #   liveness:
-    #     enabled: false
-    #   readiness:
-    #     enabled: false
-    #   startup:
-    #     enabled: false
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false

@@ -35,7 +35,7 @@ spec:
             order: 2
             image: &configSyncImage
               repository: ghcr.io/kiwigrid/k8s-sidecar
-              tag: 1.25.3
+              tag: 1.26.1
               pullPolicy: IfNotPresent
             env:
               FOLDER: /config
@@ -58,7 +58,7 @@ spec:
             image:
               # TODO: move to semver once available
               repository: ghcr.io/twin/gatus
-              tag: v5.7.0
+              tag: v5.8.0
             env:
               TZ: ${TIMEZONE}
               GATUS_CONFIG_PATH: /config

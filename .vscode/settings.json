@@ -9,7 +9,7 @@
   },
   "sops.defaults.ageKeyFile": "age.key",
   "yaml.schemas": {
-      "ansible": "./provision/ansible/**/*.yml",
+      "ansible": "./ansible/**/*.yml",
       "Kubernetes": "./kubernetes/*.yaml"
   },
   "editor.bracketPairColorization.enabled": true,
@@ -18,4 +18,5 @@
   "editor.guides.highlightActiveBracketPair": true,
   "editor.hover.delay": 1500,
   "files.trimTrailingWhitespace": true,
+  "ansible.python.interpreterPath": "/usr/bin/python3",
 }

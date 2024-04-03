@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-metallb
+    - name: cilium
   path: ./kubernetes/apps/networking/tailscale-gateway/app
   prune: true
   sourceRef:

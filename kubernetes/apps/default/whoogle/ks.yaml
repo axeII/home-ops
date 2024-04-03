@@ -5,6 +5,7 @@ metadata:
   name: cluster-apps-whoogle
   namespace: flux-system
 spec:
+  targetNamespace: default
   path: ./kubernetes/apps/default/whoogle/app
   prune: true
   sourceRef:
@@ -18,8 +19,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 3m
-  postBuild:
-    substitute:
-      APP: &app whoogle
-      GROUP: external
-      GATUS_SUBDOMAIN: *app

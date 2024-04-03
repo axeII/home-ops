@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app invidious-server
-  namespace: default
 spec:
   interval: 30m
   chart:
@@ -36,7 +35,7 @@ spec:
           init-db:
             image:
               repository: ghcr.io/auricom/postgres-init
-              tag: 15.5@sha256:21f7472b7feffe8c53a287fd9611f6690336793afc7e827a0121e74b4ad2db4e
+              tag: 15.6@sha256:e5dfcf4d53d4dfe3bf996ba02fec5145e0c4f0a3d5f14a0f529e1f8830157d20
               pullPolicy: IfNotPresent
             envFrom: &envFrom
               - secretRef:
@@ -45,8 +44,24 @@ spec:
           main:
             image:
               repository: quay.io/invidious/invidious
-              tag: latest@sha256:1bf14f71e5f0c28cafbed5ce4fac34b793ef1452365daa59976cbbd2db426894
+              tag: latest@sha256:b46c32a88d7038b18226e62e59349c50541c1c80345111bf1cf8033861e8780d
             envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    # Consider path /feed/trending
+                    path: &path /preferences
+                    port: &port 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
             resources:
               requests:
                 cpu: 50m
@@ -55,13 +70,15 @@ spec:
       main:
         ports:
           http:
-            port: 3000
+            port: *port
     ingress:
       main:
         enabled: true
         className: nginx
         annotations:
           hajimari.io/icon: mdi:youtube
+          gatus.io/enable: "true"
+          gatus.io/path: *path
         hosts:
           - host: &host-release "invidious.${SECRET_DOMAIN}"
             paths:

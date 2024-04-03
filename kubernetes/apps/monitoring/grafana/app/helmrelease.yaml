@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 7.2.4
+      version: 7.3.7
       #TODO: upgrade to version: 7.1.0
       interval: 5m
       sourceRef:
@@ -36,10 +36,6 @@ spec:
             type: file
     dashboards:
       default:
-        calico-felix:
-          datasource: Prometheus
-          gnetId: 12175
-          revision: 5
         flux-cluster:
           datasource: Prometheus
           url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/grafana/dashboards/cluster.json
@@ -166,6 +162,7 @@ spec:
       enabled: true
       ingressClassName: nginx
       annotations:
+        gatus.io/enabled: "true"
         hajimari.io/icon: "chart-bar"
       hosts:
         - "grafana.${SECRET_DOMAIN}"

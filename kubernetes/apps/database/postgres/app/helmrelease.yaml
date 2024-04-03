@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: postgresql
-      version: 13.4.1
+      version: 14.3.3
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -30,7 +30,7 @@ spec:
   values:
     image:
       repository: bitnami/postgresql
-      tag: 15.5.0
+      tag: 15.6.0
     auth:
       enablePostgresUser: true
       postgresPassword: ${SECRET_POSTGRES_ADMIN_PASS}

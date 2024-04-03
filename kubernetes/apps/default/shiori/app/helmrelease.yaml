@@ -31,7 +31,7 @@ spec:
         # reloader.stakater.com/auto: "true"
     image:
       repository: ghcr.io/go-shiori/shiori
-      tag: v1.5.5@sha256:9dbcd5a88fb28a93ede08b01062e3580dd2ecb967509ef6a2df1f430708a34c0
+      tag: v1.6.1@sha256:1c9acedd794a5cea38ab86fec4da5e19a60bf9b9efdc34fbbd2a3e0711a052cd
     # env:
       # ENV_SHIORI_DIR: save data on nfs?
     service:

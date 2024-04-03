@@ -5,8 +5,9 @@ metadata:
   name: cluster-apps-actual
   namespace: flux-system
 spec:
+  targetNamespace: finance
   dependsOn:
-    - name: cluster-apps-longhorn
+    - name: longhorn
   path: ./kubernetes/apps/finance/actual/app
   prune: true
   sourceRef:
