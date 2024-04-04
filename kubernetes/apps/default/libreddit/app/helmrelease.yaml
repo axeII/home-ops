@@ -50,7 +50,7 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:reddit
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "reddit.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
