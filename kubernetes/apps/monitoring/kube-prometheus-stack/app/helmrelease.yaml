@@ -57,12 +57,11 @@ spec:
                     {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
                     {{ end }}
                   {{ end }}
-        # TODO: Deploy pagerduty
-        # - name: 'pagerduty'
-        #   pagerduty_configs:
-        #     - routing_key: ${SECRET_KPS_PAGERDUTY_KEY}
-        #       description: |-
-        #         {{ template "pagerduty.custom.description" . }}
+          - name: 'pagerduty'
+            pagerduty_configs:
+              - routing_key: ${SECRET_KPS_PAGERDUTY_KEY}
+                description: |-
+                  {{ template "pagerduty.custom.description" . }}
         route:
           group_by:
             - "namespace"
