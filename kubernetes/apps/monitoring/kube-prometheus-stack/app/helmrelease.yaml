@@ -69,9 +69,12 @@ spec:
           repeat_interval: 6h
           group_by: [namespace, alertname, job]
           routes:
+            - receiver: "null"
+              matchers:
+                - alertname =~ "Watchdog"
             - match:
                 severity: critical
-              receiver: 'pagerduty-notifications'
+              receiver: "pagerduty-notifications"
       ingress:
         enabled: true
         pathType: Prefix
