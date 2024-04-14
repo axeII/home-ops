@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: default
 resources:
   - ./externalsecret.yaml
-  - ./externalsecret-vpn.yaml
-  - ./hr.yaml
+  - ./helmrelease.yaml
