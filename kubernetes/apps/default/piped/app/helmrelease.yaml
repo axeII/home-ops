@@ -22,6 +22,8 @@ spec:
     remediation:
       retries: 5
   values:
+    postgresql:
+      enabled: false
     frontend:
       image:
         repository: "docker.io/1337kavin/piped-frontend"
@@ -47,17 +49,14 @@ spec:
       config:
         PORT: 8080
         HTTP_WORKERS: 4
-        # PROXY_PART: https://pproxy.${SECRET_DOMAIN}
-        #DISABLE_REGISTRATION: true
+        PROXY_PART: https://pproxy.${SECRET_DOMAIN}
+        DISABLE_REGISTRATION: false
         database:
           connection_url: jdbc:postgresql://postgresql.database.svc.cluster.local/piped
           secret:
             name: *secret
             username: DB_USERNAME
             password: DB_PASSWORD
-
-    ytproxy:
-      enabled: false
 
     ingress:
       main:
@@ -81,7 +80,12 @@ spec:
           - hosts:
               - *api_host
       ytproxy:
-        enabled: false
-
-    postgresql:
-      enabled: false
+        enabled: true
+        ingressClassName: nginx
+        hosts:
+          - host: &proxy pproxy.${SECRET_DOMAIN}
+            paths:
+              - path: "/"
+        tls:
+          - hosts:
+              - *proxy
