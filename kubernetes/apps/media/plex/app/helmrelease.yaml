@@ -80,8 +80,9 @@ spec:
           io.cilium/lb-ipam-ips: ${PLEX_IP}
         externalTrafficPolicy: Local
         ports:
-          http:
-            port: *port
+          - name: http
+            port: 32400
+            targetPort: *port
     ingress:
       main:
         enabled: true
