@@ -78,10 +78,11 @@ spec:
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${PLEX_IP}
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         ports:
           - name: http
-            port: 32400
+            port: *port
+            protocol: TCP
             targetPort: *port
     ingress:
       main:
