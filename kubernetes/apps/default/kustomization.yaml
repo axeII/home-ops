@@ -12,3 +12,4 @@ resources:
   - ./archivebox/ks.yaml
   - ./whoogle/ks.yaml
   - ./microbin/ks.yaml
+  - ./piped/ks.yaml

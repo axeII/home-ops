@@ -86,13 +86,13 @@ spec:
                 service:
                   name: main
                   port: http
-          - host: &host-custom "yt.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  name: main
-                  port: http
+          # - host: &host-custom "yt.${SECRET_DOMAIN}"
+          #   paths:
+          #     - path: /
+          #       service:
+          #         name: main
+          #         port: http
         tls:
           - hosts:
               - *host-release
-              - *host-custom
+              # - *host-custom

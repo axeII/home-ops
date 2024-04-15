@@ -32,6 +32,7 @@ resources:
   - ./node-feature-discovery.yaml
   - ./novideo.yaml
   - ./phybros-charts.yaml
+  - ./piped.yaml
   - ./portainer-charts.yaml
   - ./postfinance.yaml
   - ./prometheus-community.yaml
