@@ -81,9 +81,9 @@ spec:
         externalTrafficPolicy: Cluster
         ports:
           - name: http
-            port: *port
+            port: '32400'
             protocol: TCP
-            targetPort: *port
+            targetPort: '32400'
     ingress:
       main:
         enabled: true
