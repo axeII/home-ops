@@ -2,215 +2,38 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: botkube
+  name: &app botkube
   namespace: monitoring
 spec:
   interval: 5m
-  dependsOn:
-    - name: cert-manager
-      namespace: cert-manager
   chart:
     spec:
       chart: botkube
-      version: v0.12.4
+      version: v1.9.1
       sourceRef:
         kind: HelmRepository
-        name: infracloudio
-        namespace: flux-system
-      interval: 5m
+        name: botkube-charts
+        namespace: default
+      interval: 1m
   values:
-    image:
-      repository: infracloudio/botkube
-      tag: v0.12.4
-    communications:
-      existingSecretName: "botkube-communications"
-    #serviceMonitor:
-      #enabled: true
     config:
-      recommendations: false
-      settings:
-        clustername: default
-        kubectl:
-          enabled: true
-          restrictAccess: true
-          commands:
-            verbs:
-              [
-                "api-resources",
-                "api-versions",
-                "cluster-info",
-                "describe",
-                "diff",
-                "explain",
-                "get",
-                "logs",
-                "top",
-                "auth",
-              ]
-            resources:
-              [
-                "deployments",
-                "pods",
-                "namespaces",
-                "daemonsets",
-                "statefulsets",
-                "storageclasses",
-                "nodes",
-              ]
-      resources:
-        - name: v1/pods
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/services
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            - create
-            - delete
-            - error
-        - name: apps/v1/deployments
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - update
-            - delete
-            - error
-        - name: apps/v1/statefulsets
-          namespaces:
-            include:
-              - default
-              - flux-system
-              - kube-system
-              - system-upgrade
-              - monitoring
-              - networking
-          events:
-            - create
-            - update
-            - delete
-            - error
-        - name: networking.k8s.io/v1beta1/ingresses
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/nodes
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/namespaces
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/persistentvolumes
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/persistentvolumeclaims
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            - create
-            - delete
-            - error
-        - name: v1/configmaps
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            - create
-            - delete
-            - error
-        - name: apps/v1/daemonsets
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: batch/v1/jobs
-          namespaces:
-            include:
-              - default
-              - kube-system
-              - monitoring
-              - networking
-          events:
-            # - create
-            - update
-            # - delete
-            - error
-        - name: rbac.authorization.k8s.io/v1/roles
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: rbac.authorization.k8s.io/v1/rolebindings
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: rbac.authorization.k8s.io/v1/clusterrolebindings
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-        - name: rbac.authorization.k8s.io/v1/clusterroles
-          namespaces:
-            include:
-              - all
-          events:
-            - create
-            - delete
-            - error
-      # ssl:
-        # enabled: true
+      provider:
+        endpoint:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: endpoint
+        identifier:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: identifier
+        apiKey:
+          valueFrom:
+            secretKeyRef:
+              name: botkube-secret
+              key: apiKey
+    resources:
+      request:
+        cpu: 100m
+        memory: 64Mi

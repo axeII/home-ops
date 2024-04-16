@@ -12,5 +12,4 @@ data:
   USER_ID: "65534"
   TAILSCALE_LB_IP: "192.168.69.102"
   TAILNET_PUBLIC_PORT: "51820"
-  # FIXME: In the future delete this variable
-  # METALLB_PLEX_ADDR: 192.168.69.101
+  PLEX_IP: "192.168.69.101"

@@ -21,18 +21,18 @@ spec:
     remediation:
       retries: 3
   values:
+    defaultPodOptions:
+      runtimeClassName: nvidia
     controllers:
       main:
         containers:
           main:
-            runtimeClassName: nvidia
             image:
               repository: ghcr.io/onedr0p/plex
-              tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
+              tag: 1.40.1.8227-c0dd5a73e@sha256:a60bc6352543b4453b117a8f2b89549e458f3ed8960206d2f3501756b6beb519
             env:
               TZ: "${TIMEZONE}"
-              # ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN}"
+              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
               PLEX_UID: 0
               PLEX_GID: 0
               NVIDIA_VISIBLE_DEVICES: all
@@ -63,30 +63,27 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: kubernetes.io/hostname
+                      - key: nvidia.com/gpu
                         operator: In
                         values:
-                          - k8s-2
+                          - "true"
           securityContext:
             runAsUser: 0
             runAsGroup: 0
             fsGroup: 0
             privileged: true
     # hostNetwork: true
-    # service:
-    #   main:
-    #     type: LoadBalancer
-    #     annotations:
-    #       metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
-    #     externalTrafficPolicy: Local
-    #     ports:
-    #       http:
-    #         port: &port 32400
     service:
       main:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: ${PLEX_IP}
+        externalTrafficPolicy: Cluster
         ports:
-          http:
-            port: *port
+          - name: http
+            port: '32400'
+            protocol: TCP
+            targetPort: '32400'
     ingress:
       main:
         enabled: true

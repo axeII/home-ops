@@ -3,77 +3,112 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: prowlarr
-  namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
-      version: 1.5.1
       chart: app-template
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 15m
   install:
-    createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      retries: 3
   values:
-    image:
-      repository: ghcr.io/onedr0p/prowlarr-nightly
-      tag: 1.15.0.4350@sha256:12c6c2ac023a4322af3a532b395c8f534a5130325be877a372ee9b5c481a0471
-    env:
-      TZ: "${TIMEZONE}"
-      PROWLARR__INSTANCE_NAME: Prowlarr
-      PROWLARR__PORT: &port 9696
-      PROWLARR__LOG_LEVEL: info
-      PROWLARR__ANALYTICS_ENABLED: "False"
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        # TODO: Migrate to postgresql
+        # initContainers:
+        #   init-db:
+        #     image:
+        #       repository: ghcr.io/onedr0p/postgres-init
+        #       tag: 16
+        #     envFrom: &envFrom
+        #       - secretRef:
+        #           name: prowlarr-secret
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/prowlarr-develop
+              tag: 1.16.1.4420@sha256:b92e309da6b8724671b8e52d6718cb7376131a8dedb2a79224d7eecb02fb68ae
+            env:
+              COMPlus_EnableDiagnostics: 0
+              PROWLARR__AUTHENTICATION_METHOD: External
+              PROWLARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
+              PROWLARR__INSTANCE_NAME: Prowlarr
+              PROWLARR__PORT: &port 9696
+              PROWLARR__LOG_LEVEL: info
+              PROWLARR__THEME: dark
+              TZ: ${TIMEZONE}
+            envFrom:
+              - secretRef:
+                  name: prowlarr-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+    ingress:
+      main:
+        enabled: true
+        className: nginx
+        annotations:
+          gatus.io/enable: "true"
+          hajimari.io/icon: mdi:movie-search
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: prowlarr-config-v1
+      tmp:
+        type: emptyDir
     service:
       main:
         ports:
           http:
             port: *port
-    ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          hajimari.io/icon: "radar"
-          hajimari.io/group: "media"
-        hosts:
-          - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-          - host: &host-custom "prowlarr.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host-release
-              - *host-custom
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-    persistence:
-      config:
-        enabled: true
-        existingClaim: prowlarr-config-v1
-      nfs-nas-media:
-        enabled: true
-        existingClaim: media-nfs-share-pvc
-        mountPath: /media
-        readOnly: false
-    resources:
-      requests:
-        cpu: 10m
-        memory: 250Mi
-      limits:
-        memory: 2000Mi

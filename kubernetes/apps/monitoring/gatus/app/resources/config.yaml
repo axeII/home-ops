@@ -12,8 +12,8 @@ ui:
   title: Status | Gatus
   header: Status
 alerting:
-  discord:
-    webhook-url: ${SECRET_GATUS_DISCORD_WEBHOOK}
+  slack:
+    webhook-url: ${SECRET_KPS_SLACK_WEBHOOK}
 connectivity:
   checker:
     target: 1.1.1.1:53
@@ -27,8 +27,12 @@ endpoints:
     client:
       dns-resolver: udp://192.168.69.106:53
     alerts:
-      - type: discord
-        description: "healthcheck failed"
+      - type: slack
+        description: "healthcheck failed 3 times in a row"
+        send-on-resolved: true
+      - type: slack
+        failure-threshold: 5
+        description: "healthcheck failed 5 times in a row"
         send-on-resolved: true
   # - name: flux-webhook
   #   group: external
