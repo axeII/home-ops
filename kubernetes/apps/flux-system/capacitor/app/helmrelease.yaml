@@ -49,14 +49,14 @@ spec:
       create: true
       name: "capacitor"
     service:
-      main:
+      app:
         controller: *app
         ports:
           http:
             enabled: true
             port: 9000
     ingress:
-      main:
+      app:
         enabled: true
         className: nginx
         annotations:
