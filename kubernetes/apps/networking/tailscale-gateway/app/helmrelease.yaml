@@ -43,10 +43,10 @@ spec:
               TZ: ${TIMEZONE}
               # TS_EXTRA_ARGS: "--snat-subnet-routes=false --advertise-exit-node"
               # TS_ACCEPT_DNS: "false"
-              # TS_KUBE_SECRET: "tailscale-auth"
+              TS_KUBE_SECRET: "tailscale-auth"
             envFrom:
               - secretRef:
-                  name: tailscale-secret
+                  name: tailscale-auth
             resources:
               requests:
                 cpu: 10m
