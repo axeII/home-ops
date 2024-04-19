@@ -24,7 +24,7 @@ spec:
   values:
     controllers:
       tailscale-gateway:
-        replicas: 2
+        replicas: 1
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -49,9 +49,9 @@ spec:
                   name: tailscale-secret
             probes:
               liveness:
-                enabled: true
+                enabled: false
               readiness:
-                enabled: true
+                enabled: false
             resources:
               requests:
                 cpu: 10m
