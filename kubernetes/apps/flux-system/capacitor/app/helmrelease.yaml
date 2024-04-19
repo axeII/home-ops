@@ -41,10 +41,10 @@ spec:
               limits:
                 memory: 200Mi
                 ephemeral-storage: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: {drop: [ALL]}
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: true
+            #   capabilities: {drop: [ALL]}
     serviceAccount:
       create: true
       name: "capacitor"
@@ -61,6 +61,7 @@ spec:
         className: nginx
         annotations:
           hajimari.io/icon: mdi:sync
+          gatus.io/enabled: "true"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
