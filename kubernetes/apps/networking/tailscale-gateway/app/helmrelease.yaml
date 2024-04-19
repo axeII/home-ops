@@ -3,78 +3,111 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app tailscale-gateway
-  namespace: networking
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      strategy: rollback
+      retries: 3
   values:
-    serviceAccount:
-      name: tailscale
-
-    image:
-      repository: ghcr.io/tailscale/tailscale
-      tag: v1.62.1
-    env:
-      TZ: ${TIMEZONE}
-      TS_KUBE_SECRET: "tailscale-auth"
-      SA_NAME: tailscale
-      TS_USERSPACE: "true"
-      TS_ROUTES: "192.168.69.0/24,192.168.88.0/24"
-      TS_ACCEPT_DNS: "false"
-      TS_EXTRA_ARGS: "--snat-subnet-routes=false --advertise-exit-node"
-    envFrom:
-      - secretRef:
-          name: tailscale-auth
-
+    controllers:
+      tailscale-gateway:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tailscale/tailscale
+              tag: v1.64.2@sha256:7ee2ab4b9efadc5a68c92fb4549206eedac240a758f61b5431e39e8c0806930d
+            env:
+              TZ: ${TIMEZONE}
+              NO_AUTOUPDATE: true
+              PORT: &port ${TAILNET_PUBLIC_PORT}
+              TS_EXTRA_ARGS: --advertise-exit-node --advertise-tags=tag:server
+              TS_ROUTES: "192.168.69.0/24,192.168.88.0/24"
+              TS_STATE_DIR: &path /tmp
+              TS_TAILSCALED_EXTRA_ARGS: --debug=0.0.0.0:2000
+              TS_USERSPACE: true
+              # TS_EXTRA_ARGS: "--snat-subnet-routes=false --advertise-exit-node"
+              # TS_ACCEPT_DNS: "false"
+            envFrom:
+              - secretRef:
+                  name: tailscale-secret
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+      # topologySpreadConstraints:
+      #   - maxSkew: 1
+      #     topologyKey: kubernetes.io/hostname
+      #     whenUnsatisfiable: DoNotSchedule
+      #     labelSelector:
+      #       matchLabels:
+      #         app.kubernetes.io/name: *app
+    persistence:
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: *path
     service:
-      main:
-        # type: LoadBalancer
-        # annotations:
-        # metallb.universe.tf/loadBalancerIPs: 192.168.69.102
-        # externalTrafficPolicy: Local
+      app:
+        controller: *app
+        nameOverride: *app
         ports:
           http:
-            # the magic port: I had to run with disabled probes and run `netstat -tln` to find this port
-            port: &port 65142
-            # nodePort: 65142
-
-    podSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-
-    ingress:
-      main:
-        enabled: false
-
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                    - k8s-1
-                    - k8s-0
-
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+            port: 2000
+      tailnet:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: ${TAILSCALE_LB_IP}
+        ports:
+          tailnet:
+            port: *port
+            protocol: UDP
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /debug/metrics
+            interval: 1m
+            scrapeTimeout: 10s

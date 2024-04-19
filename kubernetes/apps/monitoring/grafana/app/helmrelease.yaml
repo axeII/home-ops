@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 7.3.7
+      version: 7.3.9
       #TODO: upgrade to version: 7.1.0
       interval: 5m
       sourceRef:
