@@ -23,7 +23,7 @@ spec:
       retries: 3
   values:
     controllers:
-      tailscale:
+      tailscale-gateway:
         replicas: 2
         strategy: RollingUpdate
         annotations:
@@ -44,7 +44,6 @@ spec:
               TS_USERSPACE: true
               # TS_EXTRA_ARGS: "--snat-subnet-routes=false --advertise-exit-node"
               # TS_ACCEPT_DNS: "false"
-              # TS_KUBE_SECRET: "tailscale-auth"
             envFrom:
               - secretRef:
                   name: tailscale-secret
