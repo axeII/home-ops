@@ -108,21 +108,21 @@ spec:
         - group: Reddit
           bookmarks:
             - name: "/r/midjourney"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/midjourney"
+              url: "https://reddit.${SECRET_DOMAIN}/r/midjourney"
             - name: "/r/selfhosted"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/selfhosted/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/selfhosted/"
             - name: "/r/kubernetes"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/kubernetes/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/kubernetes/"
             - name: "/r/virtualreality"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/virtualreality/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/virtualreality/"
             - name: "/r/mk"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/mechanicalkeyboards/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/mechanicalkeyboards/"
             - name: "/r/ChatGPT"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/ChatGPT/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/ChatGPT/"
             - name: "/r/plex"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/plex/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/plex/"
             - name: "/r/NonCredibleDefense"
-              url: "https://libreddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
+              url: "https://reddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
         - group: Tech
           bookmarks:
             - name: Hacker News
