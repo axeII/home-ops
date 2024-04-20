@@ -40,5 +40,4 @@ resources:
   - ./runatlantis.yaml
   - ./stakater.yaml
   - ./vmware-tanzu-charts.yaml
-  - ./weave-gitops.yaml
   - ./xenitab.yaml
