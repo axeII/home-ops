@@ -31,13 +31,14 @@ spec:
     image:
       repository: bitnami/postgresql
       tag: 15.6.0
-      env:
-        TZ: ${TIMEZONE}
     auth:
       enablePostgresUser: true
       postgresPassword: ${SECRET_POSTGRES_ADMIN_PASS}
       database: postgres
     primary:
+      extraEnvVars:
+        - name: TZ
+          value: ${TIMEZONE}
       persistence:
         enabled: true
         existingClaim: postgresql-data
