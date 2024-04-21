@@ -6,10 +6,10 @@ metadata:
   name: l2-policy
 spec:
   loadBalancerIPs: true
-  # NOTE: interfaces might need to be set if you have more than one active NIC on your hosts
-  # interfaces:
-  #   - ^eno[0-9]+
-  #   - ^eth[0-9]+
+  interfaces:
+    - eno[0-9]+
+    - enp6s[0-9]+
+    - bond[0-9]+
   nodeSelector:
     matchLabels:
       kubernetes.io/os: linux
