@@ -26,6 +26,13 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    initContainers:
+      01-init-db:
+        image: ghcr.io/onedr0p/postgres-init:14.8
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - secretRef:
+              name: &secret semaphore-secret
     controller:
       pod:
         enableServiceLinks: false
@@ -40,9 +47,7 @@ spec:
       SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
       SEMAPHORE_DB_DIALECT: postgres
       SEMAPHORE_DB_PORT: 5432
-    envFrom:
-      - secretRef:
-          name: semaphore-secret
+    envFrom: *secret
     service:
       main:
         ports:
