@@ -25,14 +25,17 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    initContainers:
-      01-init-db:
-        image: ghcr.io/auricom/postgres-init:15.4
-        imagePullPolicy: IfNotPresent
-        envFrom: &envFrom
-          - secretRef:
-              name: semaphore-secret
+    # defaultPodOptions:
+    #   securityContext:
+    #     seccompProfile: { type: RuntimeDefault }
     controllers:
+      initContainers:
+        01-init-db:
+          image: ghcr.io/auricom/postgres-init:15.4
+          imagePullPolicy: IfNotPresent
+          envFrom: &envFrom
+            - secretRef:
+                name: semaphore-secret
       semaphore:
         annotations:
           reloader.stakater.com/auto: 'true'
@@ -54,10 +57,10 @@ spec:
               memory: 50Mi
             limits:
               memory: 1Gi
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities: {drop: ['ALL']}
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: false
+          #   capabilities: {drop: ['ALL']}
     service:
       main:
         ports:
