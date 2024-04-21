@@ -7,9 +7,9 @@ metadata:
 spec:
   loadBalancerIPs: true
   interfaces:
-    - eno[0-9]+
-    - enp6s[0-9]+
-    - bond[0-9]+
+    - eno+
+    - enp6s+
+    - bond+
   nodeSelector:
     matchLabels:
       kubernetes.io/os: linux
