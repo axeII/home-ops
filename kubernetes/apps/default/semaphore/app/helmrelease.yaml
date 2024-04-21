@@ -30,9 +30,9 @@ spec:
       01-init-db:
         image: ghcr.io/onedr0p/postgres-init:14.8
         imagePullPolicy: IfNotPresent
-        envFrom:
+        envFrom: &envFrom
           - secretRef:
-              name: &secret semaphore-secret
+              name: semaphore-secret
     controller:
       pod:
         enableServiceLinks: false
@@ -47,7 +47,7 @@ spec:
       SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
       SEMAPHORE_DB_DIALECT: postgres
       SEMAPHORE_DB_PORT: 5432
-    envFrom: *secret
+    envFrom: *envFrom
     service:
       main:
         ports:
