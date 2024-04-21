@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -32,27 +32,32 @@ spec:
         envFrom: &envFrom
           - secretRef:
               name: semaphore-secret
-    controller:
-      annotations:
-        reloader.stakater.com/auto: 'true'
-      containers:
-        app:
-          image:
-            repository: ghcr.io/onedr0p/semaphore
-            tag: v2.8.92@sha256:190f4db70247dd803119a6ace75f2064559190afb41203ab78697731d067a4a0
-          env:
-            SEMAPHORE_LDAP_ACTIVATED: "no"
-            SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
-            SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
-            SEMAPHORE_DB_DIALECT: postgres
-            SEMAPHORE_DB_PORT: 5432
-          envFrom: *envFrom
+    controllers:
+      semaphore:
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/semaphore
+              tag: v2.9.37@sha256:da37f0083a1a3d642eb5d4494244ede866bd8dfe6837dc8eae1250a6c1a411f6
+            env:
+              SEMAPHORE_LDAP_ACTIVATED: "no"
+              SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+              SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
+              SEMAPHORE_DB_DIALECT: postgres
+              SEMAPHORE_DB_PORT: 5432
+            envFrom: *envFrom
           resources:
             requests:
               cpu: 10m
               memory: 50Mi
             limits:
               memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities: {drop: ['ALL']}
     service:
       main:
         ports:
