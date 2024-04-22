@@ -16,33 +16,35 @@ spec:
   install:
     createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
       remediateLastFailure: true
   upgrade:
     remediation:
-      retries: 5
+      retries: 3
       remediateLastFailure: true
   values:
     controllers:
-      main:
+      flaresolverr:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/flaresolverr/flaresolverr
-              tag: v3.3.16
-            env:
-              TZ: ${TIMEZONE}
+              tag: v3.3.17
             resources:
               requests:
-                memory: 250Mi
-                cpu: 10m
-              limits:
-                memory: 500Mi
+                cpu: 15m
+                memory: 150Mi
+    ingress:
+      app:
+        enabled: false
     service:
-      main:
+      app:
+        controller: *app
+        type: ClusterIP
         ports:
           http:
             port: 8191
-    ingress:
-      main:
-        enabled: false
