@@ -63,7 +63,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: "nginx"
         annotations:
           hajimari.io/icon: mdi:ansible
           gatus.io/enabled: "true"
