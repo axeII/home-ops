@@ -21,5 +21,4 @@ resources:
   - ./flaresolverr/ks.yaml
   - ./kapowarr/ks.yaml
   - ./recyclarr/ks.yaml
-  #- ./kaizoku/ks.yaml Will be archived
   #- ./radarr-uhd/ks.yaml Will be archived
