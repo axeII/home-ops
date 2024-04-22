@@ -38,9 +38,6 @@ spec:
               requests:
                 cpu: 15m
                 memory: 150Mi
-    ingress:
-      app:
-        enabled: false
     service:
       app:
         controller: *app
