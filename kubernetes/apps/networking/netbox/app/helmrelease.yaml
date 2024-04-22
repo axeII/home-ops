@@ -16,15 +16,20 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    init:
+      image:
+        repository: docker.io/library/busybox
+        tag: 1.36.1
+        pullPolicy: IfNotPresent
     image:
       repository: quay.io/tgenannt/netbox
       pullPolicy: IfNotPresent
       tag: "v4.1.0"
     superuser:
       name: admin
-      email: arroyos.scarce0l@icloud.com
+      email: ${SECRET_CLOUDFLARE_EMAIL}
     admins:
-      - ["Ales Lerch", "arroyos.scarce0l@icloud.com"]
+      - ["Ales Lerch", "${SECRET_CLOUDFLARE_EMAIL}"]
     logging:
       disable_existing_loggers: false
       handlers:
@@ -38,10 +43,6 @@ spec:
       version: 1
     remoteAuth:
       enabled: false
-    # plugins:
-    #   - netbox_ddns
-    # - napalm-vyos
-    # - napalm_ros
     loginRequired: false
     storageBackend: storages.backends.s3boto3.S3Boto3Storage
     storageConfig:
@@ -50,26 +51,26 @@ spec:
       AWS_STORAGE_BUCKET_NAME: "netbox"
       AWS_S3_ENDPOINT_URL: "http://${SECRET_MINIO_SERVER}"
     metricsEnabled: true
-    # napalm:
-      # username: "auto"
-      # args:
-        # key_file: /run/secrets/ssh-keys/id_rsa
-    # existingSecret: "netbox"
     postgresql:
       enabled: false
     redis:
       enabled: false
     tasksRedis:
-      host: 100.111.77.91
+      host: netbox-redis.default.svc.cluster.local
+      existingSecretName: "netbox-redis-secret"
+      existingSecretKey: "REDIS_PASSWORD"
     cachingRedis:
-      host: 100.111.77.91
+      host: netbox-redis.default.svc.cluster.local
+      existingSecretName: "netbox-redis-secret"
+      existingSecretKey: "REDIS_PASSWORD"
     externalDatabase:
-      host: 100.111.77.91
+      host: postgres-rw.database.svc.cluster.local
       port: 5432
-      database: netbox
-      username: postgres
-      existingSecretName: "netbox"
-      existingSecretKey: "db_password"
+      database: netbox_db
+      username: netbox
+      existingSecretName: "netbox-secret"
+      existingSecretKey: "NETBOX_PG_PASS"
+    email:
     persistence:
       enabled: false
     reportsPersistence:
@@ -89,15 +90,9 @@ spec:
                   name: netbox
                   port:
                     number: 8080
-
       tls:
         - hosts:
             - "netbox.${SECRET_DOMAIN}"
-    init:
-      image:
-        repository: docker.io/library/busybox
-        tag: 1.36.1
-        pullPolicy: IfNotPresent
     updateStrategy:
       type: RollingUpdate
     worker:
