@@ -17,7 +17,6 @@ resources:
   - ./plex/ks.yaml
   - ./metube/ks.yaml
   #- ./kavita/ks.yaml #TODO: Migrate to Stamp
-  #- ./deluge/ks.yaml #TODO: Migrate to Transmission
   - ./ubooquity/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./kapowarr/ks.yaml
