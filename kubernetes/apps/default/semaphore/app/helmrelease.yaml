@@ -25,22 +25,22 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    defaultPodOptions:
+      enableServiceLinks: false
     controllers:
-      # pod:
-      #   enableServiceLinks: false
       main:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/auricom/postgres-init
-              tag: 15.6@sha256:e5dfcf4d53d4dfe3bf996ba02fec5145e0c4f0a3d5f14a0f529e1f8830157d20
-              pullPolicy: IfNotPresent
-            envFrom: &envFrom
-              - secretRef:
-                  name: semaphore-secret
+        # initContainers:
+        #   init-db:
+        #     image:
+        #       repository: ghcr.io/auricom/postgres-init
+        #       tag: 15.6@sha256:e5dfcf4d53d4dfe3bf996ba02fec5145e0c4f0a3d5f14a0f529e1f8830157d20
+        #       pullPolicy: IfNotPresent
+        #     envFrom: &envFrom
+        #       - secretRef:
+        #           name: semaphore-secret
         containers:
           main:
             image:
@@ -52,7 +52,9 @@ spec:
               SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
               SEMAPHORE_DB_DIALECT: postgres
               SEMAPHORE_DB_PORT: 5432
-            envFrom: *envFrom
+            envFrom:
+              - secretRef:
+                  name: semaphore-secret
     service:
       main:
         ports:
