@@ -79,8 +79,9 @@ spec:
         existingClaim: kapowarr-config
         globalMounts:
           - path: /app/db
-      nfs-nas-media:
-        enabled: true
-        existingClaim: media-nfs-share-pvc
-        mountPath: /media
-        readOnly: false
+      media:
+        type: nfs
+        server: 192.168.69.69
+        path: /mnt/ThiccBoi/SiccBoi/data/media/Comics
+        globalMounts:
+          - path: /data
