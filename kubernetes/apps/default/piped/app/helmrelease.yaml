@@ -82,7 +82,7 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/enable-cors: "true"
           nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS HEAD"
-          nginx.ingress.kubernetes.io/cors-allow-origin: "https://yt.${SECRET_DOMAIN}, https://pproxy.${SECRET_DOMAIN}, https://papi.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/cors-allow-origin: "*"
         hosts:
           - host: *api_host
             paths:
