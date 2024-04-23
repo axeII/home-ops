@@ -26,7 +26,7 @@ spec:
     protocolHttps: true
     ingress:
       enabled: true
-      className: internal
+      className: nginx
       annotations:
         hajimari.io/enable: "true"
         hajimari.io/appName: "Kubernetes Dashboard"
