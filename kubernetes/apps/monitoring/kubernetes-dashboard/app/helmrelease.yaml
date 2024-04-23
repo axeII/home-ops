@@ -43,13 +43,8 @@ spec:
         - "kubernetes.${SECRET_DOMAIN}"
       ingressClassName: nginx
       pathType: prefix
-      secretName: kubernetes-dashboard-tls
-      issuer:
-        name: letsencrypt-production
-        scope: cluster
       annotations:
         gatus.io/enabled: "true"
-        cert-manager.io/cluster-issuer: letsencrypt-staging
         hajimari.io/icon: mdi:kubernetes
     metricsScraper:
       enabled: true
