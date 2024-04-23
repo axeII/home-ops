@@ -53,7 +53,7 @@ spec:
         PORT: 8080
         HTTP_WORKERS: 4
         PROXY_PART: https://pproxy.${SECRET_DOMAIN}
-        DISABLE_REGISTRATION: false
+        # DISABLE_REGISTRATION: false
         database:
           connection_url: jdbc:postgresql://postgresql.database.svc.cluster.local/piped
           secret:
