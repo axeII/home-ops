@@ -9,44 +9,36 @@ spec:
   interval: 30m
   chart:
     spec:
+      # renovate: registryUrl=https://kubernetes.github.io/dashboard/
       chart: kubernetes-dashboard
       version: 7.3.2
       sourceRef:
         kind: HelmRepository
         name: kubernetes-dashboard
         namespace: flux-system
-  maxHistory: 2
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
-  dependsOn:
-    - name: ingress-nginx
-      namespace: networking
+
   values:
+    image:
+      repository: kubernetesui/dashboard
+      tag: v2.7.0
     env:
       TZ: ${TIMEZONE}
-    extraArgs:
-      - --enable-skip-login
-      - --disable-settings-authorizer
-      - --enable-insecure-login
-      - --token-ttl=43200
+    protocolHttps: true
     ingress:
       enabled: true
-      className: nginx
+      className: internal
+      annotations:
+        hajimari.io/enable: "true"
+        hajimari.io/appName: "Kubernetes Dashboard"
+        hajimari.io/icon: mdi:monitor-dashboard
+        hajimari.io/group: "monitoring"
       hosts:
-        - &host kubernetes.${SECRET_DOMAIN}
+        - &host dashboard.${SECRET_DOMAIN}
       tls:
         - hosts:
             - *host
+    extraArgs:
+      - --enable-skip-login
+      - --disable-settings-authorizer
     metricsScraper:
       enabled: true
-    serviceMonitor:
-      enabled: false
-    nginx:
-      enabled: false
