@@ -45,7 +45,7 @@ spec:
           main:
             image:
               repository: docker.io/archivebox/archivebox
-              tag: 0.7.2@sha256:8f51a6dab258198ff9616281bff13545c36cb4d65eb6221e322261cce1ee42ac
+              tag: 0.7.4@sha256:7959bdc8bb95757abd3b9b3d0832efbc22e4d63376c3611fb19c9de754f6f46d
             command: [/bin/bash]
             args: ["-c", "archivebox server --quick-init 0.0.0.0:8000"]
             env:
