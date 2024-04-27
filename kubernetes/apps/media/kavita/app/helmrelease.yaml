@@ -23,8 +23,8 @@ spec:
       retries: 5
   values:
     image:
-      repository: kizaing/kavita
-      tag: 0.7.8@sha256:48b3c2c07f90feb4641ddb791f96a1bf6e70a2b27da8c8b2ca0cc2c627b91d72
+      repository: jvmilazz0/kavita
+      tag: 0.8.1@sha256:afb2904c41006332f6bf9c5bca52990b6b76039ddace73c2fda4413c39972f28
     env:
       TZ: "${TIMEZONE}"
     service:
