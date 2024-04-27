@@ -27,7 +27,7 @@ spec:
       namespace: longhorn-system
   values:
     controllers:
-      kapowarr:
+      kavita:
         labels:
           nfsMount: "true"
         annotations:
