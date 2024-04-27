@@ -7,7 +7,6 @@
       "**/terraform/**/*.tf": "terraform",
       "**/kubernetes/**/*.sops.toml": "plaintext"
   },
-  "sops.defaults.ageKeyFile": "age.key",
   "yaml.schemas": {
       "ansible": "./ansible/**/*.yml",
       "Kubernetes": "./kubernetes/*.yaml"
