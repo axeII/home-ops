@@ -10,3 +10,6 @@ resources:
   - ./reflector/ks.yaml
   - ./nvidia-device-plugin/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./spegel/ks.yaml
+  - ./kubelet-csr-approver/ks.yaml
+  - ./cilium/ks.yaml

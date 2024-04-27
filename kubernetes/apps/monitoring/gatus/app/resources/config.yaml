@@ -1,32 +1,38 @@
 ---
 web:
   port: ${CUSTOM_WEB_PORT}
-storage:
-  type: postgres
-  path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
-  caching: true
+# Disabling storage for now
+# storage:
+#   type: postgres
+#   path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
+#   caching: true
 metrics: true
 debug: false
 ui:
   title: Status | Gatus
   header: Status
 alerting:
-  discord:
-    webhook-url: ${SECRET_GATUS_DISCORD_WEBHOOK}
+  slack:
+    webhook-url: ${SECRET_KPS_SLACK_WEBHOOK}
 connectivity:
   checker:
     target: 1.1.1.1:53
     interval: 1m
 endpoints:
   - name: status
+    group: monitoring
     url: https://status.${SECRET_DOMAIN}
     interval: 1m
     conditions: ["[STATUS] == 200"]
     client:
       dns-resolver: udp://192.168.69.106:53
     alerts:
-      - type: discord
-        description: "healthcheck failed"
+      - type: slack
+        description: "healthcheck failed 3 times in a row"
+        send-on-resolved: true
+      - type: slack
+        failure-threshold: 5
+        description: "healthcheck failed 5 times in a row"
         send-on-resolved: true
   # - name: flux-webhook
   #   group: external

@@ -2,58 +2,93 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: plex
-  namespace: media
+  name: &app plex
 spec:
-  interval: 5m
+  interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 5m
   install:
-    createNamespace: true
-  dependsOn:
-    - name: nvidia-device-plugin
-      namespace: kube-system
-    - name: longhorn
-      namespace: longhorn-system
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
-    runtimeClassName: nvidia
-    image:
-      repository: ghcr.io/onedr0p/plex
-      tag: 1.32.8.7639-fb6452ebf@sha256:637fe10cef736f249d96cb004c12f81646c81ca17ddce22374ea8782aa6646c2
-    env:
-      # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
-      TZ: "${TZ}"
-      ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${METALLB_PLEX_ADDR}:32400"
-      PLEX_UID: 0
-      PLEX_GID: 0
-      NVIDIA_VISIBLE_DEVICES: all
-      NVIDIA_DRIVER_CAPABILITIES: all
-    podSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
-    hostNetwork: true
+    defaultPodOptions:
+      runtimeClassName: nvidia
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/plex
+              tag: 1.40.2.8395-c67dce28e@sha256:a2a3149c1326e7777bfe9def135c687d884652f78d34e92264b0dab765908215
+            env:
+              TZ: "${TIMEZONE}"
+              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
+              PLEX_UID: 0
+              PLEX_GID: 0
+              NVIDIA_VISIBLE_DEVICES: all
+              NVIDIA_DRIVER_CAPABILITIES: all
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: &path /identity
+                    port: &port 32400
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 10Gi
+        pod:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: nvidia.com/gpu
+                        operator: In
+                        values:
+                          - "true"
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
+            privileged: true
+    # hostNetwork: true
     service:
       main:
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: ${METALLB_PLEX_ADDR}
-        externalTrafficPolicy: Local
+          io.cilium/lb-ipam-ips: ${PLEX_IP}
+        externalTrafficPolicy: Cluster
         ports:
           http:
-            port: &port 32400
+            port: *port
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gatus.io/enabled: "true"
+          gatus.io/path: *path
           hajimari.io/icon: "plex"
           hajimari.io/group: "media"
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
@@ -67,12 +102,12 @@ spec:
           - host: &host "plex.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-    securityContext:
-      privileged: true
     persistence:
       config:
         enabled: true
@@ -85,24 +120,3 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /transcode
-    probes:
-      liveness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-          httpGet:
-            path: /identity
-            port: *port
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                    - k8s-2

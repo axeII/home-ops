@@ -4,13 +4,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app whoogle
-  namespace: default
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -41,7 +40,7 @@ spec:
               # WHOOGLE_ALT_TW: nitter.${SECRET_DOMAIN}
               WHOOGLE_ALT_YT: invidious.${SECRET_DOMAIN}
               WHOOGLE_ALT_IG: imginn.com
-              WHOOGLE_ALT_RD: libreddit.${SECRET_DOMAIN}
+              WHOOGLE_ALT_RD: reddit.${SECRET_DOMAIN}
               # WHOOGLE_ALT_MD: scripe.rip
               WHOOGLE_ALT_TL: farside.link/lingva
               WHOOGLE_ALT_IMG: bibliogram.art
@@ -67,6 +66,7 @@ spec:
         enabled: true
         className: "nginx"
         annotations:
+          gatus.io/enabled: "true"
           hajimari.io/icon: mdi:google
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"

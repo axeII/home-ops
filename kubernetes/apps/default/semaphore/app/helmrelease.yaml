@@ -1,16 +1,15 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: semaphore
-  namespace: default
+  name: &app semaphore
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -26,21 +25,36 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    controller:
-      annotations:
-        reloader.stakater.com/auto: "true"
-    image:
-      repository: ghcr.io/onedr0p/semaphore
-      tag: v2.8.92@sha256:190f4db70247dd803119a6ace75f2064559190afb41203ab78697731d067a4a0
-    env:
-      SEMAPHORE_LDAP_ACTIVATED: "no"
-      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
-      SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
-      SEMAPHORE_DB_DIALECT: postgres
-      SEMAPHORE_DB_PORT: 5432
-    envFrom:
-      - secretRef:
-          name: semaphore-secret
+    defaultPodOptions:
+      enableServiceLinks: false
+    controllers:
+      main:
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        # initContainers:
+        #   init-db:
+        #     image:
+        #       repository: ghcr.io/auricom/postgres-init
+        #       tag: 15.6@sha256:e5dfcf4d53d4dfe3bf996ba02fec5145e0c4f0a3d5f14a0f529e1f8830157d20
+        #       pullPolicy: IfNotPresent
+        #     envFrom: &envFrom
+        #       - secretRef:
+        #           name: semaphore-secret
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/semaphore
+              tag: v2.9.37@sha256:da37f0083a1a3d642eb5d4494244ede866bd8dfe6837dc8eae1250a6c1a411f6
+            env:
+              SEMAPHORE_LDAP_ACTIVATED: "no"
+              SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+              SEMAPHORE_ADMIN_EMAIL: ${SECRET_CLOUDFLARE_EMAIL}
+              SEMAPHORE_DB_DIALECT: postgres
+              SEMAPHORE_DB_PORT: 5432
+            envFrom:
+              - secretRef:
+                  name: semaphore-secret
     service:
       main:
         ports:
@@ -49,14 +63,17 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: "nginx"
         annotations:
           hajimari.io/icon: mdi:ansible
+          gatus.io/enabled: "true"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host

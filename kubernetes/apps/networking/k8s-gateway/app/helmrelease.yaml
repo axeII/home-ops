@@ -5,33 +5,29 @@ metadata:
   name: k8s-gateway
   namespace: networking
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
       chart: k8s-gateway
-      version: 2.3.0
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: k8s-gateway
         namespace: flux-system
-      interval: 5m
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: metallb
-      namespace: networking
   values:
     fullnameOverride: k8s-gateway
-    domain: ${SECRET_DOMAIN}
+    domain: "${SECRET_DOMAIN}"
     ttl: 1
     service:
       type: LoadBalancer
       port: 53
       annotations:
-        metallb.universe.tf/loadBalancerIPs: "${METALLB_K8S_GATEWAY_ADDR}"
-      externalTrafficPolicy: Local
+        io.cilium/lb-ipam-ips: "192.168.69.106"
+      externalTrafficPolicy: Cluster

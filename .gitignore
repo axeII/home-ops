@@ -20,7 +20,7 @@ xanmanning.k3s*
 
 ## secrets ##
 .sops.dec.env
-provision/ansible/other/hosts.yml
+ansible/other/hosts.yml
 github-deploy-key*
 
 ### Helm ###

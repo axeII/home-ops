@@ -17,11 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
           fetch-depth: 0
+
       - name: MegaLinter
-        uses: megalinter/megalinter/flavors/terraform@7e042c726c68415475b05a65a686c612120a1232 # v7
+        uses: megalinter/megalinter/flavors/terraform@03986e6993ccf699a22451118520680b438e7d2a # v7
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'workflow_dispatch' }}
           PRINT_ALPACA: false
@@ -35,9 +36,9 @@ jobs:
           TERRAFORM_TFLINT_CONFIG_FILE: .tflint.hcl
           YAML_YAMLLINT_CONFIG_FILE: .yamllint.yaml
           SHELLCHECK_OPTS: "-e SC2086"
+
       - name: Archive production artifacts
-        if: ${{ success() }} || ${{ failure() }}
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           name: MegaLinter reports
           path: |

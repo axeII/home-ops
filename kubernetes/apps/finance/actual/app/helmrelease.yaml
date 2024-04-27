@@ -3,13 +3,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: actual
-  namespace: finance
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -39,7 +38,7 @@ spec:
           main:
             image:
               repository: ghcr.io/actualbudget/actual-server
-              tag: 24.1.0@sha256:0a10f8644c85fd6a83c20f5209395cf580239eb53e582d929e18e55e094320fa
+              tag: 24.4.0@sha256:bfb03445dde175f8e63a6cd879fdc107bc2cca68ae74f65d323178e8c9b738e7
 
     service:
       main:
