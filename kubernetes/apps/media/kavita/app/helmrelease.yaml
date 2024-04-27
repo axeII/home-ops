@@ -1,74 +1,89 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app kavita
-  namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   values:
-    image:
-      repository: jvmilazz0/kavita
-      tag: 0.8.1@sha256:afb2904c41006332f6bf9c5bca52990b6b76039ddace73c2fda4413c39972f28
-    env:
-      TZ: "${TIMEZONE}"
+    controllers:
+      kapowarr:
+        labels:
+          nfsMount: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: jvmilazz0/kavita
+              tag: 0.8.1@sha256:afb2904c41006332f6bf9c5bca52990b6b76039ddace73c2fda4413c39972f28
+            env:
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 15m
+                memory: 300Mi
+              limits:
+                memory: 1Gi
     service:
-      main:
+      app:
+        controller: *app
         ports:
           http:
             port: 5000
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
+      app:
+        className: nginx
         annotations:
+          gatus.io/enabled: "true"
           hajimari.io/icon: "notebook-heart"
           hajimari.io/group: "media"
+          # gethomepage.dev/enabled: "true"
+          # gethomepage.dev/group: Books
+          # gethomepage.dev/name: Kavita
+          # gethomepage.dev/icon: kavita.png
+          # gethomepage.dev/description: Comic/Ebook Web Reader
+          # gethomepage.dev/widget.type: kavita
+          # gethomepage.dev/widget.url: http://kavita.media:5000
+          # gethomepage.dev/widget.username: "{{HOMEPAGE_VAR_KAVITA_USERNAME}}"
+          # gethomepage.dev/widget.password: "{{HOMEPAGE_VAR_KAVITA_PASSWORD}}"
         hosts:
-          - host: &host "kavita.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
     persistence:
       config:
-        enabled: true
         existingClaim: kavita-config-v1
-        mountPath: /kavita/config
-      nfs-nas-media:
-        enabled: true
-        existingClaim: media-nfs-share-pvc
-        mountPath: /media
-        readOnly: false
-
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
-
-    resources:
-      requests:
-        cpu: 20m
-        memory: 100Mi
-      limits:
-      memory: 2000Mi
+        globalMounts:
+          - path: /kavita/config
+      media:
+        type: nfs
+        server: 192.168.69.69
+        path: /mnt/ThiccBoi/SiccBoi/data/media/Literature
+        globalMounts:
+          - path: /data
