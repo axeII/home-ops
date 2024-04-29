@@ -84,4 +84,4 @@ spec:
         path: /mnt/ThiccBoi/SiccBoi/data/media/Literature
         globalMounts:
           - path: /data
-            subPath: media
+
