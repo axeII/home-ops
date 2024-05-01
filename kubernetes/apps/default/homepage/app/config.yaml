@@ -131,7 +131,7 @@ data:
                 type: prowlarr
                 url: https://prowlarr.${SECRET_DOMAIN}
                 key: ${PROWLARR_API_KEY }
-          - Calendar:
+        - Calendar:
             - Agenda:
               widget:
                 type: calendar
