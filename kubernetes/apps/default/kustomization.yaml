@@ -11,5 +11,6 @@ resources:
   - ./invidious/ks.yaml
   #- ./archivebox/ks.yaml
   - ./whoogle/ks.yaml
+  - ./homepage/ks.yaml
   - ./microbin/ks.yaml
   - ./piped/ks.yaml
