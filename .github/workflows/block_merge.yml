@@ -21,8 +21,8 @@ jobs:
         id: check_tag
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: | # shellcheck disable=SC2076
-          if [[ $(git diff --name-only HEAD^ HEAD) =~ '.github/workflows/block_merge.yml' ]]; then
+        run: |
+          if [[ $(git diff --name-only HEAD^ HEAD) =~ '.github/workflows/block_merge.yml' ]]; then # shellcheck disable=SC2076
             echo "has_hold_tag=false" >> $GITHUB_ENV
           else
             pr_tags=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.[].name')
