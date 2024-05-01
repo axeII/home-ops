@@ -60,15 +60,15 @@ data:
     services.yaml: |
         ---
         - Home:
-            - Portainer:
-                href: https://portainer.carbon.${SECRET_DOMAIN}
-                icon: portainer.png
-                description: Deploy, configure, troubleshoot and secure containers
-                widget:
-                  type: portainer
-                  url: https://portainer.carbon.${SECRET_DOMAIN}
-                  env: 2
-                  key: ${SECRET_PORTAINER_KEY}
+            # - Portainer:
+            #     href: https://portainer.${SECRET_DOMAIN}
+            #     icon: portainer.png
+            #     description: Deploy, configure, troubleshoot and secure containers
+            #     widget:
+            #       type: portainer
+            #       url: https://portainer.${SECRET_DOMAIN}
+            #       env: 2
+            #       key: ${SECRET_PORTAINER_KEY}
             - Unifi:
                 href: https://unifi
                 icon: unifi.png
@@ -83,8 +83,8 @@ data:
                 description: Cluster Storage
         - Media:
             - Invidious:
-                href: https://invidious.${SECRET_DOMAIN}
-                icon: invidious.png
+                href: https://yt.${SECRET_DOMAIN}
+                icon: youtube.png
                 description: An alternative front-end to YouTube
             - Plex:
                 href: https://plex.${SECRET_DOMAIN}
@@ -94,9 +94,9 @@ data:
                   url: https://192.168.69.101:32400
                   key: ${SECRET_PLEX_KEY}
             - Kavita:
-                href: https://kavita.${SECRET_DOMAIN}
-                icon: kavita.png
-                description: Kavita is a fast, feature rich, cross platform reading server
+                href: https://komanga.${SECRET_DOMAIN}
+                icon: komanga.png
+                description: Komanga is a fast, feature rich, cross platform reading server
             - Stump:
                 href: https://stump.${SECRET_DOMAIN}
                 icon: /icons/stump.png
@@ -114,15 +114,15 @@ data:
               href: https://metube.${SECRET_DOMAIN}
               icon: metube.png
               description: Web GUI for youtube-dl
-          - Torrent:
-              href: https://torrent.${SECRET_DOMAIN}
-              icon: deluge.png
-              description: Torrent client
-              widget:
-                type: deluge
-                url: https://torrent.${SECRET_DOMAIN}
-                username: admin
-                password: ${SECRET_QBITTORRENT_PASSWORD}
+          # - Torrent:
+          #     href: https://torrent.${SECRET_DOMAIN}
+          #     icon: deluge.png
+          #     description: Torrent client
+          #     widget:
+          #       type: deluge
+          #       url: https://torrent.${SECRET_DOMAIN}
+          #       username: admin
+          #       password: ${SECRET_QBITTORRENT_PASSWORD}
           - Prowlarr:
               href: https://prowlarr.${SECRET_DOMAIN}
               icon: prowlarr.png
@@ -149,7 +149,7 @@ data:
                 key: ${SECRET_SONARR_KEY}
         - Selfhosted:
             - Libreddit:
-                href: https://libreddit.${SECRET_DOMAIN}
+                href: https://reddit.${SECRET_DOMAIN}
                 icon: libreddit.png
                 description: Private front-end for Reddit
             - OpenSpeedTest:
