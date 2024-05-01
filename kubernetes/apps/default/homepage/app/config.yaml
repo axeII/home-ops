@@ -170,17 +170,17 @@ data:
                 description: Ad-free, privacy-respecting metasearch engine
         - Utilities:
             - Kubernetes:
-                href: https://kubernetes.${SECRET_DOMAIN}
+                href: https://dashboard.${SECRET_DOMAIN}
                 icon: kubernetes-dashboard.png
                 description: Kubernetes Dashboard
             - Goldilocks:
                 href: https://goldilocks.${SECRET_DOMAIN}
                 icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
                 description: Helps identify a starting point for resource requests and limits
-            - Weave:
-                href: https://gitops.${SECRET_DOMAIN}
-                icon: /icons/weave.svg
-                description: GitOps for K8s
+            - SpeedTest:
+                href: https://wifiman.com
+                icon: /icons/wifiman.svg
+                description: Speed test tool
         - Monitoring:
             - healthchecks:
                 href: https://status.${SECRET_DOMAIN}
