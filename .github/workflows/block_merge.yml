@@ -25,7 +25,7 @@ jobs:
           if [[ $(git diff --name-only HEAD^ HEAD) =~ .github/workflows/block_merge.yml ]]; then
             echo "has_hold_tag=false" >> $GITHUB_ENV
           else
-            pr_tags=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '[.[].name] | join(" ")')
+            pr_tags=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name')
             if [[ $pr_tags =~ hold ]]; then
               echo "has_hold_tag=true" >> $GITHUB_ENV
             else
