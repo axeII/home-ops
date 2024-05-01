@@ -93,14 +93,19 @@ data:
                   type: plex
                   url: https://192.168.69.101:32400
                   key: ${PLEX_TOKEN}
-            - Kavita:
-                href: https://komanga.${SECRET_DOMAIN}
-                icon: komanga.png
-                description: Komanga is a fast, feature rich, cross platform reading server
-            - Stump:
-                href: https://stump.${SECRET_DOMAIN}
-                icon: /icons/stump.png
-                description: Comics, manga and digital book server
+            - Komga:
+                href: https://komga.${SECRET_DOMAIN}
+                icon: https://komga.org/img/logo.svg
+                description: Komga is a fast, feature rich, cross platform reading server
+                widget:
+                  type: komga
+                  url: http://komga.${SECRET_DOMAIN}
+                  username: ${HOMEPAGE_VAR_KOMGA_USERNAME}
+                  password: ${HOMEPAGE_VAR_KOMGA_PASSWORD}
+            # - Stump:
+            #     href: https://stump.${SECRET_DOMAIN}
+            #     icon: /icons/stump.png
+            #     description: Comics, manga and digital book server
         - Media Management:
           - Overseerr:
               href: https://overseerr.${SECRET_DOMAIN}
