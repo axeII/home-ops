@@ -92,7 +92,7 @@ data:
                 widget:
                   type: plex
                   url: https://192.168.69.101:32400
-                  key: ${SECRET_PLEX_KEY}
+                  key: ${PLEX_TOKEN}
             - Kavita:
                 href: https://komanga.${SECRET_DOMAIN}
                 icon: komanga.png
@@ -109,7 +109,7 @@ data:
               widget:
                 type: overseerr
                 url: https://overseerr.${SECRET_DOMAIN}
-                key: ${SECRET_OVERSEERR_KEY}
+                key: ${OVERSEERR_API_KEY}
           - Metube:
               href: https://metube.${SECRET_DOMAIN}
               icon: metube.png
@@ -130,23 +130,23 @@ data:
               widget:
                 type: prowlarr
                 url: https://prowlarr.${SECRET_DOMAIN}
-                key: ${SECRET_PROWLARR_KEY}
-          - Radarr:
-              href: https://radarr.${SECRET_DOMAIN}
-              icon: radarr.png
-              description: TODO
-              widget:
-                type: radarr
-                url: https://radarr.${SECRET_DOMAIN}
-                key: ${SECRET_RADARR_KEY}
-          - Sonarr:
-              href: https://sonarr.${SECRET_DOMAIN}
-              icon: sonarr.png
-              description: TODO
-              widget:
-                type: sonarr
-                url: https://sonarr.${SECRET_DOMAIN}
-                key: ${SECRET_SONARR_KEY}
+                key: ${PROWLARR_API_KEY }
+        - Calendar:
+          - Agenda:
+            widget:
+              type: calendar
+              view: agenda # optional - possible values monthly, agenda
+              maxEvents: 15 # optional - defaults to 10
+              integrations: # optional
+                - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
+                  service_group: Downloads # group name where widget exists
+                  service_name: Sonarr # service name for that widget
+                - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
+                  service_group: Downloads # group name where widget exists
+                  service_name: Radarr # service name for that widget
+                - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonar>
+                  service_group: Downloads # group name where widget exists
+                  service_name: Readarr # service name for that widget
         - Selfhosted:
             - Libreddit:
                 href: https://reddit.${SECRET_DOMAIN}
