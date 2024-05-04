@@ -137,7 +137,7 @@ data:
                 description: Request server for Plex
                 widget:
                   type: overseerr
-                  url: http://overserr.media.svc.cluster.local:5055
+                  url: http://overseerr.media.svc.cluster.local:5055
                   key: {{HOMEPAGE_VAR_OVERSEERR_TOKEN}}
             - Metube:
                 href: https://metube.${SECRET_DOMAIN}
