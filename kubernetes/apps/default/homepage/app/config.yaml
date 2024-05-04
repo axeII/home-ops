@@ -92,7 +92,7 @@ data:
                 widget:
                   type: plex
                   url: http://plex.media.svc.cluster.local:32400
-                  key: ${HOMEPAGE_VAR_PLEX_TOKEN}
+                  key: {{HOMEPAGE_VAR_PLEX_TOKEN}}
             - Komga:
                 href: https://komga.${SECRET_DOMAIN}
                 icon: https://komga.org/img/logo.svg
@@ -100,8 +100,8 @@ data:
                 widget:
                   type: komga
                   url: http://komga.media.svc.cluster.local:8080
-                  username: ${HOMEPAGE_VAR_KOMGA_USERNAME}
-                  password: ${HOMEPAGE_VAR_KOMGA_PASSWORD}
+                  username: {{HOMEPAGE_VAR_KOMGA_USERNAME}}
+                  password: {{HOMEPAGE_VAR_KOMGA_PASSWORD}}
             # - Stump:
             #     href: https://stump.${SECRET_DOMAIN}
             #     icon: /icons/stump.png
@@ -117,7 +117,7 @@ data:
                 description: Helps identify a starting point for resource requests and limits
             - SpeedTest:
                 href: https://wifiman.com
-                icon: /icons/wifiman.svg
+                icon: https://wifiman.com/assets/icons/favicon-32x32.png
                 description: Speed test tool
         - Monitoring:
             - healthchecks:
