@@ -59,6 +59,28 @@ data:
               hourCycle: h23
     services.yaml: |
         ---
+        - Home:
+            # - Portainer:
+            #     href: https://portainer.${SECRET_DOMAIN}
+            #     icon: portainer.png
+            #     description: Deploy, configure, troubleshoot and secure containers
+            #     widget:
+            #       type: portainer
+            #       url: https://portainer.${SECRET_DOMAIN}
+            #       env: 2
+            #       key: ${SECRET_PORTAINER_KEY}
+            - Unifi:
+                href: https://unifi
+                icon: unifi.png
+                description: Unifi console
+            - Whoogle:
+                href: https://whoogle.${SECRET_DOMAIN}
+                icon: whooglesearch.png
+                description: Ad-free, privacy-respecting metasearch engine
+            - Longhorn:
+                href: https://longhorn.${SECRET_DOMAIN}
+                icon: longhorn.png
+                description: Cluster Storage
         - Utilities:
             - Kubernetes:
                 href: https://dashboard.${SECRET_DOMAIN}
