@@ -119,22 +119,13 @@ data:
               href: https://metube.${SECRET_DOMAIN}
               icon: metube.png
               description: Web GUI for youtube-dl
-          # - Torrent:
-          #     href: https://torrent.${SECRET_DOMAIN}
-          #     icon: deluge.png
-          #     description: Torrent client
-          #     widget:
-          #       type: deluge
-          #       url: https://torrent.${SECRET_DOMAIN}
-          #       username: admin
-          #       password: ${SECRET_QBITTORRENT_PASSWORD}
           - Prowlarr:
               href: https://prowlarr.${SECRET_DOMAIN}
               icon: prowlarr.png
-              description: TODO
+              description: Sync arr indexers
               widget:
                 type: prowlarr
-                url: https://prowlarr.${SECRET_DOMAIN}
+                url: http://prowlarr
                 key: ${PROWLARR_API_KEY}
         - Calendar:
             - Agenda:
