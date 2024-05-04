@@ -91,7 +91,7 @@ data:
                 description: Mediaserver
                 widget:
                   type: plex
-                  url: https://192.168.69.101:32400
+                  url: http://plex.media.svc.cluster.local:32400
                   key: ${PLEX_TOKEN}
             - Komga:
                 href: https://komga.${SECRET_DOMAIN}
@@ -99,7 +99,7 @@ data:
                 description: Komga is a fast, feature rich, cross platform reading server
                 widget:
                   type: komga
-                  url: http://komga.${SECRET_DOMAIN}
+                  url: http://komga.media.svc.cluster.local:8080
                   username: ${HOMEPAGE_VAR_KOMGA_USERNAME}
                   password: ${HOMEPAGE_VAR_KOMGA_PASSWORD}
             # - Stump:
