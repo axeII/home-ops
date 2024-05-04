@@ -92,7 +92,7 @@ data:
                 widget:
                   type: plex
                   url: http://plex.media.svc.cluster.local:32400
-                  key: ${PLEX_TOKEN}
+                  key: ${HOMEPAGE_VAR_PLEX_TOKEN}
             - Komga:
                 href: https://komga.${SECRET_DOMAIN}
                 icon: https://komga.org/img/logo.svg
