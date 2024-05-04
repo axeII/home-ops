@@ -9,7 +9,7 @@ data:
     settings.yaml: |
         ---
         title: Dashboard
-        background: /images/background.jpg
+        background: https://reddit.juno.moe/img/5jkh4gbyd6xc1.png
         backgroundOpacity: 0.5
         theme: dark
         color: slate
