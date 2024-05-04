@@ -52,7 +52,7 @@ spec:
           gethomepage.dev/icon: radarr.png
           gethomepage.dev/description: Movie Downloads
           gethomepage.dev/widget.type: radarr
-          gethomepage.dev/widget.url: http://radarr.downloads
+          gethomepage.dev/widget.url: http://radarr.media.svc.cluster.local:80
           gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_RADARR_TOKEN}}"
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
