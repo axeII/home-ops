@@ -227,33 +227,76 @@ data:
                 description: Metric Database
     bookmarks.yaml: |
         ---
-          - Developer:
-            - Github:
+          - Daily:
+            - k8s-at-home-search:
+              - href: https://kubesearch.dev/
+            - Artifacthub:
+              - href: "https://artifacthub.io/"
+            - Loki-logs:
+              - href: "https://grafana.${SECRET_DOMAIN}/explore"
+            - InfoSecNews:
+              - href: "https://allinfosecnews.com"
+            - MinmalNews:
+              - href: "https://www.newsminimalist.com/"
+          - DevOps:
+            - Home-Ops:
               - icon: github-light.png
-                href: https://github.com/
-            - Resume:
-              - icon: resume.png
-                href: https://rxresume.me
-
-          - Cloud-Access:
-              - Cloudflare:
-                  - icon: cloudflare.png
-                    href: https://www.cloudflare.com/
-          - Communitcate:
-              - Discord:
-                  - href: 'https://discord.com/app'
-              - Gmail:
-                  - href: 'http://gmail.com'
-          - Media:
-              - YouTube:
-                  - href: 'https://yt.${SECRET_DOMAIN}'
-              - HackerNews:
-                  - href: 'https://news.ycombinator.com/'
-          - Git:
-              - k8s-at-home:
-                  - href: 'https://kubesearch.dev'
-              - home-cluster:
-                  - href: 'https://github.com/axeII/home-ops'
+                href: https://github.com/axeII/home-ops
+            - TerraformCloud:
+              - href: https://app.terraform.io/
+            - Git-cleaner:
+              - href: "https://rtyley.github.io/bfg-repo-cleaner/"
+            - K8S-Exam-simulator:
+              - href: "https://killer.sh/"
+            - Github-download-folder:
+              - href: "https://download-directory.github.io"
+          - Fun:
+            - Translator:
+              - href: "https://www.deepl.com/translator"
+            - Manhwa:
+              - href: "https://toonily.com"
+            - Archive:
+              - href: "https://archive.ph"
+            - Wallpapers:
+              - href: "https://unsplash.com"
+            - Anime:
+              - href: "https://anichart.net/"
+            - Diving-sites:
+              - href: "https://www.padi.com/dive-sites"
+          - Reddit:
+            - midjourney:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/midjourney"
+            - selfhosted:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/selfhosted/"
+            - kubernetes:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/kubernetes/"
+            - virtualreality:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/virtualreality/"
+            - ChatGPT:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/ChatGPT/"
+            - plex:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/plex/"
+            - NonCredibleDefense:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
+          - Tech:
+            - HackerNews:
+              - href: "https://news.ycombinator.com/"
+            - Shodan:
+              - href: "https://shodan.io"
+            - Intelx:
+              - href: "https://intelx.io/"
+            - Greynoise:
+              - href: "https://www.greynoise.io/"
+            - GrayHatWarFare:
+              - href: "https://www.greyhatwarfare.com/"
+            - GPPTools:
+              - href: "https://bgp.tools"
+            - BGPView:
+              - href: "https://bgpview.io"
+            - Bookhatrix:
+              - href: "https://book.hacktricks.xyz"
+            - Pentest-tools:
+              - href: "https://offsec.tools/"
 
     kubernetes.yaml: |
         ---

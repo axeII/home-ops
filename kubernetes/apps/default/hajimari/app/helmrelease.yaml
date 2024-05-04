@@ -62,7 +62,7 @@ spec:
         - group: Daily
           bookmarks:
             - name: k8s-at-home-search
-              url: "https://whazor.github.io/k8s-at-home-search/"
+              url: "https://kubesearch.dev/"
             - name: Artifacthub
               url: "https://artifacthub.io/"
             - name: "Loki logs"
