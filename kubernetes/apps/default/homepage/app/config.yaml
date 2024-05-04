@@ -82,7 +82,7 @@ data:
                 icon: longhorn.png
                 description: Cluster Storage
         - Media:
-            - Invidious:
+            - Youtube:
                 href: https://yt.${SECRET_DOMAIN}
                 icon: youtube.png
                 description: An alternative front-end to YouTube
