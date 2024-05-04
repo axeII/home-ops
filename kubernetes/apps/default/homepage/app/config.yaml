@@ -14,6 +14,30 @@ data:
         theme: dark
         color: slate
         target: _self
+        layout:
+          Network:
+            style: row
+            columns: 3
+            icon: mdi-network
+          Media:
+            style: row
+            columns: 3
+            icon: mdi-media
+          Calendar:
+            style: column
+            icon: mdi-calendar
+          Utilities:
+            style: row
+            columns: 5
+            icon: mdi-server
+          Monitoring:
+            style: row
+            columns: 5
+            icon: mdi-chart-line
+          Home:
+            style: row
+            columns: 5
+            icon: mdi-home-analytics
     widgets.yaml: |
         ---
         - kubernetes:
@@ -40,8 +64,8 @@ data:
         #     password: ${SECRET_UNIFI_PASSWORD}
         - search:
             provider: custom
-            target: _self
             url: https://whoogle.${SECRET_DOMAIN}/search?q=
+            target: _blank
         - greeting:
             text_size: xl
             text: "Hello Akira!"
@@ -75,12 +99,16 @@ data:
                 description: Unifi console
             - Whoogle:
                 href: https://whoogle.${SECRET_DOMAIN}
-                icon: whooglesearch.png
+                icon: google.png
                 description: Ad-free, privacy-respecting metasearch engine
             - Longhorn:
                 href: https://longhorn.${SECRET_DOMAIN}
                 icon: longhorn.png
                 description: Cluster Storage
+            - Libreddit:
+                href: https://reddit.${SECRET_DOMAIN}
+                icon: libreddit.png
+                description: Private front-end for Reddit
         - Media:
             - Youtube:
                 href: https://yt.${SECRET_DOMAIN}
@@ -103,31 +131,42 @@ data:
                   url: http://komga.media.svc.cluster.local:8080
                   username: {{HOMEPAGE_VAR_KOMGA_USERNAME}}
                   password: {{HOMEPAGE_VAR_KOMGA_PASSWORD}}
-            # - Stump:
-            #     href: https://stump.${SECRET_DOMAIN}
-            #     icon: /icons/stump.png
-            #     description: Comics, manga and digital book server
-        - Media Management:
-          - Overseerr:
-              href: https://overseerr.${SECRET_DOMAIN}
-              icon: jellyseerr.png
-              description: Request server for Plex
+            - Overseerr:
+                href: https://overseerr.${SECRET_DOMAIN}
+                icon: jellyseerr.png
+                description: Request server for Plex
+                widget:
+                  type: overseerr
+                  url: http://overserr.media.svc.cluster.local:5055
+                  key: {{HOMEPAGE_VAR_OVERSEERR_TOKEN}}
+            - Metube:
+                href: https://metube.${SECRET_DOMAIN}
+                icon: youtube.png
+                description: Web GUI for youtube-dl
+            - Prowlarr:
+                href: https://prowlarr.${SECRET_DOMAIN}
+                icon: prowlarr.png
+                description: Sync arr indexers
+                widget:
+                  type: prowlarr
+                  url: http://prowlarr.media.svc.cluster.local:9696
+                  key: {{HOMEPAGE_VAR_PROWLARR_TOKEN}}
+        - Calendar:
+            - Agenda:
               widget:
-                type: overseerr
-                url: https://overseerr.${SECRET_DOMAIN}
-                key: {{HOMEPAGE_VAR_OVERSEERR_TOKEN}}
-          - Metube:
-              href: https://metube.${SECRET_DOMAIN}
-              icon: youtube.png
-              description: Web GUI for youtube-dl
-          - Prowlarr:
-              href: https://prowlarr.${SECRET_DOMAIN}
-              icon: prowlarr.png
-              description: Sync arr indexers
-              widget:
-                type: prowlarr
-                url: http://prowlarr.media.svc.cluster.local:9696
-                key: {{HOMEPAGE_VAR_PROWLARR_TOKEN}}
+                type: calendar
+                view: agenda # optional - possible values monthly, agenda
+                maxEvents: 15 # optional - defaults to 10
+                integrations: # optional
+                  - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
+                    service_group: Downloads # group name where widget exists
+                    service_name: Sonarr # service name for that widget
+                  - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
+                    service_group: Downloads # group name where widget exists
+                    service_name: Radarr # service name for that widget
+                  - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonar>
+                    service_group: Downloads # group name where widget exists
+                    service_name: Readarr # service name for that widget
         - Utilities:
             - Kubernetes:
                 href: https://dashboard.${SECRET_DOMAIN}
@@ -141,6 +180,34 @@ data:
                 href: https://wifiman.com
                 icon: https://wifiman.com/assets/icons/favicon-32x32.png
                 description: Speed test tool
+        - Network:
+            # - Cloudflared:
+            #     href: https://dash.cloudflare.com/
+            #     icon: cloudflare-zero-trust.png
+            #     description: Cloudflared Tunnel Status
+            #     widget:
+            #       type: cloudflared
+            #       accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
+            #       tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
+            #       key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
+            #       fields: ["status"]
+            # - Healthchecks:
+            #     href: https://healthchecks.io/
+            #     icon: healthchecks.png
+            #     description: Healthchecks Internet Uptime
+            #     widget:
+            #       type: healthchecks
+            #       url: https://healthchecks.io/
+            #       key: {{HOMEPAGE_VAR_HEALTHCHECK_TOKEN}}
+            #       uuid: {{HOMEPAGE_VAR_HEALTHCHECK_UUID}}
+            - NextDNS:
+                href: https://my.nextdns.io
+                icon: nextdns.png
+                description: NextDNS
+                widget:
+                  type: nextdns
+                  profile: {{HOMEPAGE_VAR_NEXTDNS_ID}}
+                  key: {{HOMEPAGE_VAR_NEXTDNS_API}}
         - Monitoring:
             - healthchecks:
                 href: https://status.${SECRET_DOMAIN}
