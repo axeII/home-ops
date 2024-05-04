@@ -88,6 +88,7 @@ data:
                 description: An alternative front-end to YouTube
             - Plex:
                 href: https://plex.${SECRET_DOMAIN}
+                icon: https://plex.${SECRET_DOMAIN}/web/favicon.ico
                 description: Mediaserver
                 widget:
                   type: plex
@@ -106,6 +107,27 @@ data:
             #     href: https://stump.${SECRET_DOMAIN}
             #     icon: /icons/stump.png
             #     description: Comics, manga and digital book server
+        - Media Management:
+          - Overseerr:
+              href: https://overseerr.${SECRET_DOMAIN}
+              icon: jellyseerr.png
+              description: Request server for Plex
+              widget:
+                type: overseerr
+                url: https://overseerr.${SECRET_DOMAIN}
+                key: {{HOMEPAGE_VAR_OVERSEERR_TOKEN}}
+          - Metube:
+              href: https://metube.${SECRET_DOMAIN}
+              icon: youtube.png
+              description: Web GUI for youtube-dl
+          - Prowlarr:
+              href: https://prowlarr.${SECRET_DOMAIN}
+              icon: prowlarr.png
+              description: Sync arr indexers
+              widget:
+                type: prowlarr
+                url: http://prowlarr.media.svc.cluster.local:9696
+                key: {{HOMEPAGE_VAR_PROWLARR_TOKEN}}
         - Utilities:
             - Kubernetes:
                 href: https://dashboard.${SECRET_DOMAIN}
