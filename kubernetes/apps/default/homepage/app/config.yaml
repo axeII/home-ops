@@ -153,20 +153,21 @@ data:
                   key: {{HOMEPAGE_VAR_PROWLARR_TOKEN}}
         - Calendar:
             - Agenda:
-              widget:
-                type: calendar
-                view: agenda # optional - possible values monthly, agenda
-                maxEvents: 15 # optional - defaults to 10
-                integrations: # optional
-                  - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
-                    service_group: Downloads # group name where widget exists
-                    service_name: Sonarr # service name for that widget
-                  - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
-                    service_group: Downloads # group name where widget exists
-                    service_name: Radarr # service name for that widget
-                  - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonar>
-                    service_group: Downloads # group name where widget exists
-                    service_name: Readarr # service name for that widget
+                widget:
+                  type: calendar
+                  view: monthly
+                  maxEvents: 15
+                  timezone: ${TIMEZONE}
+                  integrations:
+                    - type: sonarr
+                      service_group: Downloads
+                      service_name: Sonarr
+                    - type: radarr
+                      service_group: Downloads
+                      service_name: Radarr
+                    - type: readarr
+                      service_group: Downloads
+                      service_name: Readarr
         - Utilities:
             - Kubernetes:
                 href: https://dashboard.${SECRET_DOMAIN}
