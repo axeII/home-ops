@@ -93,6 +93,6 @@ spec:
       data:
         type: nfs
         server: ${NAS_IP}
-        path: /mnt/ThiccBoi/SiccBoi/data/media/Literature/books
+        path: /mnt/ThiccBoi/SiccBoi/data/media/
         globalMounts:
-        - path: /data
+        - path: /media
