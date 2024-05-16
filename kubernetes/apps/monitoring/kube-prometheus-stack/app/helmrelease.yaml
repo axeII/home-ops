@@ -1,158 +1,141 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: monitoring
 spec:
-  interval: 5m
+  interval: 30m
+  timeout: 15m
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 58.3.1
+      version: 58.4.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-      interval: 5m
-
   install:
-    createNamespace: true
+    crds: CreateReplace
     remediation:
-      retries: 5
-
+      retries: 3
   upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
     remediation:
-      retries: 5
-
+      strategy: rollback
+      retries: 3
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
-
   values:
-    fullnameOverride: prometheus
-
+    crds:
+      enabled: true
+    cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      config:
-        global:
-          resolve_timeout: 5m
-          slack_api_url: ${SECRET_KPS_SLACK_API_URL}
-          pagerduty_url: "https://events.eu.pagerduty.com/generic/2010-04-15/create_event.json"
-        receivers:
-          - name: "null"
-          - name: "slack-notifications"
-            slack_configs:
-              - channel: "#prometheus-alerts"
-                icon_url: https://avatars3.githubusercontent.com/u/3380462
-                username: "Alertmanager"
-                send_resolved: true
-                title: |-
-                  [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
-                text: >-
-                  {{ range .Alerts -}}
-                    *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-
-                  {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
-
-                  *Details:*
-                    {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-                    {{ end }}
-                  {{ end }}
-          - name: "pagerduty-notifications"
-            pagerduty_configs:
-              - service_key: ${SECRET_KPS_PAGERDUTY_KEY}
-                send_resolved: true
-        route:
-          receiver: "slack-notifications" #default reciver
-          group_interval: 5m
-          group_wait: 30s
-          repeat_interval: 6h
-          group_by: [namespace, alertname, job]
-          routes:
-            - receiver: "null"
-              matchers:
-                - alertname =~ "Watchdog"
-            - match:
-                severity: critical
-              receiver: "pagerduty-notifications"
       ingress:
         enabled: true
         pathType: Prefix
         ingressClassName: nginx
-        annotations:
-        hosts:
-          - "alert-manager.${SECRET_DOMAIN}"
-        tls:
-          - hosts:
-              - "alert-manager.${SECRET_DOMAIN}"
+        hosts: ["alertmanager.${SECRET_DOMAIN}"]
       alertmanagerSpec:
+        replicas: 2
+        useExistingSecret: true
+        configSecret: alertmanager-secret
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: "longhorn"
+              storageClassName: longhorn
               resources:
                 requests:
                   storage: 1Gi
-    kube-state-metrics:
-      fullnameOverride: kube-state-metrics
-    grafana:
-      enabled: false
-      forceDeployDashboards: true
-      sidecar:
-        dashboards:
-          multicluster:
-            etcd:
-              enabled: true
     kubelet:
       enabled: true
       serviceMonitor:
         metricRelabelings:
-          - action: replace
-            sourceLabels:
-              - node
-            targetLabel: instance
+          # Drop high cardinality labels
+          - action: labeldrop
+            regex: (uid)
+          - action: labeldrop
+            regex: (id|name)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
     kubeApiServer:
       enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
     kubeControllerManager:
       enabled: true
-      endpoints:
-        - 192.168.69.110
+      endpoints: &cp
         - 192.168.69.109
-        - 192.168.69.108
-      service:
-        enabled: true
-        port: 10257
-        targetPort: 10257
-      serviceMonitor:
-        enabled: true
-        https: true
-        insecureSkipVerify: true
+        - 192.168.69.110
+        - 192.168.42.108
+    kubeEtcd:
+      enabled: true
+      endpoints: *cp
     kubeScheduler:
       enabled: true
-      endpoints:
-        - 192.168.69.110
-        - 192.168.69.109
-        - 192.168.69.108
-      service:
-        enabled: true
-        port: 10259
-        targetPort: 10259
-      serviceMonitor:
-        enabled: true
-        https: true
-        insecureSkipVerify: true
+      endpoints: *cp
     kubeProxy:
       enabled: false
-    kubeEtcd:
-      enabled: false
-    prometheusOperator:
-      prometheusConfigReloader:
+    prometheus:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        pathType: Prefix
+        hosts: ["prometheus.${SECRET_DOMAIN}"]
+      thanosService:
+        enabled: false
+      thanosServiceMonitor:
+        enabled: false
+      prometheusSpec:
+        # podMetadata:
+          # annotations:
+            # secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+        replicas: 2
+        replicaExternalLabelName: __replica__
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        enableAdminAPI: true
+        walCompression: true
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        image:
+          registry: quay.io
+          repository: prometheus/prometheus
+          tag: v2.51.0-dedupelabels
+        retention: 2d
+        retentionSize: 15GB
+        externalLabels:
+          cluster: main
         resources:
           requests:
             cpu: 100m
-            memory: 50Mi
           limits:
-            memory: 100Mi
+            memory: 1500Mi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              resources:
+                requests:
+                  storage: 20Gi
+    nodeExporter:
+      enabled: true
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
@@ -162,44 +145,32 @@ spec:
             - action: replace
               regex: (.*)
               replacement: $1
-              sourceLabels:
-                - __meta_kubernetes_pod_node_name
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
-    prometheus:
-      ingress:
-        enabled: true
-        pathType: Prefix
-        ingressClassName: nginx
-        annotations:
-        hosts:
-          - "prometheus.${SECRET_DOMAIN}"
-        tls:
-          - hosts:
-              - "prometheus.${SECRET_DOMAIN}"
-      resources:
-        requests:
-          memory: 512Mi
-          cpu: 250m
-        limits:
-          memory: 2048Mi
-      thanosService:
-        enabled: false
-      prometheusSpec:
-        replicas: 1
-        replicaExternalLabelName: "replica"
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
-        scrapeConfigSelectorNilUsesHelmValues: false
-        retention: 2d
-        retentionSize: "5GB"
-        enableAdminAPI: true
-        walCompression: true
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: "longhorn"
-              resources:
-                requests:
-                  storage: 6Gi
+    kubeStateMetrics:
+      enabled: true
+    kube-state-metrics:
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    grafana:
+      enabled: false
+      forceDeployDashboards: true
+      sidecar:
+        dashboards:
+          annotations:
+            grafana_folder: Kubernetes
+          multicluster:
+            etcd:
+              enabled: true
