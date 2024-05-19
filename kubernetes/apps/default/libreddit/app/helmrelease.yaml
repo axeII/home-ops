@@ -50,13 +50,18 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:reddit
         hosts:
-          - host: &host "reddit.${SECRET_DOMAIN}"
+          - host: &host "reddit.${secret_domain}"
             paths:
               - path: /
-                pathType: Prefix
+                pathtype: prefix
+          - host: &adhost "redlib.${secret_domain}"
+            paths:
+              - path: /
+                pathtype: prefix
         tls:
           - hosts:
               - *host
+              - *adhost
     # topologySpreadConstraints:
     #   - maxSkew: 1
     #     topologyKey: kubernetes.io/hostname
