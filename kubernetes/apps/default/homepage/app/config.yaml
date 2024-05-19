@@ -9,11 +9,35 @@ data:
     settings.yaml: |
         ---
         title: Dashboard
-        background: /images/background.jpg
+        background: https://reddit.juno.moe/img/5jkh4gbyd6xc1.png
         backgroundOpacity: 0.5
         theme: dark
         color: slate
         target: _self
+        layout:
+          Network:
+            style: row
+            columns: 3
+            icon: mdi-network
+          Media:
+            style: row
+            columns: 3
+            icon: mdi-media
+          Calendar:
+            style: column
+            icon: mdi-calendar
+          Utilities:
+            style: row
+            columns: 5
+            icon: mdi-server
+          Monitoring:
+            style: row
+            columns: 5
+            icon: mdi-chart-line
+          Home:
+            style: row
+            columns: 5
+            icon: mdi-home-analytics
     widgets.yaml: |
         ---
         - kubernetes:
@@ -40,8 +64,8 @@ data:
         #     password: ${SECRET_UNIFI_PASSWORD}
         - search:
             provider: custom
-            target: _self
             url: https://whoogle.${SECRET_DOMAIN}/search?q=
+            target: _blank
         - greeting:
             text_size: xl
             text: "Hello Akira!"
@@ -75,12 +99,16 @@ data:
                 description: Unifi console
             - Whoogle:
                 href: https://whoogle.${SECRET_DOMAIN}
-                icon: whooglesearch.png
+                icon: google.png
                 description: Ad-free, privacy-respecting metasearch engine
             - Longhorn:
                 href: https://longhorn.${SECRET_DOMAIN}
                 icon: longhorn.png
                 description: Cluster Storage
+            - Libreddit:
+                href: https://reddit.${SECRET_DOMAIN}
+                icon: libreddit.png
+                description: Private front-end for Reddit
         - Media:
             - Youtube:
                 href: https://yt.${SECRET_DOMAIN}
@@ -88,24 +116,49 @@ data:
                 description: An alternative front-end to YouTube
             - Plex:
                 href: https://plex.${SECRET_DOMAIN}
+                icon: https://plex.${SECRET_DOMAIN}/web/favicon.ico
                 description: Mediaserver
                 widget:
                   type: plex
                   url: http://plex.media.svc.cluster.local:32400
-                  key: ${PLEX_TOKEN}
-            - Komga:
-                href: https://komga.${SECRET_DOMAIN}
-                icon: https://komga.org/img/logo.svg
-                description: Komga is a fast, feature rich, cross platform reading server
+                  key: {{HOMEPAGE_VAR_PLEX_TOKEN}}
+            - Overseerr:
+                href: https://overseerr.${SECRET_DOMAIN}
+                icon: jellyseerr.png
+                description: Request server for Plex
                 widget:
-                  type: komga
-                  url: http://komga.media.svc.cluster.local:8080
-                  username: ${HOMEPAGE_VAR_KOMGA_USERNAME}
-                  password: ${HOMEPAGE_VAR_KOMGA_PASSWORD}
-            # - Stump:
-            #     href: https://stump.${SECRET_DOMAIN}
-            #     icon: /icons/stump.png
-            #     description: Comics, manga and digital book server
+                  type: overseerr
+                  url: http://overseerr.media.svc.cluster.local:5055
+                  key: {{HOMEPAGE_VAR_OVERSEERR_TOKEN}}
+            - Metube:
+                href: https://metube.${SECRET_DOMAIN}
+                icon: youtube.png
+                description: Web GUI for youtube-dl
+            - Prowlarr:
+                href: https://prowlarr.${SECRET_DOMAIN}
+                icon: prowlarr.png
+                description: Sync arr indexers
+                widget:
+                  type: prowlarr
+                  url: http://prowlarr.media.svc.cluster.local:9696
+                  key: {{HOMEPAGE_VAR_PROWLARR_TOKEN}}
+        - Calendar:
+            - Agenda:
+                widget:
+                  type: calendar
+                  view: monthly
+                  maxEvents: 15
+                  timezone: ${TIMEZONE}
+                  integrations:
+                    - type: sonarr
+                      service_group: Downloads
+                      service_name: Sonarr
+                    - type: radarr
+                      service_group: Downloads
+                      service_name: Radarr
+                    - type: readarr
+                      service_group: Downloads
+                      service_name: Readarr
         - Utilities:
             - Kubernetes:
                 href: https://dashboard.${SECRET_DOMAIN}
@@ -117,8 +170,36 @@ data:
                 description: Helps identify a starting point for resource requests and limits
             - SpeedTest:
                 href: https://wifiman.com
-                icon: /icons/wifiman.svg
+                icon: https://wifiman.com/assets/icons/favicon-32x32.png
                 description: Speed test tool
+        - Network:
+            # - Cloudflared:
+            #     href: https://dash.cloudflare.com/
+            #     icon: cloudflare-zero-trust.png
+            #     description: Cloudflared Tunnel Status
+            #     widget:
+            #       type: cloudflared
+            #       accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
+            #       tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
+            #       key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
+            #       fields: ["status"]
+            # - Healthchecks:
+            #     href: https://healthchecks.io/
+            #     icon: healthchecks.png
+            #     description: Healthchecks Internet Uptime
+            #     widget:
+            #       type: healthchecks
+            #       url: https://healthchecks.io/
+            #       key: {{HOMEPAGE_VAR_HEALTHCHECK_TOKEN}}
+            #       uuid: {{HOMEPAGE_VAR_HEALTHCHECK_UUID}}
+            - NextDNS:
+                href: https://my.nextdns.io
+                icon: nextdns.png
+                description: NextDNS
+                widget:
+                  type: nextdns
+                  profile: {{HOMEPAGE_VAR_NEXTDNS_ID}}
+                  key: {{HOMEPAGE_VAR_NEXTDNS_API}}
         - Monitoring:
             - healthchecks:
                 href: https://status.${SECRET_DOMAIN}
@@ -138,33 +219,76 @@ data:
                 description: Metric Database
     bookmarks.yaml: |
         ---
-          - Developer:
-            - Github:
+          - Daily:
+            - k8s-at-home-search:
+              - href: https://kubesearch.dev/
+            - Artifacthub:
+              - href: "https://artifacthub.io/"
+            - Loki-logs:
+              - href: "https://grafana.${SECRET_DOMAIN}/explore"
+            - InfoSecNews:
+              - href: "https://allinfosecnews.com"
+            - MinmalNews:
+              - href: "https://www.newsminimalist.com/"
+          - DevOps:
+            - Home-Ops:
               - icon: github-light.png
-                href: https://github.com/
-            - Resume:
-              - icon: resume.png
-                href: https://rxresume.me
-
-          - Cloud-Access:
-              - Cloudflare:
-                  - icon: cloudflare.png
-                    href: https://www.cloudflare.com/
-          - Communitcate:
-              - Discord:
-                  - href: 'https://discord.com/app'
-              - Gmail:
-                  - href: 'http://gmail.com'
-          - Media:
-              - YouTube:
-                  - href: 'https://yt.${SECRET_DOMAIN}'
-              - HackerNews:
-                  - href: 'https://news.ycombinator.com/'
-          - Git:
-              - k8s-at-home:
-                  - href: 'https://kubesearch.dev'
-              - home-cluster:
-                  - href: 'https://github.com/axeII/home-ops'
+                href: https://github.com/axeII/home-ops
+            - TerraformCloud:
+              - href: https://app.terraform.io/
+            - Git-cleaner:
+              - href: "https://rtyley.github.io/bfg-repo-cleaner/"
+            - K8S-Exam-simulator:
+              - href: "https://killer.sh/"
+            - Github-download-folder:
+              - href: "https://download-directory.github.io"
+          - Fun:
+            - Translator:
+              - href: "https://www.deepl.com/translator"
+            - Manhwa:
+              - href: "https://toonily.com"
+            - Archive:
+              - href: "https://archive.ph"
+            - Wallpapers:
+              - href: "https://unsplash.com"
+            - Anime:
+              - href: "https://anichart.net/"
+            - Diving-sites:
+              - href: "https://www.padi.com/dive-sites"
+          - Reddit:
+            - midjourney:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/midjourney"
+            - selfhosted:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/selfhosted/"
+            - kubernetes:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/kubernetes/"
+            - virtualreality:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/virtualreality/"
+            - ChatGPT:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/ChatGPT/"
+            - plex:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/plex/"
+            - NonCredibleDefense:
+              - href: "https://reddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
+          - Tech:
+            - HackerNews:
+              - href: "https://news.ycombinator.com/"
+            - Shodan:
+              - href: "https://shodan.io"
+            - Intelx:
+              - href: "https://intelx.io/"
+            - Greynoise:
+              - href: "https://www.greynoise.io/"
+            - GrayHatWarFare:
+              - href: "https://www.greyhatwarfare.com/"
+            - GPPTools:
+              - href: "https://bgp.tools"
+            - BGPView:
+              - href: "https://bgpview.io"
+            - Bookhatrix:
+              - href: "https://book.hacktricks.xyz"
+            - Pentest-tools:
+              - href: "https://offsec.tools/"
 
     kubernetes.yaml: |
         ---

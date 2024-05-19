@@ -28,8 +28,8 @@ spec:
         reloader.stakater.com/auto: "true"
     fullNameOverride: *app
     image:
-      repository: quay.io/redlib/redlib
-      tag: latest@sha256:7fa92bb9b5a281123ee86a0b77a443939c2ccdabba1c12595dcd671a84cd5a64
+      repository: ghrc.io/axeii/redlib
+      tag: latest@sha256:c697f63028b5d6cedba2b1e66407e8b8407d4d1e0aab0187cd638f0e953f29c6
     env:
       LIBREDDIT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
       LIBREDDIT_DEFAULT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
@@ -50,13 +50,18 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:reddit
         hosts:
-          - host: &host "reddit.${SECRET_DOMAIN}"
+          - host: &host "reddit.${secret_domain}"
             paths:
               - path: /
-                pathType: Prefix
+                pathtype: prefix
+          - host: &adhost "redlib.${secret_domain}"
+            paths:
+              - path: /
+                pathtype: prefix
         tls:
           - hosts:
               - *host
+              - *adhost
     # topologySpreadConstraints:
     #   - maxSkew: 1
     #     topologyKey: kubernetes.io/hostname

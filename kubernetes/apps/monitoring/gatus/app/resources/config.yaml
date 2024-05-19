@@ -11,9 +11,6 @@ debug: false
 ui:
   title: Status | Gatus
   header: Status
-alerting:
-  slack:
-    webhook-url: ${SECRET_KPS_SLACK_WEBHOOK}
 connectivity:
   checker:
     target: 1.1.1.1:53
@@ -26,6 +23,15 @@ endpoints:
     conditions: ["[STATUS] == 200"]
     client:
       dns-resolver: udp://192.168.69.106:53
+alerting:
+  pushover:
+    application-token: $${CUSTOM_PUSHOVER_TOKEN}
+    user-key: $${CUSTOM_PUSHOVER_USER_KEY}
+    default-alert:
+      description: health-check failed
+      send-on-resolved: true
+      failure-threshold: 5
+      success-threshold: 2
     alerts:
       - type: slack
         description: "healthcheck failed 3 times in a row"

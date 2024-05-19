@@ -30,7 +30,7 @@ spec:
       nameOverride: *app
     image:
       repository: docker.io/hotio/whisparr
-      tag: nightly-6a44c0d
+      tag: v3
     env:
       TZ: "${TIMEZONE}"
       PUID: 1000
