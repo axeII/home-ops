@@ -50,11 +50,11 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:reddit
         hosts:
-          - host: &host "reddit.${secret_domain}"
+          - host: &host "reddit.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathtype: prefix
-          - host: &adhost "redlib.${secret_domain}"
+          - host: &adhost "redlib.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathtype: prefix
