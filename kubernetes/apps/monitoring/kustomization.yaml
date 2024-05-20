@@ -11,3 +11,4 @@ resources:
   - ./goldilocks/ks.yaml
   - ./kubernetes-dashboard/ks.yaml
   - ./gatus/ks.yaml
+  - ./karma/ks.yaml
