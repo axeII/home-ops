@@ -29,7 +29,7 @@ spec:
     fullNameOverride: *app
     image:
       repository: ghrc.io/axeii/redlib
-      tag: latest@sha256:ae051fbc9e1abd86a8df702a2db20702e38f308f35fae2d474871e9ccb1edd5b
+      tag: latest@sha256:b139c37da848153321699d5d99f4106441b1fccddfc97b28e09e96f04a5cb574
     env:
       LIBREDDIT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
       LIBREDDIT_DEFAULT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
