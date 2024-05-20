@@ -79,7 +79,7 @@ spec:
         - 192.168.69.109
         - 192.168.69.108
     kubeEtcd:
-      enabled: false
+      enabled: true
       endpoints: *cp
     kubeScheduler:
       enabled: true
@@ -98,8 +98,8 @@ spec:
         enabled: false
       prometheusSpec:
         # podMetadata:
-          # annotations:
-            # secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+        # annotations:
+        # secret.reloader.stakater.com/reload: &secret thanos-objstore-config
         replicas: 2
         replicaExternalLabelName: __replica__
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
