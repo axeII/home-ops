@@ -23,7 +23,7 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
 ![Home Cluster](https://healthchecks.io/b/2/c2d2a0dc-d550-4196-90a4-cdc4a7b9b3da.svg)
 
-![image](https://axell.dev/favorite/my-home-lab/featured.jpg "My homelab")
+![image](https://axell.dev/favorite/my-home-lab/featured_hu15d310b3720445b3c7baf7181f7cbd8d_475147_600x0_resize_q75_box.jpeg "My homelab")
 
 </div>
 
