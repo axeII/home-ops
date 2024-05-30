@@ -24,7 +24,7 @@ spec:
   values:
     controllers:
       karma:
-        replicas: 2
+        replicas: 1
         strategy: RollingUpdate
         containers:
           app:
