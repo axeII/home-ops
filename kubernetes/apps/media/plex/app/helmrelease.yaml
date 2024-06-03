@@ -113,9 +113,12 @@ spec:
         enabled: true
         existingClaim: plex-config-v1
       media:
-        enabled: true
-        existingClaim: media-nfs-share-pvc
-        mountPath: /media
+        type: nfs
+        server: ${NAS_IP}
+        path: ${NAS_MEDIA_PATH}
+        globalMounts:
+          - path: /media
+            readOnly: true
       transcode:
         enabled: true
         type: emptyDir

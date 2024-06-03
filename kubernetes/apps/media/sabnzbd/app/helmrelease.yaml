@@ -108,8 +108,8 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: "192.168.69.69"
-        path: /mnt/ThiccBoi/SiccBoi/data/media
+        server: ${NAS_IP}
+        path: ${NAS_MEDIA_PATH}
         mountPath: /media
       tmp:
         type: emptyDir
