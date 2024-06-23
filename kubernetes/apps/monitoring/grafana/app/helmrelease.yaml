@@ -9,7 +9,6 @@ spec:
     spec:
       chart: grafana
       version: 7.3.9
-      #TODO: upgrade to version: 7.1.0
       interval: 5m
       sourceRef:
         kind: HelmRepository
@@ -65,7 +64,7 @@ spec:
             readOnly: false
             # isDefault: true
             type: prometheus
-            url: http://prometheus-prometheus:9090
+            url: http://prometheus-operated:9090
           - name: Loki
             access: proxy
             readOnly: false
