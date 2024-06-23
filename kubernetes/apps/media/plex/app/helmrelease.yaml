@@ -52,6 +52,10 @@ spec:
               readiness: *probes
               startup:
                 enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -68,10 +72,14 @@ spec:
                         values:
                           - "true"
           securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-            fsGroup: 0
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
             privileged: true
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 44
+              - 65537
     # hostNetwork: true
     service:
       main:
