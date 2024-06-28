@@ -7,4 +7,5 @@ resources:
   - ./k8s-gateway/ks.yaml
   - ./tailscale-gateway/ks.yaml
   - ./cloudflared/ks.yaml
+  - ./echo-server/ks.yaml
   #- ./portainer/ks.yaml
