@@ -37,7 +37,7 @@ spec:
           matchExpressions:
             - key: ingress-class
               operator: In
-              values: ["nginx"]
+              values: ["internal"]
       config:
         client-body-buffer-size: 100M
         client-body-timeout: 120
@@ -64,7 +64,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
       resources:
         requests:
           cpu: 100m

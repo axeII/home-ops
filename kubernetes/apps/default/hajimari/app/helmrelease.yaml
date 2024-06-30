@@ -146,7 +146,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           gatus.io/enabled: "true"
           hajimari.io/icon: "weather-sunset"
