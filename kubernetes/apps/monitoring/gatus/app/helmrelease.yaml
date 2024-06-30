@@ -98,6 +98,7 @@ spec:
     ingress:
       main:
         enabled: true
+        # TODO: migrate this outside
         ingressClassName: nginx
         annotations:
           hajimari.io/icon: connection
@@ -106,7 +107,6 @@ spec:
           # gethomepage.dev/group: Observability
           # gethomepage.dev/name: Gatus
           # gethomepage.dev/icon: gatus.png
-          # external-dns.alpha.kubernetes.io/target: network.${SECRET_DOMAIN}
         hosts:
           - host: &host status.${SECRET_DOMAIN}
             paths:

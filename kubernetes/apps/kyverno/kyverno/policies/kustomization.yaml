@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./delete-cpu-limits.yaml
   - ./generate-gatus.yaml
+  - ./ingress.yaml
