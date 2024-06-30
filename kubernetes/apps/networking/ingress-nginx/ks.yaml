@@ -2,9 +2,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-ingress-nginx-certificates
+  name: &app ingress-nginx-certificates
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
     - name: cluster-apps-cert-manager-issuers
   path: ./kubernetes/apps/networking/ingress-nginx/certificates
@@ -15,7 +19,7 @@ spec:
   wait: true
   interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
