@@ -8,4 +8,5 @@ resources:
   - ./tailscale-gateway/ks.yaml
   - ./cloudflared/ks.yaml
   - ./echo-server/ks.yaml
+  - ./external-dns/ks.yaml
   #- ./portainer/ks.yaml
