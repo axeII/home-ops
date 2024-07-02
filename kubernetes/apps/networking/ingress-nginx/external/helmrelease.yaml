@@ -22,7 +22,7 @@ spec:
       retries: 3
   dependsOn:
     - name: cloudflared
-      namespace: network
+      namespace: networking
   values:
     fullnameOverride: ingress-nginx-external
     controller:
