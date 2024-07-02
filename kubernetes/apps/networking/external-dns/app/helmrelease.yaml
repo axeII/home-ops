@@ -45,7 +45,7 @@ spec:
     policy: sync
     # sources: ["crd", "ingress"]
     sources:
-      - ingress"
+      - ingress
     txtOwnerId: k8s
     txtPrefix: k8s.
     domainFilters: ["${SECRET_DOMAIN}"]
