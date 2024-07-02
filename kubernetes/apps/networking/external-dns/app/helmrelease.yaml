@@ -30,19 +30,26 @@ spec:
       - name: &name CF_API_TOKEN
         valueFrom:
           secretKeyRef:
-            name: external-dns-secret
+            name: &secret external-dns-secret
+            key: *name
+      - name: &name CF_ZONE_ID
+        valueFrom:
+          secretKeyRef:
+            name: *secret
             key: *name
     extraArgs:
-      - --ingress-class=external
+      - --annotation-filter=external-dns.alpha.kubernetes.io/target
       - --cloudflare-proxied
-      - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
-      - --crd-source-kind=DNSEndpoint
+      - --ingress-class=external
+      - --zone-id-filter=$(CF_ZONE_ID)
     policy: sync
-    sources: ["crd", "ingress"]
+    # sources: ["crd", "ingress"]
+    sources:
+      - ingress"
+    txtOwnerId: k8s
     txtPrefix: k8s.
-    txtOwnerId: default
     domainFilters: ["${SECRET_DOMAIN}"]
     serviceMonitor:
       enabled: true
     podAnnotations:
-      secret.reloader.stakater.com/reload: external-dns-secret
+      secret.reloader.stakater.com/reload: *secret
