@@ -100,6 +100,7 @@ spec:
         enabled: true
         className: internal
         annotations:
+          gatus.io/enabled: "true"
           hajimari.io/icon: connection
           hajimari.io/info: Service Status Monitor
           # gethomepage.dev/enabled: "true"
