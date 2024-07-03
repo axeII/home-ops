@@ -98,8 +98,7 @@ spec:
     ingress:
       main:
         enabled: true
-        # TODO: migrate this outside
-        ingressClassName: internal
+        className: internal
         annotations:
           hajimari.io/icon: connection
           hajimari.io/info: Service Status Monitor
