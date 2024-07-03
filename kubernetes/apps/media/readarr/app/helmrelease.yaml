@@ -1,4 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/helmrelease_v2beta2.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -22,8 +23,8 @@ spec:
       strategy: rollback
       retries: 3
   dependsOn:
-  - name: longhorn
-    namespace: longhorn-system
+    - name: longhorn
+      namespace: longhorn-system
   values:
     controllers:
       readarr:
@@ -42,8 +43,8 @@ spec:
               READARR__PORT: &port 80
               READARR__LOG_LEVEL: info
             envFrom:
-            - secretRef:
-                name: readarr-secret
+              - secretRef:
+                  name: readarr-secret
             resources:
               requests:
                 cpu: 15m
@@ -64,7 +65,7 @@ spec:
             port: *port
     ingress:
       app:
-        className: nginx
+        className: internal
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Downloads
@@ -79,12 +80,12 @@ spec:
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/readarr/nord.css"></head>';
             sub_filter_once on;
         hosts:
-        - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
-          paths:
-          - path: /
-            service:
-              identifier: app
-              port: http
+          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
     persistence:
       config:
         existingClaim: readarr-config
@@ -95,4 +96,4 @@ spec:
         server: ${NAS_IP}
         path: /mnt/ThiccBoi/SiccBoi/data/media/
         globalMounts:
-        - path: /media
+          - path: /media
