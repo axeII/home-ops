@@ -64,7 +64,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "nginx"
+        className: "internal"
         annotations:
           gatus.io/enabled: "true"
           hajimari.io/icon: mdi:google
