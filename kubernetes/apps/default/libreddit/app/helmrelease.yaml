@@ -46,7 +46,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        ingressClassName: "iternal"
         annotations:
           hajimari.io/icon: simple-icons:reddit
         hosts:
