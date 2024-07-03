@@ -52,7 +52,7 @@ spec:
             port: 3000
     ingress:
       app:
-        className: nginx
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:

@@ -127,7 +127,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: nginx
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
