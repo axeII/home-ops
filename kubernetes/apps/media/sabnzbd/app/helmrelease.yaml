@@ -85,7 +85,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           gatus.io/enabled: "true"
           gatus.io/path: *path
