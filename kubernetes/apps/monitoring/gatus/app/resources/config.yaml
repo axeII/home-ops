@@ -17,15 +17,15 @@ connectivity:
 
 metrics: true
 
-# storage:
-#   type: postgres
-#   path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
-#   caching: true
+storage:
+  type: postgres
+  path: postgres://$${INIT_POSTGRES_USER}:$${INIT_POSTGRES_PASS}@$${INIT_POSTGRES_HOST}:5432/$${INIT_POSTGRES_DBNAME}?sslmode=disable
+
+  caching: true
 
 ui:
   title: Status | Gatus
   header: Status
 
-
 web:
-  port: ${CUSTOM_WEB_PORT}
+  port: $${CUSTOM_WEB_PORT}
