@@ -8,8 +8,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 7.3.9
-      #TODO: upgrade to version: 7.1.0
+      version: 8.0.2
       interval: 5m
       sourceRef:
         kind: HelmRepository
@@ -65,7 +64,7 @@ spec:
             readOnly: false
             # isDefault: true
             type: prometheus
-            url: http://prometheus-prometheus:9090
+            url: http://prometheus-operated:9090
           - name: Loki
             access: proxy
             readOnly: false
@@ -160,7 +159,7 @@ spec:
         searchNamespace: ALL
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: internal
       annotations:
         gatus.io/enabled: "true"
         hajimari.io/icon: "chart-bar"

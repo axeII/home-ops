@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: atlantis
-      version: 5.0.2
+      version: 5.3.0
       sourceRef:
         kind: HelmRepository
         name: runatlantis
@@ -40,7 +40,7 @@ spec:
 
     image:
       repository: ghcr.io/runatlantis/atlantis
-      tag: v0.27.3
+      tag: v0.28.3
 
     ## Use Server Side Repo Config,
     ## ref: https://www.runatlantis.io/docs/server-side-repo-config.html
@@ -78,7 +78,7 @@ spec:
 
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: internal
       annotations:
         hajimari.io/icon: simple-icons:terraform
       hosts:

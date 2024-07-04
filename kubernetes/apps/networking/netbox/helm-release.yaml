@@ -76,7 +76,7 @@ spec:
       enabled: false
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: internal
       annotations:
         hajimari.io/icon: ip-network-outline
       hosts:

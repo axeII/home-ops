@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gethomepage/homepage
-              tag: v0.8.13
+              tag: v0.9.2
             env:
               TZ: ${TIMEZONE}
             envFrom:
@@ -52,7 +52,7 @@ spec:
             port: 3000
     ingress:
       app:
-        className: nginx
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:

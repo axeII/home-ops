@@ -11,7 +11,7 @@ metadata:
     hajimari.io/icon: "simple-icons:truenas"
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 spec:
-  ingressClassName: nginx
+  ingressClassName: internal
   rules:
     - host: &host truenas.${SECRET_DOMAIN}
       http:

@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 58.4.0
+      version: 60.3.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -36,7 +36,7 @@ spec:
       ingress:
         enabled: true
         pathType: Prefix
-        ingressClassName: nginx
+        ingressClassName: internal
         hosts: ["alertmanager.${SECRET_DOMAIN}"]
       alertmanagerSpec:
         replicas: 2
@@ -89,7 +89,7 @@ spec:
     prometheus:
       ingress:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         pathType: Prefix
         hosts: ["prometheus.${SECRET_DOMAIN}"]
       thanosService:
