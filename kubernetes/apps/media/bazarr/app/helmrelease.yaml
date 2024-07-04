@@ -92,7 +92,7 @@ spec:
           - 100
     ingress:
       app:
-        className: nginx
+        className: internal
         annotations:
           gatus.io/enabled: "true"
           hajimari.io/icon: mdi:subtitles-outline

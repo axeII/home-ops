@@ -17,12 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
 
       - name: MegaLinter
-        uses: megalinter/megalinter/flavors/terraform@03986e6993ccf699a22451118520680b438e7d2a # v7
+        uses: megalinter/megalinter/flavors/terraform@5199c6377b4cb7faff749a1971636f3343db9fe6 # v7
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'workflow_dispatch' }}
           PRINT_ALPACA: false

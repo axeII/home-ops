@@ -1,52 +1,31 @@
 ---
-web:
-  port: ${CUSTOM_WEB_PORT}
-# Disabling storage for now
-# storage:
-#   type: postgres
-#   path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
-#   caching: true
-metrics: true
-debug: false
-ui:
-  title: Status | Gatus
-  header: Status
+alerting:
+  pushover:
+    application-token: $${GATUS_PUSHOVER_APP_TOKEN}
+    user-key: $${GATUS_PUSHOVER_USER_KEY}
+    priority: 1
+    default-alert:
+      description: healthcheck failed
+      send-on-resolved: true
+      failure-threshold: 3
+      success-threshold: 3
+
 connectivity:
   checker:
     target: 1.1.1.1:53
     interval: 1m
-endpoints:
-  - name: status
-    group: monitoring
-    url: https://status.${SECRET_DOMAIN}
-    interval: 1m
-    conditions: ["[STATUS] == 200"]
-    client:
-      dns-resolver: udp://192.168.69.106:53
-alerting:
-  pushover:
-    application-token: $${CUSTOM_PUSHOVER_TOKEN}
-    user-key: $${CUSTOM_PUSHOVER_USER_KEY}
-    default-alert:
-      description: health-check failed
-      send-on-resolved: true
-      failure-threshold: 5
-      success-threshold: 2
-    alerts:
-      - type: slack
-        description: "healthcheck failed 3 times in a row"
-        send-on-resolved: true
-      - type: slack
-        failure-threshold: 5
-        description: "healthcheck failed 5 times in a row"
-        send-on-resolved: true
-  # - name: flux-webhook
-  #   group: external
-  #   url: https://flux-webhook
-  #   interval: 1m
-  #   client:
-  #     dns-resolver: tcp://1.1.1.1:53
-  #   conditions:
-  #     - "[STATUS] == 404"
-  #   alerts:
-  #     - type: pushover
+
+metrics: true
+
+storage:
+  type: postgres
+  path: postgres://$${INIT_POSTGRES_USER}:$${INIT_POSTGRES_PASS}@$${INIT_POSTGRES_HOST}:5432/$${INIT_POSTGRES_DBNAME}?sslmode=disable
+
+  caching: true
+
+ui:
+  title: Status | Gatus
+  header: Status
+
+web:
+  port: $${GATUS_WEB_PORT}
