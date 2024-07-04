@@ -43,21 +43,22 @@ For my cluster, I decided to use the PostgreSQL database instead of high IO load
 
 ### Core Components
 
-- [cillium](https://github.com/cilium/cilium) - CNI for k8s
-- [echo-server](https://github.com/Ealenn/Echo-Server) - REST Server Tests (Echo-Server) API (useful for debugging HTTP issues)
-- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
-- [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
-- [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
-- [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
 - [cert-manager](https://cert-manager.io/) - SSL certificates - with Cloudflare DNS challenge
-- [traefik](https://traefik.io/): Provides ingress cluster services.
-- [botkube](https://github.com/infracloudio/botkube) Bot that helps me to monitor the cluster with notifications.
-- [hajimari](https://github.com/toboshii/hajimari) - start page with ingress discovery
+- [cillium](https://github.com/cilium/cilium) - CNI for k8s
+- [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my ingresses.
+- [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider.
+- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
+- [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
+- [ingress-nginx](https://github.com/kubernetes/ingress-nginx): Kubernetes ingress controller using NGINX as a reverse proxy and load balancer.
+- [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
+- [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
+- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
 - [reflector](https://github.com/emberstack/kubernetes-reflector) - mirror configmaps or secrets to other Kubernetes namespaces
 - [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
+- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are commited to Git.
+- [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
 - [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) - upgrade k3s
-- [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/): Encrypts secrets which is safe to store - even to a public repository.
-<!--- [external-dns](https://github.com/kubernetes-sigs/external-dns): Creates DNS entries in a separate [coredns](https://github.com/coredns/coredns)-->
+- [tailscale](https://github.com/tailscale/tailscale): Private WireGuard based VPN.
 
 
 ### ☸ GitOps
