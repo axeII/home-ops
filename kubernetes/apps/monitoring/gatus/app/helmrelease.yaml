@@ -1,77 +1,44 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: gatus
-  namespace: monitoring
+  name: &app gatus
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     controllers:
-      main:
+      gatus:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          init-config:
-            order: 2
-            image: &configSyncImage
-              repository: ghcr.io/kiwigrid/k8s-sidecar
-              tag: 1.26.1
-              pullPolicy: IfNotPresent
-            env:
-              FOLDER: /config
-              LABEL: gatus.io/enabled
-              NAMESPACE: ALL
-              RESOURCE: both
-              UNIQUE_FILENAMES: true
-              METHOD: LIST
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16.2
             envFrom: &envFrom
               - secretRef:
                   name: gatus-secret
-            resources: &configSyncResources
-              requests:
-                cpu: 10m
-                memory: 10Mi
-              limits:
-                memory: 128Mi
-        containers:
-          main:
+          init-config:
+            dependsOn: init-db
             image:
-              # TODO: move to semver once available
-              repository: ghcr.io/twin/gatus
-              tag: v5.10.0
-            env:
-              TZ: ${TIMEZONE}
-              GATUS_CONFIG_PATH: /config
-              CUSTOM_WEB_PORT: &port 80
-            envFrom: *envFrom
-            resources:
-              requests:
-                cpu: 10m
-                memory: 256M
-              limits:
-                memory: 512M
-          config-sync:
-            image: *configSyncImage
+              repository: ghcr.io/kiwigrid/k8s-sidecar
+              tag: 1.27.4@sha256:f6ed71d0f9f1175df8c4b8c674b339a74785384d25fdad21b3c3dc0554109286
             env:
               FOLDER: /config
               LABEL: gatus.io/enabled
@@ -79,50 +46,74 @@ spec:
               RESOURCE: both
               UNIQUE_FILENAMES: true
               METHOD: WATCH
+            resources: &resources
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+            restartPolicy: Always
+        containers:
+          app:
+            image:
+              repository: ghcr.io/twin/gatus
+              tag: v5.11.0@sha256:eb0374eb55e3ff84ec8f9ea10342ddb623cfba23e5836138896cde01f11cf23d
+            env:
+              GATUS_WEB_PORT: &port 80
+              GATUS_CONFIG_PATH: /config
+              GATUS_DELAY_START_SECONDS: 5
+              TZ: ${TIMEZONE}
             envFrom: *envFrom
-            resources: *configSyncResources
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
-    service:
-      main:
-        ports:
-          http:
-            port: *port
-    serviceMonitor:
-      main:
-        enabled: true
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: &path /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources: *resources
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
+      app:
+        className: internal
         annotations:
-          hajimari.io/icon: connection
-          hajimari.io/info: Service Status Monitor
-          # gethomepage.dev/enabled: "true"
-          # gethomepage.dev/group: Observability
-          # gethomepage.dev/name: Gatus
-          # gethomepage.dev/icon: gatus.png
-          # external-dns.alpha.kubernetes.io/target: network.${SECRET_DOMAIN}
+          gatus.io/path: *path
+          hajimari.io/icon: simple-icons:statuspage
+          hajimari.io/url: https://status.${SECRET_DOMAIN}
         hosts:
-          - host: &host status.${SECRET_DOMAIN}
-            paths:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths: &paths
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
+          - host: &customHost status.${SECRET_DOMAIN}
+            paths: *paths
         tls:
           - hosts:
               - *host
-    serviceAccount:
-      create: true
-      name: gatus
+              - *customHost
     persistence:
       config:
-        enabled: true
         type: emptyDir
       config-file:
         type: configMap
@@ -131,3 +122,21 @@ spec:
           - path: /config/config.yaml
             subPath: config.yaml
             readOnly: true
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    serviceAccount:
+      create: true
+      name: *app
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s

@@ -54,7 +54,7 @@ spec:
             port: *port
     ingress:
       app:
-        className: nginx
+        className: internal
         annotations:
           gatus.io/enabled: "true"
           gethomepage.dev/enabled: "true"

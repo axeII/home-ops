@@ -3,11 +3,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: webhook-receiver
-  namespace: flux-system
+  annotations:
+    gatus.io/status-code: "404"
+    hajimari.io/enable: "false"
 spec:
-  ingressClassName: nginx
+  ingressClassName: external
   rules:
-    - host: &host "flux-receiver.${SECRET_DOMAIN}"
+    - host: &host "flux-webhook.${SECRET_DOMAIN}"
       http:
         paths:
           - path: /hook/

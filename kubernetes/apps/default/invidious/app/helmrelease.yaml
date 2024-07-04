@@ -74,7 +74,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: nginx
+        className: internal
         annotations:
           hajimari.io/icon: mdi:youtube
           gatus.io/enable: "true"
@@ -86,13 +86,6 @@ spec:
                 service:
                   name: main
                   port: http
-          # - host: &host-custom "yt.${SECRET_DOMAIN}"
-          #   paths:
-          #     - path: /
-          #       service:
-          #         name: main
-          #         port: http
         tls:
           - hosts:
               - *host-release
-              # - *host-custom
