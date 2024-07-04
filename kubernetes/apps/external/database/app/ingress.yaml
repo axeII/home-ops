@@ -11,7 +11,7 @@ metadata:
     hajimari.io/icon: "simple-icons:database"
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 spec:
-  ingressClassName: nginx
+  ingressClassName: internal
   rules:
     - host: &host database.${SECRET_DOMAIN}
       http:

@@ -2,14 +2,14 @@
 fail_fast: false
 repos:
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.33.0
+    rev: v1.35.1
     hooks:
       - args:
           - --config-file
           - .github/linters/.yamllint.yaml
         id: yamllint
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-merge-conflict
       - id: end-of-file-fixer
@@ -17,25 +17,25 @@ repos:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.4
+    rev: v1.5.5
     hooks:
       - id: remove-crlf
       - id: remove-tabs
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.3
+    rev: 0.6.6
     hooks:
       - id: fix-smartquotes
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
-  - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.23
-    hooks:
-      - id: terraform-fmt
-      - id: terraform-validate
-      - id: tflint
+  # - repo: https://github.com/gruntwork-io/pre-commit
+  #   rev: v0.1.23
+  #   hooks:
+  #     - id: terraform-fmt
+  #     - id: terraform-validate
+  #     - id: tflint
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.18.1
+    rev: v8.18.3
     hooks:
       - id: gitleaks

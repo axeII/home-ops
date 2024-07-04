@@ -31,7 +31,7 @@ spec:
       - --disable-settings-authorizer
     ingress:
       enabled: true
-      className: nginx
+      className: internal
       # annotations:
       #   gethomepage.dev/enabled: "true"
       #   gethomepage.dev/icon: kubernetes-dashboard.png

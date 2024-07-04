@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/radarr-develop
-      tag: 5.6.0.8846@sha256:b3137a2b451683d834627bf6997460f26eb864757b1ffb5eb6544a8ba6d432ef
+      tag: 5.8.0.8897@sha256:2c9c733b4c89280cfcc25ba727b08bac7fee272917dfa28de675d4e0c3309684
     env:
       TZ: ${TIMEZONE}
       RADARR__INSTANCE_NAME: Radarr-uhd
@@ -43,7 +43,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           hajimari.io/icon: "movie-roll"
           hajimari.io/group: "media"
