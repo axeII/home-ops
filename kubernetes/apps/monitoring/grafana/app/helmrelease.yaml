@@ -159,7 +159,7 @@ spec:
         searchNamespace: ALL
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: internal
       annotations:
         gatus.io/enabled: "true"
         hajimari.io/icon: "chart-bar"
