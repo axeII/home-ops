@@ -53,12 +53,12 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-              resources:
-                requests:
-                  cpu: 12m
-                  memory: 64Mi
-                limits:
-                  memory: 256Mi
+            resources:
+              requests:
+                cpu: 12m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
