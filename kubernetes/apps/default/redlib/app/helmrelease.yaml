@@ -76,7 +76,7 @@ spec:
         runAsGroup: 1000
     ingress:
       app:
-        className: internal
+        className: external
         annotations:
           gatus.io/enabled: "true"
           gatus.io/path: *path
