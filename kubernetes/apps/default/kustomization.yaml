@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./hajimari/ks.yaml
-  - ./libreddit/ks.yaml
+  - ./redlib/ks.yaml
   - ./semaphore/ks.yaml
   - ./shiori/ks.yaml
   - ./invidious/ks.yaml
