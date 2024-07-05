@@ -23,7 +23,7 @@ spec:
       retries: 3
   values:
     controllers:
-      gatus:
+      redlib:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -78,6 +78,7 @@ spec:
       app:
         className: internal
         annotations:
+          gatus.io/enabled: "true"
           gatus.io/path: *path
           hajimari.io/icon: simple-icons:reddit
           hajimari.io/url: https://reddit.${SECRET_DOMAIN}
