@@ -105,7 +105,7 @@ data:
                 href: https://longhorn.${SECRET_DOMAIN}
                 icon: longhorn.png
                 description: Cluster Storage
-            - Libreddit:
+            - Redlib:
                 href: https://reddit.${SECRET_DOMAIN}
                 icon: libreddit.png
                 description: Private front-end for Reddit

@@ -57,8 +57,8 @@ spec:
               url: "https://my.nextdns.io/"
             - name: "Tailscale"
               url: "https://login.tailscale.com/admin/machines"
-            - name: "SMS Manager"
-              url: "https://app.smsmanager.com"
+            - name: "Cloudflare dashboard"
+              url: "https://dash.cloudflare.com/"
         - group: Daily
           bookmarks:
             - name: k8s-at-home-search
