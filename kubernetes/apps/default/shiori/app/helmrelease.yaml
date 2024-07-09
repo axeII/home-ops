@@ -43,8 +43,7 @@ spec:
       main:
         enabled: true
         ingressClassName: internal
-        annotations:
-          hajimari.io/icon: mdi:archive
+
         hosts:
           - host: &host-release "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -57,4 +56,78 @@ spec:
       config:
         enabled: true
         existingClaim: shiori-data-pvc
-  # TODO: Adds resources requests and limits
+# yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/helmrelease_v2beta1.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: shiori
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      shiori:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/go-shiori/shiori
+              tag: v1.7.0@sha256:85a47b264a5b96dec5e558b385f03cf867397dcc37d36d08b7f035681c846649
+            env:
+              TZ: ${TIMEZONE}
+              SHIORI_DIR: /srv/shiori
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 15m
+              limits:
+                memory: 105Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: shiori
+        ports:
+          http:
+            port: 8080
+    ingress:
+      app:
+        className: internal
+        annotations:
+          hajimari.io/icon: mdi:archive-outline
+          gatus.io/enabled: "true"
+        hosts:
+          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+    persistence:
+      config:
+        existingClaim: shiori-data-pvc
+        globalMounts:
+          - path: /srv/shiori
+            readOnly: false
