@@ -42,12 +42,12 @@ spec:
                 cpu: 15m
               # limits:
               #   memory: 550Mi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        seccompProfile: { type: RuntimeDefault }
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsNonRoot: true
+    #     runAsUser: 1000
+    #     runAsGroup: 1000
+    #     seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: shiori
