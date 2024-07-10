@@ -73,3 +73,5 @@ spec:
         globalMounts:
           - path: /srv/shiori
             readOnly: false
+      tmp:
+        type: emptyDir
