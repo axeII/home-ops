@@ -20,17 +20,13 @@ spec:
           - resources:
               kinds:
                 - Ingress
-      # context:
-      #   - name: INGRESS_CLASS_NAME
-      #     variable:
-      #       value: "{{ request.object.spec.ingressClassName }}"
-      #       jmesPath: "to_string(@)"
-      preconditions:
-        - key: "{{ request.object.spec.ingressClassName }}"
-          operator: Equals
-          value: "external"
+      context:
+        - name: INGRESS_CLASS_NAME
+          variable:
+            value: "{{ request.object.spec.ingressClassName }}"
+            jmesPath: "to_string(@)"
       mutate:
         patchStrategicMerge:
           metadata:
             annotations:
-              external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+              external-dns.alpha.kubernetes.io/target: "{{ INGRESS_CLASS_NAME }}.${SECRET_DOMAIN}"
