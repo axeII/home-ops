@@ -4,7 +4,7 @@
 
 <img src="https://i.imgur.com/gdvBkNE.png" align="center" width="144px" height="144px"/>
 
-### My HomeOps repository using kubernetes  :wheel_of_dharma:
+### HomeOps repo managed by k8s  :wheel_of_dharma:
 
 _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)_ :robot:
 
