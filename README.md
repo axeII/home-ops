@@ -6,7 +6,7 @@
 
 ### My HomeOps repository using kubernetes 💪 :octocat:
 
-_... managed with Flux, Renovate_ and GitHub Actions :robot:
+_... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)_ :robot:
 
 </div>
 
@@ -20,8 +20,13 @@ _... managed with Flux, Renovate_ and GitHub Actions :robot:
 
 <div align="center">
 
+[![Home-Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fd7bbc17d-0348-4fbf-9db6-946c4b7d5bf0.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://github.com/axeII/home-ops/blob/main/README.md#file_cabinet-hardware)&nbsp;&nbsp;
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)
-![Home Cluster](https://healthchecks.io/b/2/c2d2a0dc-d550-4196-90a4-cdc4a7b9b3da.svg)
+[![Alertmanager](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fc2d2a0dc-d550-4196-90a4-cdc4a7b9b3da.shields&style=for-the-badge&logo=prometheus&logoColor=white&label=Alertmanager)](https://github.com/axeII/home-ops/blob/main/README.md)
+
+</div>
+
+<div align="center">
 
 ![image](https://axell.dev/favorite/my-home-lab/featured_hu15d310b3720445b3c7baf7181f7cbd8d_475147_600x0_resize_q75_box.jpeg "My homelab")
 
