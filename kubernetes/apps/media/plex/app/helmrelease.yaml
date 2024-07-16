@@ -4,11 +4,11 @@ kind: HelmRelease
 metadata:
   name: &app plex
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -19,24 +19,22 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   values:
-    defaultPodOptions:
-      runtimeClassName: nvidia
     controllers:
-      main:
+      plex:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/plex-beta
               tag: 1.40.4.8679-424562606@sha256:d6959a77082077cd35b246dc78a082c573dd714e014511e23c7c855e72754d3e
             env:
-              TZ: "${TIMEZONE}"
+              # PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}:443
               ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
-              PLEX_UID: 0
-              PLEX_GID: 0
-              NVIDIA_VISIBLE_DEVICES: all
               NVIDIA_DRIVER_CAPABILITIES: all
+              NVIDIA_VISIBLE_DEVICES: all
+              TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true
@@ -50,76 +48,61 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-              startup:
-                enabled: false
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
               limits:
                 memory: 10Gi
-        pod:
-          affinity:
-            nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: nvidia.com/gpu
-                        operator: In
-                        values:
-                          - "true"
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            privileged: true
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 44
-              - 65537
-    # hostNetwork: true
-    service:
-      main:
-        type: LoadBalancer
-        annotations:
-          io.cilium/lb-ipam-ips: ${PLEX_IP}
-        externalTrafficPolicy: Cluster
-        ports:
-          http:
-            port: *port
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nvidia.com/gpu
+                    operator: In
+                    values:
+                      - "true"
+      runtimeClassName: nvidia
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 44
+          - 65537
     ingress:
-      main:
-        enabled: true
+      app:
         className: external
         annotations:
-          gatus.io/enabled: "true"
           gatus.io/path: *path
-          hajimari.io/icon: "plex"
-          hajimari.io/group: "media"
+          hajimari.io/icon: mdi:plex
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            location = / {
-              if ($http_x_plex_device = ""){
-                return 301 $scheme://$host/web/index.html;
-              }
-            }
         hosts:
-          - host: &host "plex.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: plex-config-v1
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Logs
       media:
         type: nfs
         server: ${NAS_IP}
@@ -127,7 +110,17 @@ spec:
         globalMounts:
           - path: /media
             readOnly: true
-      transcode:
-        enabled: true
+      tmp:
         type: emptyDir
-        mountPath: /transcode
+      transcode:
+        type: emptyDir
+    service:
+      app:
+        controller: *app
+        type: loadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: ${PLEX_IP}
+        externalTrafficPolicy: Cluster
+        ports:
+          http:
+            port: *port
