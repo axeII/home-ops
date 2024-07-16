@@ -2,7 +2,7 @@
 # After first setup open shell in pod, become archivebox user with `su -``,
 # then run: `archivebox init --setup` to create admin user
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app archivebox
