@@ -53,10 +53,6 @@ spec:
               url: "https://www.midjourney.com/app/"
             - name: Unifi
               url: "https://unifi.ui.com/consoles"
-            - name: "NextDNS"
-              url: "https://my.nextdns.io/"
-            - name: "Tailscale"
-              url: "https://login.tailscale.com/admin/machines"
             - name: "Cloudflare dashboard"
               url: "https://dash.cloudflare.com/"
         - group: Daily
@@ -93,16 +89,12 @@ spec:
           bookmarks:
             - name: Translator
               url: "https://www.deepl.com/translator"
-            - name: Manhwa
-              url: "https://toonily.com"
             - name: Archive
               url: "https://archive.ph"
             - name: Wallpapers
               url: "https://unsplash.com"
             - name: "Anime"
               url: "https://anichart.net/"
-            - name: Science
-              url: "https://nhentai.net"
             - name: Diving-sites
               url: "https://www.padi.com/dive-sites"
         - group: Reddit
