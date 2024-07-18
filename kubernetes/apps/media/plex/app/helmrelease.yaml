@@ -63,12 +63,13 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
+            - labelSelector:
+                matchExpressions:
                   - key: nvidia.com/gpu
                     operator: In
                     values:
                       - "true"
+              topologyKey: "kubernetes.io/hostname"
       runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
