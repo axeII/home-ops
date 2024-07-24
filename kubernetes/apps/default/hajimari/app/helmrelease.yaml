@@ -59,12 +59,12 @@ spec:
           bookmarks:
             - name: k8s-at-home-search
               url: "https://kubesearch.dev/"
+            - name: "Selfhosted newsletter"
+              url: "https://selfh.st"
             - name: Artifacthub
               url: "https://artifacthub.io/"
             - name: "Loki logs"
               url: "https://grafana.${SECRET_DOMAIN}/explore"
-            - name: GitHub
-              url: "https://github.com"
             - name: InfoSecNews
               url: "https://allinfosecnews.com"
             - name: "News"
