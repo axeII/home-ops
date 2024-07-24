@@ -93,7 +93,7 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 | TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                         |
 | Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway     |
 | Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports  |
-| Database Server| 20GB   | 5             | N/A            | 2GB  | Database for k3s cluster instead of etcd  |
+| Database Server| 20GB   |N/A          | 2GB  | Database for k3s cluster instead of etcd  |
 | Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage |
 <!-- textlint-enable -->
 
