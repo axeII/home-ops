@@ -57,7 +57,6 @@ For my cluster, I decided to use the PostgreSQL database instead of high IO load
 - [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are commited to Git.
 - [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
 - [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) - upgrade k3s
-- [tailscale](https://github.com/tailscale/tailscale): Private WireGuard based VPN.
 
 
 ### ☸ GitOps
