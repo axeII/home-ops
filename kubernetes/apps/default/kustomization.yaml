@@ -13,3 +13,4 @@ resources:
   - ./homepage/ks.yaml
   - ./microbin/ks.yaml
   - ./piped/ks.yaml
+  - ./nitter/ks.yaml
