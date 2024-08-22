@@ -22,54 +22,60 @@ spec:
     remediation:
       retries: 5
   values:
-    controller:
-      replicas: 2
-      strategy: RollingUpdate
-    fullNameOverride: *app
-    image:
-      repository: registry.skysolutions.fi/library/nitter
-      tag: guest-accounts
-    service:
-      main:
-        ports:
-          http:
-            port: &port 8080
+    controllers:
+      nitter:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: registry.skysolutions.fi/library/nitter
+              tag: guest-accounts
+            probes:
+              liveness: &probes
+                enabled: false
+                custom: true
+                spec:
+                  httpGet:
+                    path: /settings
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                memory: 50Mi
+              limits:
+                memory: 250Mi
+    defaultPodOptions:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: *app
     ingress:
-      main:
-        enabled: true
-        ingressClassName: internal
+      app:
+        className: internal
         annotations:
           hajimari.io/icon: 'twitter'
         hosts:
-          - host: &host 'nitter.${SECRET_DOMAIN}'
+          - host: &host "nitter.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
-        tls:
-          - hosts:
-              - *host
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: *app
-    probes:
-      liveness: &probes
-        enabled: false
-        custom: true
-        spec:
-          httpGet:
-            path: /settings
-            port: *port
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness: *probes
-      startup:
-        enabled: false
+                service:
+                  identifier: app
+                  port: http
+      tls:
+        - hosts: [*host]
     persistence:
       config:
         enabled: true
@@ -78,10 +84,9 @@ spec:
         subPath: config.ini
         mountPath: /src/nitter.conf
         readOnly: false
-    podAnnotations:
-      secret.reloader.stakater.com/reload: *app
-    resources:
-      requests:
-        memory: 50Mi
-      limits:
-        memory: 250Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
