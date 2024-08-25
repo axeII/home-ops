@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.3.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -19,10 +19,11 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   values:
     controllers:
-      main:
+      recyclarr:
         type: cronjob
         cronjob:
           schedule: "@daily"
@@ -31,14 +32,13 @@ spec:
           successfulJobsHistory: 1
           failedJobsHistory: 1
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/recyclarr/recyclarr
               tag: 7.2.2@sha256:149eacfb27a51e001c50b60bf6b0eeae15c4dbbde46a1e1d30bf11032ef7f734
             args:
               - sync
             env:
-              COMPlus_EnableDiagnostics: 0
               TZ: *timeZone
             envFrom:
               - secretRef:
@@ -54,21 +54,16 @@ spec:
               capabilities:
                 drop:
                   - ALL
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        enabled: true
         existingClaim: recyclarr-config
-        # FIXME: Remove this
-        # type: nfs
-        # server: 192.168.69.69
-        # path: /mnt/ThiccBoi/SiccBoi/data/recyclarr
       config-file:
         type: configMap
         name: recyclarr-configmap
@@ -76,6 +71,7 @@ spec:
           - path: /config/recyclarr.yml
             subPath: recyclarr.yml
             readOnly: true
-    service:
-      main:
-        enabled: false
+      config-logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
