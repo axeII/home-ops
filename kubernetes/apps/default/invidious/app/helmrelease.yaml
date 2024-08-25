@@ -44,7 +44,7 @@ spec:
           main:
             image:
               repository: quay.io/invidious/invidious
-              tag: latest@sha256:8588042944f972e97c72cfe0ba77d72e3dbcb7b6614b1bf8af6cb2d3685e7b34
+              tag: latest@sha256:8047174b3437e019323aa3db24bb86f9eee2f9f4cb3af75fe8b995dcab9c30a3
             envFrom: *envFrom
             probes:
               liveness: &probes
