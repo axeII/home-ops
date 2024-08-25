@@ -79,7 +79,7 @@ spec:
     persistence:
       config:
         type: configMap
-        name: *app
+        name: nitter-config
         globalMounts:
           - path: /src/nitter.conf
             subPath: config.ini
