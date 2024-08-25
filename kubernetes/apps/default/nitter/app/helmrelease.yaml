@@ -73,16 +73,17 @@ spec:
                 service:
                   identifier: app
                   port: http
-      tls:
-        - hosts: [*host]
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
         type: configMap
-        # name: *app
-        # subPath: config.ini
+        name: *app
         globalMounts:
           - path: /src/nitter.conf
-        # readOnly: false
+            subPath: config.ini
+            readOnly: false
     service:
       app:
         controller: *app
