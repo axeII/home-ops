@@ -77,12 +77,12 @@ spec:
         - hosts: [*host]
     persistence:
       config:
-        enabled: true
         type: configMap
-        name: *app
-        subPath: config.ini
-        mountPath: /src/nitter.conf
-        readOnly: false
+        # name: *app
+        # subPath: config.ini
+        globalMounts:
+          - path: /src/nitter.conf
+        # readOnly: false
     service:
       app:
         controller: *app
