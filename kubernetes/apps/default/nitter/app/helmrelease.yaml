@@ -78,9 +78,8 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
         type: configMap
-        name: nitter-config
+        name: nitter-configmap
         globalMounts:
           - path: /src/nitter.conf
             subPath: config.ini
