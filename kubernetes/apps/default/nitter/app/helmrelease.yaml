@@ -78,6 +78,7 @@ spec:
               - *host
     persistence:
       config:
+        enabled: true
         type: configMap
         name: nitter-config
         globalMounts:
