@@ -11,3 +11,4 @@ resources:
   - ./kubernetes-dashboard/ks.yaml
   - ./gatus/ks.yaml
   - ./karma/ks.yaml
+  - ./kromgo/ks.yaml
