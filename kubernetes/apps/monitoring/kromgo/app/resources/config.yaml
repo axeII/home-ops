@@ -1,4 +1,5 @@
 ---
+debug: true
 metrics:
   - name: cluster_node_count
     query: count(count by (node) (kube_node_status_condition{condition="Ready"}))
