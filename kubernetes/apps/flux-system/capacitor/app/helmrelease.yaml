@@ -39,7 +39,7 @@ spec:
                 memory: 100Mi
                 ephemeral-storage: 1Gi
               limits:
-                memory: 200Mi
+                memory: 1Gi
                 ephemeral-storage: 2Gi
             # securityContext:
             #   allowPrivilegeEscalation: false
