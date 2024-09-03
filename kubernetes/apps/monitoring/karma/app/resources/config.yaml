@@ -12,7 +12,7 @@ alertmanager:
           main:
             - alertname=Watchdog
             - prometheus=monitoring/kube-prometheus-stack
-          network:
+          networking:
             - alertname=Watchdog
             - prometheus=observability/kube-prometheus-stack
 
