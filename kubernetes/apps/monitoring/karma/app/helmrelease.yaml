@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.1.0
+      version: 3.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -26,14 +26,15 @@ spec:
       karma:
         replicas: 1
         strategy: RollingUpdate
+        annotations:
+          configmap.reloader.stakater.com/reload: karma-configmap
         containers:
           app:
             image:
               repository: ghcr.io/prymitive/karma
               tag: v0.120@sha256:733bff15f2529065f1c1b50b13e4a56a541d3c0615dbc6b4b6a07befbfcc27ff
             env:
-              ALERTMANAGER_URI: http://alertmanager-operated.monitoring.svc.cluster.local:9093
-              FILTERS_DEFAULT: "@state!=suppressed"
+              CONFIG_FILE: &config /config/config.yaml
             probes:
               liveness: &probes
                 enabled: true
@@ -95,6 +96,16 @@ spec:
         ports:
           http:
             port: *port
+    persistence:
+      config:
+        type: emptyDir
+      config-file:
+        type: configMap
+        name: karma-configmap
+        globalMounts:
+          - path: *config
+            subPath: config.yaml
+            readOnly: true
     serviceMonitor:
       app:
         serviceName: *app
