@@ -19,7 +19,7 @@ spec:
     image:
       repository: quay.io/tgenannt/netbox
       pullPolicy: IfNotPresent
-      tag: "v3.6.1"
+      tag: "v4.1.0"
     superuser:
       name: admin
       email: arroyos.scarce0l@icloud.com
