@@ -40,7 +40,7 @@ spec:
           hajimari.io/appName: Alertmanager
           hajimari.io/icon: fluent:alert-16-filled
         hosts:
-          - &host alertmanager.${PUBLIC_DOMAIN}
+          - &host alertmanager.${SECRET_DOMAIN}
         paths:
           - /
         pathType: Prefix
