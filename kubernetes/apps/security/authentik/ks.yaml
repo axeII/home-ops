@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: cluster-apps-external-database
     - name: external-secrets-stores
-  path: ./kubernetes/main/apps/security/authentik/app
+  path: ./kubernetes/apps/security/authentik/app
   prune: true
   sourceRef:
     kind: GitRepository
