@@ -48,7 +48,7 @@ spec:
           - hosts:
               - *host
       alertmanagerSpec:
-        replicas: 2
+        replicas: 1
         useExistingSecret: true
         configSecret: alertmanager-secret
         storage:
@@ -115,7 +115,7 @@ spec:
       thanosServiceMonitor:
         enabled: false
       prometheusSpec:
-        replicas: 2
+        replicas: 1
         replicaExternalLabelName: __replica__
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
