@@ -4,6 +4,8 @@ kind: HelmRelease
 metadata:
   name: piped
   namespace: default
+  annotations:
+    redeploy: "2024-09-15T22:11:05Z"
 spec:
   interval: 15m
   chart:
