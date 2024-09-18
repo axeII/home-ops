@@ -30,7 +30,7 @@ spec:
           app:
             image:
               repository: ghcr.io/axeii/redlib
-              tag: latest@sha256:4a0df0577bb3543a26c11cc9eeb431b58df161fe3553a84f74c8a65ec8db57cc
+              tag: 0.35.1@sha256:5687ac4b2ec00b5a13e690041e65c541c3114d561e03a0b2a03273f83da3189f
             env:
               LIBREDDIT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
               LIBREDDIT_DEFAULT_PUSHSHIFT_FRONTEND: "www.reveddit.com"
