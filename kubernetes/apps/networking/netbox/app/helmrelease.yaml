@@ -46,10 +46,8 @@ spec:
     loginRequired: false
     storageBackend: storages.backends.s3boto3.S3Boto3Storage
     storageConfig:
-      AWS_ACCESS_KEY_ID: "${SECRET_MINIO_ACCESS_KEY}"
-      AWS_SECRET_ACCESS_KEY: "${SECRET_MINIO_SECRET_KEY}"
       AWS_STORAGE_BUCKET_NAME: "netbox"
-      AWS_S3_ENDPOINT_URL: "http://${SECRET_MINIO_SERVER}"
+      existingSecret: netbox-secret
     metricsEnabled: true
     postgresql:
       enabled: false
@@ -57,19 +55,19 @@ spec:
       enabled: false
     tasksRedis:
       host: netbox-redis.default.svc.cluster.local
-      existingSecretName: "netbox-redis-secret"
+      existingSecretName: "netbox-secret"
       existingSecretKey: "REDIS_PASSWORD"
     cachingRedis:
       host: netbox-redis.default.svc.cluster.local
-      existingSecretName: "netbox-redis-secret"
+      existingSecretName: "netbox-secret"
       existingSecretKey: "REDIS_PASSWORD"
     externalDatabase:
       host: postgres.database.svc.cluster.local
       port: 5432
       database: netbox_db
       username: netbox
-      existingSecretName: "netbox-db-secret"
-      existingSecretKey: "DB_PASS"
+      existingSecretName: "netbox-secret"
+      existingSecretKey: "NETBOX_DB_PASS"
     email:
     persistence:
       enabled: false
