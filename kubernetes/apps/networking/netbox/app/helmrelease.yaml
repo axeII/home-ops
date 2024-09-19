@@ -70,7 +70,7 @@ spec:
       username: netbox
       existingSecretName: "netbox-secret"
       existingSecretKey: "NETBOX_DB_PASS"
-    email:
+    email: {}
     persistence:
       enabled: false
     reportsPersistence:
