@@ -56,9 +56,9 @@ spec:
     redis:
       enabled: false
     tasksRedis:
-      host: redis-master.database.svc.cluster.local
+      host: redis.database.svc.cluster.local
     cachingRedis:
-      host: redis-master.database.svc.cluster.local
+      host: redis.database.svc.cluster.local
     externalDatabase:
       host: postgresql.database.svc.cluster.local
       port: 5432
