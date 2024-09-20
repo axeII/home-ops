@@ -86,7 +86,7 @@ spec:
                 service:
                   name: netbox
                   port:
-                    number: 8080
+                    number: 80
       tls:
         - hosts:
             - "netbox.${SECRET_DOMAIN}"
