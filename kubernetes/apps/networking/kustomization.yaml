@@ -8,4 +8,5 @@ resources:
   - ./cloudflared/ks.yaml
   - ./echo-server/ks.yaml
   - ./external-dns/ks.yaml
+  - ./netbox/ks.yaml
   #- ./portainer/ks.yaml
