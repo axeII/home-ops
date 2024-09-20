@@ -56,11 +56,11 @@ spec:
     redis:
       enabled: false
     tasksRedis:
-      host: netbox-redis.default.svc.cluster.local
+      host: redis-master.database.svc.cluster.local
       existingSecretName: "netbox-secret"
       existingSecretKey: "REDIS_PASSWORD"
     cachingRedis:
-      host: netbox-redis.default.svc.cluster.local
+      host: redis-master.database.svc.cluster.local
       existingSecretName: "netbox-secret"
       existingSecretKey: "REDIS_PASSWORD"
     externalDatabase:
