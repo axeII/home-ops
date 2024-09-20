@@ -3,9 +3,8 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: redis
-  namespace: database
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: redis
@@ -14,8 +13,9 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
+    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -25,12 +25,9 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    architecture: "standalone"
-    global:
-      redis:
-        password: ${SECRET_REDIS_PASSWORD}
     auth:
       enabled: false
+      sentinel: false
     master:
       persistence:
         enabled: false
@@ -38,8 +35,15 @@ spec:
       persistence:
         enabled: false
     sentinel:
-      enabled: false
+      enabled: true
+      masterSet: redis-master
+      getMasterTimeout: 10
+      startupProbe:
+        failureThreshold: 2
+      persistence:
+        enabled: false
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
+        interval: 1m
