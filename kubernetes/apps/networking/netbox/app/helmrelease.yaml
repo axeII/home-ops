@@ -57,12 +57,8 @@ spec:
       enabled: false
     tasksRedis:
       host: redis-master.database.svc.cluster.local
-      existingSecretName: "netbox-secret"
-      existingSecretKey: "REDIS_PASSWORD"
     cachingRedis:
       host: redis-master.database.svc.cluster.local
-      existingSecretName: "netbox-secret"
-      existingSecretKey: "REDIS_PASSWORD"
     externalDatabase:
       host: postgresql.database.svc.cluster.local
       port: 5432
