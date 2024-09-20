@@ -1,8 +1,9 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: redis
+  name: &app redis
 spec:
   interval: 30m
   chart:
@@ -13,17 +14,14 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     auth:
       enabled: false
@@ -34,6 +32,7 @@ spec:
     replica:
       persistence:
         enabled: false
+      replicaCount: 1
     sentinel:
       enabled: true
       masterSet: redis-master
