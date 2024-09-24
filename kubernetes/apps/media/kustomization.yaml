@@ -21,4 +21,3 @@ resources:
   - ./kapowarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./komga/ks.yaml
-  #- ./radarr-uhd/ks.yaml Will be archived
