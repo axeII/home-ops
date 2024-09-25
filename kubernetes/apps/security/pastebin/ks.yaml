@@ -9,9 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: longhorn
-  #   - name: cluster-apps-external-secrets-stores
+  dependsOn:
+    - name: longhorn
   path: ./kubernetes/apps/security/pastebin/app
   prune: true
   sourceRef:
