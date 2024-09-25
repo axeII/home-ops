@@ -30,9 +30,6 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            envFrom:
-              - secretRef:
-                  name: pastebin-secret
             image:
               repository: docker.io/privatebin/nginx-fpm-alpine
               tag: 1.7.4@sha256:4cc5f26f5b558b734cb084ada4fdacd75bd9f5e4574f3f3df54165b3623d6b86
