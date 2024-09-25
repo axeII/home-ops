@@ -8,7 +8,6 @@ resources:
   - ./loki/ks.yaml
   - ./unifi-poller/ks.yaml
   - ./goldilocks/ks.yaml
-  - ./kubernetes-dashboard/ks.yaml
   - ./gatus/ks.yaml
   - ./karma/ks.yaml
   - ./kromgo/ks.yaml
