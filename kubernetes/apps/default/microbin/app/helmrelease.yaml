@@ -64,6 +64,9 @@ spec:
     ingress:
       app:
         className: external
+        annotations:
+          gatus.io/enabled: "true"
+          hajimari.io/icon: simple-icons:pastebin
         hosts:
           - host: &host "pastebin.${SECRET_DOMAIN}"
             paths:
