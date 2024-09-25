@@ -84,3 +84,4 @@ spec:
         ports:
           http:
             port: 8080
+# TODO: Create a way to set in conf.php to set expireSelection: "never" to disable never expire
