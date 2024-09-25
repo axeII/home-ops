@@ -11,5 +11,4 @@ resources:
   #- ./archivebox/ks.yaml
   - ./whoogle/ks.yaml
   - ./homepage/ks.yaml
-  - ./microbin/ks.yaml
   - ./piped/ks.yaml
