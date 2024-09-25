@@ -47,11 +47,12 @@ spec:
         statefulset:
           podManagementPolicy: Parallel
           volumeClaimTemplates:
-            - accessMode: ReadWriteOnce
+            - name: data
+              accessMode: ReadWriteOnce
+              storageClass: longhorn-media
+              size: 200Mi
               globalMounts:
                 - path: *data
-                  name: data
-                  size: 1Mi
         type: statefulset
     defaultPodOptions:
       securityContext:
