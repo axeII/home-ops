@@ -57,7 +57,7 @@ spec:
         className: internal
         annotations:
           gatus.io/enabled: "true"
-          hajimari.io/icon: mdi:thought-bubble-outline"
+          hajimari.io/icon: "mdi:thought-bubble-outline"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
           gethomepage.dev/name: Komga
