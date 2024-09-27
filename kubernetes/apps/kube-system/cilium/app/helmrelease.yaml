@@ -33,9 +33,6 @@ spec:
     cluster:
       id: 1
       name: home-kubernetes
-    containerRuntime:
-      integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
     devices:
       - eno+
       - enp6s+
