@@ -3,68 +3,87 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app unpackerr
-  namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      strategy: rollback
+      retries: 3
   values:
-    image:
-      repository: ghcr.io/onedr0p/unpackerr
-      tag: 0.12.0@sha256:354aa32097c9113f92b2aa5a42bc8606f4fafbf94a8285143ce883ce390a93a2
-    env:
-      TZ: "${TIMEZONE}"
-      UN_LIDARR_0_URL: http://lidarr:8686
-      UN_LIDARR_0_PATHS_0: /media/downloads
-      UN_RADARR_0_URL: http://radarr:80
-      UN_RADARR_0_PATHS_0: /media/downloads
-      UN_SONARR_0_URL: http://sonarr:8989
-      UN_SONARR_0_PATHS_0: /media/downloads
-      UN_READARR_0_URL: http://readarr:8787
-    envFrom:
-      - secretRef:
-          name: *app
-    service:
-      main:
-        enabled: false
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
+    controllers:
+      unpackerr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/unpackerr/unpackerr
+              tag: 0.14.5@sha256:dc72256942ce50d1c8a1aeb5aa85b6ae2680a36eefd2182129d8d210fce78044
+            env:
+              TZ: "${TIMEZONE}"
+              UN_INTERVAL: 1m
+              UN_WEBSERVER_METRICS: true
+              UN_WEBSERVER_LOG_FILE: /logs/webserver.log
+              UN_SONARR_0_URL: http://sonarr.media.svc.cluster.local:8989
+              UN_SONARR_0_PATHS_0: /media/downloads
+              UN_RADARR_0_URL: http://radarr.media.svc.cluster.local:80
+              UN_RADARR_0_PATHS_0: /media/downloads
+            envFrom:
+              - secretRef:
+                  name: unpackerr-secret
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 8Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 10000
     persistence:
-      complete:
-        enabled: true
-        existingClaim: media-nfs-share-pvc
-        mountPath: /media
-        readOnly: false
-    podAnnotations:
-      secret.reloader.stakater.com/reload: *app
-    resources:
-      requests:
-        cpu: 10m
-        memory: 250Mi
-      limits:
-        memory: 1000Mi
+      logs:
+        type: emptyDir
+      media:
+        type: nfs
+        server: ${NAS_IP}
+        path: /mnt/ThiccBoi/SiccBoi/data/media
+        globalMounts:
+          - path: /medias
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 5656
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
