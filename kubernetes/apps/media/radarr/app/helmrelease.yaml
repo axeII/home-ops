@@ -46,6 +46,7 @@ spec:
         ingressClassName: internal
         annotations:
           gatus.io/enabled: "true"
+          hajimari.io/icon: mdi:filmstrip
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Downloads
           gethomepage.dev/name: Radarr
