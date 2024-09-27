@@ -129,7 +129,7 @@ spec:
         enabled: true
         className: internal
         annotations:
-          hajimari.io/enabled: "false"
+          hajimari.io/enable: "false"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
