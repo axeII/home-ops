@@ -5,6 +5,7 @@ metadata:
   name: cluster-apps-metube
   namespace: flux-system
 spec:
+  targetNamespace: media
   dependsOn:
     - name: ingress-nginx-internal
   path: ./kubernetes/apps/media/metube/app
