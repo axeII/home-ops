@@ -56,6 +56,7 @@ spec:
         className: internal
         annotations:
           gatus.io/enabled: "true"
+          hajimari.io/icon: mdi:bookshelf
           # gethomepage.dev/enabled: "true"
           # gethomepage.dev/group: Downloads
           # gethomepage.dev/name: Kapowarr
