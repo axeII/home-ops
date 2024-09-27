@@ -12,7 +12,6 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
-  - ./whisparr/ks.yaml
   - ./unpackerr/ks.yaml
   - ./plex/ks.yaml
   - ./metube/ks.yaml
