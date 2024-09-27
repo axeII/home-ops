@@ -60,17 +60,17 @@ spec:
               globalMounts:
                 - path: /srv/data
         type: statefulset
-    defaultPodOptions:
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
-        seccompProfile:
-          type: RuntimeDefault
+    # defaultPodOptions:
+    #   securityContext:
+    #     fsGroup: 1000
+    #     runAsGroup: 1000
+    #     runAsNonRoot: true
+    #     runAsUser: 1000
+    #     seccompProfile:
+    #       type: RuntimeDefault
     ingress:
       app:
-        className: external
+        className: internal
         annotations:
           gatus.io/enabled: "true"
           hajimari.io/icon: simple-icons:pastebin
