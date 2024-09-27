@@ -44,12 +44,12 @@ spec:
               requests:
                 cpu: 100m
                 memory: 250Mi
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   capabilities:
-            #     drop:
-            #       - ALL
-            #   readOnlyRootFilesystem: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
         statefulset:
           podManagementPolicy: Parallel
           volumeClaimTemplates:
@@ -60,14 +60,14 @@ spec:
               globalMounts:
                 - path: /srv/data
         type: statefulset
-    # defaultPodOptions:
-    #   securityContext:
-    #     fsGroup: 1000
-    #     runAsGroup: 1000
-    #     runAsNonRoot: true
-    #     runAsUser: 1000
-    #     seccompProfile:
-    #       type: RuntimeDefault
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
     ingress:
       app:
         className: internal
@@ -90,4 +90,3 @@ spec:
         ports:
           http:
             port: 8080
-# TODO: Create a way to set in conf.php to set expireSelection: "never" to disable never expire
