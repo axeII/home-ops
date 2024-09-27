@@ -128,6 +128,8 @@ spec:
       main:
         enabled: true
         className: internal
+        annotations:
+          hajimari.io/enabled: "false"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
