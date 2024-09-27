@@ -55,7 +55,7 @@ spec:
           volumeClaimTemplates:
             - name: data
               accessMode: ReadWriteOnce
-              storageClass: longhorn-media
+              storageClass: longhorn
               size: 200Mi
               globalMounts:
                 - path: /srv/data
