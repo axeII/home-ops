@@ -64,8 +64,6 @@ spec:
                   identifier: app
                   port: http
     persistence:
-      config:
-        existingClaim: *app
       downloads:
         type: nfs
         server: ${NAS_IP}
