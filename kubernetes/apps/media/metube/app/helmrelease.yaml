@@ -69,5 +69,5 @@ spec:
         server: ${NAS_IP}
         path: ${NAS_MEDIA_PATH}
         globalMounts:
-          - path: /downloads
+          - path: /downloads/videos
             subPath: videos
