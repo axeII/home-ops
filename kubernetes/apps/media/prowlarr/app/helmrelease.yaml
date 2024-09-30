@@ -89,7 +89,7 @@ spec:
         enabled: true
         className: internal
         annotations:
-          gatus.io/enable: "true"
+          gatus.io/enabled: "true"
           hajimari.io/icon: mdi:movie-search
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
