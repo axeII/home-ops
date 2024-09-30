@@ -35,8 +35,8 @@ spec:
         # initContainers:
         #   init-db:
         #     image:
-        #       repository: ghcr.io/auricom/postgres-init
-        #       tag: 15.6@sha256:e5dfcf4d53d4dfe3bf996ba02fec5145e0c4f0a3d5f14a0f529e1f8830157d20
+        #       repository: ghcr.io/onedr0p/postgres-init
+        #       tag: 15
         #       pullPolicy: IfNotPresent
         #     envFrom: &envFrom
         #       - secretRef:
