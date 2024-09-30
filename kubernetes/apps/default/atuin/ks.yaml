@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cluster-apps-database-postgres
-    - name: external-secrets-stores
+    - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/default/atuin/app
   prune: true
   sourceRef:
