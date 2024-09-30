@@ -29,7 +29,7 @@ spec:
     frontend:
       image:
         repository: "docker.io/1337kavin/piped-frontend"
-        tag: latest
+        tag: "latest"
         pullPolicy: Always
       env:
         BACKEND_HOSTNAME: &api_host papi.${SECRET_DOMAIN}
@@ -42,7 +42,7 @@ spec:
         01-init-db:
           image:
             repository: ghcr.io/onedr0p/postgres-init
-            tag: 15
+            tag: "15"
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
