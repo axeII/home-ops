@@ -11,3 +11,5 @@ resources:
   #- ./archivebox/ks.yaml
   - ./homepage/ks.yaml
   - ./piped/ks.yaml
+  - ./pinchflat/ks.yaml
+  
