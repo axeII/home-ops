@@ -29,7 +29,7 @@ spec:
           app:
             image:
               repository: ghcr.io/go-shiori/shiori
-              tag: v1.7.0@sha256:85a47b264a5b96dec5e558b385f03cf867397dcc37d36d08b7f035681c846649
+              tag: v1.7.1@sha256:7578ccecaec8bfa9170135e512ea8e700751c3f5ba19824ef7632ee801838b40
             env:
               TZ: ${TIMEZONE}
               SHIORI_DIR: /srv/shiori
