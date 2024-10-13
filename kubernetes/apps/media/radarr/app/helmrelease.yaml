@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/radarr-develop
-      tag: 5.11.0.9244@sha256:db4b57f5e05304f6b2d47a6863da9e584f1f05af3b61584cb146dc358dd1430b
+      tag: 5.12.2.9335@sha256:6c4dc76eddeb06cb362ce46ac4a4beed64c49126caed70bf4d21eb8c86f70249
     env:
       TZ: ${TIMEZONE}
       RADARR__INSTANCE_NAME: Radarr
