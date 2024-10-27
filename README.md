@@ -125,4 +125,4 @@ Be sure to check out [kubesearch.dev](https://kubesearch.dev) for ideas on how t
 
 ## 🔏 License
 
-See [LICENSE](./LICENSE).
+See [LINCENSE](https://raw.githubusercontent.com/axeII/home-ops/refs/heads/main/LICENCE).
