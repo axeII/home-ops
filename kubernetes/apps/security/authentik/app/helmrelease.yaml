@@ -32,7 +32,7 @@ spec:
             name: authentik-secret
     authentik:
       redis:
-        host: redis-master.database.svc.cluster.local
+        host: redis.database.svc.cluster.local
     server:
       autoscaling:
         enabled: true
