@@ -172,7 +172,7 @@ data:
                 href: https://wifiman.com
                 icon: https://wifiman.com/assets/icons/favicon-32x32.png
                 description: Speed test tool
-        - Network:
+        # - Network:
             # - Cloudflared:
             #     href: https://dash.cloudflare.com/
             #     icon: cloudflare-zero-trust.png
@@ -192,14 +192,14 @@ data:
             #       url: https://healthchecks.io/
             #       key: {{HOMEPAGE_VAR_HEALTHCHECK_TOKEN}}
             #       uuid: {{HOMEPAGE_VAR_HEALTHCHECK_UUID}}
-            - NextDNS:
-                href: https://my.nextdns.io
-                icon: nextdns.png
-                description: NextDNS
-                widget:
-                  type: nextdns
-                  profile: {{HOMEPAGE_VAR_NEXTDNS_ID}}
-                  key: {{HOMEPAGE_VAR_NEXTDNS_API}}
+            # - NextDNS:
+            #     href: https://my.nextdns.io
+            #     icon: nextdns.png
+            #     description: NextDNS
+            #     widget:
+            #       type: nextdns
+            #       profile: {{HOMEPAGE_VAR_NEXTDNS_ID}}
+            #       key: {{HOMEPAGE_VAR_NEXTDNS_API}}
         - Monitoring:
             - healthchecks:
                 href: https://status.${SECRET_DOMAIN}
