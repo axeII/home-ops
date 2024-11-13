@@ -36,6 +36,7 @@ spec:
     devices:
       - eno+
       - enp6s+
+      - bond+
     endpointRoutes:
       enabled: true
     hubble:

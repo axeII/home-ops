@@ -9,6 +9,7 @@ spec:
   interfaces:
     - eno+
     - enp6s+
+    - bond+
   nodeSelector:
     matchLabels:
       kubernetes.io/os: linux
