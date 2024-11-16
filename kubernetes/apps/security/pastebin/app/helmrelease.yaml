@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: docker.io/privatebin/nginx-fpm-alpine
-              tag: 1.7.4@sha256:4cc5f26f5b558b734cb084ada4fdacd75bd9f5e4574f3f3df54165b3623d6b86
+              tag: 1.7.5@sha256:90b7e5713459f1059fd229d46755d17f9e94b86205cfaf104098dc76c0d969b6
             probes:
               liveness:
                 enabled: true
