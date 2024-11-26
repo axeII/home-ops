@@ -1,5 +1,5 @@
 ---
-apiversion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: helmrelease
 metadata:
   name: rook-ceph-operator
