@@ -7,7 +7,6 @@ resources:
   - ./coredns.yaml
   - ./jetstack.yaml
   - ./metrics-server.yaml
-  - ./openebs.yaml
   - ./postfinance.yaml
   - ./prometheus-community.yaml
   - ./spegel.yaml
@@ -15,3 +14,5 @@ resources:
   - ./external-dns.yaml
   - ./ingress-nginx.yaml
   - ./k8s-gateway.yaml
+  - ./external-secrets.yaml
+  - ./rook-ceph.yaml
