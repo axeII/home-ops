@@ -99,14 +99,14 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 <!-- textlint-disable -->
 | Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                         |
 |------------------------|------------------|----------------|------|---------------------------------|
-| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | k3s node                        |
-| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | k3s node                        |
-| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | k3s node with Nvidia GPU        |
+| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | Talos node                        |
+| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | Talos node                        |
+| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | Talos node with Nvidia GPU        |
 | TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                         |
 | Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway     |
 | Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports  |
-| Database Server| 20GB   |N/A          | 2GB  | Database for k3s cluster instead of etcd  |
-| Offsite Machine        | 60 GB            | 8TB            | 8GB  | for backups and offsite storage |
+| Database Server| 20GB   |N/A          | 2GB  | Database  |
+| Offsite Machine        | 60 GB            | 8TB            | 8GB  | Backup offsite vm |
 <!-- textlint-enable -->
 
 ### 📰 Blog post
