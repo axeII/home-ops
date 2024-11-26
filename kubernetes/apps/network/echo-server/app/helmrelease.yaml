@@ -79,7 +79,7 @@ spec:
             scrapeTimeout: 10s
     ingress:
       app:
-        className: internal
+        className: external
         hosts:
           - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
