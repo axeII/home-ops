@@ -25,8 +25,8 @@ spec:
   dependsOn:
     - name: rook-ceph-operator
       namespace: rook-ceph
-    - name: snapshot-controller
-      namespace: kube-system
+    # - name: snapshot-controller
+    #   namespace: kube-system
   values:
     # https://artifacthub.io/packages/helm/rook/rook-ceph-cluster?modal=values
     monitoring:
@@ -43,32 +43,16 @@ spec:
     operatorNamespace: rook-ceph
     ingress:
       dashboard:
-        ingressClassName: "traefik"
+        ingressClassName: internal
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          kubernetes.io/tls-acme: "true"
-          traefik.ingress.kubernetes.io/router.middlewares: traefik-ingress-sso@kubernetescrd
-          traefik.ingress.kubernetes.io/router.entrypoints: websecure
-          traefik.ingress.kubernetes.io/affinity: "true"
-          traefik.ingress.kubernetes.io/router.tls: "true"
-          external-dns/opnsense: "true"
-          hajimari.io/appName: rook-ceph
-          hajimari.io/enable: "true"
-          hajimari.io/icon: simple-icons:ceph
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/description: Cloud-Native Storage for Kubernetes
-          gethomepage.dev/group: Storage
-          gethomepage.dev/icon: rook
-          gethomepage.dev/name: Rook
-          gethomepage.dev/weight: "10" # optional
-          gethomepage.dev/pod-selector: app=rook-ceph-mgr
+          hajimari.io/appName: Rook
+          hajimari.io/icon: mdi:chess-rook
         host:
-          name: &host rook.techtales.io
+          name: &host rook.${SECRET_DOMAIN}
           path: /
         tls:
           - hosts:
               - *host
-            secretName: rook-tls
     cephClusterSpec:
       network:
         provider: host
