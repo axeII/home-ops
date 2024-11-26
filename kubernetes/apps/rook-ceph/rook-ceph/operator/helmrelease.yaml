@@ -1,6 +1,6 @@
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
-kind: helmrelease
+kind: HelmRelease
 metadata:
   name: rook-ceph-operator
 spec:
@@ -10,28 +10,28 @@ spec:
     spec:
       chart: rook-ceph
       version: v1.15.6
-      sourceref:
-        kind: helmrepository
+      sourceRef:
+        kind: HelmRepository
         name: rook-ceph
         namespace: flux-system
   install:
     remediation:
       retries: 3
   upgrade:
-    cleanuponfail: true
+    cleanupOnFail: true
     remediation:
       strategy: rollback
       retries: 3
   values:
     csi:
-      cephfskernelmountoptions: ms_mode=prefer-crc
-      enableliveness: true
-      servicemonitor:
+      cephFSKernelMountOptions: ms_mode=prefer-crc
+      enableLiveness: true
+      serviceMonitor:
         enabled: true
     monitoring:
       enabled: true
     resources:
       requests:
-        cpu: 100m # unchangable
-        memory: 128mi # unchangable
+        cpu: 100m # buroa says unchangable
+        memory: 128Mi # buroa says unchangable
       limits: {}
