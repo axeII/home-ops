@@ -5,4 +5,17 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  SETTING_EXAMPLE: Global settings for your cluster go in this file, this file is NOT encrypted
+  TIMEZONE: "Europe/Prague"
+
+  # LAN
+  PLEX_IP: "192.168.69.101"
+  USER_ID: "65534"
+
+  # NAS
+  NAS_IP: "192.168.69.69"
+  NAS_MEDIA_PATH: "/mnt/ThiccBoi/SiccBoi/data/media"
+  NFS_BACKUP: "nfs://192.168.69.69:/mnt/ThiccBoi/k3s"
+
+  # TailScale
+  TAILSCALE_LB_IP: "192.168.69.102"
+  TAILNET_PUBLIC_PORT: "51820"
