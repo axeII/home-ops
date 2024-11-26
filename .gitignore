@@ -1,53 +1,39 @@
+# Trash
+.DS_Store
+*.swp
+megalinter-reports
+Thumbs.db
+
 # k8s
 kubeconfig
-
-# vscode-sops
+talosconfig
 .decrypted~*.yaml
 .config.env
-configure.sh
+*.agekey
+*.pub
+*.key
 
-# downloaded compressed files
-hack/*.gz
-hack/*.zst
+# Private
+.private
+.bin
 
-# nvidia tests
-nvidia*.yaml
+# Ansible
+.venv*
 
+# Taskfile
+.task
 
-### Ansible ###
-*.retry
-xanmanning.k3s*
+# Brew
+Brewfile.lock.json
 
-## secrets ##
-.sops.dec.env
-ansible/other/hosts.yml
-github-deploy-key*
+# intellij
+.idea
 
-### Helm ###
-# Chart dependencies
-**/charts/*.tgz
+# wiki
+wiki
 
-.code-workspace
-
-# vscode-sops
-.decrypted~*.yaml
-
-# Local History for Visual Studio Code
-.history/
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
+# Bootstrap
+/config.yaml
 
 # Terraform
 .terraform
-.terraform.tfstate*
-terraform.tfstate*
-
-
-## Trash
-.DS_Store
-Thumbs.db
-megalinter-reports
-*.swp

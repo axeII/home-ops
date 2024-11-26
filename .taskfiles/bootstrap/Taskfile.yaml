@@ -1,0 +1,122 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+vars:
+  GITHUB_DEPLOY_KEY_FILE: '{{.KUBERNETES_DIR}}/bootstrap/flux/github-deploy-key.sops.yaml'
+  TALHELPER_CLUSTER_DIR: '{{.KUBERNETES_DIR}}/bootstrap/talos/clusterconfig'
+  TALHELPER_SECRET_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talsecret.sops.yaml'
+  TALHELPER_CONFIG_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talconfig.yaml'
+
+env:
+  TALOSCONFIG: '{{.TALHELPER_CLUSTER_DIR}}/talosconfig'
+
+tasks:
+
+  talos:
+    desc: Bootstrap the Talos cluster
+    dir: '{{.KUBERNETES_DIR}}/bootstrap/talos'
+    cmds:
+      - '{{if eq .TALHELPER_SECRET_EXISTS "false"}}talhelper gensecret > {{.TALHELPER_SECRET_FILE}}{{end}}'
+      - '{{if eq .TALHELPER_SECRET_EXISTS "false"}}sops --encrypt --in-place {{.TALHELPER_SECRET_FILE}}{{end}}'
+      - talhelper genconfig --config-file {{.TALHELPER_CONFIG_FILE}} --secret-file {{.TALHELPER_SECRET_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}}
+      - talhelper gencommand apply --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="--insecure" | bash
+      - until talhelper gencommand bootstrap --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} | bash; do sleep 10; done
+      - until talhelper gencommand kubeconfig --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
+      - task: apps
+      - talosctl health --server=false
+    vars:
+      TALHELPER_SECRET_EXISTS:
+        sh: test -f {{.TALHELPER_SECRET_FILE}} && echo true || echo false
+    preconditions:
+      - test -f {{.SOPS_CONFIG_FILE}}
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+      - test -f {{.TALHELPER_CONFIG_FILE}}
+      - which talhelper sops
+
+  flux:
+    desc: Bootstrap Flux into the Talos cluster
+    cmds:
+      - '{{if eq .GITHUB_DEPLOY_KEY_EXISTS "true"}}kubectl create namespace flux-system --dry-run=client -o yaml | kubectl apply --filename -{{end}}'
+      - '{{if eq .GITHUB_DEPLOY_KEY_EXISTS "true"}}sops exec-file {{.GITHUB_DEPLOY_KEY_FILE}} "kubectl apply --server-side --filename {}"{{end}}'
+      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/bootstrap/flux
+      - '{{if eq .SOPS_SECRET_EXISTS "false"}}cat {{.SOPS_AGE_KEY_FILE}} | kubectl --namespace flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin{{end}}'
+      - sops exec-file {{.KUBERNETES_DIR}}/flux/vars/cluster-secrets.sops.yaml "kubectl apply --server-side --filename {}"
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml
+      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/flux/config
+    vars:
+      GITHUB_DEPLOY_KEY_EXISTS:
+        sh: test -f {{.GITHUB_DEPLOY_KEY_FILE}} && echo true || echo false
+      SOPS_SECRET_EXISTS:
+        sh: kubectl --namespace flux-system get secret sops-age &>/dev/null && echo true || echo false
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+      - which flux kubectl sops
+
+  apps:
+    internal: true
+    dir: '{{.KUBERNETES_DIR}}/bootstrap/talos'
+    cmds:
+      - until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
+      - helmfile --file {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff
+      - until kubectl wait --for=condition=Ready nodes --all --timeout=600s; do sleep 10; done
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - test -f {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml
+      - which helmfile kubectl
+
+  age-keygen:
+    desc: Bootstrap the Sops Age key
+    cmd: age-keygen --output {{.SOPS_AGE_KEY_FILE}}
+    status:
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+    preconditions:
+      - which age-keygen
+
+  template:
+    internal: true
+    cmd: '{{.VIRTUAL_ENV}}/bin/makejinja'
+    preconditions:
+      - test -d {{.VIRTUAL_ENV}}
+      - test -f {{.BOOTSTRAP_CONFIG_FILE}}
+      - test -f {{.BOOTSTRAP_DIR}}/scripts/plugin.py
+      - test -f {{.MAKEJINJA_CONFIG_FILE}}
+
+  secrets:
+    internal: true
+    cmds:
+      - for: { var: SECRET_FILES }
+        cmd: |
+          if sops filestatus "{{.ITEM}}" | jq --exit-status ".encrypted == false" &>/dev/null; then
+              sops --encrypt --in-place "{{.ITEM}}"
+          fi
+    vars:
+      SECRET_FILES:
+        sh: find "{{.KUBERNETES_DIR}}" -type f -name "*.sops.*"
+    preconditions:
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+      - test -f {{.SOPS_CONFIG_FILE}}
+      - which sops
+
+  clean:
+    desc: Clean files and directories no longer needed after cluster bootstrap
+    cmds:
+      # Create backup directory
+      - mkdir -p {{.ROOT_DIR}}/.private
+      # Clean up CI
+      - rm -rf {{.ROOT_DIR}}/.github/tests
+      - rm -rf {{.ROOT_DIR}}/.github/workflows/e2e.yaml
+      # Clean up devcontainer
+      - rm -rf {{.ROOT_DIR}}/.devcontainer/ci
+      - rm -rf {{.ROOT_DIR}}/.github/workflows/devcontainer.yaml
+      # Move bootstrap directory to gitignored directory
+      - mv {{.BOOTSTRAP_DIR}} {{.ROOT_DIR}}/.private/bootstrap-{{.TS}}
+      - mv {{.MAKEJINJA_CONFIG_FILE}} {{.ROOT_DIR}}/.private/makejinja-{{.TS}}.toml
+      # Update renovate.json5
+      - sed -i {{if eq OS "darwin"}}''{{end}} 's/(..\.j2)\?//g' {{.ROOT_DIR}}/.github/renovate.json5
+    vars:
+      TS: '{{now | unixEpoch}}'
+    preconditions:
+      - test -d {{.BOOTSTRAP_DIR}}
+      - test -f {{.ROOT_DIR}}/.github/renovate.json5

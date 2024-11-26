@@ -1,0 +1,3 @@
+---
+providerRegex: ^(k8s-0|k8s-1|k8s-2)$
+bypassDnsResolution: true

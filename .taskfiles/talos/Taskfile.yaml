@@ -1,0 +1,99 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+vars:
+  TALHELPER_CLUSTER_DIR: '{{.KUBERNETES_DIR}}/bootstrap/talos/clusterconfig'
+  TALHELPER_CONFIG_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talconfig.yaml'
+  TALHELPER_SECRET_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talsecret.sops.yaml'
+  TALOSCONFIG: '{{.TALHELPER_CLUSTER_DIR}}/talosconfig'
+
+env:
+  TALOSCONFIG: '{{.TALOSCONFIG}}'
+
+tasks:
+
+  generate-config:
+    desc: Generate Talos configuration
+    cmd: talhelper genconfig --config-file {{.TALHELPER_CONFIG_FILE}} --secret-file {{.TALHELPER_SECRET_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}}
+    preconditions:
+      - test -f {{.TALHELPER_CONFIG_FILE}}
+      - test -f {{.SOPS_CONFIG_FILE}}
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+      - which talhelper
+
+  apply-node:
+    desc: Apply Talos config to a node [HOSTNAME=required]
+    cmds:
+      - talosctl --nodes {{.HOSTNAME}} apply-config --mode={{.MODE}} --file {{.TALHELPER_CLUSTER_DIR}}/{{.CLUSTER_NAME}}-{{.HOSTNAME}}.yaml
+      - talosctl --nodes {{.HOSTNAME}} health --wait-timeout=10m --server=false
+    vars:
+      CLUSTER_NAME:
+        sh: yq '.clusterName' {{.TALHELPER_CONFIG_FILE}}
+      MODE: '{{.MODE | default "auto"}}'
+    requires:
+      vars: [HOSTNAME]
+    preconditions:
+      - talosctl --nodes {{.HOSTNAME}} get machineconfig &>/dev/null
+      - talosctl config info &>/dev/null
+      - test -f {{.TALHELPER_CLUSTER_DIR}}/{{.CLUSTER_NAME}}-{{.HOSTNAME}}.yaml
+      - test -f {{.TALOSCONFIG}}
+      - which talosctl yq
+
+  upgrade-node:
+    desc: Upgrade Talos on a single node [HOSTNAME=required]
+    cmds:
+      - task: down
+      - talosctl --nodes {{.HOSTNAME}} upgrade --image="factory.talos.dev/installer{{if eq .TALOS_SECUREBOOT "true"}}-secureboot{{end}}/{{.TALOS_SCHEMATIC_ID}}:{{.TALOS_VERSION}}" --timeout=10m
+      - talosctl --nodes {{.HOSTNAME}} health --wait-timeout=10m --server=false
+      - task: up
+    vars:
+      TALOS_SCHEMATIC_ID:
+        sh: kubectl get node {{.HOSTNAME}} --output=jsonpath='{.metadata.annotations.extensions\.talos\.dev/schematic}'
+      TALOS_SECUREBOOT:
+        sh: talosctl --nodes {{.HOSTNAME}} get securitystate --output=jsonpath='{.spec.secureBoot}'
+      TALOS_VERSION:
+        sh: yq '.talosVersion' {{.TALHELPER_CONFIG_FILE}}
+    requires:
+      vars: [HOSTNAME]
+    preconditions:
+      - curl -fsSL -o /dev/null --fail https://github.com/siderolabs/talos/releases/tag/{{.TALOS_VERSION}}
+      - talosctl --nodes {{.HOSTNAME}} get machineconfig &>/dev/null
+      - talosctl config info &>/dev/null
+      - test -f {{.TALOSCONFIG}}
+      - which kubectl talosctl yq
+
+  upgrade-k8s:
+    desc: Upgrade Kubernetes
+    cmd: talosctl --nodes {{.KUBERNETES_CONTROLLER}} upgrade-k8s --to {{.KUBERNETES_VERSION}}
+    vars:
+      KUBERNETES_CONTROLLER:
+        sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
+      KUBERNETES_VERSION:
+        sh: yq '.kubernetesVersion' {{.TALHELPER_CONFIG_FILE}}
+    preconditions:
+      - curl -fsSL -o /dev/null --fail https://github.com/siderolabs/kubelet/releases/tag/{{.KUBERNETES_VERSION}}
+      - talosctl --nodes {{.KUBERNETES_CONTROLLER}} get machineconfig &>/dev/null
+      - talosctl config info &>/dev/null
+      - test -f {{.TALOSCONFIG}}
+      - which talosctl yq
+
+  reset:
+    desc: Resets nodes back to maintenance mode
+    dir: "{{.KUBERNETES_DIR}}/bootstrap/talos"
+    prompt: This will destroy your cluster and reset the nodes back to maintenance mode... continue?
+    cmd: talhelper gencommand reset --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="--reboot {{- if eq .CLI_FORCE false }} --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL{{ end }} --graceful=false --wait=false" | bash
+  preconditions:
+    - which talhelper
+
+  down:
+    internal: true
+    cmd: flux --namespace flux-system suspend kustomization --all
+    preconditions:
+      - which flux
+
+  up:
+    internal: true
+    cmd: flux --namespace flux-system resume kustomization --all
+    preconditions:
+      - which flux
