@@ -19,9 +19,8 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     crds:
       install: true
@@ -40,14 +39,6 @@ spec:
                 - create
                 - update
                 - delete
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/instance: *app
-              app.kubernetes.io/component: admission-controller
       serviceMonitor:
         enabled: true
     backgroundController:
@@ -78,9 +69,3 @@ spec:
     reportsController:
       serviceMonitor:
         enabled: true
-    config:
-      webhooks:
-        - objectSelector:
-            matchExpressions:
-              - key: webhooks.kyverno.io/exclude
-                operator: DoesNotExist
