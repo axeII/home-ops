@@ -2,7 +2,7 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: generate-gatus
+  name: &name gatus
   annotations:
     policies.kyverno.io/title: Generate gatus endpoints
     policies.kyverno.io/category: Monitoring
@@ -10,35 +10,45 @@ metadata:
     policies.kyverno.io/subject: Ingress
     policies.kyverno.io/description: >-
       This policy will automatically generate gatus endpoints for
-      all Ingresses with the annotation `gatus.io/enabled: "true"`.
+      all Ingresses with the ingressClassName set to external.
     pod-policies.kyverno.io/autogen-controllers: none
 spec:
   generateExisting: true
   rules:
-    - name: generate-gatus
+    - name: *name
       match:
         any:
           - resources:
               kinds:
                 - Ingress
+      exclude:
+        any:
+          - resources:
+              kinds:
+                - Ingress
               annotations:
-                gatus.io/enabled: "true"
+                gatus.io/enabled: "false"
+      # preconditions:
+      #   all:
+      #     - key: "{{ request.object.spec.ingressClassName }}"
+      #       operator: Equals
+      #       value: external
       context:
         - name: GATUS_HOST
           variable:
-            value: "{{ request.object.metadata.annotations.\"gatus.io/host\" || request.object.spec.rules[0].host }}"
+            value: '{{ request.object.metadata.annotations."gatus.io/host" || request.object.spec.rules[0].host }}'
             jmesPath: "to_string(@)"
         - name: GATUS_NAME
           variable:
-            value: "{{ request.object.metadata.annotations.\"gatus.io/name\" || request.object.metadata.name }}"
+            value: '{{ request.object.metadata.annotations."gatus.io/name" || request.object.metadata.name }}'
             jmesPath: "to_string(@)"
         - name: GATUS_PATH
           variable:
-            value: "{{ request.object.metadata.annotations.\"gatus.io/path\" || '' }}"
-            jmesPath: "to_string(@) || ''"
+            value: '{{ request.object.metadata.annotations."gatus.io/path" || request.object.spec.rules[0].http.paths[0].path }}'
+            jmesPath: "to_string(@)"
         - name: GATUS_STATUS_CODE
           variable:
-            value: "{{ request.object.metadata.annotations.\"gatus.io/status-code\" || `200` }}"
+            value: '{{ request.object.metadata.annotations."gatus.io/status-code" || `200` }}'
             jmesPath: "to_string(@)"
       generate:
         apiVersion: v1
