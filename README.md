@@ -50,7 +50,7 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 
 ### Installation
 
-For my cluster, I decided to use the PostgreSQL database instead of high IO load using etcd. I store critical data for my cluster in the PostgreSQL database and maintain it in High Availability mode. I use k3s deployed on ubuntu machines. For that I use ansible to prepare the machines and then install k3s and deploy my cluster configuration.
+My cluster has been migrated from a k3s/longhorn combo to Talos and Rook Ceph. First of all, Talos is amazing, and I really recommend it to anyone who is looking for a lightweight k8s distribution. Currently, I still use a node with the e1000 driver, and the second node doesn't have a good primary disk, so I am currently running in single controller mode with two workers. In the future, I would like to change the setup to have three controllers. The reason I switched to rook-ceph is longhorn feels less stable it's still under development and I decied to finally give rook-ceph a try.
 
 
 ### Core Components
@@ -64,12 +64,11 @@ For my cluster, I decided to use the PostgreSQL database instead of high IO load
 - [ingress-nginx](https://github.com/kubernetes/ingress-nginx): Kubernetes ingress controller using NGINX as a reverse proxy and load balancer.
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
-- [longhorn](https://longhorn.com) - storage class provider for data persistence (yeah I'm giving longhorn second chance)
+- [rook-ceph](https://rook.io) - storage class provider for data persistence
 - [reflector](https://github.com/emberstack/kubernetes-reflector) - mirror configmaps or secrets to other Kubernetes namespaces
 - [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
 - [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are commited to Git.
 - [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
-- [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) - upgrade k3s
 
 
 ### ☸ GitOps
