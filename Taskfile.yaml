@@ -6,6 +6,7 @@ set: [pipefail]
 shopt: [globstar]
 
 vars:
+  CLUSTER: '{{.CLUSTER | default "main"}}'
   BOOTSTRAP_DIR: '{{.ROOT_DIR}}/bootstrap'
   KUBERNETES_DIR: '{{.ROOT_DIR}}/kubernetes'
   SCRIPTS_DIR: '{{.ROOT_DIR}}/scripts'
