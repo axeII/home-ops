@@ -17,3 +17,4 @@ resources:
   - ./external-secrets.yaml
   - ./rook-ceph.yaml
   - ./piraeus.yaml
+  - ./democratic-csi.yaml

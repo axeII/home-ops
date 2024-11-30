@@ -10,3 +10,4 @@ resources:
   - ./kubelet-csr-approver/ks.yaml
   - ./spegel/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./local-path-provisioner/ks.yaml
