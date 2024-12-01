@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./atuin/ks.yaml
-  # - ./piped/ks.yaml
+  - ./piped/ks.yaml
