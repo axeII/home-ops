@@ -39,9 +39,8 @@ spec:
       podAnnotations:
         configmap.reloader.stakater.com/reload: "piped-backend-config"
       initContainers:
-        01-init-db:
-          image:
-            repository: ghcr.io/onedr0p/postgres-init:15
+        - name: init-db
+          image: ghcr.io/onedr0p/postgres-init:15
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
