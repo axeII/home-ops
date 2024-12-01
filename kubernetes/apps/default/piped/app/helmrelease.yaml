@@ -57,7 +57,7 @@ spec:
         PROXY_PART: https://pproxy.${SECRET_DOMAIN}
         # DISABLE_REGISTRATION: false
         database:
-          connection_url: jdbc:postgresql://postgresql.database.svc.cluster.local/piped
+          connection_url: jdbc:postgresql://192.168.69.107/piped
           secret:
             name: *secret
             username: DB_USERNAME
