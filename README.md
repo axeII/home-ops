@@ -98,9 +98,9 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 <!-- textlint-disable -->
 | Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                         |
 |------------------------|------------------|----------------|------|---------------------------------|
-| Udoo Bolt V8 AMD Ryzen | 250GB NVMe       | N/A            | 32GB | Talos node                        |
-| Intel NUC              | 250GB NVMe       | 1TB HDD        | 32GB | Talos node                        |
-| AMD GPU Server         | 250GB NVMe       | 1TB SSD        | 32GB | Talos node with Nvidia GPU        |
+| k8s-2 (Intel NUC)              | 1TB SSD SATA    |  250GB NVMe   | 32GB | Talos node                        |
+| k8s-1 (Udoo Bolt V8 AMD Ryzen) | eMMC 30GB|  250GB NVMe | 32GB | Talos node                        |
+| k8s-0 (VM) | 250GB NVMe SCSi |  250GB NVMe    | 32GB | Talos node with Nvidia GPU and NVMe Disk|
 | TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 32GB | Storage                         |
 | Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway     |
 | Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports  |
