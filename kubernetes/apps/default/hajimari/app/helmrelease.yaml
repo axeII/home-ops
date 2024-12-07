@@ -1,0 +1,170 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hajimari
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: hajimari
+      version: 2.0.2
+      sourceRef:
+        kind: HelmRepository
+        name: hajimari
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: ghcr.io/toboshii/hajimari
+      tag: v0.3.1
+    hajimari:
+      defaultEnable: true
+      namespaceSelector:
+        matchNames:
+          - default
+          - rook-ceph
+          - media
+          - networking
+          - kube-system
+          - observability
+          - flux-system
+          - external
+      name: "Ales"
+      defaultSearchProvider: Kagi
+      searchProviders:
+        - name: Kagi
+          token: "y"
+          icon: simple-icons:kagi
+          searchUrl: https://kagi.com/search?q={query}
+          url: https://kagi.com
+      globalBookmarks:
+        - group: Admin
+          bookmarks:
+            - name: Midjourney
+              url: "https://www.midjourney.com/app/"
+            - name: Unifi
+              url: "https://unifi.ui.com/consoles"
+            - name: "Cloudflare dashboard"
+              url: "https://dash.cloudflare.com/"
+        - group: Daily
+          bookmarks:
+            - name: k8s-at-home-search
+              url: "https://kubesearch.dev/"
+            - name: "Selfhosted newsletter"
+              url: "https://selfh.st"
+            - name: Artifacthub
+              url: "https://artifacthub.io/"
+            - name: "Loki logs"
+              url: "https://grafana.${SECRET_DOMAIN}/explore"
+            - name: InfoSecNews
+              url: "https://allinfosecnews.com"
+            - name: "News"
+              url: "https://www.newsminimalist.com/"
+        - group: DevOps
+          bookmarks:
+            - name: Home-Ops
+              url: "https://github.com/axeII/home-ops"
+            - name: TerraformCloud
+              url: "https://app.terraform.io/"
+            - name: Visual studio
+              url: https://my.visualstudio.com"
+            - name: Atlantis
+              url: "https://www.runatlantis.io/"
+            - name: Git-cleaner
+              url: "https://rtyley.github.io/bfg-repo-cleaner/"
+            - name: K8S Exam simulator
+              url: "https://killer.sh/"
+            - name: Github-download-folder
+              url: "https://download-directory.github.io"
+        - group: Fun
+          bookmarks:
+            - name: Translator
+              url: "https://www.deepl.com/translator"
+            - name: Archive
+              url: "https://archive.ph"
+            - name: Wallpapers
+              url: "https://unsplash.com"
+            - name: "Anime"
+              url: "https://anichart.net/"
+            - name: Diving-sites
+              url: "https://www.padi.com/dive-sites"
+        - group: Reddit
+          bookmarks:
+            - name: "/r/midjourney"
+              url: "https://reddit.${SECRET_DOMAIN}/r/midjourney"
+            - name: "/r/selfhosted"
+              url: "https://reddit.${SECRET_DOMAIN}/r/selfhosted/"
+            - name: "/r/kubernetes"
+              url: "https://reddit.${SECRET_DOMAIN}/r/kubernetes/"
+            - name: "/r/virtualreality"
+              url: "https://reddit.${SECRET_DOMAIN}/r/virtualreality/"
+            - name: "/r/mk"
+              url: "https://reddit.${SECRET_DOMAIN}/r/mechanicalkeyboards/"
+            - name: "/r/ChatGPT"
+              url: "https://reddit.${SECRET_DOMAIN}/r/ChatGPT/"
+            - name: "/r/plex"
+              url: "https://reddit.${SECRET_DOMAIN}/r/plex/"
+            - name: "/r/NonCredibleDefense"
+              url: "https://reddit.${SECRET_DOMAIN}/r/NonCredibleDefense/"
+        - group: Tech
+          bookmarks:
+            - name: Hacker News
+              url: "https://news.ycombinator.com/"
+            - name: Shodan
+              url: "https://shodan.io"
+            - name: Intelx
+              url: "https://intelx.io/"
+            - name: Greynoise
+              url: "https://www.greynoise.io/"
+            - name: GrayHatWarFare
+              url: "https://www.greyhatwarfare.com/"
+            - name: GPP Tools
+              url: "https://bgp.tools"
+            - name: BGP View
+              url: "https://bgpview.io"
+            - name: "Bookhatrix"
+              url: "https://book.hacktricks.xyz"
+            - name: "Pentest-tools"
+              url: "https://offsec.tools/"
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          gatus.io/enabled: "true"
+          hajimari.io/icon: "weather-sunset"
+        hosts:
+          - host: &custom-host "hajimari.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+          - host: &host "${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *custom-host
+              - *host
+    persistence:
+      data:
+        enabled: true
+        existingClaim: hajimari-config
+    podSecurityContext:
+      fsGroup: 101
+    podAnnotations:
+      configmap.reloader.stakater.com/reload: "hajimari-settings"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi

@@ -19,3 +19,4 @@ resources:
   - ./piraeus.yaml
   - ./democratic-csi.yaml
   - ./piped.yaml
+  - ./hajimari.yaml
