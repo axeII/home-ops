@@ -33,5 +33,17 @@ ui:
     - name: Homelab
       link: https://github.com/axeII/home-ops
 
+endpoints:
+  - name: blog
+    group: external
+    url: https://axell.dev
+    interval: 1m
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: pushover
+
 web:
   port: $${GATUS_WEB_PORT}
