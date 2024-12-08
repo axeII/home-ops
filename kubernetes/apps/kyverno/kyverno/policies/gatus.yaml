@@ -28,11 +28,11 @@ spec:
                 - Ingress
               annotations:
                 gatus.io/enabled: "false"
-      # preconditions:
-      #   all:
-      #     - key: "{{ request.object.spec.ingressClassName }}"
-      #       operator: Equals
-      #       value: external
+      preconditions:
+        all:
+          - key: "{{ request.object.spec.ingressClassName }}"
+            operator: Equals
+            value: external
       context:
         - name: GATUS_HOST
           variable:
