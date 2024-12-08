@@ -1,0 +1,37 @@
+---
+alerting:
+  pushover:
+    application-token: $${GATUS_PUSHOVER_APP_TOKEN}
+    user-key: $${GATUS_PUSHOVER_USER_KEY}
+    priority: 1
+    default-alert:
+      description: healthcheck failed
+      send-on-resolved: true
+      failure-threshold: 3
+      success-threshold: 3
+
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+
+metrics: true
+
+storage:
+  type: postgres
+  path: postgres://$${INIT_POSTGRES_USER}:$${INIT_POSTGRES_PASS}@$${INIT_POSTGRES_HOST}:5432/$${INIT_POSTGRES_DBNAME}?sslmode=disable
+  caching: true
+
+ui:
+  title: Status | Gatus
+  header: Status
+  logo: https://camo.githubusercontent.com/d2689c2c178ad21d7c91c2fd4fe3753643499d34e789d177ece4ed3a2eec2782/68747470733a2f2f692e696d6775722e636f6d2f676476426b4e452e706e67
+  link: https://github.com/axeII
+  buttons:
+    - name: Github
+      link: https://github.com/axeII
+    - name: Homelab
+      link: https://github.com/axeII/home-ops
+
+web:
+  port: $${GATUS_WEB_PORT}
