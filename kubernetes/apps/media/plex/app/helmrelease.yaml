@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/plex-beta
-              tag: 1.41.1.9057-af5eaea7a@sha256:0d40b2568aaa5811ed803cb475994e09b9ae2ee043b3349bc637f26960cf8a18
+              tag: 1.41.3.9292-bc7397402@sha256:f623aae1f4b7001549f0915816964c3d1f3a23c1027559388eb61d6b55f4ed5b
             env:
               # PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}:443
               ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
