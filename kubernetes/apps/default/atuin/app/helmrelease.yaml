@@ -101,7 +101,7 @@ spec:
       app:
         annotations:
           gatus.io/enabled: "true"
-        className: internal
+        className: external
         hosts:
           - host: sh.${SECRET_DOMAIN}
             paths:
