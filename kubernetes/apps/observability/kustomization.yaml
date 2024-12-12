@@ -8,3 +8,4 @@ resources:
   - ./kromgo/ks.yaml
   - ./karma/ks.yaml
   - ./gatus/ks.yaml
+  - ./grafana/ks.yaml

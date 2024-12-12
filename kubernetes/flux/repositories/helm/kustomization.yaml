@@ -21,3 +21,4 @@ resources:
   - ./piped.yaml
   - ./hajimari.yaml
   - ./backube.yaml
+  - ./grafana.yaml
