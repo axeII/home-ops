@@ -9,3 +9,4 @@ resources:
   - ./karma/ks.yaml
   - ./gatus/ks.yaml
   - ./grafana/ks.yaml
+  - ./loki/ks.yaml
