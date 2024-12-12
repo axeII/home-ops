@@ -20,3 +20,4 @@ resources:
   - ./democratic-csi.yaml
   - ./piped.yaml
   - ./hajimari.yaml
+  - ./backube.yaml
