@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    # - name: volsync
+    - name: volsync
     - name: rook-ceph-cluster
     - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/media/sabnzbd/app
