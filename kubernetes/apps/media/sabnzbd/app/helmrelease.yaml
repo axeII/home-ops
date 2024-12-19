@@ -112,7 +112,8 @@ spec:
         type: nfs
         server: ${NAS_IP}
         path: ${NAS_MEDIA_PATH}
-        mountPath: /media
+        globalMounts:
+          - path: /media
       tmp:
         type: emptyDir
     service:
