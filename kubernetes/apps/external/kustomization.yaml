@@ -5,4 +5,5 @@ resources:
   - ./namespace.yaml
   - ./truenas/ks.yaml
   - ./proxmox/ks.yaml
+  - ./minio/ks.yaml
   #- ./database/ks.yaml
