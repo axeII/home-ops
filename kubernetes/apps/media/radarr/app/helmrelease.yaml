@@ -29,8 +29,8 @@ spec:
         initContainers:
           init-db:
             image:
-              repository: ghcr.io/buroa/postgres-init
-              tag: 17
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
             envFrom: &envFrom
               - secretRef:
                   name: radarr-secret
