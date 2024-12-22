@@ -1,19 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
-    // {
-    //   "description": ["Actions Runner Controller Group"],
-    //   "groupName": "Actions Runner Controller",
-    //   "matchPackagePatterns": [
-    //     "gha-runner-scale-set-controller",
-    //     "gha-runner-scale-set"
-    //   ],
-    //   "matchDatasources": ["helm", "docker"],
-    //   "group": {
-    //     "commitMessageTopic": "{{{groupName}}} group"
-    //   },
-    //   "separateMinorPatch": true
-    // },
+    {
+      "description": [
+        "1Password Connect Group"
+      ],
+      "groupName": "1Password Connnect",
+      "matchPackagePatterns": [
+        "1password/connect"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
+    },
     {
       "description": ["Flux Group"],
       "groupName": "Flux",
@@ -26,10 +29,33 @@
       "separateMinorPatch": true
     },
     {
-      "description": ["Longhorn Group"],
-      "groupName": "Longhorn",
-      "matchPackagePatterns": ["longhorn"],
-      "matchDatasources": ["helm"],
+      "description": [
+        "Rook-Ceph Group"
+      ],
+      "groupName": "Rook-Ceph",
+      "matchPackagePatterns": [
+        "rook.ceph"
+      ],
+      "matchDatasources": [
+        "helm"
+      ],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
+    },
+    {
+      "description": [
+        "Talos Group"
+      ],
+      "groupName": "Talos",
+      "matchPackagePatterns": [
+        "siderolabs/talosctl",
+        "siderolabs/installer"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
       },
