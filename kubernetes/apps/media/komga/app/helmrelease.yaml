@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/axeII/crds/main/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app komga
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      komga:
+        labels:
+          nfsMount: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: gotson/komga
+              tag: "1.14.0@sha256:243e6c3d06bf64adf29923f9f6d6a1c2ef4ffc5a000317fa90ab2431f6cf978d"
+            env:
+              TZ: ${TIMEZONE}
+              SERVER_PORT: &port 8080
+            resources:
+              requests:
+                cpu: 15m
+                memory: 1Gi
+              limits:
+                memory: 4Gi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    ingress:
+      app:
+        className: internal
+        annotations:
+          gatus.io/enabled: "true"
+          hajimari.io/icon: "mdi:thought-bubble-outline"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Media
+          gethomepage.dev/name: Komga
+          gethomepage.dev/href: https://komga.${SECRET_DOMAIN}
+          gethomepage.dev/icon: komga.png
+          gethomepage.dev/description: Comic/Ebook Web Reader
+          gethomepage.dev/widget.type: komga
+          gethomepage.dev/widget.url: http://komga.media.svc.cluster.local:8080
+          gethomepage.dev/widget.username: "{{HOMEPAGE_VAR_KOMGA_USERNAME}}"
+          gethomepage.dev/widget.password: "{{HOMEPAGE_VAR_KOMGA_PASSWORD}}"
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts: [*host]
+    persistence:
+      config:
+        existingClaim: komga-config
+      media:
+        type: nfs
+        server: 192.168.69.69
+        path: /mnt/ThiccBoi/SiccBoi/data/media/Literature
+        globalMounts:
+          - path: /data

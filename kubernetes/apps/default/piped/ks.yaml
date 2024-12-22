@@ -17,6 +17,3 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: false
-  # dependsOn:
-    # - name: longhorn
-    # - name: external-secrets-stores
