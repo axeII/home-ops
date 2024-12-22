@@ -8,3 +8,4 @@ resources:
   # - ./sonarr/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./prowlarr/ks.yaml
+  - ./flaresolverr/ks.yaml
