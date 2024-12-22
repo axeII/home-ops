@@ -9,3 +9,5 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./prowlarr/ks.yaml
   - ./flaresolverr/ks.yaml
+  - ./unpackerr/ks.yaml
+  - ./recyclarr/ks.yaml
