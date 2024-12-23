@@ -79,7 +79,7 @@ spec:
       #               values:
       #                 - "true"
       #         topologyKey: "kubernetes.io/hostname"
-      runtimeClassName: nvidia
+      # runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
