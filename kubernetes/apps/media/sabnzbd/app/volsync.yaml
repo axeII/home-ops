@@ -65,7 +65,8 @@ metadata:
 spec:
   sourcePVC: sabnzbd
   trigger:
-    schedule: "15 */8 * * *"
+    # schedule: "15 */8 * * *"
+    schedule: "*/5 * * * * "
   restic:
     pruneIntervalDays: 7
     repository: sabnzbd-restic-secret
