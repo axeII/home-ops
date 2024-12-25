@@ -89,49 +89,49 @@ spec:
           - name: k8s-2
             devices:
               - name: /dev/nvme0n1
-      # resources:
-        # mgr:
-        #   limits:
-        #     memory: 1Gi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 500Mi
-        # mon:
-        #   limits:
-        #     memory: 2Gi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 500Mi
-        # osd:
-        #   limits:
-        #     memory: 4Gi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 1500Mi
-        # mgr-sidecar:
-        #   limits:
-        #     memory: 100Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 40Mi
-        # crashcollector:
-        #   limits:
-        #     memory: 60Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 10Mi
-        # logcollector:
-        #   limits:
-        #     memory: 1Gi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 100Mi
-        # cleanup:
-        #   limits:
-        #     memory: 1Gi
-        #   requests:
-        #     cpu: 500m
-        #     memory: 100Mi
+      resources:
+        mgr:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        mon:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        osd:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 1500Mi
+        mgr-sidecar:
+          limits:
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 40Mi
+        crashcollector:
+          limits:
+            memory: 60Mi
+          requests:
+            cpu: 100m
+            memory: 10Mi
+        logcollector:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        cleanup:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 100Mi
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
