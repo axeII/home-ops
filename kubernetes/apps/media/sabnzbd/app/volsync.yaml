@@ -33,7 +33,7 @@ spec:
     name: sabnzbd
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
   storageClassName: ceph-block
 # ---
 # apiVersion: volsync.backube/v1alpha1
