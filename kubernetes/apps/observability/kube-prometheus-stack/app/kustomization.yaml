@@ -5,3 +5,4 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./prometheusrule.yaml
+  - ./alertmanagerconfig.yaml
