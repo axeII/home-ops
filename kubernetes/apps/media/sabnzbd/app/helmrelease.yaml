@@ -107,7 +107,7 @@ spec:
               - *customHost
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: local-path-pvc
       media:
         type: nfs
         server: ${NAS_IP}
