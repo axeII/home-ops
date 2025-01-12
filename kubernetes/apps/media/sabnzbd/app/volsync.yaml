@@ -1,40 +1,51 @@
 ---
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: sabnzbd-restic
-spec:
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: onepassword-connect
-  target:
-    name: sabnzbd-restic-secret
-    creationPolicy: Owner
-    template:
-      engineVersion: v2
-      data:
-        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/sabnzbd"
-        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
-        AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
-        AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
-  dataFrom:
-    - extract:
-        key: volsync-restic-template
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sabnzbd
+  name: local-path-pvc
 spec:
-  accessModes: ["ReadWriteOnce"]
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: sabnzbd
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: ceph-block
+      storage: 2Gi
+  storageClassName: local-hostpath
+# apiVersion: external-secrets.io/v1beta1
+# kind: ExternalSecret
+# metadata:
+#   name: sabnzbd-restic
+# spec:
+#   secretStoreRef:
+#     kind: ClusterSecretStore
+#     name: onepassword-connect
+#   target:
+#     name: sabnzbd-restic-secret
+#     creationPolicy: Owner
+#     template:
+#       engineVersion: v2
+#       data:
+#         RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/sabnzbd"
+#         RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+#         AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
+#         AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
+#   dataFrom:
+#     - extract:
+#         key: volsync-restic-template
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: sabnzbd
+# spec:
+#   accessModes: ["ReadWriteOnce"]
+#   dataSourceRef:
+#     kind: ReplicationDestination
+#     apiGroup: volsync.backube
+#     name: sabnzbd
+#   resources:
+#     requests:
+#       storage: 5Gi
+#   storageClassName: ceph-block
 # ---
 # apiVersion: volsync.backube/v1alpha1
 # kind: ReplicationDestination
