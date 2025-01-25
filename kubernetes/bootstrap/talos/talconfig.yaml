@@ -26,7 +26,7 @@ nodes:
   - hostname: "k8s-0"
     ipAddress: "192.168.69.110"
     installDisk: "/dev/sda"
-    talosImageURL: factory.talos.dev/installer/c9c66ec3d0c412a82d428ed1f25aa236d8cbafebcb9f63bca31617a6000eb96f
+    talosImageURL: factory.talos.dev/installer/af8eb82417d3deaa94d2ef19c3b590b0dac1b2549d0b9b35b3da2bc325de75f7
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -44,7 +44,7 @@ nodes:
     ipAddress: "192.168.69.111"
     installDiskSelector:
       serial: "0xca8aec3e"
-    talosImageURL: factory.talos.dev/installer/f19ad7b4a5d29151f3a59ef2d9c581cf89e77142e52f0abb5022e8f0b95ad0b9
+    talosImageURL: factory.talos.dev/installer/96f8c146a67c80daad900d3fc1a6976fe11062321eee9ab6ae2a6aea88b2d26e
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
