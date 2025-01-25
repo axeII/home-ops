@@ -41,27 +41,23 @@ tasks:
       - which talosctl yq
 
   upgrade-node:
-    desc: Upgrade Talos on a single node [HOSTNAME=required]
-    cmds:
-      - task: down
-      - talosctl --nodes {{.HOSTNAME}} upgrade --image="factory.talos.dev/installer{{if eq .TALOS_SECUREBOOT "true"}}-secureboot{{end}}/{{.TALOS_SCHEMATIC_ID}}:{{.TALOS_VERSION}}" --timeout=10m
-      - talosctl --nodes {{.HOSTNAME}} health --wait-timeout=10m --server=false
-      - task: up
+    desc: Upgrade Talos on a single node [IP=required]
+    cmd: talhelper gencommand upgrade --node {{.IP}} --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags "--image='factory.talos.dev/installer{{if eq .TALOS_SECUREBOOT "true"}}-secureboot{{end}}/{{.TALOS_SCHEMATIC_ID}}:{{.TALOS_VERSION}}' --timeout=10m" | bash
     vars:
       TALOS_SCHEMATIC_ID:
-        sh: kubectl get node {{.HOSTNAME}} --output=jsonpath='{.metadata.annotations.extensions\.talos\.dev/schematic}'
+        sh: yq '.nodes[] | select(.ipAddress == "{{.IP}}") | .talosImageURL' {{.TALHELPER_CONFIG_FILE}} | awk -F/ '{print $NF}'
       TALOS_SECUREBOOT:
-        sh: talosctl --nodes {{.HOSTNAME}} get securitystate --output=jsonpath='{.spec.secureBoot}'
+        sh: yq '.nodes[] | select(.ipAddress == "{{.IP}}") | .machineSpec.secureboot' {{.TALHELPER_CONFIG_FILE}}
       TALOS_VERSION:
         sh: yq '.talosVersion' {{.TALHELPER_CONFIG_FILE}}
     requires:
-      vars: [HOSTNAME]
+      vars: [IP]
     preconditions:
-      - curl -fsSL -o /dev/null --fail https://github.com/siderolabs/talos/releases/tag/{{.TALOS_VERSION}}
-      - talosctl --nodes {{.HOSTNAME}} get machineconfig &>/dev/null
-      - talosctl config info &>/dev/null
+      - talosctl --nodes {{.IP}} get machineconfig
+      - talosctl config info
       - test -f {{.TALOSCONFIG}}
-      - which kubectl talosctl yq
+      - which kubectl talhelper talosctl yq
+
 
   upgrade-k8s:
     desc: Upgrade Kubernetes
