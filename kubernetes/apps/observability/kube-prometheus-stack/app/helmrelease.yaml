@@ -48,7 +48,7 @@ spec:
           - hosts:
               - *host
       alertmanagerSpec:
-        forceEnableClusterMode: true
+        # forceEnableClusterMode: true
         replicas: 1
         useExistingSecret: true
         configSecret: alertmanager-secret
