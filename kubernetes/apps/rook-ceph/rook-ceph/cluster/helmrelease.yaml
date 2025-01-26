@@ -67,6 +67,9 @@ spec:
         modules:
           - name: pg_autoscaler
             enabled: true
+          # Enable this if you want to use the Rook dashboard some features
+          # - name: rook
+          #   enabled: true
       crashCollector:
         disable: false
       dashboard:
