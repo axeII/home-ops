@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/alertmanagerconfig_v1alpha1.json
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
@@ -13,23 +12,14 @@ spec:
     repeatInterval: 12h
     routes:
       - receiver: "null"
-        matchers:
-          - name: alertname
-            value: InfoInhibitor
-            matchType: =
+        matchers: [{name: alertname, value: InfoInhibitor, matchType: =}]
       - receiver: heartbeat
-        groupInterval: 5m
+        groupInterval: 15s
         groupWait: 0s
         repeatInterval: 5m
-        matchers:
-          - name: alertname
-            value: Watchdog
-            matchType: =
+        matchers: [{name: alertname, value: Watchdog, matchType: =}]
       - receiver: pushover
-        matchers:
-          - name: severity
-            value: critical
-            matchType: =
+        matchers: [{name: severity, value: critical, matchType: =}]
   inhibitRules:
     - equal: ["alertname", "namespace"]
       sourceMatch:
@@ -63,9 +53,9 @@ spec:
               {{- end }}
               {{- if gt (len .Labels.SortedPairs) 0 }}
                 <small>
-                  {{- range .Labels.SortedPairs }}
-                    <b>{{ .Name }}:</b> {{ .Value }}
-                  {{- end }}
+                {{- range .Labels.SortedPairs }}
+                  <b>{{ .Name }}:</b> {{ .Value }}
+                {{- end }}
                 </small>
               {{- end }}
             {{- end }}
@@ -76,7 +66,7 @@ spec:
           title: >-
             [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]
             {{ .CommonLabels.alertname }}
-          ttl: 86400s
+          ttl: 3600s
           token:
             name: *secret
             key: ALERTMANAGER_PUSHOVER_TOKEN

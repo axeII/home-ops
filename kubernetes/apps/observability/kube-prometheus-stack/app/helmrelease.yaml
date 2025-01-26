@@ -36,22 +36,13 @@ spec:
       ingress:
         enabled: true
         ingressClassName: internal
-        annotations:
-          hajimari.io/appName: Alertmanager
-          hajimari.io/icon: fluent:alert-16-filled
-        hosts:
-          - &host alertmanager.${SECRET_DOMAIN}
-        paths:
-          - /
-        pathType: Prefix
-        tls:
-          - hosts:
-              - *host
+        hosts: ["alertmanager.juno.moe"]
       alertmanagerSpec:
-        # forceEnableClusterMode: true
-        replicas: 1
-        useExistingSecret: true
-        configSecret: alertmanager-secret
+        alertmanagerConfiguration:
+          name: alertmanager
+          global:
+            resolveTimeout: 5m
+        externalUrl: https://alertmanager.juno.moe
         storage:
           volumeClaimTemplate:
             spec:
@@ -102,7 +93,7 @@ spec:
           hajimari.io/appName: Prometheus
           hajimari.io/icon: simple-icons:prometheus
         hosts:
-          - &host prometheus.${SECRET_DOMAIN}
+          - &host prometheus.juno.moe
         paths:
           - /
         pathType: Prefix
