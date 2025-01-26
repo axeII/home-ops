@@ -61,25 +61,16 @@ spec:
                   - ALL
     defaultPodOptions:
       affinity:
-        nodeAffinity:
+        podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: nvidia.com/gpu.present
                     operator: In
                     values:
-                      - "k8s-0"
-      # affinity:
-      #   podAntiAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       - labelSelector:
-      #           matchExpressions:
-      #             - key: nvidia.com/gpu
-      #               operator: In
-      #               values:
-      #                 - "true"
-      #         topologyKey: "kubernetes.io/hostname"
-      # runtimeClassName: nvidia
+                      - "true"
+              topologyKey: "kubernetes.io/hostname"
+      runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
