@@ -11,4 +11,4 @@ resources:
   - ./spegel/ks.yaml
   - ./external-secrets/ks.yaml
   - ./local-path-provisioner/ks.yaml
-  #- ./nvidia-device-plugin/ks.yaml
+  - ./nvidia-device-plugin/ks.yaml
