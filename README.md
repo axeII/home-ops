@@ -23,7 +23,7 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 [![Home-Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fd7bbc17d-0348-4fbf-9db6-946c4b7d5bf0.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://github.com/axeII/home-ops/blob/main/README.md#file_cabinet-hardware)&nbsp;&nbsp;
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)&nbsp;&nbsp;
-[![Alertmanager](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fc2d2a0dc-d550-4196-90a4-cdc4a7b9b3da.shields&style=for-the-badge&logo=prometheus&logoColor=white&label=Alertmanager)](https://github.com/axeII/home-ops/blob/main/README.md)
+[![Alertmanager](https://img.shields.io/endpoint?url=https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Faf7af6f2-3052-4360-94b8-0ddd4ee09109.shields&style=for-the-badge&logo=prometheus&logoColor=white&label=Alertmanager)](https://github.com/axeII/home-ops/blob/main/README.md)
 
 </div>
 
