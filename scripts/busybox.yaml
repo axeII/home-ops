@@ -6,13 +6,13 @@ metadata:
 spec:
   containers:
     - name: debug
-      image: restic/restic
+      image: busybox
       command: ['sh', '-c', 'echo Lets debug! && sleep 3600']
-      volumeMounts:
-        - name: volume-claim
-          mountPath: "/data"
-  volumes:
-    - name: volume-claim
-      persistentVolumeClaim:
-        claimName: sabnzbd # CHANGE THIS TO YOUR PVC NAME
+  #     volumeMounts:
+  #       - name: volume-claim
+  #         mountPath: "/data"
+  # volumes:
+  #   - name: volume-claim
+  #     persistentVolumeClaim:
+  #       claimName: appdata # CHANGE THIS TO YOUR PVC NAME
   restartPolicy: Never
