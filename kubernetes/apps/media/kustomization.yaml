@@ -11,4 +11,4 @@ resources:
   - ./flaresolverr/ks.yaml
   - ./unpackerr/ks.yaml
   - ./recyclarr/ks.yaml
-  #- ./komga/ks.yaml
+  - ./komga/ks.yaml
