@@ -4,11 +4,11 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./plex/ks.yaml
-  # - ./radarr/ks.yaml
-  #- ./sonarr/ks.yaml
+  - ./radarr/ks.yaml
+  - ./sonarr/ks.yaml
   - ./sabnzbd/ks.yaml
-  #- ./prowlarr/ks.yaml
-  #- ./flaresolverr/ks.yaml
-  #- ./unpackerr/ks.yaml
-  #- ./recyclarr/ks.yaml
+  - ./prowlarr/ks.yaml
+  - ./flaresolverr/ks.yaml
+  - ./unpackerr/ks.yaml
+  - ./recyclarr/ks.yaml
   #- ./komga/ks.yaml
