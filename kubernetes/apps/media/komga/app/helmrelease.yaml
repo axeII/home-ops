@@ -55,16 +55,6 @@ spec:
         annotations:
           gatus.io/enabled: "true"
           hajimari.io/icon: "mdi:thought-bubble-outline"
-          # gethomepage.dev/enabled: "true"
-          # gethomepage.dev/group: Media
-          # gethomepage.dev/name: Komga
-          # gethomepage.dev/href: https://komga.${SECRET_DOMAIN}
-          # gethomepage.dev/icon: komga.png
-          # gethomepage.dev/description: Comic/Ebook Web Reader
-          # gethomepage.dev/widget.type: komga
-          # gethomepage.dev/widget.url: http://komga.media.svc.cluster.local:8080
-          # gethomepage.dev/widget.username: "{{HOMEPAGE_VAR_KOMGA_USERNAME}}"
-          # gethomepage.dev/widget.password: "{{HOMEPAGE_VAR_KOMGA_PASSWORD}}"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -76,7 +66,7 @@ spec:
           - hosts: [*host]
     persistence:
       config:
-        existingClaim: komga-config
+        existingClaim: *app
       media:
         type: nfs
         server: 192.168.69.69
