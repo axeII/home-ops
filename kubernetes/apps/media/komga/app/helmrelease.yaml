@@ -56,14 +56,18 @@ spec:
           gatus.io/enabled: "true"
           hajimari.io/icon: "mdi:thought-bubble-outline"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
+          - host: &host "{{ .Release.Name }}.juno.moe"
+            paths: &paths
               - path: /
                 service:
                   identifier: app
                   port: http
+          - host: &chost "comics.juno.moe"
+            paths: *paths
         tls:
-          - hosts: [*host]
+          - hosts:
+              - *host
+              - *chost
     persistence:
       config:
         existingClaim: *app
