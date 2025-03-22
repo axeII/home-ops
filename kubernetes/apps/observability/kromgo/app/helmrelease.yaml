@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/kashalls/kromgo
-              tag: v0.4.4@sha256:4f6770a49ffa2d1a96517761d677ababe5fa966a5da398530cc35ee4714c315b
+              tag: v0.5.1@sha256:1f86c6151c676fa6d368230f1b228d67ed030fd4409ae0a53763c60d522ea425
             env:
               HEALTH_HOST: 0.0.0.0
               HEALTH_PORT: &healthPort 8888
