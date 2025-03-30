@@ -5,7 +5,7 @@ metadata:
   name: ingress-nginx-internal
   namespace: network
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: ingress-nginx
