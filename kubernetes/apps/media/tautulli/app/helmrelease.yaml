@@ -70,18 +70,16 @@ spec:
           - path: /config/logs
       tmp:
         type: emptyDir
-    route:
+    ingress:
       app:
-        hostnames:
-          - "{{ .Release.Name }}.juno.moe"
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
+        className: internal
+        hosts:
+          - host: "{{ .Release.Name }}.juno.moe"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
     service:
       app:
         controller: *app
