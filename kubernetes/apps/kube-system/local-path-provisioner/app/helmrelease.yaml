@@ -4,7 +4,7 @@ metadata:
   name: local-path-provisioner
   namespace: kube-system
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: democratic-csi
