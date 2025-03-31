@@ -12,7 +12,9 @@ spec:
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
+      namespace: flux-system
     - name: volsync
+      namespace: flux-system
   interval: 1h
   path: ./kubernetes/apps/media/tautulli/app
   postBuild:
