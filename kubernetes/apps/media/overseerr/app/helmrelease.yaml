@@ -73,19 +73,18 @@ spec:
           - path: /app/config/logs
       tmp:
         type: emptyDir
-    route:
+    ingress:
       app:
-        hostnames:
-          - "{{ .Release.Name }}.juno.moe"
-          - requests.juno.moe
-        parentRefs:
-          - name: internal #TODO: move this to external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
+        className: internal
+        annotations:
+          gatus.io/path: *path
+        hosts:
+          - host: "{{ .Release.Name }}.juno.moe"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
     service:
       app:
         controller: *app
