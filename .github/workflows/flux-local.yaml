@@ -20,8 +20,7 @@ jobs:
         id: changed-files
         uses: bjw-s-labs/action-changed-files@b1144fc772fca235a50902c7bb6cc431cc7d8e27 # v0.3.2
         with:
-          patterns: |-
-            kubernetes/**/*
+          patterns: kubernetes/**/*
 
   test:
     if: ${{ needs.filter.outputs.changed-files != '[]' }}
@@ -108,7 +107,7 @@ jobs:
 
   success:
     if: ${{ !cancelled() }}
-    needs: [test, diff]
+    needs: ["test", "diff"]
     name: Flux Local - Success
     runs-on: ubuntu-latest
     steps:
