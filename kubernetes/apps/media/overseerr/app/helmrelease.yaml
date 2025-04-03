@@ -75,9 +75,15 @@ spec:
         type: emptyDir
     ingress:
       app:
-        className: internal
+        className: external
         hosts:
           - host: "{{ .Release.Name }}.juno.moe"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+          - host: "requests.juno.moe"
             paths:
               - path: /
                 service:
