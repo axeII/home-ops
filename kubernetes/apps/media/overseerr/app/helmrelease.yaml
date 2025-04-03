@@ -77,18 +77,18 @@ spec:
       app:
         className: external
         hosts:
-          - host: "{{ .Release.Name }}.juno.moe"
-            paths:
+          - host: &host "{{ .Release.Name }}.juno.moe"
+            paths: &paths
               - path: /
                 service:
                   identifier: app
                   port: http
-          - host: "requests.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+          - host: &host2 "requests.juno.moe"
+            paths: *paths
+        tls:
+          - hosts:
+              - *host
+              - *host2
     service:
       app:
         controller: *app
