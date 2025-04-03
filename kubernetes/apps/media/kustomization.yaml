@@ -13,4 +13,4 @@ resources:
   - ./recyclarr/ks.yaml
   - ./komga/ks.yaml
   - ./tautulli/ks.yaml
-  # - ./overseerr/ks.yaml
+  - ./overseerr/ks.yaml
