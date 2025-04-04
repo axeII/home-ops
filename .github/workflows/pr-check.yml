@@ -1,0 +1,25 @@
+name: PR Check
+
+on: [pull_request, push, workflow_dispatch]
+
+jobs:
+  scan:
+    name: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: harupy/find-trailing-whitespace@master
+      - name: "Gitleaks checks"
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: "Yamllint checks"
+      #   uses: karancode/yamllint-github-action@master
+      #   with:
+      #     yamllint_file_or_dir: "kubernetes"
+      #     yamllint_strict: false
+      #     yamllint_comment: true
+      #   env:
+      #     GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
