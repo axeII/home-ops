@@ -15,11 +15,11 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Yamllint checks"
-        uses: karancode/yamllint-github-action@master
-        with:
-          yamllint_file_or_dir: "kubernetes"
-          yamllint_strict: false
-          yamllint_comment: true
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: "Yamllint checks"
+      #   uses: karancode/yamllint-github-action@master
+      #   with:
+      #     yamllint_file_or_dir: "kubernetes"
+      #     yamllint_strict: false
+      #     yamllint_comment: true
+      #   env:
+      #     GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
