@@ -1,3 +1,4 @@
+---
 name: PR Check
 
 on:
@@ -20,7 +21,8 @@ jobs:
       - name: "Copy changes files"
         run: |
           mkdir testfiles
-          gh pr view ${{ github.event.number }} --json files -q '.files[].path' | xargs -I {} cp {} testfiles/
+          gh pr view ${{ github.event.number }} --json files -q '.files[].path' | \
+          xargs -I {} cp {} testfiles/
         env:
           GH_TOKEN: ${{ github.token }}
       - name: "Yamllint checks"
