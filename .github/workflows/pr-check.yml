@@ -21,6 +21,8 @@ jobs:
         run: |
           mkdir testfiles
           gh pr view ${{ github.event.number }} --json files -q '.files[].path' | xargs cp testfiles
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: "Yamllint checks"
         uses: karancode/yamllint-github-action@master
         with:
