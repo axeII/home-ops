@@ -1,6 +1,9 @@
+---
 name: PR Check
 
-on: [pull_request, push, workflow_dispatch]
+on:
+  pull_request:
+    branches: ["main"]
 
 jobs:
   scan:
@@ -15,11 +18,17 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: "Yamllint checks"
-      #   uses: karancode/yamllint-github-action@master
-      #   with:
-      #     yamllint_file_or_dir: "kubernetes"
-      #     yamllint_strict: false
-      #     yamllint_comment: true
-      #   env:
-      #     GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Copy changes files"
+        run: |
+          mkdir testfiles
+          gh pr view ${{ github.event.number }} --json files -q '.files[].path' | grep -v .github | xargs -I {} cp {} testfiles/
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: "Yamllint checks"
+        uses: karancode/yamllint-github-action@master
+        with:
+          yamllint_file_or_dir: "testfiles"
+          yamllint_strict: false
+          yamllint_comment: true
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
