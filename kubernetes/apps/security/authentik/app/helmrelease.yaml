@@ -37,7 +37,7 @@ spec:
         host: redis-master.database.svc.cluster.local
         db: 1
     server:
-      replicas: 3
+      replicas: 1
       initContainers:
         - name: init-db
           image: ghcr.io/rafaribe/postgres-init:16
