@@ -27,6 +27,7 @@ jobs:
       - name: "Yamllint checks"
         uses: karancode/yamllint-github-action@master
         with:
+          yamllint_config_filepath: .github/linters/.yamllint.yaml
           yamllint_file_or_dir: "testfiles"
           yamllint_strict: false
           yamllint_comment: true
