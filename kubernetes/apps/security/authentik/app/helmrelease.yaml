@@ -32,9 +32,8 @@ spec:
       envFrom:
         - secretRef:
             name: *secret
-    authentik:
-      redis:
-        enabled: true
+    redis:
+      enabled: true
     server:
       replicas: 1
       initContainers:
