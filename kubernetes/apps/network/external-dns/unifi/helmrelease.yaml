@@ -5,66 +5,114 @@ metadata:
   name: &app external-dns-unifi
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: external-dns
-      version: 1.16.0
-      sourceRef:
-        kind: HelmRepository
-        name: external-dns
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
     remediation:
       strategy: rollback
       retries: 3
   values:
-    fullnameOverride: *app
-    provider:
-      name: webhook
-      webhook:
-        image:
-          repository: ghcr.io/kashalls/external-dns-unifi-webhook
-          tag: v0.5.2@sha256:e1eef62e8d9f1966def6f2efc89ff42bcaba1060b0c2957d9cab57a11c900d5c
-        env:
-          - name: UNIFI_HOST
-            value: https://192.168.69.1
-          - name: &name UNIFI_USER
-            valueFrom:
-              secretKeyRef:
-                name: &secret external-dns-unifi-secret
-                key: *name
-          - name: &name UNIFI_PASS
-            valueFrom:
-              secretKeyRef:
-                name: *secret
-                key: *name
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: http-webhook
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: http-webhook
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-    policy: sync
-    sources:
-      - ingress
-      - service
-    txtOwnerId: k8s
-    txtPrefix: k8s.
-    domainFilters:
-      - ${SECRET_DOMAIN}
+    controllers:
+      external-dns-unifi:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          webhook:
+            image:
+              repository: ghcr.io/kashalls/external-dns-unifi-webhook
+              tag: v0.5.2@sha256:e1eef62e8d9f1966def6f2efc89ff42bcaba1060b0c2957d9cab57a11c900d5c
+            env:
+              UNIFI_HOST: https://192.168.69.1 
+            envFrom:
+              - secretRef:
+                  name: external-dns-unifi-secret
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            resources: &resources
+              requests:
+                cpu: 10m
+              limits:
+                memory: 64Mi
+            restartPolicy: Always
+        containers:
+          app:
+            image:
+              repository: registry.k8s.io/external-dns/external-dns
+              tag: v0.16.1@sha256:37d3a7a05c4638b8177382b80a627c223bd84a53c1a91be137245bd3cfdf9986
+            args:
+              - --domain-filter=ktwo.io
+              - --events
+              - --interval=1m
+              - --log-format=text
+              - --log-level=info
+              - --policy=sync
+              - --provider=webhook
+              - --registry=txt
+              - --source=gateway-httproute
+              - --source=service
+              - --txt-owner-id=k8s
+              - --txt-prefix=k8s.
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 7979
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources: *resources
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    serviceAccount:
+      create: true
+      name: *app
     serviceMonitor:
-      enabled: true
-    podAnnotations:
-      secret.reloader.stakater.com/reload: *secret
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
