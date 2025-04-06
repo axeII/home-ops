@@ -12,14 +12,14 @@ spec:
     - name: onepassword-stores
       namespace: external-secrets
   interval: 1h
-  path: ./kubernetes/apps/networking/external-dns/cloudflare
+  path: ./kubernetes/apps/network/external-dns/cloudflare
   prune: true
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
     namespace: flux-system
-  targetNamespace: networking
+  targetNamespace: network
   timeout: 5m
   wait: true
 ---
@@ -36,13 +36,13 @@ spec:
     - name: onepassword-stores
       namespace: external-secrets
   interval: 1h
-  path: ./kubernetes/apps/networking/external-dns/unifi
+  path: ./kubernetes/apps/network/external-dns/unifi
   prune: true
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
     namespace: flux-system
-  targetNamespace: networking
+  targetNamespace: network
   timeout: 5m
   wait: true
