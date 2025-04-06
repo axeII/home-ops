@@ -34,8 +34,7 @@ spec:
             name: *secret
     authentik:
       redis:
-        host: redis-master.database.svc.cluster.local
-        db: 1
+        enabled: true
     server:
       replicas: 1
       initContainers:
