@@ -3,7 +3,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: external-dns-unifi
-  namespace: network
 rules:
   - apiGroups: [""]
     resources: ["services"]
@@ -20,12 +19,14 @@ rules:
   - apiGroups: [""]
     resources: ["endpoints"]
     verbs: ["get", "watch", "list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["gateways", "httproutes", "tlsroutes", "tcproutes", "udproutes"]
+    verbs: ["get", "watch", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: external-dns-unifi
-  namespace: network
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
