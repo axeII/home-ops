@@ -2,54 +2,88 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app external-dns
+  name: &app external-dns-cloudflare
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: external-dns
-      version: 1.15.1
-      sourceRef:
-        kind: HelmRepository
-        name: external-dns
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
     remediation:
       strategy: rollback
       retries: 3
   values:
-    fullnameOverride: *app
-    provider: cloudflare
-    env:
-      - name: &name CF_API_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: &secret external-dns-secret
-            key: *name
-      - name: &name CF_ZONE_ID
-        valueFrom:
-          secretKeyRef:
-            name: *secret
-            key: *name
-    extraArgs:
-      - --annotation-filter=external-dns.alpha.kubernetes.io/target
-      - --cloudflare-proxied
-      - --ingress-class=external
-      - --zone-id-filter=$(CF_ZONE_ID)
-    policy: sync
-    # sources: ["crd", "ingress"]
-    sources:
-      - ingress
-    txtOwnerId: k8s
-    txtPrefix: k8s.
-    domainFilters: ["${SECRET_DOMAIN}"]
+    controllers:
+      external-dns-cloudflare:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: registry.k8s.io/external-dns/external-dns
+              tag: v0.16.1@sha256:37d3a7a05c4638b8177382b80a627c223bd84a53c1a91be137245bd3cfdf9986
+            args:
+              - --cloudflare-dns-records-per-page=1000
+              - --cloudflare-proxied
+              - --domain-filter=ktwo.io
+              - --events
+              - --gateway-name=external
+              - --interval=1m
+              - --log-format=text
+              - --log-level=info
+              - --policy=sync
+              - --provider=cloudflare
+              - --registry=txt
+              - --source=gateway-httproute
+              - --txt-owner-id=k8s
+              - --txt-prefix=k8s.
+              - --zone-id-filter=$(CF_ZONE_ID)
+            envFrom:
+              - secretRef:
+                  name: external-dns-cloudflare-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 7979
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    serviceAccount:
+      create: true
+      name: *app
     serviceMonitor:
-      enabled: true
-    podAnnotations:
-      secret.reloader.stakater.com/reload: *secret
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
