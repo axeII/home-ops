@@ -3,6 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: external-dns-cloudflare
+  namespace: network
 rules:
   - apiGroups: [""]
     resources: ["namespaces"]
