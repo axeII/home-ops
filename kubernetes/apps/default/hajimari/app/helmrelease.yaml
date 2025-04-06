@@ -32,7 +32,7 @@ spec:
           - default
           - rook-ceph
           - media
-          - networking
+          - network
           - kube-system
           - observability
           - flux-system
