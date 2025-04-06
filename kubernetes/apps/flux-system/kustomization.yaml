@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./webhooks/ks.yaml
-  - ./prometheusrule.yaml
