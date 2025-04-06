@@ -8,9 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-stores
-      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/external-dns/cloudflare
   prune: true
@@ -32,9 +29,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-stores
-      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/external-dns/unifi
   prune: true
