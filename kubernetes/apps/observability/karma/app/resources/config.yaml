@@ -11,7 +11,7 @@ alertmanager:
         filters:
           main:
             - alertname=Watchdog
-            - prometheus=monitoring/kube-prometheus-stack
+            - prometheus=observability/kube-prometheus-stack
           # networking: # FIXME: this is not working
           #   - alertname=Watchdog
           #   - prometheus=observability/kube-prometheus-stack
