@@ -4,7 +4,7 @@
 
 <img src="https://i.imgur.com/gdvBkNE.png" align="center" width="144px" height="144px"/>
 
-### HomeOps repo managed by k8s  :wheel_of_dharma:
+### HomeOps repo managed by k8s :wheel_of_dharma:
 
 _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)_ :robot:
 
@@ -24,7 +24,7 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 [![Home-Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fd7bbc17d-0348-4fbf-9db6-946c4b7d5bf0.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://github.com/axeII/home-ops/blob/main/README.md#file_cabinet-hardware)&nbsp;&nbsp;
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)&nbsp;&nbsp;
-[![Alertmanager](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Faf7af6f2-3052-4360-94b8-0ddd4ee09109.shields&style=for-the-badge&logo=prometheus&logoColor=white&label=Alertmanager)](https://github.com/axeII/home-ops/blob/main/README.md)
+[![Alertmanager](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fdee68f60-ad66-463a-abba-83edca016e68.shields&style=for-the-badge&logo=prometheus&logoColor=white&label=Alertmanager)](https://github.com/axeII/home-ops/blob/main/README.md)
 
 </div>
 
@@ -37,13 +37,14 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 [![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fcluster_cpu_usage&style=flat-square&label=CPU)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
 [![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fcluster_memory_usage&style=flat-square&label=Memory)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
 [![Power-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fcluster_power_usage&style=flat-square&label=Power)](https://github.com/kashalls/kromgo)
+
 </div>
 
 ---
 
-## 📖  Overview
+## 📖 Overview
 
-Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Ansible, it's very easy for me to manage my home infrastructure and the cluster.  I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
+Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Ansible, it's very easy for me to manage my home infrastructure and the cluster. I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
 
 ## ⛵ Kubernetes
 
@@ -52,7 +53,6 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 ### Installation
 
 My cluster has been migrated from a k3s/longhorn combo to Talos and Rook Ceph. First of all, Talos is amazing, and I really recommend it to anyone who is looking for a lightweight k8s distribution. Currently, I still use a node with the e1000 driver, and the second node doesn't have a good primary disk, so I am currently running in single controller mode with two workers. In the future, I would like to change the setup to have three controllers. The reason I switched to rook-ceph is longhorn feels less stable it's still under development and I decied to finally give rook-ceph a try.
-
 
 ### Core Components
 
@@ -70,7 +70,6 @@ My cluster has been migrated from a k3s/longhorn combo to Talos and Rook Ceph. F
 - [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
 - [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are commited to Git.
 - [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
-
 
 ### ☸ GitOps
 
@@ -91,22 +90,23 @@ This Git repository contains the following directories under [kubernetes](./kube
 └─📁 apps          # Apps deployed into my cluster grouped by namespace (see below)
 ```
 
-
 ### :file_cabinet: Hardware
 
 My homelab runs on the following hardware (all k8s nodes are running on ubuntu 20.04):
 
 <!-- textlint-disable -->
-| Device                 | OS Disk Size     | Data Disk Size | Ram  | Purpose                         |
-|------------------------|------------------|----------------|------|---------------------------------|
-| k8s-2 (Intel NUC)              | 1TB SSD SATA    |  250GB NVMe   | 32GB | Talos node                        |
-| k8s-1 (Udoo Bolt V8 AMD Ryzen) | eMMC 30GB|  250GB NVMe | 32GB | Talos node                        |
-| k8s-0 (VM) | 250GB NVMe SCSi |  250GB NVMe    | 32GB | Talos node with Nvidia GPU and NVMe Disk|
-| TRUENAS                | ZFS raidz 1 40TB | 4x10TB HDD     | 64GB | Storage                         |
-| Unifi UDM Pro          | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway     |
-| Unifi Switch 16 PoE    | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports  |
-| Database Server| 20GB   |N/A          | 2GB  | Database  |
-| Offsite Machine        | 60 GB            | 8TB            | 8GB  | Backup offsite vm |
+
+| Device                         | OS Disk Size     | Data Disk Size | Ram  | Purpose                                  |
+| ------------------------------ | ---------------- | -------------- | ---- | ---------------------------------------- |
+| k8s-2 (Intel NUC)              | 1TB SSD SATA     | 250GB NVMe     | 32GB | Talos node                               |
+| k8s-1 (Udoo Bolt V8 AMD Ryzen) | eMMC 30GB        | 250GB NVMe     | 32GB | Talos node                               |
+| k8s-0 (VM)                     | 250GB NVMe SCSi  | 250GB NVMe     | 32GB | Talos node with Nvidia GPU and NVMe Disk |
+| TRUENAS                        | ZFS raidz 1 40TB | 4x10TB HDD     | 64GB | Storage                                  |
+| Unifi UDM Pro                  | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway              |
+| Unifi Switch 16 PoE            | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports           |
+| Database Server                | 20GB             | N/A            | 2GB  | Database                                 |
+| Offsite Machine                | 60 GB            | 8TB            | 8GB  | Backup offsite vm                        |
+
 <!-- textlint-enable -->
 
 ### 📰 Blog post
@@ -114,11 +114,9 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)!
 I also have made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
 
-
 ## 🤝 Gratitude and Thanks
 
 I am proud to be a member of the home operations (previously k8s-at-home) community! I received a lot of help and inspiration for my Kubernetes cluster from this community which helped a lot. Thanks! :heart:
-
 
 If you are interested in running your own k8s cluster at home, I highly recommend you to check out the [k8s-at-home](https://k8s-at-home.com) website.
 
