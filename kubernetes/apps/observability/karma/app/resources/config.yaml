@@ -21,4 +21,4 @@ alertAcknowledgement:
 
 filters:
   default:
-    - "@state!=suppressed"
+    - "@receiver!=observability/alertmanager/heartbeat"
