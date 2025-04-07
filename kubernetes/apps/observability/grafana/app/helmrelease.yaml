@@ -240,13 +240,6 @@ spec:
           datasource:
             - name: DS_PROMETHEUS
               value: Prometheus
-        synology-nas-details:
-          # renovate: depName="Synology NAS Details"
-          gnetId: 14284
-          revision: 10
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Prometheus
         unifi-insights:
           # renovate: depName="UniFi-Poller: Client Insights - Prometheus"
           gnetId: 11315
