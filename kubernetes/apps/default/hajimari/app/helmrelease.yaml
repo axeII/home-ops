@@ -27,6 +27,8 @@ spec:
       tag: v0.3.1
     hajimari:
       defaultEnable: true
+      lightTheme: gazette
+      darkTheme: blackboard
       namespaceSelector:
         matchNames:
           - default

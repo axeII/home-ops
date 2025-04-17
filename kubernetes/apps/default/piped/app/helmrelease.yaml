@@ -69,6 +69,7 @@ spec:
         ingressClassName: internal
         annotations:
           hajimari.io/icon: mdi:youtube
+          hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/enable-cors: "true"
           nginx.ingress.kubernetes.io/cors-allow-origin: "https://yt.${SECRET_DOMAIN}, https://pproxy.${SECRET_DOMAIN}, https://papi.${SECRET_DOMAIN}"
         hosts:
