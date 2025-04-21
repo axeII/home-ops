@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.68.1@sha256:a0d1a9ed2abfacf905c0e3423aea00181064162e548f875f422a03924b9cc5c4
+              tag: v1.82.0@sha256:d26fc9bb035b0559900cc6f23506f6b1ddab61a690ffab4f5d84feceb3de811e
             env:
               TZ: ${TIMEZONE}
               NO_AUTOUPDATE: true
