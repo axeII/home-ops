@@ -35,7 +35,7 @@ spec:
           main:
             image:
               repository: docker.io/benbusby/whoogle-search
-              tag: 0.8.4
+              tag: 0.9.3
             env:
               # WHOOGLE_ALT_TW: nitter.${SECRET_DOMAIN}
               WHOOGLE_ALT_YT: invidious.${SECRET_DOMAIN}
