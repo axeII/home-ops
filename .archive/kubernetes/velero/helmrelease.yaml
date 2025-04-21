@@ -20,7 +20,7 @@ spec:
       secret.reloader.stakater.com/reload: velero-s3-secret
     image:
       repository: velero/velero
-      tag: v1.14.1
+      tag: v1.16.0
     configuration:
       extraEnvVars:
         TZ: "Europe/Paris"
