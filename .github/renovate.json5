@@ -1,50 +1,34 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
     "config:recommended",
     "docker:enableMajor",
-    "replacements:k8s-registry-move",
-    ":automergeBranch",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":skipStatusChecks",
+    "helpers:pinGitHubActionDigests",
     ":timezone(Europe/Berlin)",
-    "github>axeII/home-ops//.github/renovate/allowedVersions.json5",
-    "github>axeII/home-ops//.github/renovate/autoMerge.json5",
-    "github>axeII/home-ops//.github/renovate/commitMessage.json5",
-    "github>axeII/home-ops//.github/renovate/customManagers.json5",
-    "github>axeII/home-ops//.github/renovate/labels.json5",
-    "github>axeII/home-ops//.github/renovate/grafanaDashboards.json5",
-    "github>axeII/home-ops//.github/renovate/groups.json5",
-    "github>axeII/home-ops//.github/renovate/packageRules.json5",
-    "github>axeII/home-ops//.github/renovate/semanticCommits.json5"
+    "github>axeII/home-ops//.renovate/allowedVersions.json5",
+    "github>axeII/home-ops//.renovate/autoMerge.json5",
+    "github>axeII/home-ops//.renovate/customManagers.json5",
+    "github>axeII/home-ops//.renovate/grafanaDashboards.json5",
+    "github>axeII/home-ops//.renovate/groups.json5",
+    "github>axeII/home-ops//.renovate/labels.json5",
+    "github>axeII/home-ops//.renovate/semanticCommits.json5",
+    ":automergeBranch",
+    ":dependencyDashboard",
+    ":disableRateLimiting",
+    ":gitSignOff",
+    ":semanticCommits",
+    ":timezone(America/Chicago)",
   ],
-  "onboarding": false,
-  "requireConfig": "optional",
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": [
-    "prEditedNotification",
-    "prIgnoreNotification"
-  ],
-  "ignorePaths": [
-    "**/*.sops.*",
-    "**/.archive/**"
-  ],
-  "flux": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
+  dependencyDashboardTitle: "Renovate Dashboard 🤖",
+  suppressNotifications: ["prEditedNotification", "prIgnoreNotification"],
+  ignorePaths: ["**/resources/**"],
+  flux: {
+    fileMatch: ["(^|/)kubernetes/.+\\.ya?ml$"],
   },
   "helm-values": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
+    fileMatch: ["(^|/)kubernetes/.+\\.ya?ml$"],
   },
-  "kubernetes": {
-    "fileMatch": [
-      "(^|/)\\.taskfiles/.+\\.ya?ml(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
-  }
+  kubernetes: {
+    fileMatch: ["(^|/)kubernetes/.+\\.ya?ml$"],
+  },
 }
