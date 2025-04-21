@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: jvmilazz0/kavita
-              tag: 0.8.1@sha256:afb2904c41006332f6bf9c5bca52990b6b76039ddace73c2fda4413c39972f28
+              tag: 0.8.6@sha256:cdd6abc6e5c3d337c5bb68d4a29bc490456af2a550b3a031374e46dbfac291ce
             env:
               TZ: ${TIMEZONE}
             resources:
