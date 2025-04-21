@@ -40,7 +40,7 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: ghcr.io/midarrlabs/midarr-server
-      tag: v4.2.0@sha256:b368f94a8a7e0657125da108129ffbdc92d04fc7fba302ea88d9396b125b4d03
+      tag: v4.3.0@sha256:50f64bec9d9e09ffadf103a3ba7acdf106aa2b558cd1ba88c2c21b3db25b9fb0
     env:
       TZ: ${TIMEZONE}
       APP_URL: http://midarr.media.svc.cluster.local:4000
