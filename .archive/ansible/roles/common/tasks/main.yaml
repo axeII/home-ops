@@ -1,9 +1,0 @@
----
-- include: networking.yml
-  tags:
-    - networking
-
-
-- include: packages.yml
-  tags:
-    - packages
