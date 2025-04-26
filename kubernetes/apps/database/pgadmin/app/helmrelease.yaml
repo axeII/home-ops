@@ -23,8 +23,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
-        strategy: Recreate
+      pgadmin:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -34,7 +33,7 @@ spec:
             fsGroup: 5050
             fsGroupChangePolicy: OnRootMismatch
         containers:
-          main:
+          app:
             image:
               repository: docker.io/dpage/pgadmin4
               tag: "9.2@sha256:52cb72a9e3da275324ca0b9bb3891021366d501aad375db34584a7bca8ce02ff"
