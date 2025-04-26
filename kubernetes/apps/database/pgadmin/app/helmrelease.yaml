@@ -66,11 +66,11 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: "${VOLSYNC_CLAIM}"
-        advancedMounts:
-          main:
-            main:
-              - path: /var/lib/pgadmin
+        storageClass: ceph-block
+        size: 1Gi
+        accessMode: "ReadWriteOnce"
+        globalMounts:
+          - path: /var/lib/pgadmin
       server-json:
         enabled: true
         type: configMap
