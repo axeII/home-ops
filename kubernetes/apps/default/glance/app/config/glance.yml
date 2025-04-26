@@ -1,0 +1,73 @@
+# theme:
+#   background-color: 240 21 15
+#   contrast-multiplier: 1.2
+#   primary-color: 217 92 83
+#   positive-color: 115 54 76
+#   negative-color: 347 70 65
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: hacker-news
+            limit: 20
+            collapse-after: 5
+            sort-by: top
+
+          - type: monitor
+            cache: 15m
+            title: Services
+            sites:
+              - title: Rook
+                url: https://rook.${SECRET_DOMAIN}
+              - title: Grafana
+                url: https://grafana.${SECRET_DOMAIN}
+              - title: Plex
+                url: https://plex.${SECRET_DOMAIN}
+              - title: Karma
+                url: https://karma.${SECRET_DOMAIN}
+              - title: Minio
+                url: https://minio.${SECRET_DOMAIN}
+              - title: Requests
+                url: https://requests.${SECRET_DOMAIN}
+              - title: Comics
+                url: https://comics.${SECRET_DOMAIN}
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: TSLA
+                name: Tesla
+                chart-link: https://www.tradingview.com/chart/?symbol=INDEX:BTCUSD
+              - symbol: DAX
+                name: DAX
+              - symbol: ^N225
+                name: Nikkei 225
+
+      - size: full
+        widgets:
+          - type: hacker-news
+
+          - type: videos
+            channels:
+              - UCkWQ0gDrqOCarmUKmppD7GQ
+              - UCbpMy0Fg74eXXkvxJrtEn3w
+              - UCwpHKudUkP5tNgmMdexB3ow
+              - UCJ901NqoRaXMnIm7aOjLyuA
+
+          - type: reddit
+            subreddit: selfhosted
+
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Prague
+                label: Prague
+
+          - type: calendar
+
+          - type: weather
+            location: Brno, Czechia
