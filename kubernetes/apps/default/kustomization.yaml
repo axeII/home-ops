@@ -8,3 +8,4 @@ resources:
   - ./hajimari/ks.yaml
   - ./glance/ks.yaml
   - ./karakeep/ks.yaml
+  - ./docmost/ks.yaml
