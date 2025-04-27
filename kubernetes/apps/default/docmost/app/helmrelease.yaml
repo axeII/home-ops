@@ -37,7 +37,7 @@ spec:
               tag: 0.20.3
             env:
               TZ: "${TIMEZONE}"
-              APP_URL: "https://{{ .Release.Name }}.${CLUSTER_DOMAIN}"
+              APP_URL: "https://{{ .Release.Name }}.juno.moe"
               PORT: "3000"
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
             envFrom: *envFrom
