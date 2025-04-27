@@ -53,7 +53,7 @@ spec:
             port: 8080
     ingress:
       app:
-        className: nginx
+        className: internal
         hosts:
           - host: &host glance.juno.moe
             paths:
