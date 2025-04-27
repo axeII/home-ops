@@ -9,6 +9,12 @@ pages:
     columns:
       - size: small
         widgets:
+          - type: rss
+            title: News
+            style: horizontal-cards
+            feeds:
+              - url: https://blog.cloudflare.com/rss
+                title: Cloudflare Blog
           - type: hacker-news
             limit: 20
             collapse-after: 5
