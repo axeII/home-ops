@@ -38,13 +38,8 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               APP_URL: "https://{{ .Release.Name }}.${CLUSTER_DOMAIN}"
-              MAIL_DRIVER: smtp
-              MAIL_FROM_ADDRESS: docmost@${CLUSTER_DOMAIN}
-              MAIL_FROM_NAME: Docmost
               PORT: "3000"
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
-              SMTP_HOST: smtp.${CLUSTER_DOMAIN}
-              SMTP_PORT: 25
             envFrom: *envFrom
             probes:
               liveness:
