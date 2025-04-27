@@ -4,6 +4,10 @@
 #   primary-color: 217 92 83
 #   positive-color: 115 54 76
 #   negative-color: 347 70 65
+theme:
+  background-color: 0 0 95
+  primary-color: 0 0 10
+  negative-color: 0 90 50
 pages:
   - name: Home
     columns:
@@ -15,11 +19,6 @@ pages:
             feeds:
               - url: https://blog.cloudflare.com/rss
                 title: Cloudflare Blog
-          - type: hacker-news
-            limit: 20
-            collapse-after: 5
-            sort-by: top
-
           - type: monitor
             cache: 15m
             title: Services
@@ -28,16 +27,12 @@ pages:
                 url: https://rook.${SECRET_DOMAIN}
               - title: Grafana
                 url: https://grafana.${SECRET_DOMAIN}
-              - title: Plex
-                url: https://plex.${SECRET_DOMAIN}
               - title: Karma
                 url: https://karma.${SECRET_DOMAIN}
               - title: Minio
                 url: https://minio.${SECRET_DOMAIN}
               - title: Requests
                 url: https://requests.${SECRET_DOMAIN}
-              - title: Comics
-                url: https://comics.${SECRET_DOMAIN}
 
           - type: markets
             markets:
@@ -54,6 +49,9 @@ pages:
       - size: full
         widgets:
           - type: hacker-news
+            limit: 20
+            collapse-after: 5
+            sort-by: top
 
           - type: videos
             channels:
