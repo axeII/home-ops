@@ -7,3 +7,4 @@ resources:
   - ./piped/ks.yaml
   - ./hajimari/ks.yaml
   - ./glance/ks.yaml
+  - ./karakeep/ks.yaml
