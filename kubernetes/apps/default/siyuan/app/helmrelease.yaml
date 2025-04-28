@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: docker.io/b3log/siyuan
-              tag: v3.1.28@sha256:c1392ac61a6bf36d1b24004123075237a4e3e0763bbe7a5ff00b1c35ae19730d
+              tag: v3.1.28@sha256:69e167eff47566e6f69e717df37b282d62e979751e0301526c989cb32cb9c17b
             args:
               - "--workspace=/siyuan/workspace/"
               - "--accessAuthCode=$(AUTH_CODE)"
