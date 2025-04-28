@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app docmost
+  name: &app siyuan
   namespace: flux-system
   # namespace: &namespace default
 spec:
@@ -17,11 +17,11 @@ spec:
     - name: volsync
       namespace: flux-system
   interval: 1h
-  path: ./kubernetes/apps/default/docmost/app
+  path: ./kubernetes/apps/default/siyuan/app
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 2Gi
   prune: true
   retryInterval: 2m
   sourceRef:
