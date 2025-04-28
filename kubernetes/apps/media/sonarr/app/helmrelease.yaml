@@ -41,7 +41,7 @@ spec:
               tag: 4.0.14.2938@sha256:acd5416ab9c36d017687820a32f09d09a4e25a5754aa5ebeae2e7c63d7609c13
             env:
               SONARR__APP__INSTANCENAME: Sonarr
-              SONARR__APP__THEME: dark
+              SONARR__APP__THEME: auto
               SONARR__AUTH__METHOD: External
               SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
               SONARR__LOG__LEVEL: info
