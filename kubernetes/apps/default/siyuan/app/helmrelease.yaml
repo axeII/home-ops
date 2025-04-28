@@ -25,7 +25,7 @@ spec:
         containers:
           app:
             image:
-              repository: b3log/siyuan
+              repository: docker.io/b3log/siyuan
               tag: v3.1.28@sha256:c1392ac61a6bf36d1b24004123075237a4e3e0763bbe7a5ff00b1c35ae19730d
             args:
               - "--workspace=/siyuan/workspace/"
