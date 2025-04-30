@@ -32,8 +32,9 @@ spec:
       envFrom:
         - secretRef:
             name: *secret
-    redis:
-      enabled: true
+    authentik:
+          redis:
+            host: dragonfly.database.svc.cluster.local
     server:
       replicas: 1
       initContainers:
