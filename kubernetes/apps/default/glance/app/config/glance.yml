@@ -47,6 +47,11 @@ pages:
                 name: DAX
               - symbol: ^N225
                 name: Nikkei 225
+          - type: twitch-channels
+            channels:
+              - Psychoghost
+              - ThePrimeagen
+              - GMHikaru
 
       - size: full
         widgets:
