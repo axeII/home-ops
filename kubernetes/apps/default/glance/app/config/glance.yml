@@ -61,7 +61,7 @@ pages:
         widgets:
           - type: weather
             location: Brno, Czechia
-            units: imperial
+            units: metric
             hour-format: 24h
             # Optionally hide the location from being displayed in the widget
             # hide-location: true
