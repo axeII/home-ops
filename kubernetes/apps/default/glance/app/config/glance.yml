@@ -1,26 +1,95 @@
-# light theme
-# https://github.com/glanceapp/glance/issues/55
-# theme:
-#   light: true
-#   background-color: 0 0 95
-#   primary-color: 0 0 10
-#   negative-color: 0 90 50
-# theme:
-#   background-color: 240 13 14
-#   primary-color: 51 33 68
-#   negative-color: 358 100 68
-#   contrast-multiplier: 1.2
+---
 pages:
   - name: Home
+    # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
+    # hide-desktop-navigation: true
     columns:
       - size: small
         widgets:
+          - type: calendar
+            first-day-of-week: monday
+
           - type: rss
-            title: News
-            style: horizontal-cards
+            limit: 10
+            collapse-after: 3
+            cache: 12h
             feeds:
+              - url: https://selfh.st/rss/
+                title: selfh.st
+                limit: 4
+              - url: https://ciechanow.ski/atom.xml
+              - url: https://www.joshwcomeau.com/rss.xml
+                title: Josh Comeau
+              - url: https://samwho.dev/rss.xml
               - url: https://blog.cloudflare.com/rss
                 title: Cloudflare Blog
+
+          - type: twitch-channels
+            channels:
+              - theprimeagen
+              - EJ_SA
+              - Psychoghost
+              - GMHikaru
+
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - type: hacker-news
+              - type: lobsters
+
+          - type: videos
+            channels:
+              - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
+              - UCkWQ0gDrqOCarmUKmppD7GQ
+              - UCbpMy0Fg74eXXkvxJrtEn3w
+              - UCwpHKudUkP5tNgmMdexB3ow
+              - UCJ901NqoRaXMnIm7aOjLyuA
+              - UCUyeluBRhGPCW4rPe_UvBZQ
+              - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
+
+          - type: group
+            widgets:
+              - type: reddit
+                subreddit: technology
+                show-thumbnails: true
+              - type: reddit
+                subreddit: selfhosted
+                show-thumbnails: true
+
+      - size: small
+        widgets:
+          - type: weather
+            location: Brno, Czech Republic
+            units: imperial
+            hour-format: 24
+            # Optionally hide the location from being displayed in the widget
+            # hide-location: true
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Prague
+                label: Prague
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: TSLA
+                name: Tesla
+                chart-link: https://www.tradingview.com/chart/?symbol=INDEX:BTCUSD
+              - symbol: DAX
+                name: DAX
+              - symbol: ^N225
+                name: Nikkei 225
+
+          - type: releases
+            cache: 1d
+            repositories:
+              - glanceapp/glance
+              - nikitabobko/AeroSpace 
+              - freelensapp/freelens
+           
           - type: monitor
             cache: 15m
             title: Services
@@ -36,50 +105,17 @@ pages:
               - title: Requests
                 url: https://requests.${SECRET_DOMAIN}
 
-          - type: markets
-            markets:
-              - symbol: SPY
-                name: S&P 500
-              - symbol: TSLA
-                name: Tesla
-                chart-link: https://www.tradingview.com/chart/?symbol=INDEX:BTCUSD
-              - symbol: DAX
-                name: DAX
-              - symbol: ^N225
-                name: Nikkei 225
-          - type: twitch-channels
-            channels:
-              - Psychoghost
-              - ThePrimeagen
-              - GMHikaru
+  # Add more pages here:
+  # - name: Your page name
+  #   columns:
+  #     - size: small
+  #       widgets:
+  #         # Add widgets here
 
-      - size: full
-        widgets:
-          - type: hacker-news
-            limit: 20
-            collapse-after: 5
-            sort-by: top
+  #     - size: full
+  #       widgets:
+  #         # Add widgets here
 
-          - type: videos
-            channels:
-              - UCkWQ0gDrqOCarmUKmppD7GQ
-              - UCbpMy0Fg74eXXkvxJrtEn3w
-              - UCwpHKudUkP5tNgmMdexB3ow
-              - UCJ901NqoRaXMnIm7aOjLyuA
-              - UCUyeluBRhGPCW4rPe_UvBZQ
-
-          - type: reddit
-            subreddit: selfhosted
-
-      - size: small
-        widgets:
-          - type: clock
-            hour-format: 24h
-            timezones:
-              - timezone: Europe/Prague
-                label: Prague
-
-          - type: calendar
-
-          - type: weather
-            location: Brno, Czechia
+  #     - size: small
+  #       widgets:
+  #         # Add widgets here
