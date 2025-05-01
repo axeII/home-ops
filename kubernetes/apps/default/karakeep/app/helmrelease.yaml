@@ -127,7 +127,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     ingress:
       app:
-        className: internal
+        className: external
         hosts:
           - host: "{{ .Release.Name }}.juno.moe"
             paths:
