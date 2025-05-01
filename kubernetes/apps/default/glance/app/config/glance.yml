@@ -60,7 +60,7 @@ pages:
       - size: small
         widgets:
           - type: weather
-            location: Brno, Czech Republic
+            location: Brno, Czechia
             units: imperial
             hour-format: 24h
             # Optionally hide the location from being displayed in the widget
@@ -104,18 +104,3 @@ pages:
                 url: https://minio.${SECRET_DOMAIN}
               - title: Requests
                 url: https://requests.${SECRET_DOMAIN}
-
-  # Add more pages here:
-  # - name: Your page name
-  #   columns:
-  #     - size: small
-  #       widgets:
-  #         # Add widgets here
-
-  #     - size: full
-  #       widgets:
-  #         # Add widgets here
-
-  #     - size: small
-  #       widgets:
-  #         # Add widgets here

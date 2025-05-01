@@ -35,19 +35,13 @@ spec:
               DISABLE_SIGNUPS: true
               DATA_DIR: /data
               MEILI_ADDR: http://karakeep-meilisearch.default.svc.cluster.local:7700
-              MEILI_MASTER_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: karakeep-secret
-                    key: meilisearch_master_key
-              NEXTAUTH_SECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: karakeep-secret
-                    key: encryption_key
               NEXTAUTH_URL: https://karakeep.juno.moe
               DISABLE_NEW_RELEASE_CHECK: true
               COREPACK_INTEGRITY_KEYS: 0
+              DISABLE_PASSWORD_AUTH: false
+            envFrom:
+              - secretRef:
+                  name: karakeep-secret
             probes:
               liveness:
                 enabled: true
@@ -58,7 +52,6 @@ spec:
                 cpu: 10m
               limits:
                 memory: 1Gi
-
       chrome:
         annotations:
           reloader.stakater.com/auto: "true"
