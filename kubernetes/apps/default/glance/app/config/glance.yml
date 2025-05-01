@@ -62,7 +62,7 @@ pages:
           - type: weather
             location: Brno, Czech Republic
             units: imperial
-            hour-format: 24
+            hour-format: 24h
             # Optionally hide the location from being displayed in the widget
             # hide-location: true
           - type: clock
@@ -87,9 +87,9 @@ pages:
             cache: 1d
             repositories:
               - glanceapp/glance
-              - nikitabobko/AeroSpace 
+              - nikitabobko/AeroSpace
               - freelensapp/freelens
-           
+
           - type: monitor
             cache: 15m
             title: Services
