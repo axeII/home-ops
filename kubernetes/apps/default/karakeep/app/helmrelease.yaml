@@ -39,6 +39,8 @@ spec:
               DISABLE_NEW_RELEASE_CHECK: true
               COREPACK_INTEGRITY_KEYS: 0
               DISABLE_PASSWORD_AUTH: false
+              INFERENCE_TEXT_MODEL: gemini-2.0-flash
+              INFERENCE_IMAGE_MODEL: gemini-2.0-flash
             envFrom:
               - secretRef:
                   name: karakeep-secret
