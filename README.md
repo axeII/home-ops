@@ -54,7 +54,9 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 
 ### Installation
 
-My cluster has been migrated from a k3s/longhorn combo to Talos and Rook Ceph. First of all, Talos is amazing, and I really recommend it to anyone who is looking for a lightweight k8s distribution. Currently, I still use a node with the e1000 driver, and the second node doesn't have a good primary disk, so I am currently running in single controller mode with two workers. In the future, I would like to change the setup to have three controllers. The reason I switched to rook-ceph is longhorn feels less stable it's still under development and I decied to finally give rook-ceph a try.
+My cluster has been migrated from a k3s/Longhorn setup to Talos with Rook Ceph. First of all, Talos is fantastic—I highly recommend it to anyone seeking a lightweight Kubernetes distribution. Currently, I’m running one node with the e1000 driver, while the second node lacks a reliable primary disk, so the cluster is operating in single-controller mode with two worker nodes. In the future, I plan to upgrade the setup to include three controller nodes.
+
+The main reason I switched to Rook Ceph is that Longhorn felt less stable and is still under active development. I decided it was time to give Rook Ceph a try.
 
 ### Core Components
 
@@ -70,7 +72,7 @@ My cluster has been migrated from a k3s/longhorn combo to Talos and Rook Ceph. F
 - [rook-ceph](https://rook.io) - storage class provider for data persistence
 - [reflector](https://github.com/emberstack/kubernetes-reflector) - mirror configmaps or secrets to other Kubernetes namespaces
 - [reloader](https://github.com/stakater/Reloader) - restart pods when Kubernetes `configmap` or `secret` changes
-- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are commited to Git.
+- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes which are committed to Git.
 - [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
 
 ### ☸ GitOps
