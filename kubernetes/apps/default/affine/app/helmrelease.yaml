@@ -22,17 +22,33 @@ spec:
       affine:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-config:
+            dependsOn: init-db
+            image:
+              repository: ghcr.io/toeverything/affine-graphql
+              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
+            command: ["sh"]
+            args:
+              - -c node ./scripts/self-host-predeploy.js
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
+            resources: &resources
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+            restartPolicy: Always
         containers:
           app:
             image:
               repository: ghcr.io/toeverything/affine-graphql
-              tag: canary-a23112c@ sha256:abb0a874b0a6a85918c358d44b8a277fed3c36117e486b41b1409e991ac34cd9
+              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
             env:
               TZ: "${TIMEZONE}"
               REDIS_SERVER_HOST: dragonfly.database.svc.cluster.local
-            envFrom:
-              - secretRef:
-                  name: affine-secret
+            envFrom: *envFrom
             probes:
               liveness:
                 enabled: true
@@ -48,11 +64,11 @@ spec:
                 memory: 105M
         pod:
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
+            runAsUser: 0
+            # runAsGroup: 1000
+            # runAsNonRoot: true
+            # fsGroup: 1000
+            # fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: affine
@@ -75,4 +91,4 @@ spec:
         enabled: true
         existingClaim: *app
         globalMounts:
-          - path: /siyuan/workspace
+          - path: /root/.affine
