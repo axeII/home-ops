@@ -23,17 +23,17 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            env:
-              POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
-            envFrom: &envFrom
-              - secretRef:
-                  name: affine-secret
+          # init-db:
+          #   image:
+          #     repository: ghcr.io/onedr0p/postgres-init
+          #     tag: 16
+          #   env:
+          #     POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
+          #   envFrom: &envFrom
+          #     - secretRef:
+          #         name: affine-secret
           init-config:
-            dependsOn: init-db
+            # dependsOn: init-db
             image:
               repository: ghcr.io/toeverything/affine-graphql
               tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
@@ -41,7 +41,9 @@ spec:
             args:
               - |
                 node ./scripts/self-host-predeploy.js
-            envFrom: *envFrom
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
             resources:
               requests:
                 cpu: 20m
