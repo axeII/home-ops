@@ -67,11 +67,8 @@ spec:
                 memory: 105M
         pod:
           securityContext:
+            # TODO: non root should be done oneday
             runAsUser: 0
-            # runAsGroup: 1000
-            # runAsNonRoot: true
-            # fsGroup: 1000
-            # fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: affine
