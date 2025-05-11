@@ -23,6 +23,13 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
           init-config:
             image:
               repository: ghcr.io/toeverything/affine-graphql
@@ -31,9 +38,7 @@ spec:
             args:
               - |
                 node ./scripts/self-host-predeploy.js
-            envFrom: &envFrom
-              - secretRef:
-                  name: affine-secret
+            envFrom: *envFrom
             resources:
               requests:
                 cpu: 10m
