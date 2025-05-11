@@ -27,6 +27,8 @@ spec:
             image:
               repository: ghcr.io/onedr0p/postgres-init
               tag: 16
+            env:
+              POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
             envFrom: &envFrom
               - secretRef:
                   name: affine-secret
