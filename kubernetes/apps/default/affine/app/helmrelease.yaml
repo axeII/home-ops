@@ -45,7 +45,6 @@ spec:
                 cpu: 20m
               limits:
                 memory: 1Gi
-            restartPolicy: Never
         containers:
           app:
             image:
@@ -87,7 +86,7 @@ spec:
               - path: /
                 service:
                   identifier: app
-                  port: https
+                  port: http
         tls:
           - hosts: [*host]
     persistence:
