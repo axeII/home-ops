@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app siyuan
+  name: &app affine
 spec:
   interval: 1h
   chartRef:
@@ -19,33 +19,44 @@ spec:
       retries: 3
   values:
     controllers:
-      siyuan:
+      affine:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-config:
+            image:
+              repository: ghcr.io/toeverything/affine-graphql
+              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
+            command: ["sh"]
+            args:
+              - -c node ./scripts/self-host-predeploy.js
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+            restartPolicy: Always
         containers:
           app:
             image:
-              repository: docker.io/b3log/siyuan
-              tag: v3.1.28@sha256:c1392ac61a6bf36d1b24004123075237a4e3e0763bbe7a5ff00b1c35ae19730d
-            args:
-              - "--workspace=/siyuan/workspace/"
-              - "--accessAuthCode=$(AUTH_CODE)"
+              repository: ghcr.io/toeverything/affine-graphql
+              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
             env:
               TZ: "${TIMEZONE}"
-              PUID: 1000
-              PGID: 1000
-            envFrom:
-              - secretRef:
-                  name: siyuan-secret
+              REDIS_SERVER_HOST: dragonfly.database.svc.cluster.local
+            envFrom: *envFrom
             probes:
               liveness:
                 enabled: true
                 path: /
-                port: 6806
+                port: &port 3010
               readiness:
                 enabled: true
                 path: /
-                port: 6806
+                port: *port
             resources:
               requests:
                 cpu: 25m
@@ -53,17 +64,16 @@ spec:
         pod:
           securityContext:
             runAsUser: 0
-        #     runAsUser: 1000
-        #     runAsGroup: 1000
-        #     runAsNonRoot: true
-        #     fsGroup: 1000
-        #     fsGroupChangePolicy: OnRootMismatch
+            # runAsGroup: 1000
+            # runAsNonRoot: true
+            # fsGroup: 1000
+            # fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: siyuan
+        controller: affine
         ports:
           http:
-            port: 6806
+            port: *port
     ingress:
       app:
         enabled: true
@@ -80,4 +90,4 @@ spec:
         enabled: true
         existingClaim: *app
         globalMounts:
-          - path: /siyuan/workspace
+          - path: /root/.affine
