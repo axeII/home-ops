@@ -41,7 +41,9 @@ spec:
             args:
               - |
                 node ./scripts/self-host-predeploy.js
-            envFrom: *envFrom
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
             resources:
               requests:
                 cpu: 20m
