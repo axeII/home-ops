@@ -85,7 +85,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: "nt.juno.moe"
+          - host: &host nt.juno.moe
             paths:
               - path: /
                 service:
