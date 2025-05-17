@@ -23,16 +23,15 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          # init-db:
-          #   image:
-          #     repository: ghcr.io/onedr0p/postgres-init
-          #     tag: 16
-          #   env:
-          #     POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
-          #     INIT_POSTGRES_UTF8: "true"
-          #   envFrom: &envFrom
-          #     - secretRef:
-          #         name: affine-secret
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 17
+            env:
+              INIT_POSTGRES_UTF8: "true"
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
           init-config:
             # dependsOn: init-db
             image:
