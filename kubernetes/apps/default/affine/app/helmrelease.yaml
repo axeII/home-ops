@@ -25,7 +25,7 @@ spec:
         initContainers:
           init-db:
             image:
-              repository: ghcr.io/onedr0p/postgres-init
+              repository: ghcr.io/home-operations/postgres-init
               tag: 17
             env:
               INIT_POSTGRES_UTF8: "true"
@@ -33,7 +33,7 @@ spec:
               - secretRef:
                   name: affine-secret
           init-config:
-            # dependsOn: init-db
+            dependsOn: init-db
             image:
               repository: ghcr.io/toeverything/affine-graphql
               tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
@@ -86,7 +86,7 @@ spec:
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-nginx-ingress.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+            http://ak-outpost-authentik-embedded-outpost.security.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-
             https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
           nginx.ingress.kubernetes.io/auth-response-headers: |-
