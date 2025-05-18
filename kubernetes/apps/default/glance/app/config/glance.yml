@@ -1,4 +1,21 @@
 ---
+theme:
+  background-color: 100 20 10
+  primary-color: 40 90 40
+  contrast-multiplier: 1.1
+
+  presets:
+    default-dark:
+      background-color: 0 0 16
+      primary-color: 43 59 81
+      positive-color: 61 66 44
+      negative-color: 6 96 59
+
+    default-light:
+      light: true
+      background-color: 0 0 95
+      primary-color: 0 0 10
+      negative-color: 0 90 50
 pages:
   - name: Home
     # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
