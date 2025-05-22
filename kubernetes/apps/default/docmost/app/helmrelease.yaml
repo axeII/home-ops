@@ -60,7 +60,6 @@ spec:
     service:
       app:
         controller: docmost
-        ipFamilyPolicy: PreferDualStack
         ports:
           http:
             port: 3000
