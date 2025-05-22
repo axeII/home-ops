@@ -8,4 +8,5 @@ resources:
   - ./hajimari/ks.yaml
   - ./glance/ks.yaml
   - ./karakeep/ks.yaml
-  - ./affine/ks.yaml
+  - ./docmost/ks.yaml
+  - ./affine/ks.yaml # TODO: Remove as not stable
