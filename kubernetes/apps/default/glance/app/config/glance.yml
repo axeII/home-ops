@@ -53,7 +53,9 @@ pages:
           - type: group
             widgets:
               - type: hacker-news
+                sort-by: best
               - type: lobsters
+                sort-by: hot
 
           - type: videos
             channels:
