@@ -66,22 +66,22 @@ pages:
               - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
 
           - type: group
-                widgets:
-                  - type: reddit
-                    subreddit: technology
-                    show-thumbnails: true
-                    sort-by: "top"
-                    comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
-                  - type: reddit
-                    subreddit: selfhosted
-                    show-thumbnails: true
-                    sort-by: "top"
-                    comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
-                  - type: reddit
-                    subreddit: kubernetes
-                    show-thumbnails: true
-                    sort-by: "top"
-                    comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+            widgets:
+              - type: reddit
+                subreddit: technology
+                show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+              - type: reddit
+                subreddit: selfhosted
+                show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+              - type: reddit
+                subreddit: kubernetes
+                show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
 
       - size: small
         widgets:
