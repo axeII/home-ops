@@ -70,9 +70,18 @@ pages:
               - type: reddit
                 subreddit: technology
                 show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: selfhosted
                 show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+              - type: reddit
+                subreddit: kubernetes
+                show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
 
       - size: small
         widgets:
@@ -107,3 +116,4 @@ pages:
               - nikitabobko/AeroSpace
               - freelensapp/freelens
               - toeverything/AFFiNE
+              - docmost/docmost
