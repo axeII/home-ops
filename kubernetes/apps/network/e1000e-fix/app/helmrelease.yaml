@@ -3,13 +3,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app e1000e-fix
+  name: e1000e-fix
 spec:
   interval: 1h
   chart:
     spec:
       chart: app-template
-      version: 3.1.0
+      version: 3.7.3
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,26 +26,31 @@ spec:
             command: ["/bin/bash", "-c"]
             args:
               - |
-                find /sys/class/net/*/device/driver/module/drivers -maxdepth 1 -path "*e1000e*" | awk -F'/' '{print $5}' | xargs -I% nsenter --mount=/host/proc/$(pidof /usr/local/bin/kubelet)/ns/mnt --net=/host/proc/$(pidof /usr/local/bin/kubelet)/ns/net -- sh -c "
-                echo '% - BEFORE' &&
-                echo '==========' &&
-                ethtool -k % &&
-                echo '==========' &&
-                echo 'Disabling offloads for %...' &&
-                ethtool -K % tso off gso off gro off &&
-                echo '==========' &&
-                echo '% - AFTER' &&
-                echo '==========' &&
-                ethtool -k % &&
-                echo '=========='" &&
-                sleep infinity
+                  find /sys/class/net/*/device/driver/module/drivers -maxdepth 1 -path "*e1000e*" | \
+                  awk -F'/' '{print $5}' | \
+                  xargs -I% nsenter --mount=/host/proc/$(pidof /usr/local/bin/kubelet)/ns/mnt \
+                                    --net=/host/proc/$(pidof /usr/local/bin/kubelet)/ns/net \
+                                    -- sh -c "
+                                      echo '% - BEFORE' && \
+                                      echo '==========' && \
+                                      ethtool -k % && \
+                                      echo '==========' && \
+                                      echo 'Disabling offloads for %...' && \
+                                      ethtool -K % tso off && \
+                                      echo '==========' && \
+                                      echo '% - AFTER' && \
+                                      echo '==========' && \
+                                      ethtool -k % && \
+                                      echo '=========='
+                                    " && \
+                  sleep infinity
             securityContext:
               privileged: true
             resources:
               requests:
-                cpu: "10m"
+                cpu: 10m
               limits:
-                memory: "50Mi"
+                memory: 50Mi
     persistence:
       procfs:
         type: hostPath
