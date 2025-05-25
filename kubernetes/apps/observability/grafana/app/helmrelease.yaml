@@ -300,6 +300,8 @@ spec:
       enabled: true
     ingress:
       enabled: true
+      annotations:
+        hajimari.io/icon: "simple-icons:grafana"
       ingressClassName: internal
       hosts: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
     persistence:

@@ -75,6 +75,8 @@ spec:
         type: emptyDir
     ingress:
       app:
+        annotations:
+          hajimari.io/icon: "mdi:eye-circle"
         className: external
         hosts:
           - host: &host "requests.juno.moe"

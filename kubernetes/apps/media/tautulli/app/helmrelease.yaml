@@ -72,6 +72,8 @@ spec:
         type: emptyDir
     ingress:
       app:
+        annotations:
+          hajimari.io/icon: "mdi:chart-bar"
         className: internal
         hosts:
           - host: "{{ .Release.Name }}.juno.moe"

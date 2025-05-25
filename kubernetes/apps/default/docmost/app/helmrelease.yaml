@@ -66,6 +66,8 @@ spec:
     ingress:
       app:
         enabled: true
+        annotations:
+          hajimari.io/icon: mdi:text-box-outline
         className: internal
         hosts:
           - host: "nt.juno.moe"

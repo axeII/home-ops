@@ -53,6 +53,8 @@ spec:
             port: 8080
     ingress:
       app:
+        annotations:
+          hajimari.io/icon: "mdi:page-layout-sidebar-right"
         className: external
         hosts:
           - host: &host glance.juno.moe
