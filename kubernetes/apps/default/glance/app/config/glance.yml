@@ -74,17 +74,17 @@ pages:
                 subreddit: technology
                 show-thumbnails: true
                 sort-by: "top"
-                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
                 subreddit: selfhosted
                 show-thumbnails: true
                 sort-by: "top"
-                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
                 subreddit: kubernetes
                 show-thumbnails: true
                 sort-by: "top"
-                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
 
       - size: small
         widgets:
