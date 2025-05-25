@@ -49,12 +49,12 @@ spec:
       globalBookmarks:
         - group: Admin
           bookmarks:
-            - name: Midjourney
-              url: "https://www.midjourney.com/app/"
             - name: Unifi
               url: "https://unifi.ui.com/consoles"
             - name: "Cloudflare dashboard"
               url: "https://dash.cloudflare.com/"
+            - name: Home-Ops
+              url: "https://github.com/axeII/home-ops"
         - group: Daily
           bookmarks:
             - name: k8s-at-home-search
@@ -63,22 +63,12 @@ spec:
               url: "https://selfh.st"
             - name: Artifacthub
               url: "https://artifacthub.io/"
-            - name: "Loki logs"
-              url: "https://grafana.${SECRET_DOMAIN}/explore"
-            - name: InfoSecNews
-              url: "https://allinfosecnews.com"
             - name: "News"
               url: "https://www.newsminimalist.com/"
         - group: DevOps
           bookmarks:
-            - name: Home-Ops
-              url: "https://github.com/axeII/home-ops"
             - name: TerraformCloud
               url: "https://app.terraform.io/"
-            - name: Visual studio
-              url: https://my.visualstudio.com"
-            - name: Atlantis
-              url: "https://www.runatlantis.io/"
             - name: Git-cleaner
               url: "https://rtyley.github.io/bfg-repo-cleaner/"
             - name: K8S Exam simulator
@@ -87,38 +77,24 @@ spec:
               url: "https://download-directory.github.io"
         - group: Fun
           bookmarks:
-            - name: Translator
-              url: "https://www.deepl.com/translator"
             - name: Archive
               url: "https://archive.ph"
             - name: Wallpapers
               url: "https://unsplash.com"
-            - name: "Anime"
-              url: "https://anichart.net/"
             - name: Diving-sites
               url: "https://www.padi.com/dive-sites"
         - group: Reddit
           bookmarks:
             - name: "/r/midjourney"
-              url: "https://red.artemislena.eu/r/midjourney"
-            - name: "/r/selfhosted"
-              url: "https://red.artemislena.eu/r/selfhosted/"
-            - name: "/r/kubernetes"
-              url: "https://red.artemislena.eu/r/kubernetes/"
-            - name: "/r/virtualreality"
-              url: "https://red.artemislena.eu/r/virtualreality/"
-            - name: "/r/mk"
-              url: "https://red.artemislena.eu/r/mechanicalkeyboards/"
+              url: "https://redlib.lol/r/midjourney"
             - name: "/r/ChatGPT"
-              url: "https://red.artemislena.eu/r/ChatGPT/"
+              url: "https://redlib.lol/r/ChatGPT/"
             - name: "/r/plex"
-              url: "https://red.artemislena.eu/r/plex/"
+              url: "https://redlib.lol/r/plex/"
             - name: "/r/NonCredibleDefense"
-              url: "https://red.artemislena.eu/r/NonCredibleDefense/"
+              url: "https://redlib.lol/r/NonCredibleDefense/"
         - group: Tech
           bookmarks:
-            - name: Hacker News
-              url: "https://news.ycombinator.com/"
             - name: Shodan
               url: "https://shodan.io"
             - name: Intelx
