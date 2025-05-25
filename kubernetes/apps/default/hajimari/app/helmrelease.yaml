@@ -37,7 +37,6 @@ spec:
           - network
           - kube-system
           - observability
-          - flux-system
           - external
       name: "Ales"
       defaultSearchProvider: Kagi

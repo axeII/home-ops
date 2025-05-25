@@ -6,8 +6,6 @@ metadata:
   annotations:
     gatus.io/status-code: "404"
 spec:
-  annotations:
-    hajimari.io/enable: false
   ingressClassName: external
   rules:
     - host: "flux-webhook.${SECRET_DOMAIN}"
