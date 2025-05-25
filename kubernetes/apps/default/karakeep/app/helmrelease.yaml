@@ -130,7 +130,7 @@ spec:
     ingress:
       app:
         annotations:
-          hajimari.io/icon: mdi:tpalette-swatch
+          hajimari.io/icon: "simple-icons:internetarchive"
         className: external
         hosts:
           - host: "{{ .Release.Name }}.juno.moe"
