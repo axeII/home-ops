@@ -35,6 +35,9 @@ spec:
     alertmanager:
       ingress:
         enabled: true
+        annotations:
+          hajimari.io/appName: Alertmanager
+          hajimari.io/icon: "mdi:chart-bar"
         ingressClassName: internal
         hosts: ["alertmanager.juno.moe"]
       alertmanagerSpec:

@@ -52,6 +52,9 @@ spec:
         rollOutPods: true
         ingress:
           enabled: true
+          annotations:
+            hajimari.io/appName: Hubble
+            hajimari.io/icon: "simple-icons:cilium"
           className: internal
           hosts: ["hubble.${SECRET_DOMAIN}"]
     operator:
