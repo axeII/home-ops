@@ -57,16 +57,18 @@ spec:
               url: "https://github.com/axeII/home-ops"
         - group: Daily
           bookmarks:
-            - name: k8s-at-home-search
-              url: "https://kubesearch.dev/"
+            - name: "Geoguessr"
+              url: "https://www.geoguessr.com"
             - name: "Selfhosted newsletter"
               url: "https://selfh.st"
-            - name: Artifacthub
-              url: "https://artifacthub.io/"
             - name: "News"
               url: "https://www.newsminimalist.com/"
         - group: DevOps
           bookmarks:
+            - name: Artifacthub
+              url: "https://artifacthub.io/"
+            - name: k8s-at-home-search
+              url: "https://kubesearch.dev/"
             - name: TerraformCloud
               url: "https://app.terraform.io/"
             - name: Git-cleaner

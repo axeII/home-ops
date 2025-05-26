@@ -85,6 +85,11 @@ pages:
                 show-thumbnails: true
                 sort-by: "top"
                 comments-url-template: "https://redlib.lol/{POST-PATH}"
+              - type: reddit
+                subreddit: chatgpt
+                show-thumbnails: true
+                sort-by: "top"
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
 
       - size: small
         widgets:
