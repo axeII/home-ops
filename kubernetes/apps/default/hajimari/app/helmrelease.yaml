@@ -59,6 +59,8 @@ spec:
           bookmarks:
             - name: "Last.fm"
               url: "https://www.last.fm/home"
+            - name: "Music"
+              url: "https://eu.qobuz.squid.wtf/"
             - name: "Geoguessr"
               url: "https://www.geoguessr.com"
             - name: "Selfhosted newsletter"
