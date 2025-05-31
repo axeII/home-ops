@@ -57,6 +57,8 @@ spec:
               url: "https://github.com/axeII/home-ops"
         - group: Daily
           bookmarks:
+            - name: "Last.fm"
+              url: "https://www.last.fm/home"
             - name: "Geoguessr"
               url: "https://www.geoguessr.com"
             - name: "Selfhosted newsletter"
