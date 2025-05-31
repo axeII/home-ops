@@ -19,7 +19,6 @@ resources:
   - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./democratic-csi.yaml
-  - ./piped.yaml
   - ./hajimari.yaml
   - ./backube.yaml
   - ./grafana.yaml

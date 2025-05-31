@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./atuin/ks.yaml
-  # - ./piped/ks.yaml
   - ./hajimari/ks.yaml
   - ./glance/ks.yaml
   - ./karakeep/ks.yaml
