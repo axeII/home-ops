@@ -4,18 +4,30 @@ kind: Kustomization
 metadata:
   name: &app plex
   namespace: flux-system
+  # namespace: &namespace media
 spec:
-  targetNamespace: media
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
   dependsOn:
-    # - name: local-path-provisioner
-    # - name: cluster-apps-nvidia
-    - name: rook-ceph
+    - name: rook-ceph-cluster
+      namespace: flux-system
+    - name: volsync
+      namespace: flux-system
+  interval: 1h
   path: ./kubernetes/apps/media/plex/app
-  prune: false
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 20Gi
+  prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  wait: true
-  interval: 30m
-  retryInterval: 1m
+    namespace: flux-system
+  targetNamespace: media
   timeout: 5m
+  wait: true
