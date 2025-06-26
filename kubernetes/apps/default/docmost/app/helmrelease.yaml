@@ -68,7 +68,7 @@ spec:
         enabled: true
         annotations:
           hajimari.io/icon: mdi:text-box-outline
-        className: internal
+        className: external
         hosts:
           - host: "nt.juno.moe"
             paths:
