@@ -22,4 +22,3 @@ resources:
   - ./hajimari.yaml
   - ./backube.yaml
   - ./grafana.yaml
-  - ./nvidia.yaml

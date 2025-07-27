@@ -28,8 +28,8 @@ spec:
             env:
               # PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}:443
               ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
-              NVIDIA_DRIVER_CAPABILITIES: all
-              NVIDIA_VISIBLE_DEVICES: all
+              # NVIDIA_DRIVER_CAPABILITIES: all
+              # NVIDIA_VISIBLE_DEVICES: all
               TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
@@ -56,16 +56,16 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: nvidia.com/gpu.present
-                    operator: In
-                    values:
-                      - "true"
-      runtimeClassName: nvidia
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: nvidia.com/gpu.present
+      #               operator: In
+      #               values:
+      #                 - "true"
+      # runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
