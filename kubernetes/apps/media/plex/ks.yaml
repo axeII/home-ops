@@ -16,6 +16,8 @@ spec:
       namespace: flux-system
     - name: volsync
       namespace: flux-system
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
   postBuild:

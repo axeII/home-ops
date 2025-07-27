@@ -90,4 +90,3 @@ controlPlane:
     - "@./patches/controller/cluster.yaml"
     - "@./patches/controller/disable-admission-controller.yaml"
     - "@./patches/controller/etcd.yaml"
-    - "@./patches/controller/gpu-controller-patch.yaml"
