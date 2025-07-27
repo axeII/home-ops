@@ -11,3 +11,4 @@ resources:
   - ./spegel/ks.yaml
   - ./external-secrets/ks.yaml
   - ./local-path-provisioner/ks.yaml
+  - ./intel-device-plugin-operator/ks.yaml

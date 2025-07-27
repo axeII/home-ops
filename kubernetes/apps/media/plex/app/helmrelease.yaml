@@ -26,11 +26,9 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
             env:
-              # PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}:443
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
-              # NVIDIA_DRIVER_CAPABILITIES: all
-              # NVIDIA_VISIBLE_DEVICES: all
               TZ: "${TIMEZONE}"
+              ADVERTISE_IP: "https://plex.juno.moe,http://${PLEX_IP}:32400"
+              PLEX_NO_AUTH_NETWORKS: 192.168.69.0/24
             probes:
               liveness: &probes
                 enabled: true
@@ -48,6 +46,7 @@ spec:
               requests:
                 cpu: 100m
               limits:
+                gpu.intel.com/i915: 1
                 memory: 7Gi
             securityContext:
               allowPrivilegeEscalation: false
@@ -56,16 +55,6 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: nvidia.com/gpu.present
-      #               operator: In
-      #               values:
-      #                 - "true"
-      # runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -83,7 +72,7 @@ spec:
           hajimari.io/icon: mdi:plex
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.juno.moe"
             paths:
               - path: /
                 service:
