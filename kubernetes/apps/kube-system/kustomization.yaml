@@ -12,3 +12,4 @@ resources:
   - ./external-secrets/ks.yaml
   - ./local-path-provisioner/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
+  - ./csi-driver-nfs/ks.yaml
