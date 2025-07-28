@@ -14,5 +14,4 @@ data:
 
   # NAS
   NAS_IP: "192.168.69.69"
-  NAS_MEDIA_PATH: "/mnt/ThiccBoi/SiccBoi/data/media"
-  NFS_BACKUP: "nfs://192.168.69.69:/mnt/ThiccBoi/k3s"
+  NAS_MEDIA_PATH: "/mnt/storage0/media"
