@@ -117,8 +117,8 @@ spec:
           - path: /config/logs
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: ${NAS_MEDIA_PATH}
+        server: nas.internal
+        path: /mnt/storage0/media
       tmp:
         type: emptyDir
     service:

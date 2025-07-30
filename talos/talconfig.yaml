@@ -1,24 +1,23 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
 ---
-# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.10.6
-# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.33.3
-
 clusterName: "home-kubernetes"
+
+
+
+talosVersion: "${talosVersion}"
+kubernetesVersion: "${kubernetesVersion}"
+
+
 endpoint: https://192.168.69.254:6443
-
-clusterPodNets:
-  - "10.69.0.0/16"
-clusterSvcNets:
-  - "10.96.0.0/16"
-
 additionalApiServerCertSans: &sans
-  - "192.168.69.254"
   - "127.0.0.1"
+  - "192.168.69.254"
 additionalMachineCertSans: *sans
 
-# Disable built-in Flannel to use Cilium
+clusterPodNets: ["10.42.0.0/16"]
+clusterSvcNets: ["10.43.0.0/16"]
+
+# Disable built-in CNI to use Cilium
 cniConfig:
   name: none
 
@@ -58,6 +57,8 @@ nodes:
   - hostname: "k8s-2"
     ipAddress: "192.168.69.112"
     installDisk: "/dev/sda"
+    extraManifests:
+          - ./manifests/e1000e.yaml
     talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
     controlPlane: true
     networkInterfaces:
@@ -73,20 +74,15 @@ nodes:
 
 # Global patches
 patches:
-  - "@./patches/global/cluster-discovery.yaml"
-  - "@./patches/global/containerd.yaml"
-  - "@./patches/global/disable-search-domain.yaml"
-  - "@./patches/global/dns.yaml"
-  - "@./patches/global/hostdns.yaml"
-  - "@./patches/global/kubelet.yaml"
-  - "@./patches/global/ntp.yaml"
-  - "@./patches/global/openebs-local.yaml" # keep this for now
-  - "@./patches/global/sysctl.yaml"
+  - "@./patches/global/machine-files.yaml"
+  - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-network.yaml"
+  - "@./patches/global/machine-sysctls.yaml"
+  - "@./patches/global/machine-time.yaml"
 
 # Controller patches
 controlPlane:
   patches:
-    - "@./patches/controller/api-access.yaml"
+    - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
-    - "@./patches/controller/disable-admission-controller.yaml"
-    - "@./patches/controller/etcd.yaml"
+

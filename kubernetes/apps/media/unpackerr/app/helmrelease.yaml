@@ -68,8 +68,8 @@ spec:
         type: emptyDir
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: /mnt/ThiccBoi/SiccBoi/data/media
+        server: nas.internal
+        path: /mnt/storage0/media
         globalMounts:
           - path: /medias
     service:
