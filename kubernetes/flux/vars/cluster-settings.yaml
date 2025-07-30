@@ -8,7 +8,6 @@ data:
   TIMEZONE: "Europe/Prague"
 
   # LAN
-  PLEX_IP: "192.168.69.101"
   USER_ID: "65534"
   DATABASE_IP: "192.168.69.107"
 

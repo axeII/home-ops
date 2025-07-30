@@ -74,6 +74,6 @@ spec:
       media:
         type: nfs
         server: 192.168.69.69
-        path: /mnt/ThiccBoi/SiccBoi/data/media/Literature
+        path: /mnt/storage0/media/Literature
         globalMounts:
           - path: /data

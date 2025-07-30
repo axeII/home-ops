@@ -99,8 +99,8 @@ spec:
         existingClaim: *app
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: ${NAS_MEDIA_PATH}
+        server: nas.internal
+        path: /mnt/storage0/media
         globalMounts:
           - path: /media
       tmp:
