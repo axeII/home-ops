@@ -35,7 +35,7 @@ spec:
               repository: gotson/komga
               tag: "1.22.0@sha256:ba892ab3e082b17e73929b06b89f1806535bc72ef4bc6c89cd3e135af725afc3"
             env:
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
               SERVER_PORT: &port 8080
             resources:
               requests:

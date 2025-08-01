@@ -26,7 +26,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Paris"
               ADVERTISE_IP: "https://plex.juno.moe,http://192.168.69.101:32400"
               PLEX_NO_AUTH_NETWORKS: 192.168.69.0/24
             probes:

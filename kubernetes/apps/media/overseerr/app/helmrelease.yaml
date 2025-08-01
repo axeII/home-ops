@@ -28,7 +28,7 @@ spec:
             env:
               LOG_LEVEL: info
               PORT: &port 5055
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             probes:
               liveness: &probes
                 enabled: true
