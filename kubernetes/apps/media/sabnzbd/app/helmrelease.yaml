@@ -41,7 +41,7 @@ spec:
                 sabnzbd.media.svc.cluster.local,
                 {{ .Release.Name }}.${SECRET_DOMAIN},
                 sab.${SECRET_DOMAIN}
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             envFrom:
               - secretRef:
                   name: sabnzbd-secret
