@@ -14,4 +14,4 @@ resources:
   - ./spegel/ks.yaml
   - ./external-secrets/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
-  - ./csi-driver-nfs/ks.yaml
+  # - ./csi-driver-nfs/ks.yaml # Do I need this?
