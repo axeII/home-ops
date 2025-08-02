@@ -36,7 +36,7 @@ spec:
               repository: docmost/docmost
               tag: 0.21.0
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Paris"
               APP_URL: "https://nt.juno.moe"
               PORT: "3000"
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"

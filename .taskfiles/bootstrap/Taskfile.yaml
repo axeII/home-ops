@@ -2,70 +2,33 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
-vars:
-  BOOTSTRAP_RESOURCES_DIR: '{{.ROOT_DIR}}/.taskfiles/bootstrap/resources'
-  GITHUB_DEPLOY_KEY_FILE: '{{.KUBERNETES_DIR}}/bootstrap/flux/github-deploy-key.sops.yaml'
-  TALHELPER_CLUSTER_DIR: '{{.KUBERNETES_DIR}}/bootstrap/talos/clusterconfig'
-  TALHELPER_SECRET_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talsecret.sops.yaml'
-  TALHELPER_CONFIG_FILE: '{{.KUBERNETES_DIR}}/bootstrap/talos/talconfig.yaml'
-
-env:
-  TALOSCONFIG: '{{.TALHELPER_CLUSTER_DIR}}/talosconfig'
-
 tasks:
 
   talos:
     desc: Bootstrap the Talos cluster
-    dir: '{{.KUBERNETES_DIR}}/bootstrap/talos'
+    dir: '{{.TALOS_DIR}}'
     cmds:
-      - '{{if eq .TALHELPER_SECRET_EXISTS "false"}}talhelper gensecret > {{.TALHELPER_SECRET_FILE}}{{end}}'
-      - '{{if eq .TALHELPER_SECRET_EXISTS "false"}}sops --encrypt --in-place {{.TALHELPER_SECRET_FILE}}{{end}}'
-      - talhelper genconfig --config-file {{.TALHELPER_CONFIG_FILE}} --secret-file {{.TALHELPER_SECRET_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}}
-      - talhelper gencommand apply --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="--insecure" | bash
-      - until talhelper gencommand bootstrap --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} | bash; do sleep 10; done
-      - until talhelper gencommand kubeconfig --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
-      - task: apps
-      - talosctl health --server=false
-    vars:
-      TALHELPER_SECRET_EXISTS:
-        sh: test -f {{.TALHELPER_SECRET_FILE}} && echo true || echo false
+      - '[ -f talsecret.sops.yaml ] || talhelper gensecret | sops --filename-override talos/talsecret.sops.yaml --encrypt /dev/stdin > talsecret.sops.yaml'
+      - talhelper genconfig
+      - talhelper gencommand apply --extra-flags="--insecure" | bash
+      - until talhelper gencommand bootstrap | bash; do sleep 10; done
+      - until talhelper gencommand kubeconfig --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
     preconditions:
-      - test -f {{.SOPS_CONFIG_FILE}}
+      - test -f {{.ROOT_DIR}}/.sops.yaml
       - test -f {{.SOPS_AGE_KEY_FILE}}
-      - test -f {{.TALHELPER_CONFIG_FILE}}
-      - which talhelper sops
-
-  flux:
-    desc: Bootstrap Flux into the Talos cluster
-    cmds:
-      - '{{if eq .GITHUB_DEPLOY_KEY_EXISTS "true"}}kubectl create namespace flux-system --dry-run=client -o yaml | kubectl apply --filename -{{end}}'
-      - '{{if eq .GITHUB_DEPLOY_KEY_EXISTS "true"}}sops exec-file {{.GITHUB_DEPLOY_KEY_FILE}} "kubectl apply --server-side --filename {}"{{end}}'
-      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/bootstrap/flux
-      - '{{if eq .SOPS_SECRET_EXISTS "false"}}cat {{.SOPS_AGE_KEY_FILE}} | kubectl --namespace flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin{{end}}'
-      - sops exec-file {{.KUBERNETES_DIR}}/flux/vars/cluster-secrets.sops.yaml "kubectl apply --server-side --filename {}"
-      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml
-      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/flux/config
-    vars:
-      GITHUB_DEPLOY_KEY_EXISTS:
-        sh: test -f {{.GITHUB_DEPLOY_KEY_FILE}} && echo true || echo false
-      SOPS_SECRET_EXISTS:
-        sh: kubectl --namespace flux-system get secret sops-age &>/dev/null && echo true || echo false
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - test -f {{.SOPS_AGE_KEY_FILE}}
-      - which flux kubectl sops
+      - test -f {{.TALOS_DIR}}/talconfig.yaml
+      - which talhelper talosctl sops
 
   apps:
-    internal: true
-    dir: '{{.KUBERNETES_DIR}}/bootstrap/talos'
-    cmds:
-      - until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
-      - helmfile --file {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff
-      - until kubectl wait --for=condition=Ready nodes --all --timeout=600s; do sleep 10; done
+    desc: Bootstrap apps into the Talos cluster
+    cmd: bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
     preconditions:
+      - msg: Unsupported bash version, run `brew install bash` to upgrade
+        sh: '{{if eq OS "darwin"}}test -f /opt/homebrew/bin/bash || test -f /usr/local/bin/bash{{end}}'
       - test -f {{.KUBECONFIG}}
-      - test -f {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml
-      - which helmfile kubectl
+      - test -f {{.ROOT_DIR}}/.sops.yaml
+      - test -f {{.SCRIPTS_DIR}}/bootstrap-apps.sh
+      - test -f {{.SOPS_AGE_KEY_FILE}}
 
   # NOTE: Nodes must all be part of the Ceph cluster and Ceph disks must share the same disk model
   rook:

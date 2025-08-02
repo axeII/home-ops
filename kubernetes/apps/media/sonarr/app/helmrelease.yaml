@@ -47,7 +47,7 @@ spec:
               SONARR__LOG__LEVEL: info
               SONARR__SERVER__PORT: &port 8989
               SONARR__UPDATE__BRANCH: develop
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             envFrom: *envFrom
             probes:
               liveness: &probes
@@ -117,8 +117,8 @@ spec:
           - path: /config/logs
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: ${NAS_MEDIA_PATH}
+        server: nas.internal
+        path: /mnt/storage0/media
       tmp:
         type: emptyDir
     service:
