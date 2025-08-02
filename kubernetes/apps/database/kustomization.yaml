@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./dragonfly/ks.yaml
+  - ./pgbackup/ks.yaml
