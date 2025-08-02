@@ -24,7 +24,7 @@ jobs:
           file_list=$(gh pr view ${{ github.event.number }} --json files -q '.files[].path' | grep -v .github)
           for file in $file_list; do
             if [ -f "$file" ]; then
-              cp "$file" testfiles/
+              cp --parents "$file" testfiles
             fi
           done
         env:
