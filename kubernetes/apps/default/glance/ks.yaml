@@ -14,7 +14,7 @@ spec:
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
     namespace: flux-system
   targetNamespace: default
   timeout: 5m

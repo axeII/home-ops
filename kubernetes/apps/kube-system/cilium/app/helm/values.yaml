@@ -1,27 +1,34 @@
 ---
 autoDirectNodeRoutes: true
 bpf:
-  masquerade: false # Required for Talos `.machine.features.hostDNS.forwardKubeDNSToHost`
+  masquerade: true
+  # Ref: https://github.com/siderolabs/talos/issues/10002
+  hostLegacyRouting: true
+cni:
+  # Required for pairing with Multus CNI
+  exclusive: false
 cgroup:
   automount:
     enabled: false
   hostRoot: /sys/fs/cgroup
-cluster:
-  id: 1
-  name: "home-kubernetes"
-cni:
-  exclusive: false
 # NOTE: devices might need to be set if you have more than one active NIC on your hosts
 # devices: eno+ eth+
+dashboards:
+  enabled: true
 endpointRoutes:
   enabled: true
 envoy:
-  enabled: false
+  rollOutPods: true
+  prometheus:
+     serviceMonitor:
+       enabled: true
+gatewayAPI:
+  enabled: true
 hubble:
   enabled: false
 ipam:
   mode: kubernetes
-ipv4NativeRoutingCIDR: "10.69.0.0/16"
+ipv4NativeRoutingCIDR: "10.42.0.0/16"
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
 kubeProxyReplacement: true
@@ -33,8 +40,19 @@ loadBalancer:
   mode: "dsr"
 localRedirectPolicy: true
 operator:
+  dashboards:
+    enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
   replicas: 1
   rollOutPods: true
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
 rollOutCiliumPods: true
 routingMode: native
 securityContext:
@@ -47,6 +65,8 @@ securityContext:
       - IPC_LOCK
       - SYS_ADMIN
       - SYS_RESOURCE
+      - PERFMON
+      - BPF
       - DAC_OVERRIDE
       - FOWNER
       - SETGID
