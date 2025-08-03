@@ -4,14 +4,15 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app volsync
-  namespace: flux-system
+  namespace: &namespace volsync-system
 spec:
-  targetNamespace: volsync-system
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kyverno-policies
+      namespace: kyverno
   path: ./kubernetes/apps/volsync-system/volsync/app
   prune: true
   sourceRef:

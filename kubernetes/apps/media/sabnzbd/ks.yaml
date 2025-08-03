@@ -11,8 +11,11 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: volsync
+      namespace: volsync-system
     - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
+      namespace: kube-system
   path: ./kubernetes/apps/media/sabnzbd/app
   prune: true
   sourceRef:
