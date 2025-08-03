@@ -7,10 +7,10 @@ metadata:
     policies.kyverno.io/title: Generate gatus endpoints
     policies.kyverno.io/category: Monitoring
     policies.kyverno.io/severity: low
-    policies.kyverno.io/subject: Ingress
+    policies.kyverno.io/subject: HTTPRoute
     policies.kyverno.io/description: >-
       This policy will automatically generate gatus endpoints for
-      all Ingresses with the ingressClassName set to external.
+      all HTTPRoutes with parentRefs pointing to the external gateway.
     pod-policies.kyverno.io/autogen-controllers: none
 spec:
   generateExisting: true
@@ -20,23 +20,23 @@ spec:
         any:
           - resources:
               kinds:
-                - Ingress
+                - HTTPRoute
       exclude:
         any:
           - resources:
               kinds:
-                - Ingress
+                - HTTPRoute
               annotations:
                 gatus.io/enabled: "false"
       preconditions:
         all:
-          - key: "{{ request.object.spec.ingressClassName }}"
+          - key: "{{ request.object.spec.parentRefs[0].name }}"
             operator: Equals
             value: external
       context:
         - name: GATUS_HOST
           variable:
-            value: '{{ request.object.metadata.annotations."gatus.io/host" || request.object.spec.rules[0].host }}'
+            value: '{{ request.object.metadata.annotations."gatus.io/host" || request.object.spec.hostnames[0] }}'
             jmesPath: "to_string(@)"
         - name: GATUS_NAME
           variable:
@@ -44,7 +44,7 @@ spec:
             jmesPath: "to_string(@)"
         - name: GATUS_PATH
           variable:
-            value: '{{ request.object.metadata.annotations."gatus.io/path" || request.object.spec.rules[0].http.paths[0].path }}'
+            value: '{{ request.object.metadata.annotations."gatus.io/path" || request.object.spec.rules[0].matches[0].path.value || `/` }}'
             jmesPath: "to_string(@)"
         - name: GATUS_STATUS_CODE
           variable:

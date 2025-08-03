@@ -127,18 +127,18 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-    ingress:
+    route:
       app:
-        annotations:
-          hajimari.io/icon: "simple-icons:internetarchive"
-        className: external
-        hosts:
-          - host: "{{ .Release.Name }}.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - karakeep.juno.moe
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: &port 3000
     persistence:
       data:
         existingClaim: *app
@@ -153,11 +153,9 @@ spec:
                 subPath: meilisearch
     service:
       app:
-        primary: true
-        controller: *app
         ports:
           http:
-            port: 3000
+            port: *port
       chrome:
         controller: chrome
         ports:

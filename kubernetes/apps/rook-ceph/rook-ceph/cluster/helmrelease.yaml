@@ -42,18 +42,16 @@ spec:
       osd_class_update_on_start = false
 
     operatorNamespace: rook-ceph
-    ingress:
+    route:
       dashboard:
-        ingressClassName: internal
-        annotations:
-          hajimari.io/appName: Rook
-          hajimari.io/icon: mdi:chess-rook
         host:
-          name: &host rook.${SECRET_DOMAIN}
+          name: rook.juno.moe
           path: /
-        tls:
-          - hosts:
-              - *host
+          pathType: PathPrefix
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
     cephClusterSpec:
       network:
         provider: host

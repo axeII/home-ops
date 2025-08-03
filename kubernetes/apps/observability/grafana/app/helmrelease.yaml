@@ -201,11 +201,6 @@ spec:
           gnetId: 11454
           revision: 14
           datasource: Prometheus
-        nginx:
-          # renovate: depName="Kubernetes Nginx Ingress Prometheus NextGen"
-          gnetId: 14314
-          revision: 2
-          datasource: Prometheus
         node-exporter-full:
           # renovate: depName="Node Exporter Full"
           gnetId: 1860
@@ -298,12 +293,15 @@ spec:
       - vonage-status-panel
     serviceMonitor:
       enabled: true
-    ingress:
-      enabled: true
-      annotations:
-        hajimari.io/icon: "simple-icons:grafana"
-      ingressClassName: internal
-      hosts: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+    route:
+      main:
+        enabled: true
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
     persistence:
       enabled: false
     testFramework:

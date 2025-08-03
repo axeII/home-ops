@@ -70,21 +70,20 @@ spec:
           - path: /config/logs
       tmp:
         type: emptyDir
-    ingress:
+    route:
       app:
-        annotations:
-          hajimari.io/icon: "mdi:chart-bar"
-        className: internal
-        hosts:
-          - host: "{{ .Release.Name }}.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port

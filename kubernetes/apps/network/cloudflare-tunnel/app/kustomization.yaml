@@ -6,8 +6,8 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: cloudflared-configmap
+  - name: cloudflare-tunnel-configmap
     files:
-      - ./configs/config.yaml
+      - config.yaml=./configs/config.yaml
 generatorOptions:
   disableNameSuffixHash: true

@@ -33,19 +33,21 @@ spec:
       enabled: true
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      ingress:
-        enabled: true
-        annotations:
-          hajimari.io/appName: Alertmanager
-          hajimari.io/icon: "mdi:chart-bar"
-        ingressClassName: internal
-        hosts: ["alertmanager.juno.moe"]
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - am.juno.moe
+          parentRefs:
+            - name: internal
+              namespace: kube-system
+              sectionName: https
       alertmanagerSpec:
         alertmanagerConfiguration:
           name: alertmanager
           global:
             resolveTimeout: 5m
-        externalUrl: https://alertmanager.juno.moe
+        externalUrl: https://am.juno.moe
         storage:
           volumeClaimTemplate:
             spec:
@@ -89,20 +91,15 @@ spec:
     kubeProxy:
       enabled: false
     prometheus:
-      ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          hajimari.io/appName: Prometheus
-          hajimari.io/icon: simple-icons:prometheus
-        hosts:
-          - &host prometheus.juno.moe
-        paths:
-          - /
-        pathType: Prefix
-        tls:
-          - hosts:
-              - *host
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - prometheus.juno.moe
+          parentRefs:
+            - name: internal
+              namespace: kube-system
+              sectionName: https
       thanosService:
         enabled: false
       thanosServiceMonitor:

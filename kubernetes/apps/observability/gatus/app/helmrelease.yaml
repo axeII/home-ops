@@ -92,26 +92,19 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          gatus.io/path: *path
-          hajimari.io/icon: simple-icons:statuspage
-          hajimari.io/url: https://status.${SECRET_DOMAIN}
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths: &paths
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-          - host: &customHost status.${SECRET_DOMAIN}
-            paths: *paths
-        tls:
-          - hosts:
-              - *host
-              - *customHost
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+          - "status.juno.moe"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     persistence:
       config:
         type: emptyDir
@@ -124,7 +117,6 @@ spec:
             readOnly: true
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
@@ -133,10 +125,5 @@ spec:
       name: *app
     serviceMonitor:
       app:
-        serviceName: *app
         endpoints:
           - port: http
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s

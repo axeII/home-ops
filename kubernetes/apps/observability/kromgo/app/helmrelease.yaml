@@ -5,14 +5,10 @@ metadata:
   name: &app kromgo
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   install:
     remediation:
       retries: 3
@@ -79,22 +75,18 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: *app
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          gatus.io/status-code: "404"
-          hajimari.io/enable: "false"
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     persistence:
       config:
         type: configMap
@@ -105,7 +97,6 @@ spec:
             readOnly: true
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
@@ -113,10 +104,5 @@ spec:
             port: *healthPort
     serviceMonitor:
       app:
-        serviceName: *app
         endpoints:
-          - port: health
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s
+          - port: http

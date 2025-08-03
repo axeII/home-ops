@@ -64,23 +64,28 @@ spec:
         supplementalGroups:
           - 44
           - 65537
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          gatus.io/path: *path
-          hajimari.io/icon: mdi:plex
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        hosts:
-          - host: &host "{{ .Release.Name }}.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames: ["{{ .Release.Name }}.juno.moe"]
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  remove: ["Range"]
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /library/streams
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       config:
         existingClaim: *app

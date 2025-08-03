@@ -47,14 +47,18 @@ spec:
         enabled: false
         serviceMonitor:
           enabled: false
-      ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          hajimari.io/icon: simple-icons:authentik
-        hosts:
-          - &host sso.juno.moe
-        tls: [hosts: [*host]]
+    route:
+      app:
+        hostnames:
+          - sso.juno.moe
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     prometheus:
       rules:
         enabled: false

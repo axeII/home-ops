@@ -47,24 +47,21 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: glance
         ports:
           http:
-            port: 8080
-    ingress:
+            port: &port 8080
+    route:
       app:
-        annotations:
-          hajimari.io/icon: "mdi:page-layout-sidebar-right"
-        className: external
-        hosts:
-          - host: &host glance.juno.moe
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts: [*host]
+        hostnames:
+          - glance.juno.moe
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     persistence:
       config-file:
         type: configMap
