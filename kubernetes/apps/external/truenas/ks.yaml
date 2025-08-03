@@ -8,6 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: cilium-gateway
+      namespace: kube-system
   path: ./kubernetes/apps/external/truenas/app
   prune: true
   sourceRef:

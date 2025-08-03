@@ -13,9 +13,9 @@ spec:
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
-      namespace: flux-system
+      namespace: rook-ceph
     - name: volsync
-      namespace: flux-system
+      namespace: volsync-system
     - name: intel-device-plugin-gpu
       namespace: kube-system
   interval: 1h
