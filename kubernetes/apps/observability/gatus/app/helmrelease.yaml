@@ -5,14 +5,10 @@ metadata:
   name: &app gatus
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   install:
     remediation:
       retries: 3
@@ -50,7 +46,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 256Mi
+                memory: 128Mi
             restartPolicy: Always
         containers:
           app:
@@ -61,7 +57,7 @@ spec:
               GATUS_WEB_PORT: &port 80
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             envFrom: *envFrom
             probes:
               liveness: &probes
@@ -83,6 +79,8 @@ spec:
               capabilities:
                 drop:
                   - ALL
+        serviceAccount:
+          name: *app
     defaultPodOptions:
       dnsConfig:
         options:
@@ -92,26 +90,19 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          gatus.io/path: *path
-          hajimari.io/icon: simple-icons:statuspage
-          hajimari.io/url: https://status.${SECRET_DOMAIN}
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths: &paths
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-          - host: &customHost status.${SECRET_DOMAIN}
-            paths: *paths
-        tls:
-          - hosts:
-              - *host
-              - *customHost
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+          - "status.juno.moe"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       config:
         type: emptyDir
@@ -124,19 +115,10 @@ spec:
             readOnly: true
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
-    serviceAccount:
-      create: true
-      name: *app
     serviceMonitor:
       app:
-        serviceName: *app
         endpoints:
           - port: http
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s

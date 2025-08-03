@@ -66,7 +66,6 @@ The main reason I switched to Rook Ceph is that Longhorn felt less stable and is
 - [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider.
 - [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
 - [flux](https://toolkit.fluxcd.io/) - GitOps tool for deploying manifests from the `cluster` directory
-- [ingress-nginx](https://github.com/kubernetes/ingress-nginx): Kubernetes ingress controller using NGINX as a reverse proxy and load balancer.
 - [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver for all types of external Kubernetes resources
 - [kube-vip](https://kube-vip.io) - layer 2 load balancer for the Kubernetes control plane
 - [rook-ceph](https://rook.io) - storage class provider for data persistence
@@ -100,16 +99,16 @@ My homelab runs on the following hardware (all k8s nodes are running on ubuntu 2
 
 <!-- textlint-disable -->
 
-| Device                         | OS Disk Size     | Data Disk Size | Ram  | Purpose                                  |
-| ------------------------------ | ---------------- | -------------- | ---- | ---------------------------------------- |
-| k8s-2 (Intel NUC)              | 1TB SSD SATA     | 250GB NVMe     | 32GB | Talos node                               |
-| k8s-1 (Udoo Bolt V8 AMD Ryzen) | eMMC 30GB        | 250GB NVMe     | 32GB | Talos node                               |
-| k8s-0 (VM)                     | 250GB NVMe SCSi  | 250GB NVMe     | 32GB | Talos node with Nvidia GPU and NVMe Disk |
-| TRUENAS                        | ZFS raidz 1 40TB | 4x10TB HDD     | 64GB | Storage                                  |
-| Unifi UDM Pro                  | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway              |
-| Unifi Switch 16 PoE            | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports           |
-| Database Server                | 20GB             | N/A            | 2GB  | Database                                 |
-| Offsite Machine                | 60 GB            | 8TB            | 8GB  | Backup offsite vm                        |
+| Device                         | OS Disk Size     | Data Disk Size | Ram  | Purpose                                     |
+| ------------------------------ | ---------------- | -------------- | ---- | ------------------------------------------- |
+| k8s-2 (Intel NUC)              | 1TB SSD SATA     | 250GB NVMe     | 32GB | Talos node                                  |
+| k8s-1 (Udoo Bolt V8 AMD Ryzen) | eMMC 30GB        | 250GB NVMe     | 32GB | Talos node                                  |
+| k8s-0 (VM)                     | 250GB NVMe SCSi  | 250GB NVMe     | 32GB | Talos node with intel ARC GPU and NVMe Disk |
+| TRUENAS                        | ZFS raidz 1 40TB | 4x10TB HDD     | 64GB | Storage                                     |
+| Unifi UDM Pro                  | SSD 14GB         | HDD 1TB        | 4GB  | Router and security Gateway                 |
+| Unifi Switch 16 PoE            | N/A              | N/A            | N/A  | Switch with 802.3at PoE+ ports              |
+| Database Server                | 20GB             | N/A            | 2GB  | Database                                    |
+| Offsite Machine                | 60 GB            | 8TB            | 8GB  | Backup offsite vm                           |
 
 <!-- textlint-enable -->
 

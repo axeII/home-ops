@@ -11,11 +11,12 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/observability/loki/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
   wait: true
   interval: 30m
   retryInterval: 1m

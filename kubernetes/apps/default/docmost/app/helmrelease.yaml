@@ -36,9 +36,9 @@ spec:
               repository: docmost/docmost
               tag: 0.21.0
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Paris"
               APP_URL: "https://nt.juno.moe"
-              PORT: "3000"
+              PORT: &port 3000
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
             envFrom: *envFrom
             probes:
@@ -59,23 +59,21 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: docmost
         ports:
           http:
-            port: 3000
-    ingress:
+            port: *port
+    route:
       app:
-        enabled: true
-        annotations:
-          hajimari.io/icon: mdi:text-box-outline
-        className: external
-        hosts:
-          - host: "nt.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - nt.juno.moe
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       data:
         existingClaim: *app

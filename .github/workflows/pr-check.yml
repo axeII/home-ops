@@ -21,7 +21,12 @@ jobs:
       - name: "Copy changes files"
         run: |
           mkdir testfiles
-          gh pr view ${{ github.event.number }} --json files -q '.files[].path' | grep -v .github | xargs -I {} cp {} testfiles/
+          file_list=$(gh pr view ${{ github.event.number }} --json files -q '.files[].path' | grep -v .github)
+          for file in $file_list; do
+            if [ -f "$file" ]; then
+              cp --parents "$file" testfiles
+            fi
+          done
         env:
           GH_TOKEN: ${{ github.token }}
       - name: "Yamllint checks"

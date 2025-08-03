@@ -27,7 +27,7 @@ spec:
               tag: 2.15.2@sha256:4e7d75c9fe8f96ae766269fb451fc5ad215451b30a463c11142c492512c021cd
             env:
               TAUTULLI__PORT: &port 8181
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             probes:
               liveness: &probes
                 enabled: true
@@ -70,21 +70,20 @@ spec:
           - path: /config/logs
       tmp:
         type: emptyDir
-    ingress:
+    route:
       app:
-        annotations:
-          hajimari.io/icon: "mdi:chart-bar"
-        className: internal
-        hosts:
-          - host: "{{ .Release.Name }}.juno.moe"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port

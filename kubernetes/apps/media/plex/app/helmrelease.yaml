@@ -26,11 +26,9 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
             env:
-              # PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}:443
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN},http://${PLEX_IP}:32400"
-              NVIDIA_DRIVER_CAPABILITIES: all
-              NVIDIA_VISIBLE_DEVICES: all
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Paris"
+              ADVERTISE_IP: "https://plex.juno.moe,http://192.168.69.101:32400"
+              PLEX_NO_AUTH_NETWORKS: 192.168.69.0/24
             probes:
               liveness: &probes
                 enabled: true
@@ -48,6 +46,7 @@ spec:
               requests:
                 cpu: 100m
               limits:
+                gpu.intel.com/i915: 1
                 memory: 7Gi
             securityContext:
               allowPrivilegeEscalation: false
@@ -56,16 +55,6 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: nvidia.com/gpu.present
-                    operator: In
-                    values:
-                      - "true"
-      runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -75,23 +64,28 @@ spec:
         supplementalGroups:
           - 44
           - 65537
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          gatus.io/path: *path
-          hajimari.io/icon: mdi:plex
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames: ["{{ .Release.Name }}.juno.moe"]
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  remove: ["Range"]
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /library/streams
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       config:
         existingClaim: *app
@@ -101,8 +95,8 @@ spec:
           - path: /config/Library/Application Support/Plex Media Server/Logs
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: ${NAS_MEDIA_PATH}
+        server: nas.internal
+        path: /mnt/storage0/media
         globalMounts:
           - path: /media
             readOnly: true
@@ -115,7 +109,7 @@ spec:
         controller: *app
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: ${PLEX_IP}
+          io.cilium/lb-ipam-ips: 192.168.69.101
         externalTrafficPolicy: Cluster
         ports:
           http:

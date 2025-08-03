@@ -28,7 +28,7 @@ spec:
               repository: glanceapp/glance
               tag: v0.8.4@sha256:6df86a7e8868d1eda21f35205134b1962c422957e42a0c44d4717c8e8f741b1a
             env:
-              TZ: ${TIMEZONE}
+              TZ: Europe/Paris
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -47,24 +47,21 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: glance
         ports:
           http:
-            port: 8080
-    ingress:
+            port: &port 8080
+    route:
       app:
-        annotations:
-          hajimari.io/icon: "mdi:page-layout-sidebar-right"
-        className: external
-        hosts:
-          - host: &host glance.juno.moe
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts: [*host]
+        hostnames:
+          - glance.juno.moe
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       config-file:
         type: configMap

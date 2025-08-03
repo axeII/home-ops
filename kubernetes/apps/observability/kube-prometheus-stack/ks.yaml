@@ -11,12 +11,13 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets-stores
+      namespace: kube-system
   path: ./kubernetes/apps/observability/kube-prometheus-stack/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
   wait: false
   interval: 30m
   retryInterval: 1m

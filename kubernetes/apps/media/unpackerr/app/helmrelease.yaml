@@ -5,14 +5,10 @@ metadata:
   name: &app unpackerr
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   install:
     remediation:
       retries: 3
@@ -32,7 +28,7 @@ spec:
               repository: ghcr.io/unpackerr/unpackerr
               tag: 0.14.5@sha256:dc72256942ce50d1c8a1aeb5aa85b6ae2680a36eefd2182129d8d210fce78044
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Paris"
               UN_INTERVAL: 1m
               UN_WEBSERVER_METRICS: true
               UN_WEBSERVER_LOG_FILE: /logs/webserver.log
@@ -68,8 +64,8 @@ spec:
         type: emptyDir
       media:
         type: nfs
-        server: ${NAS_IP}
-        path: /mnt/ThiccBoi/SiccBoi/data/media
+        server: nas.internal
+        path: /mnt/storage0/media
         globalMounts:
           - path: /medias
     service:
