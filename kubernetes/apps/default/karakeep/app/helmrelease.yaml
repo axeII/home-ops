@@ -137,8 +137,8 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: &port 3000
+              - identifier: app
+                port: &port 3000
     persistence:
       data:
         existingClaim: *app
