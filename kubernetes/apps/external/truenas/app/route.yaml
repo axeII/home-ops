@@ -13,7 +13,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - truenas.${SECRET_DOMAIN}
+    - truenas.juno.moe
   rules:
     - matches:
         - path:

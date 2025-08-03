@@ -13,7 +13,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - minio.${SECRET_DOMAIN}
+    - minio.juno.moe
   rules:
     - matches:
         - path:

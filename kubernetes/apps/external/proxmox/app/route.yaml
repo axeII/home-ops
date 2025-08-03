@@ -13,7 +13,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - proxmox.${SECRET_DOMAIN}
+    - proxmox.juno.moe
   rules:
     - matches:
         - path:
