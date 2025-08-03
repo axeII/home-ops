@@ -14,7 +14,7 @@ spec:
     secretRef:
       name: sops-age
   interval: 1h
-  path: ./kubernetes/apps/network/echo/app
+  path: ./kubernetes/apps/network/echo-server/app
   postBuild:
     substituteFrom:
       - name: cluster-secrets
