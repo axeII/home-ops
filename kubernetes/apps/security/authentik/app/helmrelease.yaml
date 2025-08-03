@@ -58,7 +58,7 @@ spec:
         rules:
           - backendRefs:
             - identifier: app
-              port: *port
+              port: 9443
     prometheus:
       rules:
         enabled: false
