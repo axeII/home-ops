@@ -7,7 +7,7 @@ metadata:
   namespace: external
 spec:
   dependsOn:
-    - name: ingress-nginx-internal
+    - name: cilium-gateway
   path: ./kubernetes/apps/external/proxmox/app
   prune: true
   sourceRef:
