@@ -1,63 +1,36 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
 metadata:
-  name: &app intel-device-plugin-operator
-  namespace: &namespace kube-system
+  name: intel-device-plugins-gpu
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  interval: 1h
-  path: ./kubernetes/apps/kube-system/intel-device-plugin-operator/app
-  prune: true
-  retryInterval: 2m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 0.32.1
+  url: oci://ghcr.io/home-operations/charts-mirror/intel-device-plugins-gpu
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
 metadata:
-  name: &app intel-device-plugin-gpu
-  namespace: &namespace kube-system
+  name: intel-device-plugin-gpu
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: intel-device-plugin-operator
-      namespace: *namespace
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-    - apiVersion: deviceplugin.intel.com/v1
-      kind: GpuDevicePlugin
-      name: i915
-  healthCheckExprs:
-    - apiVersion: deviceplugin.intel.com/v1
-      kind: GpuDevicePlugin
-      failed: status.desiredNumberScheduled != status.numberReady
-      current: status.desiredNumberScheduled == status.numberReady
   interval: 1h
-  path: ./kubernetes/apps/kube-system/intel-device-plugin-operator/gpu
-  prune: true
-  retryInterval: 2m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
+  chartRef:
+    kind: OCIRepository
+    name: intel-device-plugins-gpu
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    name: i915
+    nodeFeatureRule: false
+    sharedDevNum: 99
