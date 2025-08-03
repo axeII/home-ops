@@ -46,7 +46,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 256Mi
+                memory: 128Mi
             restartPolicy: Always
         containers:
           app:
@@ -79,6 +79,8 @@ spec:
               capabilities:
                 drop:
                   - ALL
+        serviceAccount:
+          name: *app
     defaultPodOptions:
       dnsConfig:
         options:
@@ -99,8 +101,8 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: *port
+              - identifier: app
+                port: *port
     persistence:
       config:
         type: emptyDir
@@ -116,9 +118,6 @@ spec:
         ports:
           http:
             port: *port
-    serviceAccount:
-      create: true
-      name: *app
     serviceMonitor:
       app:
         endpoints:

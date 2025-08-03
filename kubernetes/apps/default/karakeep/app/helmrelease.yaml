@@ -153,6 +153,7 @@ spec:
                 subPath: meilisearch
     service:
       app:
+        controller: karakeep
         ports:
           http:
             port: *port

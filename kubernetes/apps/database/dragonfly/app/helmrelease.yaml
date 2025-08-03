@@ -62,6 +62,8 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+        serviceAccount:
+          name: *app
 
     defaultPodOptions:
       securityContext:
@@ -86,16 +88,7 @@ spec:
           metrics:
             port: 8080
 
-    serviceAccount:
-      create: true
-      name: *app
-
     serviceMonitor:
       app:
-        serviceName: *app
         endpoints:
-          - port: metrics
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s
+          - port: http
