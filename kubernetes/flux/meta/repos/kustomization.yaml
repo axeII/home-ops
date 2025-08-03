@@ -22,3 +22,4 @@ resources:
   - ./hajimari.yaml
   - ./backube.yaml
   - ./grafana.yaml
+  - ./kyverno.yaml
