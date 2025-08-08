@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: security
 components:
   - ../../components/common
-resources:
-  - ./authentik/ks.yaml
+# resources:
+#   - ./authentik/ks.yaml
