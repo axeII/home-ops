@@ -12,5 +12,5 @@ resources:
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
   - ./external-secrets/ks.yaml
-  - ./intel-device-plugin-operator/ks.yaml
+  # - ./intel-device-plugin-operator/ks.yaml
   # - ./csi-driver-nfs/ks.yaml # Let's not deploy this for now, as it is not needed in the current setup.
