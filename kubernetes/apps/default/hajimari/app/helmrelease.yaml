@@ -122,7 +122,6 @@ spec:
         enabled: true
         ingressClassName: internal
         annotations:
-          gatus.io/enabled: "true"
           hajimari.io/icon: "weather-sunset"
         hosts:
           - host: &custom-host "hajimari.${SECRET_DOMAIN}"
