@@ -9,6 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus
   decryption:
     provider: sops
     secretRef:
@@ -16,6 +18,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/echo-server/app
   postBuild:
+    substitute:
+      APP: *app
+      GATUS_PATH: /healthz
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
