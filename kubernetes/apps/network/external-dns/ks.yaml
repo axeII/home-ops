@@ -8,7 +8,15 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   path: ./kubernetes/apps/network/external-dns/cloudflare
   prune: true
   retryInterval: 2m
@@ -29,7 +37,15 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   path: ./kubernetes/apps/network/external-dns/unifi
   prune: true
   retryInterval: 2m
