@@ -12,7 +12,7 @@ spec:
   ports:
     - port: 443
       protocol: TCP
-      targetPort: 443
+      targetPort: 80
 
 ---
 apiVersion: v1
@@ -27,4 +27,4 @@ subsets:
   - addresses:
       - ip: 192.168.69.69
     ports:
-      - port: 443
+      - port: 80
