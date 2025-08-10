@@ -3,17 +3,25 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: external-secrets
-  namespace: kube-system
+  name: &app external-secrets
+  namespace: &namespace kube-system
 spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   path: ./kubernetes/apps/kube-system/external-secrets/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: true
-  interval: 30m
   retryInterval: 1m
   timeout: 5m
 ---
@@ -21,9 +29,17 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: external-secrets-stores
-  namespace: kube-system
+  name: &app external-secrets-stores
+  namespace: &namespace kube-system
 spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   dependsOn:
     - name: external-secrets
   path: ./kubernetes/apps/kube-system/external-secrets/stores
@@ -32,7 +48,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: true
-  interval: 30m
   retryInterval: 1m
   timeout: 5m
