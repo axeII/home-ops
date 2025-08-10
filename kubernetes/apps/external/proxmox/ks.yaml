@@ -14,6 +14,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+    namespace: flux-system
   healthChecks:
     - apiVersion: v1
       kind: Service
