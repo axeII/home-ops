@@ -43,9 +43,7 @@ spec:
       - --ingress-class=external
       - --zone-id-filter=$(CF_ZONE_ID)
     policy: sync
-    # sources: ["crd", "ingress"]
-    sources:
-      - ingress
+    sources: ["crd", "gateway-httproute"]
     txtOwnerId: k8s
     txtPrefix: k8s.
     domainFilters: ["${SECRET_DOMAIN}"]
