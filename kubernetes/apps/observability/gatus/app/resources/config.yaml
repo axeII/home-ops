@@ -45,7 +45,7 @@ endpoints:
     alerts:
       - type: pushover
   - name: flux-webhook
-    url: https://flux-webhook.k13.dev
+    url: https://flux-webhook.juno.moe
     interval: 1m
     client:
       dns-resolver: tcp://8.8.8.8:53
