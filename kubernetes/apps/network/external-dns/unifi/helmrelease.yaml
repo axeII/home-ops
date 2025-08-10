@@ -57,9 +57,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
     policy: sync
-    sources:
-      - ingress
-      - service
+    sources: ["crd", "gateway-httproute", "service"]
     txtOwnerId: k8s
     txtPrefix: k8s.
     domainFilters:
