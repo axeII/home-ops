@@ -108,21 +108,18 @@ spec:
         runAsNonRoot: true
         runAsUser: 999
         runAsGroup: 999
-    ingress:
+    route:
       app:
-        className: internal
-        annotations:
-          hajimari.io/enable: "false"
-        hosts:
-          - host: &host "{{ .Release.Name }}.ktwo.io"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+            - identifier: app
+              port: *port
     persistence:
       config:
         type: emptyDir

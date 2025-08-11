@@ -32,6 +32,6 @@ spec:
       enabled: true
     resources:
       requests:
-        cpu: 100m # buroa says unchangable
-        memory: 128Mi # buroa says unchangable
+        cpu: 100m # buroa says unchangeable
+        memory: 128Mi # buroa says unchangeable
       limits: {}
