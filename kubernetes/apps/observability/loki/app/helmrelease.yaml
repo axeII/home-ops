@@ -26,11 +26,9 @@ spec:
   values:
     deploymentMode: SingleBinary
     loki:
-      auth_enabled: false
       analytics:
         reporting_enabled: false
-      server:
-        log_level: info
+      auth_enabled: false
       commonConfig:
         replication_factor: 1
       compactor:
@@ -39,8 +37,8 @@ spec:
         retention_enabled: true
       ingester:
         chunk_encoding: snappy
-      storage:
-        type: filesystem
+      limits_config:
+        retention_period: 14d
       schemaConfig:
         configs:
           - from: "2024-04-01" # quote
@@ -50,34 +48,49 @@ spec:
             index:
               prefix: loki_index_
               period: 24h
-      limits_config:
-        retention_period: 14d
+      server:
+        grpc_server_max_recv_msg_size: 10485760 # 10 MiB
+        grpc_server_max_send_msg_size: 10485760 # 10 MiB
+        log_level: info
+      storage:
+        type: filesystem
+      structuredConfig:
+        ruler:
+          enable_api: true
+          enable_alertmanager_v2: true
+          alertmanager_url: http://alertmanager-operated.observability.svc.cluster.local:9093
+          storage:
+            type: local
+            local:
+              directory: /rules
+          rule_path: /rules/fake
+    backend:
+      replicas: 0
+    chunksCache:
+      enabled: false
+    gateway:
+      replicas: 0
+    lokiCanary:
+      enabled: false
+    read:
+      replicas: 0
+    resultsCache:
+      enabled: false
+    sidecar:
+      image:
+        repository: ghcr.io/home-operations/k8s-sidecar
+        tag: 1.30.7@sha256:3b6444d91c6e69a9e07c5e55419452d967d18c833d88b36277dc2021b708f621
+      enableUniqueFilenames: true
+      rules:
+        searchNamespace: ALL
+        folder: /rules/fake
     singleBinary:
       replicas: 1
       persistence:
         enabled: true
         storageClass: ceph-block
         size: 50Gi
-    gateway:
-      replicas: 0
-    backend:
-      replicas: 0
-    read:
-      replicas: 0
-    write:
-      replicas: 0
-    chunksCache:
-      enabled: false
-    resultsCache:
-      enabled: false
-    lokiCanary:
-      enabled: false
     test:
       enabled: false
-    sidecar:
-      image:
-        repository: ghcr.io/kiwigrid/k8s-sidecar
-      enableUniqueFilenames: true
-      rules:
-        searchNamespace: ALL
-        folder: /rules/fake
+    write:
+      replicas: 0
