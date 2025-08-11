@@ -118,8 +118,8 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: *port
+              - identifier: app
+                port: 80
     persistence:
       config:
         type: emptyDir

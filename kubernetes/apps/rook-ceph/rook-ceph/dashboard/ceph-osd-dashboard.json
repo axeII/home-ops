@@ -645,7 +645,7 @@
       },
       "id": 13,
       "panels": [],
-      "title": "Latency, Storage, Utilization Varience",
+      "title": "Latency, Storage, Utilization Variance",
       "type": "row"
     },
     {
