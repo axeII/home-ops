@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/plex
-              tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
+              tag: 1.42.1.10060@sha256:04563be281364ba2462285aacb2ca13d7ef7e1d0b19e1203f4c19b4a56840c5c
             env:
               TZ: "Europe/Paris"
               ADVERTISE_IP: "https://plex.juno.moe,http://192.168.69.101:32400"
