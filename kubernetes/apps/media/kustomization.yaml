@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: media
 components:
   - ../../components/common
-# resources:
+resources:
   # - ./plex/ks.yaml
   # - ./radarr/ks.yaml
   # - ./sonarr/ks.yaml
@@ -14,6 +14,6 @@ components:
   # - ./flaresolverr/ks.yaml
   # - ./unpackerr/ks.yaml
   # - ./recyclarr/ks.yaml
-  # - ./komga/ks.yaml
+  - ./komga/ks.yaml
   # - ./tautulli/ks.yaml
   # - ./overseerr/ks.yaml
