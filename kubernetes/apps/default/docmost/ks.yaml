@@ -21,6 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: nt
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   retryInterval: 2m
