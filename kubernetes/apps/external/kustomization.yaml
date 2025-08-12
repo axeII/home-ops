@@ -8,4 +8,4 @@ components:
 resources:
   - ./truenas/ks.yaml
   - ./minio/ks.yaml
-  # - ./proxmox/ks.yaml
+  - ./proxmox/ks.yaml
