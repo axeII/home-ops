@@ -8,7 +8,7 @@ components:
 resources:
   - ./atuin/ks.yaml
   - ./glance/ks.yaml
-  # - ./karakeep/ks.yaml
+  - ./karakeep/ks.yaml
   - ./docmost/ks.yaml
   # - ./affine/ks.yaml # Waiting for stable version
   # - ./hajimari/ks.yaml # TODO: Remove later since this does not work with api gateway
