@@ -13,7 +13,7 @@ spec:
       namespace: kube-system
       sectionName: https
   hostnames:
-    - proxmox.juno.moe
+    - pxm.juno.moe
   rules:
     - matches:
         - path:
