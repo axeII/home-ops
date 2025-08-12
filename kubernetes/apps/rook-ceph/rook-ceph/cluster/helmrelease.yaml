@@ -45,7 +45,7 @@ spec:
     route:
       dashboard:
         host:
-          name: rook2.juno.moe
+          name: rook.juno.moe
           path: /
           pathType: PathPrefix
         parentRefs:
