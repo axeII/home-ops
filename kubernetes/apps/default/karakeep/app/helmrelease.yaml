@@ -95,10 +95,6 @@ spec:
                         operator: In
                         values:
                           - *app
-                      - key: app.kubernetes.io/component
-                        operator: In
-                        values:
-                          - *app
                   topologyKey: kubernetes.io/hostname
         containers:
           app:
