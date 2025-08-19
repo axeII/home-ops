@@ -6,7 +6,7 @@ namespace: media
 components:
   - ../../components/common
 resources:
-  # - ./plex/ks.yaml
+  - ./plex/ks.yaml
   # - ./radarr/ks.yaml
   # - ./sonarr/ks.yaml
   # - ./sabnzbd/ks.yaml

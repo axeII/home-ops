@@ -46,7 +46,6 @@ spec:
               requests:
                 cpu: 100m
               limits:
-                gpu.intel.com/i915: 1
                 memory: 7Gi
             securityContext:
               allowPrivilegeEscalation: false
@@ -55,6 +54,13 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: intel.feature.node.kubernetes.io/gpu
+                    operator: Exists
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
