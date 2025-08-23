@@ -102,11 +102,8 @@ spec:
               - identifier: app
                 port: *port
     persistence:
-      # config:
-      #   enabled: false
-        # existingClaim: *app
-        # globalMounts:
-        #   - path: /config
+      config:
+        type: emptyDir
       media:
         type: nfs
         server: nas.internal
