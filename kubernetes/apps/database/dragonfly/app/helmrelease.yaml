@@ -16,10 +16,12 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      retries: 1
+      retries: 3
+
   values:
     controllers:
       dragonfly-operator:
+        replicas: 1
         strategy: RollingUpdate
         containers:
           app:
