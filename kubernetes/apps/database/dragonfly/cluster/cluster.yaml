@@ -6,7 +6,7 @@ metadata:
   name: dragonfly
 spec:
   image: ghcr.io/dragonflydb/dragonfly:v1.33.1@sha256:de1a932e51bf50d96bb8bee1b5bde96b429de38e3cab369238aeec3a93f5fdba
-  replicas: 3
+  replicas: 1
   env:
     - name: MAX_MEMORY
       valueFrom:
