@@ -99,15 +99,14 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: *port
+              - identifier: app
+                port: *port
     persistence:
-      config:
-        existingClaim: *app
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/logs
+      # config:
+      #   enabled: false
+        # existingClaim: *app
+        # globalMounts:
+        #   - path: /config
       media:
         type: nfs
         server: nas.internal
