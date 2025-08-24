@@ -9,6 +9,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   dependsOn:
     - name: volsync
       namespace: volsync-system
@@ -17,6 +21,10 @@ spec:
     - name: external-secrets-stores
       namespace: kube-system
   path: ./kubernetes/apps/media/sabnzbd/app
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
