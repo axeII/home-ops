@@ -11,7 +11,7 @@ resources:
   - ./sonarr/ks.yaml
   # - ./sabnzbd/ks.yaml
   - ./prowlarr/ks.yaml
-  # - ./flaresolverr/ks.yaml
+  - ./flaresolverr/ks.yaml
   # - ./unpackerr/ks.yaml
   # - ./recyclarr/ks.yaml
   - ./komga/ks.yaml
