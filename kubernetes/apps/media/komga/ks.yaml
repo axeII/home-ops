@@ -13,6 +13,10 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/media/komga/app
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository
