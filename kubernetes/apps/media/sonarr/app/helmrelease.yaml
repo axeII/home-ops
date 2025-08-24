@@ -99,11 +99,11 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: *port
+              - identifier: app
+                port: *port
     persistence:
       config:
-        existingClaim: *app
+        type: emptyDir
       logs:
         type: emptyDir
         globalMounts:
