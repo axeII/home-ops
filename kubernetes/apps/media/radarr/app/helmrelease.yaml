@@ -104,6 +104,10 @@ spec:
     persistence:
       config:
         type: emptyDir
+      config-cache:
+        existingClaim: "{{ .Release.Name }}-cache"
+        globalMounts:
+          - path: /config/MediaCover
       media:
         type: nfs
         server: nas.internal
