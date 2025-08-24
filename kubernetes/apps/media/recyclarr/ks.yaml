@@ -11,7 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: sonarr
+      namespace: media
     - name: radarr
+      namespace: media
     - name: external-secrets-stores
       namespace: kube-system
   path: ./kubernetes/apps/media/recyclarr/app
