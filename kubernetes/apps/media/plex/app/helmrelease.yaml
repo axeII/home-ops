@@ -47,6 +47,7 @@ spec:
                 cpu: 100m
               limits:
                 memory: 7Gi
+                gpu.intel.com/i915: 1
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
