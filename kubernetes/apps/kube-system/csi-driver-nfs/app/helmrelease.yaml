@@ -35,8 +35,8 @@ spec:
       create: true
       name: nfs-slow
       parameters:
-        server: expanse.internal
-        share: /mnt/eros/Kubernetes
+        server: nas.internal
+        share: /mnt/storage0/media
       mountOptions:
         - nfsvers=4.2
         - nconnect=16
