@@ -3,16 +3,17 @@
   packageRules: [
     {
       description: "1Password Connect Group",
-      groupName: "1Password Connnect",
+      groupName: "1password-connect",
       matchDatasources: ["docker"],
       matchPackageNames: ["/1password/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      minimumGroupSize: 2,
     },
     {
       description: "Actions Runner Controller Group",
-      groupName: "Actions Runner Controller",
+      groupName: "actions-runner-controller",
       matchDatasources: ["docker"],
       matchPackageNames: [
         "/gha-runner-scale-set-controller/",
@@ -21,6 +22,23 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Kubernetes Group",
+      groupName: "kubernetes",
+      matchDatasources: ["docker"],
+      matchPackageNames: [
+        "/kube-apiserver/",
+        "/kube-controller-manager/",
+        "/kube-proxy/",
+        "/kube-scheduler/",
+        "/kubelet/",
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 5,
     },
     {
       description: "Cert-Manager Group",
@@ -60,12 +78,13 @@
     },
     {
       description: "Flux Operator Group",
-      groupName: "Flux Operator",
+      groupName: "flux-operator",
       matchDatasources: ["docker"],
       matchPackageNames: ["/flux-operator/", "/flux-instance/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      minimumGroupSize: 2,
     },
     {
       description: "Intel Device Plugins Group",
@@ -76,14 +95,15 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
     },
-    {
+{
       description: "Rook-Ceph Group",
-      groupName: "Rook-Ceph",
+      groupName: "rook-ceph",
       matchDatasources: ["docker"],
       matchPackageNames: ["/rook-ceph/", "/rook-ceph-cluster/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      minimumGroupSize: 2,
     },
     {
       description: "Spegel Group",
@@ -93,6 +113,16 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+    },
+    {
+      description: "Talos Group",
+      groupName: "talos",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/installer/", "/talosctl/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
     },
   ],
 }
