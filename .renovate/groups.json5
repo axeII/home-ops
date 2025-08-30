@@ -95,7 +95,7 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
     },
-{
+    {
       description: "Rook-Ceph Group",
       groupName: "rook-ceph",
       matchDatasources: ["docker"],
