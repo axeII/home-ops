@@ -7,6 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
+  annotations:
+    ingress.cilium.io/ssl-passthrough
 spec:
   parentRefs:
     - name: internal
