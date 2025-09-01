@@ -1,0 +1,48 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: minecraft
+  namespace: default
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: minecraft
+      version: '4.26.4'
+      sourceRef:
+        kind: HelmRepository
+        name: minecraft
+        namespace: flux-system
+      interval: 1h
+  values:
+    fullnameOverride: minecraft-minecraft
+    image:
+      pullPolicy: Always
+    resources:
+      requests:
+        cpu: 1
+        memory: 4G
+      limits:
+        memory: 4G
+    minecraftServer:
+      eula: "TRUE"
+      version: "1.21.4"
+      whitelist: # TODO: add nicknames
+      ops: # TODO: add nicnames
+      maxWorldSize: 29999984
+      spawnProtection: 0
+      pvp: true
+      memory: 3000M
+      serviceType: LoadBalancer
+      loadBalancerIP: 192.168.69.102
+      rcon:
+        enabled: true
+      type: "FABRIC"
+      modrinth:
+        projects: ["worldedit"]
+    persistence:
+      dataDir:
+        enabled: true
+        storageClass: ceph-block
+        Size: 3G
