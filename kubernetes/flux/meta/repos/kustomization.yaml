@@ -23,4 +23,3 @@ resources:
   - ./backube.yaml
   - ./grafana.yaml
   - ./kyverno.yaml
-  - ./minecraft.yaml
