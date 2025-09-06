@@ -15,7 +15,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_STATUS: "404"
+      GATUS_PATH: /talos_version
   prune: true
   sourceRef:
     kind: GitRepository
