@@ -50,7 +50,7 @@ spec:
       type: PAPER
       difficulty: normal
       whitelist: "phonyAussie,Grandmainmybed"
-      ops: "phoneyAussie"
+      ops: "phonyAussie"
       pvp: true
       motd: Meh
       worldSaveName: RomanSaje
