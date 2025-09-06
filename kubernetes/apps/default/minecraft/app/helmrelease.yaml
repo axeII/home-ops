@@ -49,8 +49,8 @@ spec:
       version: 1.21.4
       type: PAPER
       difficulty: normal
-      whitelist: "phonyAussie,Grandmainmybed"
-      ops: "phonyAussie"
+      whitelist: "phonyAustralian,Grandmainmybed"
+      ops: "phonyAustralian,Grandmainmybed"
       pvp: true
       motd: Meh
       worldSaveName: RomanSaje
