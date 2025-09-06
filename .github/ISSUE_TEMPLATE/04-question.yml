@@ -1,0 +1,85 @@
+name: ❓ Question / Help
+description: Ask for help or clarification about the home lab setup
+title: "❓ [Question]: "
+labels: ["question"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you need help, have questions, or want to discuss something about your home lab setup.
+
+  - type: input
+    id: topic
+    attributes:
+      label: What's your question about?
+      description: Brief summary of what you need help with
+      placeholder: e.g., Flux configuration, networking setup, troubleshooting
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - GitOps / Flux
+        - Kubernetes configuration
+        - Application setup
+        - Networking
+        - Storage / Persistence
+        - Monitoring / Observability
+        - Security / Authentication
+        - Hardware / Infrastructure
+        - Best practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What do you need help with? Be as detailed as possible.
+      placeholder: Describe what you're trying to do, what you've tried, and where you're stuck...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context & Background
+      description: Any relevant background information
+      placeholder: |
+        - What you're trying to achieve
+        - Current setup details
+        - What you've already tried
+        - Error messages or logs
+
+  - type: textarea
+    id: current-config
+    attributes:
+      label: Current Configuration
+      description: Relevant configuration files or settings
+      render: yaml
+      placeholder: Paste any relevant YAML, commands, or configuration...
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      options:
+        - Just curious - no rush
+        - Would like help when possible
+        - Blocking my progress
+        - Production issue
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Anything else that might be helpful
+      placeholder: Screenshots, links to documentation you've checked, similar issues, etc.
