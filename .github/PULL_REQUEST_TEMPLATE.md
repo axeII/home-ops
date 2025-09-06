@@ -1,8 +1,29 @@
-**Description of the change**
+## What's Changed
 
-<!-- Describe the scope of your change - i.e. what the change does. -->
+<!-- Brief description of what you're adding/changing -->
 
-**Benefits or applicable issues**
+### Type of Change
 
-<!-- What benefits will be realized by the code change and any applicable issues here? -->
-- fixes #
+- [ ] 🆕 New app/service
+- [ ] ⬆️ Version upgrade
+- [ ] 🔧 Config change
+- [ ] 🐛 Bug fix
+- [ ] 🧹 Cleanup
+
+### Apps/Namespaces Affected
+
+<!-- Which apps or namespaces will this impact? -->
+
+### Testing Done
+
+- [ ] Manifests validated locally
+- [ ] Tested the change works
+- [ ] Checked it doesn't break anything
+
+### Notes
+
+<!-- Anything else worth mentioning? -->
+
+---
+
+Fixes #
