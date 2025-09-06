@@ -46,7 +46,7 @@ spec:
       io.cilium/ippool: public
     minecraftServer:
       eula: true
-      version: 1.21.4
+      version: 1.21.8
       type: PAPER
       difficulty: normal
       ops: "phonyAustralian"
