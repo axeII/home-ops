@@ -1,0 +1,100 @@
+name: 🚢 Deploy New App
+description: Deploy a new application or service to the cluster
+title: "🚢 [Deploy]: "
+labels: ["deploy"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you want to deploy a new application or service to your home lab cluster.
+
+  - type: input
+    id: app-name
+    attributes:
+      label: Application Name
+      description: What app do you want to deploy?
+      placeholder: e.g., Jellyfin, Nextcloud, Home Assistant
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target-namespace
+    attributes:
+      label: Target Namespace
+      options:
+        - media
+        - default
+        - observability
+        - security
+        - database
+        - network
+        - external
+        - Create new namespace
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What does this app do?
+      description: Brief description of the application and why you want it
+      placeholder: Describe the purpose and benefits...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment-method
+    attributes:
+      label: Deployment Method
+      options:
+        - Helm Chart
+        - Kustomize
+        - Raw Manifests
+        - Docker Compose (needs conversion)
+        - Not sure yet
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements & Dependencies
+      description: What does this app need to work?
+      placeholder: |
+        - Database (PostgreSQL/MySQL/etc.)
+        - External storage
+        - Specific ports
+        - Secrets/API keys
+        - Domain/subdomain
+        - etc.
+
+  - type: textarea
+    id: config-notes
+    attributes:
+      label: Configuration Notes
+      description: Any specific configuration requirements or notes
+      placeholder: Special settings, resource requirements, networking needs, etc.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-deployment Checklist
+      options:
+        - label: Found suitable Helm chart or manifests
+        - label: Checked resource requirements
+        - label: Planned networking/ingress setup
+        - label: Identified required secrets
+        - label: Considered backup/persistence needs
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Useful Links
+      description: Documentation, Helm charts, GitHub repos, etc.
+      placeholder: |
+        - Official docs:
+        - Helm chart:
+        - GitHub:
+        - Other:

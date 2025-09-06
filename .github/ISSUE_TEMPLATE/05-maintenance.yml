@@ -1,0 +1,133 @@
+name: 🔧 Maintenance
+description: Scheduled maintenance tasks for the home lab cluster
+title: "🔧 [Maintenance]: "
+labels: ["maintenance"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for planned maintenance tasks, updates, and routine cluster operations.
+
+  - type: input
+    id: maintenance-task
+    attributes:
+      label: Maintenance Task
+      description: What maintenance needs to be done?
+      placeholder: e.g., Update all Helm charts, Certificate renewal, Node maintenance
+    validations:
+      required: true
+
+  - type: dropdown
+    id: maintenance-type
+    attributes:
+      label: Type of Maintenance
+      options:
+        - Version updates / upgrades
+        - Security updates
+        - Certificate renewal
+        - Cluster node maintenance
+        - Storage maintenance
+        - Backup verification
+        - Performance tuning
+        - Cleanup / housekeeping
+        - Infrastructure changes
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact-level
+    attributes:
+      label: Expected Impact
+      options:
+        - No downtime expected
+        - Brief service interruption
+        - Planned downtime required
+        - Rolling updates (no downtime)
+        - Unknown impact
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-services
+    attributes:
+      label: Affected Services
+      description: Which apps/services will be impacted?
+      placeholder: |
+        - All services
+        - Media stack (Plex, Sonarr, etc.)
+        - Monitoring (Grafana, Prometheus)
+        - Specific apps: ...
+
+  - type: textarea
+    id: maintenance-plan
+    attributes:
+      label: Maintenance Plan
+      description: Step-by-step plan for the maintenance
+      placeholder: |
+        1. Pre-maintenance checks
+        2. Backup critical data
+        3. Perform maintenance tasks
+        4. Verify everything works
+        5. Post-maintenance cleanup
+    validations:
+      required: true
+
+  - type: input
+    id: planned-date
+    attributes:
+      label: Planned Date/Time
+      description: When do you plan to do this maintenance?
+      placeholder: e.g., This weekend, Next Tuesday evening, ASAP
+
+  - type: textarea
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: What needs to be done before starting?
+      placeholder: |
+        - Backup data
+        - Stop certain services
+        - Download updates
+        - Notify users
+        - etc.
+
+  - type: checkboxes
+    id: pre-maintenance-checklist
+    attributes:
+      label: Pre-Maintenance Checklist
+      options:
+        - label: Backup critical data
+        - label: Document current state
+        - label: Check cluster health
+        - label: Verify rollback plan
+        - label: Schedule maintenance window
+        - label: Test in staging/dev (if applicable)
+
+  - type: textarea
+    id: rollback-plan
+    attributes:
+      label: Rollback Plan
+      description: How to revert if something goes wrong
+      placeholder: Steps to rollback the changes if needed...
+
+  - type: textarea
+    id: verification-steps
+    attributes:
+      label: Post-Maintenance Verification
+      description: How to verify maintenance was successful
+      placeholder: |
+        - Check all pods are running
+        - Verify services are accessible
+        - Test critical functionality
+        - Monitor for errors
+        - etc.
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any other important information
+      placeholder: Special considerations, known issues, references, etc.

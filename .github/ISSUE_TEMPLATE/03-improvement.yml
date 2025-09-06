@@ -1,0 +1,95 @@
+name: 🚀 Improvement
+description: Improve existing apps or cluster configuration
+title: "🚀 [Improvement]: "
+labels: ["improvement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to suggest improvements to existing applications or cluster infrastructure.
+
+  - type: input
+    id: component
+    attributes:
+      label: What needs improvement?
+      description: Which app, service, or cluster component?
+      placeholder: e.g., Grafana dashboards, Plex performance, cluster monitoring
+    validations:
+      required: true
+
+  - type: dropdown
+    id: improvement-type
+    attributes:
+      label: Type of Improvement
+      options:
+        - Performance optimization
+        - Configuration enhancement
+        - Security improvement
+        - Monitoring/observability
+        - Resource optimization
+        - User experience
+        - Automation
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-situation
+    attributes:
+      label: Current Situation
+      description: How does it work currently?
+      placeholder: Describe the current state...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Improvement
+      description: What would you like to improve and how?
+      placeholder: Describe your improvement idea...
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Expected Benefits
+      description: What benefits will this improvement provide?
+      placeholder: |
+        - Better performance
+        - Easier maintenance
+        - Cost savings
+        - Better monitoring
+        - etc.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low - Nice to have
+        - Medium - Would be helpful
+        - High - Really needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-notes
+    attributes:
+      label: Implementation Ideas
+      description: Any thoughts on how to implement this?
+      placeholder: Technical approach, tools needed, potential challenges, etc.
+
+  - type: textarea
+    id: resources
+    attributes:
+      label: Additional Resources
+      description: Links, documentation, or examples
+      placeholder: |
+        - Related documentation:
+        - Examples:
+        - Similar implementations:
