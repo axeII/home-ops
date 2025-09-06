@@ -82,10 +82,6 @@ spec:
             port: *port
           metrics:
             port: *metricsPort
-    serviceMonitor:
-      app:
-        endpoints:
-          - port: http
     route:
       app:
         hostnames:
