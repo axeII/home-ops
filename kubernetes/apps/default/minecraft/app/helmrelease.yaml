@@ -50,6 +50,7 @@ spec:
       version: 1.21.8
       type: PAPER
       difficulty: normal
+      whitelisted: "phonyAustralian,Grandmainmybed"
       ops: "phonyAustralian"
       pvp: true
       motd: Meh
