@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://crd.movishell.pl/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app minecraft
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: minecraft
+  interval: 1h
+  values:
+    deploymentAnnotations:
+      secret.reloader.stakater.com/reload: &secret minecraft-secret
+    image:
+      repository: ghcr.io/itzg/minecraft-server
+      tag: 2025.9.0-java21
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+    securityContext:
+      runAsUser: 1000
+      fsGroup: 1000
+    livenessProbe:
+      initialDelaySeconds: 0
+    readinessProbe:
+      initialDelaySeconds: 0
+    startupProbe:
+      enabled: true
+    extraEnv:
+      TZ: "Europe/Paris"
+      ENABLE_ROLLING_LOGS: true
+      UID: 1000
+      GID: 1000
+      MEMORY: ""
+    persistence:
+      dataDir:
+        enabled: true
+        existingClaim: *app
+    serviceAnnotations:
+      lbipam.cilium.io/ips: "192.168.69.102"
+    serviceLabels:
+      io.cilium/ippool: public
+    minecraftServer:
+      eula: true
+      version: 1.21.4
+      type: PAPER
+      difficulty: normal
+      whitelist: "phonyAussie,Grandmainmybed"
+      ops: "phoneyAussie"
+      pvp: true
+      motd: Meh
+      worldSaveName: RomanSaje
+      viewDistance: 12
+      forceReDownload: true
+      memory: ""
+      jvmXXOpts: "-XX:MaxRAMPercentage=70"
+      # spigetResources:
+      #   - 36618
+      #   # Dynmap
+      #   - 274
+      rcon:
+        enabled: true
+        serviceType: ClusterIP
+      serviceType: LoadBalancer
+      extraPorts:
+        - name: map
+          containerPort: 8100
+          protocol: TCP
+          service:
+            enabled: true
+            embedded: false
+            type: ClusterIP
+            port: 8100
+  valuesFrom:
+    - kind: Secret
+      name: *secret
+      valuesKey: RCON_PASSWORD
+      targetPath: minecraftServer.rcon.password
