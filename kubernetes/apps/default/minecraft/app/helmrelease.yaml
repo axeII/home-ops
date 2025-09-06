@@ -46,11 +46,9 @@ spec:
       io.cilium/ippool: public
     minecraftServer:
       eula: true
-      onlineMode: false
       version: 1.21.8
       type: PAPER
       difficulty: normal
-      whitelist: "phonyAustralian,Grandmainmybed"
       ops: "phonyAustralian"
       pvp: true
       motd: Meh
