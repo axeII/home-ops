@@ -102,7 +102,3 @@ spec:
             port: *port
           health:
             port: *healthPort
-    serviceMonitor:
-      app:
-        endpoints:
-          - port: http
