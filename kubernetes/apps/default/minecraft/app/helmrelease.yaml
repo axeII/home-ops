@@ -49,7 +49,7 @@ spec:
       version: 1.21.8
       type: PAPER
       difficulty: normal
-      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles" # Pridat bioaldu a juru
+      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHelen1980" # Pridat bioaldu
       ops: "phonyAustralian"
       pvp: true
       motd: Meh
