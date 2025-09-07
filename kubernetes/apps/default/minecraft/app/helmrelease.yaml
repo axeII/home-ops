@@ -52,7 +52,7 @@ spec:
       ops: "phonyAustralian"
       pvp: true
       motd: Meh
-      worldSaveName: RomanSaje
+      worldSaveName: "The Forgotten Realm"
       viewDistance: 12
       forceReDownload: true
       memory: ""
