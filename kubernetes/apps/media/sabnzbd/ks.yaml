@@ -9,6 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/keda/nfs-scaler
   decryption:
     provider: sops
     secretRef:
@@ -22,6 +24,8 @@ spec:
       namespace: kube-system
   path: ./kubernetes/apps/media/sabnzbd/app
   postBuild:
+    substitute:
+      APP: *app
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

@@ -14,3 +14,5 @@ resources:
   - ./grafana/ks.yaml
   - ./loki/ks.yaml
   - ./alloy/ks.yaml
+  - ./keda/ks.yaml
+  - ./blackbox-exporter/ks.yaml
