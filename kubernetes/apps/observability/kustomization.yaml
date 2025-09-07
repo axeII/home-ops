@@ -16,3 +16,4 @@ resources:
   - ./alloy/ks.yaml
   - ./keda/ks.yaml
   - ./blackbox-exporter/ks.yaml
+  - ./unpoller/ks.yaml
