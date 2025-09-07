@@ -54,7 +54,7 @@ spec:
       pvp: true
       motd: Meh
       worldSaveName: "The Forgotten Realm"
-      viewDistance: 32
+      viewDistance: 26
       forceReDownload: true
       memory: ""
       jvmXXOpts: "-XX:MaxRAMPercentage=70"
