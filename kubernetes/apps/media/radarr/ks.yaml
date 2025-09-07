@@ -9,12 +9,17 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/keda/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: external-secrets-stores
       namespace: kube-system
   path: ./kubernetes/apps/media/radarr/app
+  postBuild:
+    substitute:
+      APP: *app
   prune: true
   sourceRef:
     kind: GitRepository
