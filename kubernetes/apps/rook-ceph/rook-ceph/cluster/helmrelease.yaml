@@ -35,6 +35,12 @@ spec:
       createPrometheusRules: true
     toolbox:
       enabled: true
+      resources:
+        limits:
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
     configOverride: |
       [global]
       bdev_enable_discard = true
@@ -93,46 +99,46 @@ spec:
       resources:
         mgr:
           limits:
-            memory: 2Gi
+            memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 500Mi
+            cpu: 50m
+            memory: 256Mi
         mon:
           limits:
-            memory: 2Gi
+            memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 500Mi
+            cpu: 50m
+            memory: 256Mi
         osd:
           limits:
-            memory: 4Gi
+            memory: 2Gi
           requests:
             cpu: 100m
-            memory: 1500Mi
+            memory: 1Gi
         mgr-sidecar:
           limits:
-            memory: 300Mi
+            memory: 256Mi
           requests:
-            cpu: 100m
-            memory: 40Mi
+            cpu: 50m
+            memory: 32Mi
         crashcollector:
           limits:
-            memory: 60Mi
+            memory: 64Mi
           requests:
-            cpu: 100m
-            memory: 10Mi
+            cpu: 50m
+            memory: 16Mi
         logcollector:
           limits:
-            memory: 2Gi
+            memory: 512Mi
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 50m
+            memory: 64Mi
         cleanup:
           limits:
-            memory: 2Gi
+            memory: 1Gi
           requests:
-            cpu: 500m
-            memory: 100Mi
+            cpu: 200m
+            memory: 128Mi
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
@@ -164,10 +170,10 @@ spec:
                       app.kubernetes.io/part-of: *cephFileSystemName
             resources:
               requests:
-                cpu: 100m
-                memory: 1Gi
+                cpu: 50m
+                memory: 512Mi
               limits:
-                memory: 4Gi
+                memory: 2Gi
         storageClass:
           enabled: true
           isDefault: false
