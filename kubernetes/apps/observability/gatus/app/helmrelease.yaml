@@ -57,6 +57,7 @@ spec:
               GATUS_WEB_PORT: &port 80
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
+              GATUS_LOG_LEVEL: WARN
               TZ: Europe/Paris
             envFrom: *envFrom
             probes:
