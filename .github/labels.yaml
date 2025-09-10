@@ -1,18 +1,14 @@
 ---
 # Areas
-- { name: "area/ansible",               color: "0e8a16" }
 - { name: "area/bootstrap",             color: "0e8a16" }
 - { name: "area/github",                color: "0e8a16" }
 - { name: "area/kubernetes",            color: "0e8a16" }
-- { name: "area/terraform",             color: "0e8a16" }
 # Renovate Types
-- { name: "renovate/ansible",           color: "027fa0" }
 - { name: "renovate/container",         color: "027fa0" }
 - { name: "renovate/github-action",     color: "027fa0" }
 - { name: "renovate/grafana-dashboard", color: "027fa0" }
 - { name: "renovate/github-release",    color: "027fa0" }
 - { name: "renovate/helm",              color: "027fa0" }
-- { name: "renovate/terraform",         color: "027fa0" }
 - { name: "renovate/pip",               color: "027fa0" }
 # Semantic Type
 - { name: "type/patch",                 color: "ffec19" }
@@ -22,5 +18,9 @@
 - { name: "type/digest",                color: "ffeC19" }
 # Uncategorized
 - { name: "hold",                       color: "ee0701" }
+# General
+- { name: "bug",                        color: "a4ffae" }
+- { name: "deploy",                     color: "1f6feb" }
+- { name: "improvement",                color: "ff9800" }
 # Status
 - { name: "status/priority",            color: "519fd0" }

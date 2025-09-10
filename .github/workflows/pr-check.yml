@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@a8e2f975c9bca245b9e3183aecbdb835b810f297 # v44
+        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32 # v46.0.1
       - uses: harupy/find-trailing-whitespace@master
       - name: "Gitleaks checks"
         uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2

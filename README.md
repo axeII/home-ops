@@ -44,7 +44,7 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 ## 📖 Overview
 
-Here, I perform DevOps best practices but at home. Check out the hardware section where I describe what sort of hardware I am using. Thanks to Ansible, it's very easy for me to manage my home infrastructure and the cluster. I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
+Here, I perform DevOps best practices at home. Check out the hardware section where I describe what sort of hardware I am using. I adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
 
 ![Alt](https://repobeats.axiom.co/api/embed/ac9d545da659ac0aa72d1a74c05aa89fed08418b.svg "Repobeats analytics image")
 
