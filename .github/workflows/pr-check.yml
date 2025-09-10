@@ -13,22 +13,25 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@a8e2f975c9bca245b9e3183aecbdb835b810f297 # v44
       - uses: harupy/find-trailing-whitespace@master
       - name: "Gitleaks checks"
         uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Copy changes files"
+      - name: "Copy changed files"
         run: |
           mkdir testfiles
-          file_list=$(gh pr view ${{ github.event.number }} --json files -q '.files[].path' | grep -v .github)
-          for file in $file_list; do
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ "$file" == .github/* ]]; then
+              continue
+            fi
             if [ -f "$file" ]; then
               cp --parents "$file" testfiles
             fi
           done
-        env:
-          GH_TOKEN: ${{ github.token }}
       - name: "Yamllint checks"
         uses: karancode/yamllint-github-action@master
         with:

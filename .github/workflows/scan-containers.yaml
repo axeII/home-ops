@@ -6,8 +6,8 @@ on: # yamllint disable-line rule:truthy
     branches:
       - main
     paths:
-      - "cluster/**.yaml"
-      - "ansible/**.yml.j2"
+      - "kubernetes/**/*.yaml"
+      - "kubernetes/**/*.yml"
 
 jobs:
   detect-file-changes:
