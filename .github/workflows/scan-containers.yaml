@@ -21,10 +21,8 @@ jobs:
           list-files: json
           filters: |
             yaml:
-              - added|modified: "**.yaml"
-              - added|modified: "**.yml"
-              - added|modified: "**.yaml.j2"
-              - added|modified: "**.yml.j2"
+              - added|modified: "kubernetes/**/*.yaml"
+              - added|modified: "kubernetes/**/*.yml"
     outputs:
       yaml_files: ${{ steps.filter.outputs.yaml_files }}
   detect-containers:
