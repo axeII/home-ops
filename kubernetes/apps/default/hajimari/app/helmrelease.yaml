@@ -73,8 +73,6 @@ spec:
               url: "https://artifacthub.io/"
             - name: k8s-at-home-search
               url: "https://kubesearch.dev/"
-            - name: TerraformCloud
-              url: "https://app.terraform.io/"
             - name: Git-cleaner
               url: "https://rtyley.github.io/bfg-repo-cleaner/"
             - name: K8S Exam simulator

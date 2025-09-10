@@ -29,12 +29,6 @@ repos:
   #   rev: v2.1.1
   #   hooks:
   #     - id: forbid-secrets
-  # - repo: https://github.com/gruntwork-io/pre-commit
-  #   rev: v0.1.23
-  #   hooks:
-  #     - id: terraform-fmt
-  #     - id: terraform-validate
-  #     - id: tflint
   - repo: https://github.com/zricethezav/gitleaks
     rev: v8.18.3
     hooks:
