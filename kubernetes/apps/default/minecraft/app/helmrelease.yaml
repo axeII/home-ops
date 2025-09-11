@@ -79,7 +79,7 @@ spec:
         projects:
           - worldedit
           - luckperms
-          - distanthorizons
+          - distanthorizons:beta
   valuesFrom:
     - kind: Secret
       name: *secret
