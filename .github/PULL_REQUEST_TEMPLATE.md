@@ -1,5 +1,4 @@
 ## What's Changed
-
 <!-- Brief description of what you're adding/changing -->
 
 ### Type of Change
@@ -10,20 +9,5 @@
 - [ ] 🐛 Bug fix
 - [ ] 🧹 Cleanup
 
-### Apps/Namespaces Affected
-
+### Notes and apps affected
 <!-- Which apps or namespaces will this impact? -->
-
-### Testing Done
-
-- [ ] Manifests validated locally
-- [ ] Tested the change works
-- [ ] Checked it doesn't break anything
-
-### Notes
-
-<!-- Anything else worth mentioning? -->
-
----
-
-Fixes #
