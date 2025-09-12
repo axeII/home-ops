@@ -16,7 +16,6 @@ resources:
   - ./ingress-nginx.yaml
   - ./k8s-gateway.yaml
   - ./external-secrets.yaml
-  - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./democratic-csi.yaml
   - ./hajimari.yaml
