@@ -17,7 +17,7 @@ spec:
       tag: 2025.9.2-java21
     resources:
       limits:
-        memory: 6Gi
+        memory: 8Gi
       requests:
         cpu: 1000m
         memory: 2Gi
