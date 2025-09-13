@@ -17,3 +17,4 @@ resources:
   - ./keda/ks.yaml
   - ./blackbox-exporter/ks.yaml
   - ./unpoller/ks.yaml
+  - ./silence-operator/ks.yaml
