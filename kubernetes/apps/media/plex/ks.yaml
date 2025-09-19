@@ -26,6 +26,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 20Gi
+      VOLSYNC_CACHE_CAPACITY: 5Gi
       GATUS_PATH: /identity
   prune: true
   retryInterval: 2m
