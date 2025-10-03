@@ -75,14 +75,16 @@ spec:
       app:
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
+          - "bookmarks.juno.moe"
+          - "kp.juno.moe"
         parentRefs:
           - name: internal
             namespace: kube-system
             sectionName: https
         rules:
           - backendRefs:
-            - identifier: app
-              port: *port
+              - identifier: app
+                port: *port
     service:
       app:
         ports:
