@@ -9,6 +9,7 @@
     "github>axeII/home-ops//.renovate/autoMerge.json5",
     "github>axeII/home-ops//.renovate/customManagers.json5",
     "github>axeII/home-ops//.renovate/grafanaDashboards.json5",
+    "github>axeII/home-ops//.renovate/minecraft.json5",
     "github>axeII/home-ops//.renovate/groups.json5",
     "github>axeII/home-ops//.renovate/labels.json5",
     "github>axeII/home-ops//.renovate/semanticCommits.json5",

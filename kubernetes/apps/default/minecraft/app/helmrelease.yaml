@@ -46,6 +46,7 @@ spec:
       io.cilium/ippool: public
     minecraftServer:
       eula: true
+      # renovate: datasource=custom.minecraft-release
       version: 1.21.8
       type: FABRIC
       difficulty: normal
