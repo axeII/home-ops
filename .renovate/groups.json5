@@ -124,5 +124,15 @@
       },
       minimumGroupSize: 2,
     },
+    {
+      description: "Dragonfly Group",
+      groupName: "dragonfly",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/dragonflydb/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
   ],
 }
