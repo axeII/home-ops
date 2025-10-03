@@ -3,12 +3,12 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Track Minecraft release versions",
-      "managerFilePatterns": [
-        "/(^|/)versions\\.ya?ml$/"
+      "description": "Track Minecraft release versions in HelmRelease files",
+      "fileMatch": [
+        "(^|/)helmrelease\\.ya?ml$"
       ],
       "matchStrings": [
-        "# renovate: datasource=custom.minecraft-release\\s+minecraft_version:\\s+[\"']?(?<currentValue>[^\"'\\s]+)[\"']?"
+        "# renovate: datasource=custom\\.minecraft-release\\s+version:\\s+[\"']?(?<currentValue>[^\"'\\s]+)[\"']?"
       ],
       "datasourceTemplate": "custom.minecraft-release",
       "depNameTemplate": "minecraft-release",
@@ -16,12 +16,12 @@
     },
     {
       "customType": "regex",
-      "description": "Track Minecraft snapshot versions",
-      "managerFilePatterns": [
-        "/(^|/)versions\\.ya?ml$/"
+      "description": "Track Minecraft snapshot versions in HelmRelease files",
+      "fileMatch": [
+        "(^|/)helmrelease\\.ya?ml$"
       ],
       "matchStrings": [
-        "# renovate: datasource=custom.minecraft-snapshot\\s+minecraft_snapshot:\\s+[\"']?(?<currentValue>[^\"'\\s]+)[\"']?"
+        "# renovate: datasource=custom\\.minecraft-snapshot\\s+version:\\s+[\"']?(?<currentValue>[^\"'\\s]+)[\"']?"
       ],
       "datasourceTemplate": "custom.minecraft-snapshot",
       "depNameTemplate": "minecraft-snapshot",
