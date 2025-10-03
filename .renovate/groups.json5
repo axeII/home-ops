@@ -127,7 +127,7 @@
     {
       description: "Dragonfly Group",
       groupName: "dragonfly",
-      matchDatasources: ["docker"],
+      matchDatasources: ["docker", "github-releases"],
       matchPackageNames: ["/dragonflydb/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
