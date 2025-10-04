@@ -75,8 +75,6 @@ spec:
       app:
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
-          - "bookmarks.juno.moe"
-          - "kp.juno.moe"
         parentRefs:
           - name: internal
             namespace: kube-system
