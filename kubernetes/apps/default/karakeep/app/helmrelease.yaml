@@ -127,6 +127,8 @@ spec:
       app:
         hostnames:
           - karakeep.juno.moe
+          - "bookmarks.juno.moe"
+          - "kp.juno.moe"
         parentRefs:
           - name: external
             namespace: kube-system
