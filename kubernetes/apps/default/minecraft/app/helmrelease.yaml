@@ -79,7 +79,8 @@ spec:
       modrinth:
         projects:
           - worldedit
-          - luckperms
+          - ferrite-core
+          - lithium
           - distanthorizons:beta
   valuesFrom:
     - kind: Secret
