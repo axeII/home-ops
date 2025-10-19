@@ -18,10 +18,10 @@ theme:
       negative-color: 0 90 50
 
 auth:
-  secret-key: !env_var GLANCE_SECRET_KEY
+  secret-key: !env_var SECRET_KEY
   users:
     admin:
-      password: !env_var GLANCE_ADMIN_PASSWORD
+      password: !env_var ADMIN_PASSWORD
 
 pages:
   - name: Home
