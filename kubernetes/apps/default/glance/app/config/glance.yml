@@ -240,15 +240,17 @@ pages:
 
       - size: small
         widgets:
-          - title: Links
-            color: 200 50 50
-            links:
-              - title: Unifi
-                url: "https://unifi.ui.com/consoles"
-              - title: "Cloudflare dashboard"
-                url: "https://dash.cloudflare.com/"
-              - title: Home-Ops
-                url: "https://github.com/axeII/home-ops"
+          - type: bookmarks
+            groups:
+              - title: Links
+                color: 200 50 50
+                links:
+                  - title: Unifi
+                    url: "https://unifi.ui.com/consoles"
+                  - title: "Cloudflare dashboard"
+                    url: "https://dash.cloudflare.com/"
+                  - title: Home-Ops
+                    url: "https://github.com/axeII/home-ops"
 
           - type: weather
             location: Brno, Czechia
