@@ -71,6 +71,8 @@ spec:
           - port: http
     route:
       app:
+        annotations:
+          glance/show: "true"
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: external
