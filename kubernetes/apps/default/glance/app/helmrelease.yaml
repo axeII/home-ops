@@ -32,7 +32,7 @@ spec:
               TZ: Europe/Paris
             envFrom:
               - secretRef:
-                  name: recyclarr-secret
+                  name: gatus-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
