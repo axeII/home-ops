@@ -163,24 +163,55 @@ pages:
               - title: Entertainment
                 color: 10 70 50
                 links:
-                  - title: Netflix
-                    url: https://www.netflix.com/
-                  - title: Disney+
-                    url: https://www.disneyplus.com/
-                  - title: YouTube
-                    url: https://www.youtube.com/
-                  - title: Prime Video
-                    url: https://www.primevideo.com/
+                  - title: "Last.fm"
+                    url: "https://www.last.fm/home"
+                  - title: "Geoguessr"
+                    url: "https://www.geoguessr.com"
+                  # - title: "News"
+                  #   url: "https://www.newsminimalist.com/"
 
-              - title: Social
+              - title: DevOps
                 color: 200 50 50
                 links:
-                  - title: Reddit
-                    url: https://www.reddit.com/
-                  - title: Twitter
-                    url: https://twitter.com/
-                  - title: Instagram
-                    url: https://www.instagram.com/
+                  - title: Artifacthub
+                    url: "https://artifacthub.io/"
+                  - title: k8s-at-home-search
+                    url: "https://kubesearch.dev/"
+                  - title: Git-cleaner
+                    url: "https://rtyley.github.io/bfg-repo-cleaner/"
+                  - title: K8S Exam simulator
+                    url: "https://killer.sh/"
+                  - title: Github-download-folder
+                    url: "https://download-directory.github.io"
+
+              - title: Fun
+                color: 200 50 50
+                links:
+                  - title: Archive
+                    url: "https://archive.ph"
+                  - title: Wallpapers
+                    url: "https://unsplash.com"
+                  - title: Diving-sites
+                    url: "https://www.padi.com/dive-sites"
+              - title: Hacking
+                color: 200 50 50
+                links:
+                  - title: Shodan
+                    url: "https://shodan.io"
+                  - title: Intelx
+                    url: "https://intelx.io/"
+                  - title: Greynoise
+                    url: "https://www.greynoise.io/"
+                  - title: GrayHatWarFare
+                    url: "https://www.greyhatwarfare.com/"
+                  - title: GPP Tools
+                    url: "https://bgp.tools"
+                  - title: BGP View
+                    url: "https://bgpview.io"
+                  - title: "Bookhatrix"
+                    url: "https://book.hacktricks.xyz"
+                  - title: "Pentest-tools"
+                    url: "https://offsec.tools/"
 
           - type: extension
             url: http://glance-k8s:8080/extension/apps
@@ -207,18 +238,17 @@ pages:
               - url: https://blog.cloudflare.com/rss
                 title: Cloudflare Blog
 
-
       - size: small
         widgets:
           - title: Links
             color: 200 50 50
             links:
-            - title: Unifi
-              url: "https://unifi.ui.com/consoles"
-            - title: "Cloudflare dashboard"
-              url: "https://dash.cloudflare.com/"
-            - title: Home-Ops
-              url: "https://github.com/axeII/home-ops"
+              - title: Unifi
+                url: "https://unifi.ui.com/consoles"
+              - title: "Cloudflare dashboard"
+                url: "https://dash.cloudflare.com/"
+              - title: Home-Ops
+                url: "https://github.com/axeII/home-ops"
 
           - type: weather
             location: Brno, Czechia
@@ -227,14 +257,13 @@ pages:
 
   - name: media
 
-
-# ---
+  # ---
   - name: finance
     columns:
       head-widgets:
-      - type: markets
-        hide-header: true
-        markets:
+        - type: markets
+          hide-header: true
+          markets:
             markets:
               - symbol: SPY
                 name: S&P 500
@@ -245,9 +274,8 @@ pages:
                 name: DAX
               - symbol: ^N225
                 name: Nikkei 225
-    
-    
-# ---
+
+  # ---
   - name: news
     columns:
       - size: full
@@ -297,19 +325,3 @@ pages:
               - nikitabobko/AeroSpace
               - freelensapp/freelens
               - docmost/docmost
-
-# ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
