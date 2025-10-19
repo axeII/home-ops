@@ -18,7 +18,7 @@
 - { name: "type/break",                 color: "f6412d" }
 - { name: "type/digest",                color: "ffeC19" }
 # Uncategorized
-- { name: "hold",                       color: "ee0701" }
+- { name: "do not merge",                       color: "ee0701" }
 # General
 - { name: "bug",                        color: "a4ffae" }
 - { name: "deploy",                     color: "1f6feb" }
