@@ -268,16 +268,15 @@ pages:
       - type: markets
         hide-header: true
         markets:
-          markets:
-            - symbol: SPY
-              name: S&P 500
-            - symbol: TSLA
-              name: Tesla
-              chart-link: https://www.tradingview.com/chart/?symbol=INDEX:BTCUSD
-            - symbol: DAX
-              name: DAX
-            - symbol: ^N225
-              name: Nikkei 225
+          - symbol: SPY
+            name: S&P 500
+          - symbol: TSLA
+            name: Tesla
+            chart-link: https://www.tradingview.com/chart/?symbol=INDEX:BTCUSD
+          - symbol: DAX
+            name: DAX
+          - symbol: ^N225
+            name: Nikkei 225
     columns:
       - size: full
         widgets:
