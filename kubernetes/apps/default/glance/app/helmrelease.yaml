@@ -32,7 +32,7 @@ spec:
               TZ: Europe/Paris
             envFrom:
               - secretRef:
-                  name: gatus-secret
+                  name: glance-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
