@@ -30,9 +30,6 @@ spec:
               tag: v0.8.4@sha256:6df86a7e8868d1eda21f35205134b1962c422957e42a0c44d4717c8e8f741b1a
             env:
               TZ: Europe/Paris
-            envFrom:
-              - secretRef:
-                  name: glance-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -103,8 +100,8 @@ spec:
                 port: *port
     persistence:
       config-file:
-        type: configMap
-        name: glance-configmap
+        type: secret
+        name: glance-config-secret
         globalMounts:
           - path: /app/config/glance.yml
             subPath: glance.yml
