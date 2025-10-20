@@ -64,6 +64,10 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: si:docsdotrs
+          glance/description: "Notes system focused on privacy and simplicity."
         hostnames:
           - nt.juno.moe
         parentRefs:
