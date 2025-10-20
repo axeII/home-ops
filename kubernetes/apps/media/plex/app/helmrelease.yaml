@@ -35,7 +35,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: &path /identity
+                    path: /identity
                     port: &port 32400
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -73,6 +73,10 @@ spec:
           - 65537
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: si:plex
+          glance/description: "Plex Media server"
         hostnames: ["{{ .Release.Name }}.juno.moe"]
         parentRefs:
           - name: external
