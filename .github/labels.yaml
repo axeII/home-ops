@@ -23,5 +23,6 @@
 - { name: "bug",                        color: "a4ffae" }
 - { name: "deploy",                     color: "1f6feb" }
 - { name: "improvement",                color: "ff9800" }
+- { name: "broken",                     color: "ee0701" }
 # Status
 - { name: "status/priority",            color: "519fd0" }
