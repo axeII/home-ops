@@ -34,8 +34,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    # - name: rook-ceph
-    #   namespace: *namespace
+    - name: rook-ceph
+      namespace: *namespace
     - name: volsync
       namespace: volsync-system
   healthChecks:
