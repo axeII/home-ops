@@ -17,11 +17,6 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: rook-ceph-operator
-      namespace: rook-ceph
-    - name: snapshot-controller
-      namespace: volsync-system
   values:
     # https://artifacthub.io/packages/helm/rook/rook-ceph-cluster?modal=values
     monitoring:
