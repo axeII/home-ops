@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  NAMESPACE: media
+  APP_LABEL: app.kubernetes.io/name=plex
+  LOGS_PATH: "/config/Library/Application Support/Plex Media Server/Logs"
+
+tasks:
+  get-pod:
+    desc: Get the Plex pod name
+    cmd: kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} -o jsonpath='{.items[0].metadata.name}'
+    silent: true
+
+  logs:
+    desc: Show standard container logs for Plex
+    cmd: kubectl logs -n {{.NAMESPACE}} -l {{.APP_LABEL}} {{.CLI_ARGS | default "-f"}}
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-list:
+    desc: List all Plex log files in the custom logs directory
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- ls -lah "{{.LOGS_PATH}}"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-main:
+    desc: View the main Plex Media Server log
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- cat "{{.LOGS_PATH}}/Plex Media Server.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-main-tail:
+    desc: Tail the main Plex Media Server log (follow in real-time)
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- tail -f "{{.LOGS_PATH}}/Plex Media Server.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-main-last:
+    desc: View last N lines of the main Plex log [LINES=100]
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- tail -n {{.LINES | default "100"}} "{{.LOGS_PATH}}/Plex Media Server.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-scanner:
+    desc: View the Plex Media Scanner Analysis log
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- cat "{{.LOGS_PATH}}/Plex Media Scanner Analysis.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-transcoder:
+    desc: View the Plex Transcoder Statistics log
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- cat "{{.LOGS_PATH}}/Plex Transcoder Statistics.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-grep:
+    desc: Search through main Plex log [PATTERN=required]
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- grep -i "{{.PATTERN}}" "{{.LOGS_PATH}}/Plex Media Server.log"
+    requires:
+      vars: [PATTERN]
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-errors:
+    desc: Search for errors in the main Plex log
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- grep -i error "{{.LOGS_PATH}}/Plex Media Server.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-warnings:
+    desc: Search for warnings in the main Plex log
+    cmd: kubectl exec -n {{.NAMESPACE}} $(task plex:get-pod) -- grep -i warn "{{.LOGS_PATH}}/Plex Media Server.log"
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-copy:
+    desc: Copy all Plex logs to local directory [DEST=./plex-logs]
+    cmd: kubectl cp {{.NAMESPACE}}/$(task plex:get-pod):"{{.LOGS_PATH}}" {{.DEST | default "./plex-logs"}}
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  logs-copy-main:
+    desc: Copy main Plex log to local file [DEST=./plex-server.log]
+    cmd: kubectl cp {{.NAMESPACE}}/$(task plex:get-pod):"{{.LOGS_PATH}}/Plex Media Server.log" {{.DEST | default "./plex-server.log"}}
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  exec:
+    desc: Execute a command in the Plex container [CMD=required]
+    cmd: kubectl exec -n {{.NAMESPACE}} -it $(task plex:get-pod) -- {{.CMD}}
+    requires:
+      vars: [CMD]
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  shell:
+    desc: Open a shell in the Plex container
+    cmd: kubectl exec -n {{.NAMESPACE}} -it $(task plex:get-pod) -- /bin/bash
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  describe:
+    desc: Describe the Plex pod
+    cmd: kubectl describe pod -n {{.NAMESPACE}} -l {{.APP_LABEL}}
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null
+
+  restart:
+    desc: Restart the Plex pod
+    cmd: kubectl delete pod -n {{.NAMESPACE}} -l {{.APP_LABEL}}
+    preconditions:
+      - kubectl get pod -n {{.NAMESPACE}} -l {{.APP_LABEL}} &>/dev/null

@@ -1,29 +1,30 @@
 ---
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
-version: '3'
+version: "3"
 
 set: [pipefail]
 shopt: [globstar]
 
 vars:
   CLUSTER: '{{.CLUSTER | default "main"}}'
-  BOOTSTRAP_DIR: '{{.ROOT_DIR}}/bootstrap'
-  KUBERNETES_DIR: '{{.ROOT_DIR}}/kubernetes'
-  SCRIPTS_DIR: '{{.ROOT_DIR}}/scripts'
-  BOOTSTRAP_CONFIG_FILE: '{{.ROOT_DIR}}/config.yaml'
-  SOPS_CONFIG_FILE: '{{.ROOT_DIR}}/.sops.yaml'
-  TALOS_DIR: '{{.ROOT_DIR}}/talos'
+  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
+  BOOTSTRAP_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
+  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+  TALOS_DIR: "{{.ROOT_DIR}}/talos"
 
 env:
-  KUBECONFIG: '{{.ROOT_DIR}}/kubeconfig'
-  PYTHONDONTWRITEBYTECODE: '1'
-  SOPS_AGE_KEY_FILE: '{{.ROOT_DIR}}/age.key'
-  VIRTUAL_ENV: '{{.ROOT_DIR}}/.venv'
-  TALOSCONFIG: '{{.TALOSCONFIG}}'
+  KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  PYTHONDONTWRITEBYTECODE: "1"
+  SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
+  TALOSCONFIG: "{{.TALOSCONFIG}}"
 
 includes:
   bootstrap: .taskfiles/bootstrap
   kubernetes: .taskfiles/kubernetes
+  plex: .taskfiles/plex
   talos: .taskfiles/talos
   volsync: .taskfiles/volsync
   workstation: .taskfiles/workstation
@@ -32,7 +33,6 @@ includes:
     optional: true
 
 tasks:
-
   default: task --list
 
   init:
