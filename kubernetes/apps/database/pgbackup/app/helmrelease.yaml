@@ -32,6 +32,7 @@ spec:
             image:
               repository: ghcr.io/axeii/pgbackup
               tag: latest
+              pullPolicy: Always
             envFrom:
               - secretRef:
                   name: pgbackup-secret
