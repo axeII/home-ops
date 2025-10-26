@@ -123,8 +123,8 @@ spec:
           registry: quay.io
           repository: prometheus/prometheus
           tag: v2.54.0-dedupelabels
-        retention: 2d
-        retentionSize: 15GB
+        retention: 7d
+        retentionSize: 18GB
         externalLabels:
           cluster: main
         resources:
