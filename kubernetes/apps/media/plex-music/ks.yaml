@@ -16,6 +16,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: music
       # GATUS_PATH: /identity
   prune: true
   retryInterval: 2m
