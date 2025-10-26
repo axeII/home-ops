@@ -118,13 +118,14 @@ spec:
           - auto-gomemlimit
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
-        # externalUrl: https://prometheus.${PUBLIC_DOMAIN}
+        externalUrl: https://prometheus.juno.moe
+        version: v2.55.1 # override 'unsupported Prometheus version' error
         image:
-          registry: quay.io
-          repository: prometheus/prometheus
-          tag: v2.54.0-dedupelabels
-        retention: 2d
-        retentionSize: 15GB
+          registry: docker.io
+          repository: prompp/prompp
+          tag: 0.6.2
+        retention: 7d
+        retentionSize: 18GB
         externalLabels:
           cluster: main
         resources:
