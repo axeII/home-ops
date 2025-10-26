@@ -31,8 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/axeii/pgbackup
-              tag: latest
-              pullPolicy: Always
+              tag: v3@sha256:247b274e2603070aae467351106cd3fb3fdfad0edf9185ff77201eaf1b6d907c
             envFrom:
               - secretRef:
                   name: pgbackup-secret
