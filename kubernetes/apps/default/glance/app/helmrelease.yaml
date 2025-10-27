@@ -100,8 +100,8 @@ spec:
                 port: *port
     persistence:
       config-file:
-        type: secret
-        name: glance-config-secret
+        type: configMap
+        name: glance-configmap
         globalMounts:
           - path: /app/config/glance.yml
             subPath: glance.yml
