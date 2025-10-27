@@ -4,4 +4,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./helmrelease.yaml
-  - ./externalsecret.yaml
+configMapGenerator:
+  - name: glance-configmap
+    files:
+      - glance.yml=./config/glance.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

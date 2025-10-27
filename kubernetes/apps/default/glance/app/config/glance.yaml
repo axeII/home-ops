@@ -1,0 +1,85 @@
+server:
+  port: 80
+  proxied: true
+theme:
+  background-color: 240 21 15
+  contrast-multiplier: 1.2
+  primary-color: 217 92 83
+  positive-color: 115 54 76
+  negative-color: 347 70 65
+pages:
+  - name: Startpage
+    width: slim
+    hide-desktop-navigation: true
+    center-vertically: true
+    columns:
+      - size: full
+        widgets:
+          - type: search
+            search-engine: kagi
+            autofocus: true
+
+          - type: extension
+            url: http://glance-k8s-extension:8080/extension/apps
+            allow-potentially-dangerous-html: true
+            cache: 1s
+            parameters:
+              show-if:
+                - |
+                  namespace != "kube-system"
+                - |
+                  ("glance/show" in annotations || annotations["glance/show"] == "true"
+
+          - type: bookmarks
+            groups:
+              - title: Entertainment
+                color: 10 70 50
+                links:
+                  - title: YouTube
+                    url: https://youtube.com
+                  - title: Netflix
+                    url: https://netflix.com
+                  - title: Archive
+                    url: https://archive.org
+                  - title: Wallpapers
+                    url: https://wallhaven.cc
+
+              - title: DevOps
+                color: 200 50 50
+                links:
+                  - title: Artifacthub
+                    url: https://artifacthub.io
+                  - title: k8s-at-home-search
+                    url: https://nanne.dev/k8s-at-home-search/
+                  - title: Git-cleaner
+                    url: https://gitcleaner.com
+                  - title: K8S Exam simulator
+                    url: https://killer.sh
+                  - title: Github-download-folder
+                    url: https://download-directory.github.io/
+
+              - title: Network & Security
+                color: 200 50 50
+                links:
+                  - title: Shodan
+                    url: https://shodan.io
+                  - title: Greynoise
+                    url: https://greynoise.io
+                  - title: BGP View
+                    url: https://bgp.he.net
+                  - title: ViewDNS
+                    url: https://viewdns.info
+
+              - title: Intelligence & Tools
+                color: 200 50 50
+                links:
+                  - title: Intelx
+                    url: https://intelx.io
+                  - title: GrayHatWarFare
+                    url: https://grayhatwarfare.com
+                  - title: GPP Tools
+                    url: https://gpptools.com
+                  - title: DNSChecker
+                    url: https://dnschecker.org
+                  - title: Diving-sites
+                    url: https://divesites.com
