@@ -26,7 +26,7 @@ pages:
             parameters:
               show-if: |
                 namespace != "kube-system" and
-                ("glance/hide" not in annotations || annotations["glance/show"] == "true")
+                ("glance/hide" in annotations || annotations["glance/show"] == "true")
 
           - type: bookmarks
             groups:
