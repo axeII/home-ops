@@ -24,11 +24,9 @@ pages:
             allow-potentially-dangerous-html: true
             cache: 1s
             parameters:
-              show-if:
-                - |
-                  namespace != "kube-system"
-                - |
-                  ("glance/show" in annotations || annotations["glance/show"] == "true")
+                show-if: |
+                  namespace != "kube-system" and
+                  ("glance/hide" not in annotations || annotations["glance/show"] == "true"))
 
           - type: bookmarks
             groups:
