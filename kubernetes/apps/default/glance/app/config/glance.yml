@@ -24,24 +24,12 @@ pages:
             allow-potentially-dangerous-html: true
             cache: 1s
             parameters:
-                show-if: |
-                  namespace != "kube-system" and
-                  ("glance/hide" not in annotations || annotations["glance/show"] == "true"))
+              show-if: |
+                namespace != "kube-system" and
+                ("glance/hide" not in annotations || annotations["glance/show"] == "true")
 
           - type: bookmarks
             groups:
-              - title: Entertainment
-                color: 10 70 50
-                links:
-                  - title: YouTube
-                    url: https://youtube.com
-                  - title: Netflix
-                    url: https://netflix.com
-                  - title: Archive
-                    url: https://archive.org
-                  - title: Wallpapers
-                    url: https://wallhaven.cc
-
               - title: DevOps
                 color: 200 50 50
                 links:
@@ -67,6 +55,8 @@ pages:
                     url: https://bgp.he.net
                   - title: ViewDNS
                     url: https://viewdns.info
+                  - title: Archive
+                    url: https://archive.si
 
               - title: Intelligence & Tools
                 color: 200 50 50
