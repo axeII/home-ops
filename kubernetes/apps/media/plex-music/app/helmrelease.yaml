@@ -71,8 +71,9 @@ spec:
     route:
       app:
         annotations:
+          glance/name: Music
           glance/show: "true"
-          glance/icon: si:music
+          glance/icon: si:applemusic
           glance/description: "Music streaming service for Plex"
         hostnames: ["music.juno.moe"]
         parentRefs:

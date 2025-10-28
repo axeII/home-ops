@@ -280,6 +280,11 @@ spec:
     route:
       main:
         enabled: true
+        annotations:
+          glance/name: Grafana
+          glance/show: "true"
+          glance/icon: si:grafana
+          glance/description: "Grafana dashboard for observability and monitoring."
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

@@ -125,6 +125,11 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     route:
       app:
+        annotations:
+          glance/name: Bookmarks
+          glance/show: "true"
+          glance/icon: si:bookstack
+          glance/description: "Bookmark manager with AI-powered features."
         hostnames:
           - karakeep.juno.moe
           - "bookmarks.juno.moe"

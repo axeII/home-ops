@@ -65,6 +65,7 @@ spec:
     route:
       app:
         annotations:
+          glance/name: Notes
           glance/show: "true"
           glance/icon: si:docsdotrs
           glance/description: "Notes system focused on privacy and simplicity."
