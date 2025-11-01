@@ -2,11 +2,12 @@ server:
   port: 80
   proxied: true
 theme:
-  background-color: 240 21 15
+  light: true
+  background-color: 240 5 98
   contrast-multiplier: 1.2
-  primary-color: 217 92 83
-  positive-color: 115 54 76
-  negative-color: 347 70 65
+  primary-color: 217 70 25
+  positive-color: 115 60 30
+  negative-color: 347 70 35
 pages:
   - name: Startpage
     width: slim
@@ -30,10 +31,20 @@ pages:
 
           - type: bookmarks
             groups:
+              - title: Admin
+                color: 200 50 50
+                links:
+                  - title: Unifi
+                    url: https://unifi.ui.com/consoles
+                  - title: "Cloudflare dashboard"
+                    url: https://dash.cloudflare.com/
+                  - title: Home-Ops
+                    url: https://github.com/axeII/home-ops
+
               - title: DevOps
                 color: 200 50 50
                 links:
-                  - title: Artifacthub
+                  - title: Helmcharts
                     url: https://artifacthub.io
                   - title: k8s-at-home-search
                     url: https://nanne.dev/k8s-at-home-search/
@@ -55,8 +66,17 @@ pages:
                     url: https://bgp.he.net
                   - title: ViewDNS
                     url: https://viewdns.info
+
+              - title: Archive & Fun
+                color: 200 50 50
+                links:
                   - title: Archive
                     url: https://archive.si
+                  - title: Music
+                    url: https://tidal.squid.wtf/
+                  - title: Diving-sites
+                    url: https://divesites.com
+
 
               - title: Intelligence & Tools
                 color: 200 50 50
@@ -69,5 +89,3 @@ pages:
                     url: https://gpptools.com
                   - title: DNSChecker
                     url: https://dnschecker.org
-                  - title: Diving-sites
-                    url: https://divesites.com
