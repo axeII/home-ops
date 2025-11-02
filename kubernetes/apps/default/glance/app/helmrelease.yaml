@@ -90,7 +90,7 @@ spec:
       glance:
         hostnames:
           - glance.juno.moe
-          - juno.moe
+          - home.juno.moe
         parentRefs:
           - name: internal
             namespace: kube-system

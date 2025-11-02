@@ -69,7 +69,7 @@ spec:
         annotations:
           glance/name: Music
           glance/show: "true"
-          glance/icon: si:applemusic
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/apple-music.png
           glance/description: "Music streaming service for Plex"
         hostnames: ["music.juno.moe"]
         parentRefs:

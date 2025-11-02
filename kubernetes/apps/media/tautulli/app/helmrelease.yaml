@@ -72,6 +72,9 @@ spec:
         type: emptyDir
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

@@ -91,6 +91,9 @@ spec:
           - 65536
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/sonarr.png
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:
