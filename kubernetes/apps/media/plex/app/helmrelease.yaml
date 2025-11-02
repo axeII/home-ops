@@ -75,7 +75,7 @@ spec:
       app:
         annotations:
           glance/show: "true"
-          glance/icon: si:plex
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
           glance/description: "Plex Media server"
         hostnames: ["{{ .Release.Name }}.juno.moe"]
         parentRefs:

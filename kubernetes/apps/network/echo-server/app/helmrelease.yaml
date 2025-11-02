@@ -73,7 +73,7 @@ spec:
       app:
         annotations:
           glance/show: "true"
-          glance/icon: si:sonarqubeserver
+          # glance/icon: si:sonarqubeserver
           glance/description: "A simple HTTP and HTTPS echo server"
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:

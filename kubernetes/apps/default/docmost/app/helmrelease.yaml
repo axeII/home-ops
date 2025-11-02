@@ -67,7 +67,7 @@ spec:
         annotations:
           glance/name: Notes
           glance/show: "true"
-          glance/icon: si:docsdotrs
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docmost.png
           glance/description: "Notes system focused on privacy and simplicity."
         hostnames:
           - nt.juno.moe

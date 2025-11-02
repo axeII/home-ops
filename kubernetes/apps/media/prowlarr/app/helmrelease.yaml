@@ -91,6 +91,9 @@ spec:
                 subPath: tmp
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prowlarr.png
         hostnames:
           - prowlarr.juno.moe
         parentRefs:
