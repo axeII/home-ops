@@ -31,63 +31,70 @@ pages:
 
           - type: bookmarks
             groups:
-              - title: Admin
+              - title: Infrastructure
                 color: 200 50 50
                 links:
                   - title: Unifi
                     url: https://unifi.ui.com/consoles
-                  - title: "Cloudflare dashboard"
+                  - title: Cloudflare
                     url: https://dash.cloudflare.com/
-                  - title: Home-Ops
-                    url: https://github.com/axeII/home-ops
 
-              - title: DevOps
-                color: 200 50 50
+              - title: Code & Git
+                color: 217 70 25
                 links:
-                  - title: Helmcharts
-                    url: https://artifacthub.io
-                  - title: k8s-at-home-search
-                    url: https://nanne.dev/k8s-at-home-search/
-                  - title: Git-cleaner
+                  - title: Home-Ops Repo
+                    url: https://github.com/axeII/home-ops
+                  - title: Git Cleaner
                     url: https://gitcleaner.com
-                  - title: K8S Exam simulator
-                    url: https://killer.sh
-                  - title: Github-download-folder
+                  - title: GitHub Folder Download
                     url: https://download-directory.github.io/
 
-              - title: Network & Security
-                color: 200 50 50
+              - title: Kubernetes
+                color: 115 60 30
+                links:
+                  - title: Artifact Hub
+                    url: https://artifacthub.io
+                  - title: k8s-at-home Search
+                    url: https://nanne.dev/k8s-at-home-search/
+                  - title: K8S Exam Simulator
+                    url: https://killer.sh
+                  - title: Dashboard Icons
+                    url: https://dashboardicons.com/
+
+              - title: DNS & Networking
+                color: 180 60 45
+                links:
+                  - title: DNSChecker
+                    url: https://dnschecker.org
+                  - title: ViewDNS
+                    url: https://viewdns.info
+                  - title: BGP View
+                    url: https://bgp.he.net
+
+              - title: Security Intelligence
+                color: 347 70 35
                 links:
                   - title: Shodan
                     url: https://shodan.io
-                  - title: Greynoise
+                  - title: GreyNoise
                     url: https://greynoise.io
-                  - title: BGP View
-                    url: https://bgp.he.net
-                  - title: ViewDNS
-                    url: https://viewdns.info
-
-              - title: Archive & Fun
-                color: 200 50 50
-                links:
-                  - title: Archive
-                    url: https://archive.si
-                  - title: Music
-                    url: https://tidal.squid.wtf/
-                  - title: Diving-sites
-                    url: https://divesites.com
-                  - title: Cool icons
-                    url: https://dashboardicons.com/
-
-
-              - title: Intelligence & Tools
-                color: 200 50 50
-                links:
-                  - title: Intelx
+                  - title: Intel X
                     url: https://intelx.io
-                  - title: GrayHatWarFare
+                  - title: GrayHatWarfare
                     url: https://grayhatwarfare.com
+
+              - title: Utilities
+                color: 270 50 50
+                links:
                   - title: GPP Tools
                     url: https://gpptools.com
-                  - title: DNSChecker
-                    url: https://dnschecker.org
+                  - title: Archive.si
+                    url: https://archive.si
+
+              - title: Personal
+                color: 160 50 50
+                links:
+                  - title: Music (Tidal)
+                    url: https://tidal.squid.wtf/
+                  - title: Diving Sites
+                    url: https://divesites.com
