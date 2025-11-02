@@ -39,6 +39,9 @@ spec:
     operatorNamespace: rook-ceph
     route:
       dashboard:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
         host:
           name: rook.juno.moe
           path: /
@@ -47,9 +50,6 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https
-        annotations:
-          glance/show: "true"
-          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
     cephClusterSpec:
       network:
         provider: host
@@ -175,7 +175,7 @@ spec:
           allowVolumeExpansion: true
           parameters:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-cephprowlarr
+            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
             csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
