@@ -128,7 +128,7 @@ spec:
         annotations:
           glance/name: Bookmarks
           glance/show: "true"
-          glance/icon: https://cdn.jsdelivr.net/gh/homar-labs/dashboard-icons/png/karakeep-dark.png
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/karakeep-dark.png
           glance/description: "Bookmark manager with AI-powered features."
         hostnames:
           - karakeep.juno.moe
