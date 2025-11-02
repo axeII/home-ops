@@ -41,7 +41,9 @@ spec:
       dashboard:
         annotations:
           glance/show: "true"
+          glance/name: Rook Ceph
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
+          glance/description: Rook Ceph Dashboard
         host:
           name: rook.juno.moe
           path: /
