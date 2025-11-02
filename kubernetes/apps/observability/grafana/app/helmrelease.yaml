@@ -283,7 +283,7 @@ spec:
         annotations:
           glance/name: Grafana
           glance/show: "true"
-          glance/icon: si:grafana
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
           glance/description: "Grafana dashboard for observability and monitoring."
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
