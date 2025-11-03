@@ -69,7 +69,7 @@ spec:
       version: 1.21.10
       type: FABRIC
       difficulty: normal
-      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHelen1980" # Pridat bioaldu
+      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHelen1980,Morgoth_the_3rd,CrazyRogueE" # Pridat bioaldu
       ops: "phonyAustralian,DemTriangles"
       pvp: true
       motd: Meh
