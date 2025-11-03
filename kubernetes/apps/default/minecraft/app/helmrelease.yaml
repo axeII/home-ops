@@ -23,18 +23,37 @@ spec:
         memory: 8Gi
     securityContext:
       runAsUser: 1000
-      fsGroup: 1000
+      fsGroup: 2000
+      fsGroupChangePolicy: "OnRootMismatch"
     livenessProbe:
-      initialDelaySeconds: 0
+      command:
+        - mc-health
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      failureThreshold: 10
+      successThreshold: 1
+      timeoutSeconds: 5
     readinessProbe:
-      initialDelaySeconds: 0
+      command:
+        - mc-health
+      initialDelaySeconds: 45
+      periodSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+      timeoutSeconds: 5
     startupProbe:
+      command:
+        - mc-health
       enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      failureThreshold: 30
+      timeoutSeconds: 5
     extraEnv:
       TZ: "Europe/Paris"
       ENABLE_ROLLING_LOGS: true
       UID: 1000
-      GID: 1000
+      GID: 2000
       MEMORY: 8G
     persistence:
       dataDir:
