@@ -19,6 +19,6 @@ spec:
   values:
     alertmanagerAddress: http://kube-prometheus-stack-alertmanager:9093
     image:
-      registry: quay.io
+      registry: gsoci.azurecr.io
     networkPolicy:
       enabled: false
