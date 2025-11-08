@@ -6,29 +6,22 @@ metadata:
   name: &app paperless
   namespace: &namespace default
 spec:
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/guarded
   dependsOn:
-    - name: crunchy-postgres-operator-cluster
-      namespace: database
     - name: dragonfly-cluster
       namespace: database
     - name: external-secrets-stores
-      namespace: external-secrets
-  interval: 1h
+      namespace: kube-system
   path: ./kubernetes/apps/default/paperless/app
-  postBuild:
-    substitute:
-      APP: *app
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
+  wait: true
+  interval: 30m
+  retryInterval: 1m
   timeout: 5m
-  wait: false

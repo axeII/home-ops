@@ -19,11 +19,11 @@ spec:
       retries: 3
   values:
     controllers:
+      # add init db
       paperless:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-          secret.reloader.stakater.com/reload: authelia-secret,paperless-db-secret
         containers:
           app:
             image:
@@ -35,15 +35,15 @@ spec:
               PAPERLESS_CONSUMER_RECURSIVE: "true"
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
               PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
-              PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTH_REQUEST_EMAIL
-              PAPERLESS_OCR_LANGUAGES: fra
-              PAPERLESS_OCR_LANGUAGE: fra
+              # PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTH_REQUEST_EMAIL
+              PAPERLESS_OCR_LANGUAGES: ces eng
+              PAPERLESS_OCR_LANGUAGE: ces
               PAPERLESS_PORT: 8000
               PAPERLESS_DBNAME: paperless
               PAPERLESS_REDIS: redis://dragonfly.database.svc.cluster.local.:6379
               PAPERLESS_TASK_WORKERS: 2
               PAPERLESS_TIME_ZONE: Europe/Paris
-              PAPERLESS_URL: https://paperless.${SECRET_EXTERNAL_DOMAIN}
+              PAPERLESS_URL: https://docs.${SECRET_EXTERNAL_DOMAIN}
             envFrom:
               - secretRef:
                   name: paperless-secret
@@ -63,7 +63,13 @@ spec:
             port: &port 8000
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"]
+        annotations:
+          glance/name: Documents
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/paperless-ngx.png
+          glance/description: "Document management system"
+        hostnames:
+          - docs.juno.moe
         parentRefs:
           - name: internal
             namespace: network
@@ -73,6 +79,7 @@ spec:
               - name: *app
                 port: *port
     persistence:
+      # should I use storage classes here instead of the nfs with backups?
       data:
         enabled: true
         type: nfs
