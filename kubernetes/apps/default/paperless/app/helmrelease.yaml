@@ -19,11 +19,19 @@ spec:
       retries: 3
   values:
     controllers:
-      # add init db
       paperless:
-        strategy: RollingUpdate
+        strategy: Recreate
         annotations:
-          reloader.stakater.com/auto: "true"
+          secret.reloader.stakater.com/reload: &secret paperless-secret
+        initContainers:
+          01-init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: *secret
         containers:
           app:
             image:
@@ -50,7 +58,7 @@ spec:
               USERMAP_GID: 1000
             envFrom:
               - secretRef:
-                  name: paperless-secret
+                  name: *secret
             resources:
               requests:
                 cpu: 25m
