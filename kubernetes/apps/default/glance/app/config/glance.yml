@@ -60,6 +60,8 @@ pages:
                     url: https://killer.sh
                   - title: Dashboard Icons
                     url: https://dashboardicons.com/
+                  - title: Selfhosted blog
+                    url: https://selfh.st/
 
               - title: DNS & Networking
                 color: 180 60 45
@@ -90,6 +92,8 @@ pages:
                     url: https://gpptools.com
                   - title: Archive.si
                     url: https://archive.si
+                  - title: Download book
+                    url: https://z-lib.gd/
 
               - title: Personal
                 color: 160 50 50
