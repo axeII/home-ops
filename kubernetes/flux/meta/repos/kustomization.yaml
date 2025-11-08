@@ -18,7 +18,6 @@ resources:
   - ./external-secrets.yaml
   - ./piraeus.yaml
   - ./democratic-csi.yaml
-  - ./hajimari.yaml
   - ./backube.yaml
   - ./grafana.yaml
   - ./kyverno.yaml

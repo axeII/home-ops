@@ -12,4 +12,3 @@ resources:
   - ./docmost/ks.yaml
   - ./minecraft/ks.yaml
   # - ./affine/ks.yaml # Waiting for stable version and unsecure
-  # - ./hajimari/ks.yaml # TODO: Remove later since this does not work with api gateway
