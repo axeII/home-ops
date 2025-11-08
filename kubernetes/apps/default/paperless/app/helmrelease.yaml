@@ -38,29 +38,73 @@ spec:
               # PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTH_REQUEST_EMAIL
               PAPERLESS_OCR_LANGUAGES: ces eng
               PAPERLESS_OCR_LANGUAGE: ces
-              PAPERLESS_PORT: 8000
-              PAPERLESS_DBNAME: paperless
+              PAPERLESS_PORT: &port 8000
               PAPERLESS_REDIS: redis://dragonfly.database.svc.cluster.local.:6379
               PAPERLESS_TASK_WORKERS: 2
               PAPERLESS_TIME_ZONE: Europe/Paris
-              PAPERLESS_URL: https://docs.${SECRET_EXTERNAL_DOMAIN}
+              PAPERLESS_TIKA_ENABLED: 1
+              PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://localhost:3000
+              PAPERLESS_TIKA_ENDPOINT: http://localhost:9998
+              PAPERLESS_URL: https://docs.juno.moe
+              USERMAP_UID: 1000
+              USERMAP_GID: 1000
             envFrom:
               - secretRef:
                   name: paperless-secret
-              - secretRef:
-                  name: paperless-db-secret
             resources:
               requests:
                 cpu: 25m
                 memory: 3Gi
               limits:
                 memory: 7Gi
+            securityContext:
+              supplementalGroups: ["1000"]
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 30
+                  timeoutSeconds: 2
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  timeoutSeconds: 1
+                  failureThreshold: 10
+                  periodSeconds: 12
+          gotenberg:
+            image:
+              repository: docker.io/thecodingmachine/gotenberg
+              tag: 8.24.0
+            env:
+              - {name: DISABLE_GOOGLE_CHROME, value: "1"}
+            securityContext:
+              runAsUser: 65534
+              runAsGroup: 65534
+          tika:
+            image:
+              repository: docker.io/apache/tika
+              tag: 3.2.3.0-full
+            securityContext:
+              runAsUser: 65534
+              runAsGroup: 65534
     service:
       app:
         controller: *app
         ports:
           http:
-            port: &port 8000
+            port: *port
     route:
       app:
         annotations:
@@ -79,32 +123,9 @@ spec:
               - name: *app
                 port: *port
     persistence:
-      # should I use storage classes here instead of the nfs with backups?
-      data:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/shared-documents/paperless/data
-        globalMounts:
-          - path: /usr/src/paperless/data
-      media:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/shared-documents/paperless/media
-        globalMounts:
-          - path: /usr/src/paperless/media
-      consume:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/shared-documents/paperless/watch
-        globalMounts:
-          - path: /usr/src/paperless/consume
-      export:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/shared-documents/paperless/export
-        globalMounts:
-          - path: /usr/src/paperless/export
+      library:
+        existingClaim: *app
+        advancedMounts:
+          paperless:
+            app:
+              - path: /library

@@ -10,18 +10,24 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
   dependsOn:
     - name: dragonfly-cluster
       namespace: database
     - name: external-secrets-stores
       namespace: kube-system
   path: ./kubernetes/apps/default/paperless/app
-  prune: true
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5G
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   wait: true
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
