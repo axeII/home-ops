@@ -91,9 +91,9 @@ spec:
                     path: /
                     port: *port
                   initialDelaySeconds: 0
-                  timeoutSeconds: 1
-                  failureThreshold: 10
-                  periodSeconds: 12
+                  timeoutSeconds: 3
+                  failureThreshold: 30
+                  periodSeconds: 10
           gotenberg:
             image:
               repository: docker.io/thecodingmachine/gotenberg
