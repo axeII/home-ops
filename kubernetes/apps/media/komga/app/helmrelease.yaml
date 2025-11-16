@@ -45,6 +45,9 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/komga.png
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
           - comics.juno.moe
