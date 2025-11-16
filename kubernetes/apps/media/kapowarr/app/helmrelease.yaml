@@ -51,7 +51,7 @@ spec:
       media:
         type: nfs
         server: nas.internal
-        path: /mnt/storage/media
+        path: /mnt/storage0/media
         globalMounts:
           - path: /media
     route:
