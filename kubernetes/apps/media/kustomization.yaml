@@ -18,3 +18,4 @@ resources:
   - ./komga/ks.yaml
   - ./tautulli/ks.yaml
   - ./overseerr/ks.yaml
+  - ./kapowarr/ks.yaml

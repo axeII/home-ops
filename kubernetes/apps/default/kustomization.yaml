@@ -11,4 +11,4 @@ resources:
   - ./karakeep/ks.yaml
   - ./docmost/ks.yaml
   - ./minecraft/ks.yaml
-  # - ./affine/ks.yaml # Waiting for stable version and unsecure
+  - ./paperless/ks.yaml

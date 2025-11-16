@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 79.4.0
+      version: 79.5.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -110,7 +110,7 @@ spec:
         image:
           registry: docker.io
           repository: prompp/prompp
-          tag: 0.6.2
+          tag: 0.6.4
         securityContext:
           runAsNonRoot: true
           runAsUser: 64535
