@@ -71,7 +71,19 @@ spec:
             securityContext:
               supplementalGroups: ["1000"]
             probes:
-              liveness: &probes
+              # start is heavy on cpu let's give it more time
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness:
                 enabled: true
                 custom: true
                 spec:
@@ -82,7 +94,6 @@ spec:
                   periodSeconds: 30
                   timeoutSeconds: 2
                   failureThreshold: 3
-              readiness: *probes
               startup:
                 enabled: true
                 custom: true
