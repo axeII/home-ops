@@ -90,7 +90,7 @@ spec:
                   httpGet:
                     path: /
                     port: *port
-                  initialDelaySeconds: 0
+                  initialDelaySeconds: 120
                   timeoutSeconds: 3
                   failureThreshold: 30
                   periodSeconds: 10
