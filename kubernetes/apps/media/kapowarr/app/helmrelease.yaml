@@ -67,7 +67,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: app
+              - name: *app
                 port: &port 5656
     service:
       app:
