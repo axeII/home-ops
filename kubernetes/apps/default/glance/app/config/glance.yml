@@ -40,16 +40,12 @@ pages:
                     url: https://dash.cloudflare.com/
                   - title: News page
                     url: https://glance.juno.moe/news
-
-              - title: Code & Git
-                color: 217 70 25
-                links:
                   - title: Home-Ops Repo
                     url: https://github.com/axeII/home-ops
-                  - title: Git Cleaner
-                    url: https://gitcleaner.com
-                  - title: GitHub Folder Download
-                    url: https://download-directory.github.io/
+                  # - title: Git Cleaner
+                  #   url: https://gitcleaner.com
+                  # - title: GitHub Folder Download
+                  #   url: https://download-directory.github.io
 
               - title: Kubernetes
                 color: 115 60 30
