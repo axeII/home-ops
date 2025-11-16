@@ -71,6 +71,7 @@ spec:
                 port: &port 5656
     service:
       app:
+        controller: kapowarr
         ports:
           http:
             port: *port
