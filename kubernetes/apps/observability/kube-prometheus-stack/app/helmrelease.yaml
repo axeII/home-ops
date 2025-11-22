@@ -58,18 +58,55 @@ spec:
     kubelet:
       enabled: true
       serviceMonitor:
+        # Reduce scrape frequency for kubelet metrics
+        interval: 60s
+        # Increase timeout
+        scrapeTimeout: 55s
         metricRelabelings:
           # Drop high cardinality labels
           - action: labeldrop
             regex: (uid)
           - action: labeldrop
             regex: (id|name)
+          - action: labeldrop
+            regex: (container_id|image_id)
+          # Drop expensive REST client metrics
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+          # Drop high-cardinality container metrics
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (container_memory_failures_total|container_memory_usage_bytes|container_network_tcp_usage_total)
+          # Keep only essential container metrics, drop per-container detailed metrics
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total|container_cpu_cfs_periods_total|container_cpu_usage_seconds_total|container_fs_io_time_seconds_total|container_fs_io_time_weighted_seconds_total|container_fs_reads_bytes_total|container_fs_reads_total|container_fs_writes_bytes_total|container_fs_writes_total|container_last_seen|container_memory_cache|container_memory_rss|container_memory_swap|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_receive_packets_dropped_total|container_network_receive_packets_total|container_network_transmit_bytes_total|container_network_transmit_packets_dropped_total|container_network_transmit_packets_total)
+          # Drop verbose kubelet metrics
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (kubelet_runtime_operations_duration_seconds_bucket|kubelet_runtime_operations_errors_total)
+        # Add cAdvisor-specific relabeling
+        cAdvisor: true
+        cAdvisorMetricRelabelings:
+          # Drop high cardinality cAdvisor metrics
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (container_tasks_state|container_memory_failures_total|container_memory_mapped_file)
+          # Drop container metrics for non-running containers
+          - action: drop
+            sourceLabels: ["container_state"]
+            regex: (exited|dead)
+          # Limit histogram buckets
+          - action: drop
+            sourceLabels: ["__name__", "le"]
+            regex: (container_.*_duration_seconds_bucket);(0.005|0.01|0.025|0.05|0.075|2.5|7.5|15|30|45)
+            separator: ";"
     kubeApiServer:
       enabled: true
       serviceMonitor:
+        interval: 60s
+        scrapeTimeout: 55s
         metricRelabelings:
           # Drop high cardinality labels
           - action: drop
@@ -78,6 +115,11 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
+          # Drop excessive histogram buckets
+          - action: drop
+            sourceLabels: ["__name__", "le"]
+            regex: apiserver_request_duration_seconds_bucket;(0.001|0.002|0.004|0.008|0.016|0.032|0.064|0.128|0.256)
+            separator: ";"
     kubeControllerManager:
       enabled: true
       endpoints: &cp
@@ -124,9 +166,22 @@ spec:
         replicas: 1
         retention: 8d
         retentionSize: 23GB
+        # Optimize query performance and reduce CPU usage
+        queryLogFile: /prometheus/query.log
+        enableAdminAPI: true
+        walCompression: true
+        # Reduce scrape frequency for less critical metrics
+        scrapeInterval: 60s
+        evaluationInterval: 60s
+        # Global limits to prevent cardinality explosion
+        enforcedSampleLimit: 500000
+        enforcedTargetLimit: 500
+        enforcedLabelLimit: 50
+        enforcedLabelNameLengthLimit: 256
+        enforcedLabelValueLengthLimit: 2048
         resources:
           requests:
-            cpu: 100m
+            cpu: 500m # Increased from 100m - was too low causing throttling
           limits:
             memory: 4Gi
         storageSpec:
@@ -143,12 +198,25 @@ spec:
       prometheus:
         monitor:
           enabled: true
+          interval: 60s
+          scrapeTimeout: 50s
           relabelings:
             - action: replace
               regex: (.*)
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
+          metricRelabelings:
+            # Drop high cardinality filesystem metrics for temporary mounts
+            - action: drop
+              sourceLabels: ["__name__", "mountpoint"]
+              regex: node_filesystem_.*;/var/lib/kubelet/pods/.*
+              separator: ";"
+            # Drop network metrics for virtual interfaces
+            - action: drop
+              sourceLabels: ["__name__", "device"]
+              regex: node_network_.*;(veth.*|br.*|cilium.*|lxc.*)
+              separator: ";"
     kubeStateMetrics:
       enabled: true
     kube-state-metrics:
@@ -160,12 +228,27 @@ spec:
       prometheus:
         monitor:
           enabled: true
+          interval: 60s
+          scrapeTimeout: 55s
           relabelings:
             - action: replace
               regex: (.*)
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
+          metricRelabelings:
+            # Drop very high cardinality owner reference metrics
+            - action: drop
+              sourceLabels: ["__name__"]
+              regex: kube_.*_owner
+            # Drop annotation and label metrics (very high cardinality)
+            - action: drop
+              sourceLabels: ["__name__"]
+              regex: kube_.*(annotations|labels)
+            # Drop excessive resource version tracking
+            - action: drop
+              sourceLabels: ["__name__"]
+              regex: kube_.*_resource_version
     grafana:
       enabled: false
       forceDeployDashboards: true
