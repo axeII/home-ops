@@ -79,9 +79,9 @@ spec:
             sourceLabels: ["__name__"]
             regex: (container_memory_failures_total|container_memory_usage_bytes|container_network_tcp_usage_total)
           # Keep only essential container metrics, drop per-container detailed metrics
-          - action: drop
-            sourceLabels: ["__name__"]
-            regex: (container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total|container_cpu_cfs_periods_total|container_cpu_usage_seconds_total|container_fs_io_time_seconds_total|container_fs_io_time_weighted_seconds_total|container_fs_reads_bytes_total|container_fs_reads_total|container_fs_writes_bytes_total|container_fs_writes_total|container_last_seen|container_memory_cache|container_memory_rss|container_memory_swap|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_receive_packets_dropped_total|container_network_receive_packets_total|container_network_transmit_bytes_total|container_network_transmit_packets_dropped_total|container_network_transmit_packets_total)
+          # - action: drop
+          #   sourceLabels: ["__name__"]
+          #   regex: (container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total|container_cpu_cfs_periods_total|container_cpu_usage_seconds_total|container_fs_io_time_seconds_total|container_fs_io_time_weighted_seconds_total|container_fs_reads_bytes_total|container_fs_reads_total|container_fs_writes_bytes_total|container_fs_writes_total|container_last_seen|container_memory_cache|container_memory_rss|container_memory_swap|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_receive_packets_dropped_total|container_network_receive_packets_total|container_network_transmit_bytes_total|container_network_transmit_packets_dropped_total|container_network_transmit_packets_total)
           # Drop verbose kubelet metrics
           - action: drop
             sourceLabels: ["__name__"]
