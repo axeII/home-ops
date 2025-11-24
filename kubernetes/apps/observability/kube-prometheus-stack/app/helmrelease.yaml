@@ -59,11 +59,15 @@ spec:
       enabled: true
       serviceMonitor:
         # Reduce scrape frequency for kubelet metrics
-        interval: 60s
+        interval: 30s
         # Increase timeout
-        scrapeTimeout: 55s
+        scrapeTimeout: 25s
         metricRelabelings:
-          # Drop high cardinality labels
+          # Keep essential CPU metrics for Lens and monitoring
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: (container_cpu_usage_seconds_total|container_cpu_cfs_.*|node_cpu_seconds_total|kubelet_.*|container_memory_working_set_bytes|container_network_.*_total|container_fs_.*_total|container_spec_.*|container_start_time_seconds|container_last_seen)
+          # Drop high cardinality labels (after keep rules)
           - action: labeldrop
             regex: (uid)
           - action: labeldrop
@@ -74,10 +78,10 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
-          # Drop high-cardinality container metrics
+          # Drop specific high-cardinality container metrics (not essential for monitoring)
           - action: drop
             sourceLabels: ["__name__"]
-            regex: (container_memory_failures_total|container_memory_usage_bytes|container_network_tcp_usage_total)
+            regex: (container_memory_failures_total|container_network_tcp_usage_total)
           # Keep only essential container metrics, drop per-container detailed metrics
           # - action: drop
           #   sourceLabels: ["__name__"]
@@ -89,14 +93,14 @@ spec:
         # Add cAdvisor-specific relabeling
         cAdvisor: true
         cAdvisorMetricRelabelings:
+          # Keep essential cAdvisor metrics first (CPU metrics required for Lens)
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: (container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_.*_total|container_fs_.*_total|container_spec_.*|container_start_time_seconds|container_last_seen)
           # Drop high cardinality cAdvisor metrics
           - action: drop
             sourceLabels: ["__name__"]
             regex: (container_tasks_state|container_memory_failures_total|container_memory_mapped_file)
-          # Drop container metrics for non-running containers
-          - action: drop
-            sourceLabels: ["container_state"]
-            regex: (exited|dead)
           # Limit histogram buckets
           - action: drop
             sourceLabels: ["__name__", "le"]
@@ -228,8 +232,8 @@ spec:
       prometheus:
         monitor:
           enabled: true
-          interval: 60s
-          scrapeTimeout: 55s
+          interval: 30s
+          scrapeTimeout: 25s
           relabelings:
             - action: replace
               regex: (.*)
@@ -237,6 +241,10 @@ spec:
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
           metricRelabelings:
+            # Keep essential kube-state-metrics for resource tracking
+            - action: keep
+              sourceLabels: ["__name__"]
+              regex: (kube_pod_container_resource_requests|kube_pod_container_resource_limits|kube_pod_status_phase|kube_pod_info|kube_node_.*|kube_deployment_.*|kube_statefulset_.*|kube_daemonset_.*)
             # Drop very high cardinality owner reference metrics
             - action: drop
               sourceLabels: ["__name__"]
