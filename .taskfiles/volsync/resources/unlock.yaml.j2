@@ -21,12 +21,12 @@ spec:
             - name: repository
               mountPath: /repository
           resources: {}
-        - name: r2
+        - name: volsync
           image: docker.io/restic/restic:latest
           args: ["unlock", "--remove-all"]
           envFrom:
             - secretRef:
-                name: {{ ENV.APP }}-volsync-r2-secret
+                name: {{ ENV.APP }}-volsync-secret
           resources: {}
       volumes:
         - name: repository
