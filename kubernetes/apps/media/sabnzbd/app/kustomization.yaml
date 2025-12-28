@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ./volsync.yaml
 configMapGenerator:
   - name: sabnzbd-scripts
     files:

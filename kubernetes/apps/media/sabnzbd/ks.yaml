@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/volsync
     - ../../../../components/keda/nfs-scaler
   decryption:
     provider: sops
@@ -26,6 +27,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: "2Gi"
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
