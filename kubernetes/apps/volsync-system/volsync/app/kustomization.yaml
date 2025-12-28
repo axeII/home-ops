@@ -6,4 +6,3 @@ resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
   - ./repository.yaml
-  - ./dashboard.yaml
