@@ -132,23 +132,15 @@ spec:
           - auto-gomemlimit
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
-        scrapeInterval: 60s
-        scrapeTimeout: 30s
-        evaluationInterval: 60s
-        queryLogFile: /prometheus/query.log
-        enforcedSampleLimit: 50000
         retention: 2d
         retentionSize: 15GB
         externalLabels:
           cluster: main
         resources:
           requests:
-            cpu: 500m
+            cpu: 100m
           limits:
             memory: 3Gi
-        query:
-          maxSamples: 50000000
-          timeout: 2m
         storageSpec:
           volumeClaimTemplate:
             spec:
