@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: kopia
   dependsOn:
     - name: volsync
-      namespace: storage
+      namespace: volsync-system
   path: ./kubernetes/apps/volsync-system/kopia/app
   prune: true
   sourceRef:
