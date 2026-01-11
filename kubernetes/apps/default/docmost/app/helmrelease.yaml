@@ -37,7 +37,7 @@ spec:
               tag: 0.24.1
             env:
               TZ: "Europe/Paris"
-              APP_URL: "https://nt.juno.moe"
+              APP_URL: "https://hub.juno.moe"
               PORT: &port 3000
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
             envFrom: *envFrom
@@ -70,7 +70,7 @@ spec:
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docmost.png
           glance/description: "Notes system focused on privacy and simplicity."
         hostnames:
-          - nt.juno.moe
+          - hub.juno.moe
         parentRefs:
           - name: external
             namespace: kube-system
