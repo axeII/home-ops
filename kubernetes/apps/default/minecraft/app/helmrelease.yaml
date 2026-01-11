@@ -52,7 +52,6 @@ spec:
     extraEnv:
       GENERATE_LOG4J2_CONFIG: true # https://github.com/itzg/docker-minecraft-server/issues/3857
       TZ: "Europe/Paris"
-      ENABLE_ROLLING_LOGS: true
       UID: 1000
       GID: 2000
       MEMORY: 8G
