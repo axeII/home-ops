@@ -50,6 +50,7 @@ spec:
       failureThreshold: 30
       timeoutSeconds: 5
     extraEnv:
+      GENERATE_LOG4J2_CONFIG: true # https://github.com/itzg/docker-minecraft-server/issues/3857
       TZ: "Europe/Paris"
       ENABLE_ROLLING_LOGS: true
       UID: 1000
