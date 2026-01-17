@@ -22,7 +22,7 @@ nodes:
   - hostname: "k8s-0"
     ipAddress: "192.168.69.110"
     installDisk: "/dev/sda"
-    talosImageURL: factory.talos.dev/installer/44094505f553b2341580d87c83653f3aa5cbef305443e9b981236cb66396b31d
+    talosImageURL: factory.talos.dev/installer/44094505f553b2341580d87c83653f3aa5cbef305443e9b981236cb66396b31d # TODO: update image URL to v v1.11.6
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -39,7 +39,7 @@ nodes:
   - hostname: "k8s-1"
     ipAddress: "192.168.69.111"
     installDisk: "/dev/sda"
-    talosImageURL: factory.talos.dev/installer/96f8c146a67c80daad900d3fc1a6976fe11062321eee9ab6ae2a6aea88b2d26e
+    talosImageURL: factory.talos.dev/installer/96f8c146a67c80daad900d3fc1a6976fe11062321eee9ab6ae2a6aea88b2d26e # TODO: update image URL to v v1.11.6
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -56,7 +56,7 @@ nodes:
     installDisk: "/dev/sda"
     extraManifests:
       - ./manifests/e1000e.yaml
-    talosImageURL: factory.talos.dev/installer/2d61dd07b20062062ea671b4d01873506103b67c0f7a4c3fb6cf4ee85585dcb8
+    talosImageURL: factory.talos.dev/installer/2d61dd07b20062062ea671b4d01873506103b67c0f7a4c3fb6cf4ee85585dcb8 # TODO: update image URL to v v1.11.6
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
