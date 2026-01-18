@@ -33,11 +33,10 @@ spec:
       retries: 3
   values:
     args:
-      - --kubelet-insecure-tls
       - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
       - --kubelet-use-node-status-port
       - --metric-resolution=10s
-      - --kubelet-request-timeout=2s
+      - --kubelet-certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     metrics:
       enabled: true
     serviceMonitor:
