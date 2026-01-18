@@ -47,8 +47,8 @@ spec:
                   echo "Initializing new Kopia repository..."
                   kopia repository create filesystem --path=/repository --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync
                 fi
-                # Start the server (disable CSRF for reverse proxy compatibility)
-                exec kopia server start --address=0.0.0.0:80 --without-password --insecure --disable-csrf-token-checks --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync
+                # Start the server with password authentication for API clients
+                exec kopia server start --address=0.0.0.0:80 --server-username=volsync --server-password="$KOPIA_PASSWORD" --insecure --disable-csrf-token-checks --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync
             probes:
               liveness: &probes
                 enabled: true
