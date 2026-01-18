@@ -25,9 +25,11 @@ spec:
         resources:
           - jobs
   matchConditions:
-    - name: has-kopia-maint-job-name-prefix
+    - name: has-volsync-kopia-job-name
       expression: >
-        object.metadata.name.startsWith("kopia-maint-")
+        object.metadata.name.startsWith("kopia-maint-") ||
+        object.metadata.name.startsWith("volsync-dst-") ||
+        object.metadata.name.startsWith("volsync-src-")
     - name: repository-volume-does-not-exist
       expression: >
         !has(object.spec.template.spec.volumes) ||
@@ -44,7 +46,7 @@ spec:
               value: Object.spec.template.spec.volumes{
                 name: "repository",
                 nfs: Object.spec.template.spec.volumes.nfs{
-                  server: "expanse.internal",
+                  server: "nas.internal",
                   path: "/mnt/storage0/backup"
                 }
               }
