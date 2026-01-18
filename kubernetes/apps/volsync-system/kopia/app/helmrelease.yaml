@@ -41,6 +41,7 @@ spec:
               - |
                 export HOME=/tmp
                 export USER=kopia
+                export KOPIA_CONFIG_PATH=/tmp/.config/kopia/repository.config
                 # Initialize repository if it doesn't exist (KOPIA_PASSWORD env var is read automatically)
                 if ! kopia repository connect filesystem --path=/repository --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync 2>/dev/null; then
                   echo "Initializing new Kopia repository..."
