@@ -40,6 +40,9 @@ spec:
     - patchType: JSONPatch
       jsonPatch:
         expression: >-
+          (has(object.spec.template.spec.volumes) ? [] : [
+            JSONPatch{op: "add", path: "/spec/template/spec/volumes", value: []}
+          ]) +
           [
             JSONPatch{
               op: "add", path: "/spec/template/spec/volumes/-",
@@ -50,7 +53,12 @@ spec:
                   path: "/mnt/storage0/backup"
                 }
               }
-            },
+            }
+          ] +
+          (has(object.spec.template.spec.containers[0].volumeMounts) ? [] : [
+            JSONPatch{op: "add", path: "/spec/template/spec/containers/0/volumeMounts", value: []}
+          ]) +
+          [
             JSONPatch{
               op: "add", path: "/spec/template/spec/containers/0/volumeMounts/-",
               value: Object.spec.template.spec.containers.volumeMounts{
