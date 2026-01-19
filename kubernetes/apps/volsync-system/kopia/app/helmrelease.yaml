@@ -35,20 +35,8 @@ spec:
             envFrom:
               - secretRef:
                   name: kopia-secret
-            command:
-              - /bin/sh
-              - -c
-              - |
-                export HOME=/tmp
-                export USER=kopia
-                export KOPIA_CONFIG_PATH=/tmp/.config/kopia/repository.config
-                # Initialize repository if it doesn't exist (KOPIA_PASSWORD env var is read automatically)
-                if ! kopia repository connect filesystem --path=/repository --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync 2>/dev/null; then
-                  echo "Initializing new Kopia repository..."
-                  kopia repository create filesystem --path=/repository --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync
-                fi
-                # Start the server without password for API access
-                exec kopia server start --address=0.0.0.0:80 --without-password --insecure --disable-csrf-token-checks --override-hostname=volsync.volsync-system.svc.cluster.local --override-username=volsync
+            args:
+              - --without-passwordc
             probes:
               liveness: &probes
                 enabled: true
@@ -91,6 +79,22 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https
+    configMaps:
+      config:
+        data:
+          repository.config: |-
+            {
+              "storage": {
+                "type": "filesystem",
+                "config": {
+                  "path": "/repository"
+                }
+              },
+              "hostname": "volsync.{{ .Release.Namespace }}.svc.cluster.local",
+              "username": "volsync",
+              "description": "volsync",
+              "enableActions": false
+            }
     persistence:
       repository:
         type: nfs
