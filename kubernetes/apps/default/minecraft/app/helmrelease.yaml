@@ -79,7 +79,7 @@ spec:
       viewDistance: 16
       forceReDownload: true
       memory: 14G
-      jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMObjects -XX:+AlwaysPreTouch"
+      jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+AlwaysPreTouch"
       rcon:
         enabled: true
         serviceType: ClusterIP
