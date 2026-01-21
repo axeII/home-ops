@@ -21,8 +21,7 @@ spec:
       requests:
         cpu: 1000m
         memory: 8Gi
-    securityContext:
-      runAsUser: 1000
+    podSecurityContext:
       fsGroup: 2000
       fsGroupChangePolicy: "OnRootMismatch"
     nodeSelector:
