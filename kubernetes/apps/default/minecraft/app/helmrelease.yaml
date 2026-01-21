@@ -57,7 +57,6 @@ spec:
       TZ: "Europe/Paris"
       UID: 1000
       GID: 2000
-      MEMORY: 14G
     persistence:
       dataDir:
         enabled: true
