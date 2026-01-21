@@ -26,7 +26,7 @@ spec:
       fsGroup: 2000
       fsGroupChangePolicy: "OnRootMismatch"
     nodeSelector:
-      kuberentes.io/hostname: k8s-2
+      kubernetes.io/hostname: k8s-2
     livenessProbe:
       command:
         - mc-health
