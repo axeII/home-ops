@@ -47,6 +47,47 @@ pre-commit run --all-files
 *   `task --list`: List all available tasks.
 *   `task reconcile`: Force Flux to reconcile the cluster.
 
+## Talos Configuration Management
+
+### Applying Talos Configuration Changes
+When modifying Talos configuration (e.g., patches in `talos/patches/`), apply changes to each control plane node:
+
+1. **Generate new configuration:**
+   ```bash
+   task talos:generate-config
+   ```
+
+2. **Apply to individual nodes:**
+   ```bash
+   task talos:apply-node IP=192.168.69.110  # k8s-0
+   task talos:apply-node IP=192.168.69.111  # k8s-1
+   task talos:apply-node IP=192.168.69.112  # k8s-2
+   ```
+
+3. **Monitor changes:**
+   ```bash
+   kubectl get nodes
+   kubectl get pods -n kube-system
+   ```
+
+### Resource Limits for Static Pods
+Static pods (kube-apiserver, kube-controller-manager, kube-scheduler, etcd) are configured via Talos patches:
+*   Location: `talos/patches/controller/`
+*   Critical: Always set both `requests` and `limits` to prevent OOM kills (exit code 137)
+*   Example: `apiserver-resources.yaml` sets kube-apiserver memory limit to 2Gi
+
+### Checking for OOM Issues
+```bash
+# Check for OOM kills in kernel logs
+talosctl -n <node-ip> dmesg | grep -i "oom\|kill"
+
+# Check pod restart counts
+kubectl get pods -n kube-system
+
+# Check resource usage
+kubectl top nodes
+```
+
 ## Code Style & Guidelines
 
 ### Kubernetes & YAML
