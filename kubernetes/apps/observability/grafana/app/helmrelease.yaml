@@ -298,6 +298,6 @@ spec:
         cpu: 100m
         memory: 128Mi
       limits:
-        memory: 1Gi
+        memory: 2Gi
     testFramework:
       enabled: false
