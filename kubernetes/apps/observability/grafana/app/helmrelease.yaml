@@ -293,5 +293,11 @@ spec:
             sectionName: https
     persistence:
       enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 1Gi
     testFramework:
       enabled: false

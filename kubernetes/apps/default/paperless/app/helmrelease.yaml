@@ -67,7 +67,7 @@ spec:
                 cpu: 25m
                 memory: 3Gi
               limits:
-                memory: 5Gi
+                memory: 6Gi
             securityContext:
               supplementalGroups: ["1000"]
             probes:
@@ -111,6 +111,12 @@ spec:
               tag: 8.25.1
             env:
               - { name: DISABLE_GOOGLE_CHROME, value: "1" }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
             securityContext:
               runAsUser: 65534
               runAsGroup: 65534
@@ -118,6 +124,12 @@ spec:
             image:
               repository: docker.io/apache/tika
               tag: 3.2.3.0-full
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
             securityContext:
               runAsUser: 65534
               runAsGroup: 65534
