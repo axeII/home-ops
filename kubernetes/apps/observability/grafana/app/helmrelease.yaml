@@ -202,19 +202,6 @@ spec:
           gnetId: 5342 # https://grafana.com/grafana/dashboards/5342?tab=revisions
           revision: 9
           datasource: Prometheus
-      flux:
-        flux-cluster:
-          # renovate: depName="Flux Cluster Stats"
-          gnetId: 14936
-          revision: 1
-          datasource: Prometheus
-        flux-control-plane:
-          # renovate: depName="Flux2"
-          gnetId: 16714
-          revision: 1
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Prometheus
       kubernetes:
         kubernetes-api-server:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
