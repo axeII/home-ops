@@ -204,14 +204,17 @@ spec:
           datasource: Prometheus
       flux:
         flux-cluster:
-          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+          # renovate: depName="Flux Cluster Stats"
+          gnetId: 14936
+          revision: 1
           datasource: Prometheus
         flux-control-plane:
-          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
-          datasource: Prometheus
-        flux-logs:
-          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
-          datasource: Prometheus
+          # renovate: depName="Flux2"
+          gnetId: 16714
+          revision: 1
+          datasource:
+            - name: DS_PROMETHEUS
+              value: Prometheus
       kubernetes:
         kubernetes-api-server:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
