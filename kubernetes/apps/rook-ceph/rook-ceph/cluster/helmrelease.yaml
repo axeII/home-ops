@@ -93,22 +93,22 @@ spec:
       resources:
         mgr:
           limits:
-            memory: 1Gi
+            memory: 2Gi
           requests:
             cpu: 50m
-            memory: 256Mi
+            memory: 512Mi
         mon:
-          limits:
-            memory: 1Gi
-          requests:
-            cpu: 50m
-            memory: 256Mi
-        osd:
           limits:
             memory: 2Gi
           requests:
+            cpu: 50m
+            memory: 512Mi
+        osd:
+          limits:
+            memory: 4Gi
+          requests:
             cpu: 100m
-            memory: 1Gi
+            memory: 2Gi
         mgr-sidecar:
           limits:
             memory: 256Mi
@@ -165,9 +165,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 512Mi
+                memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 3Gi
         storageClass:
           enabled: true
           isDefault: false
