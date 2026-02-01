@@ -7,6 +7,7 @@ resources:
   - ./externalsecret.yaml
   - ./httproute.yaml
   - ./receiver.yaml
+  - ./dashboard.yaml
 configMapGenerator:
   - name: flux-instance-values
     files:
