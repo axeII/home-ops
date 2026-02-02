@@ -5,3 +5,5 @@ resources:
   - ./helmrelease.yaml
   - ./repository.yaml
   - ./externalsecret.yaml
+  - ./restart-cronjob.yaml
+  - ./restart-rbac.yaml
