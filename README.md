@@ -54,7 +54,7 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 
 ### Installation
 
-My cluster has been migrated from a k3s/Longhorn setup to Talos with Rook Ceph. First of all, Talos is fantastic—I highly recommend it to anyone seeking a lightweight Kubernetes distribution. Currently, I’m running one node with the e1000 driver, while the second node lacks a reliable primary disk, so the cluster is operating in single-controller mode with two worker nodes. In the future, I plan to upgrade the setup to include three controller nodes.
+My cluster has been migrated from a k3s/Longhorn setup to Talos with Rook Ceph. First of all, Talos is fantastic—I highly recommend it to anyone seeking a lightweight Kubernetes distribution. Currently, I'm running one node with the e1000 driver, while the second node lacks a reliable primary disk, so the cluster is operating in single-controller mode with two worker nodes. In the future, I plan to upgrade the setup to include three controller nodes.
 
 The main reason I switched to Rook Ceph is that Longhorn felt less stable and is still under active development. I decided it was time to give Rook Ceph a try.
 
