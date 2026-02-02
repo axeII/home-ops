@@ -123,3 +123,4 @@ kubectl top nodes
 2.  **Context**: Always check `Taskfile.yaml` and included taskfiles to understand how commands are constructed.
 3.  **Verification**: After modifying YAML files, always run `task kubernetes:kubeconform` and `pre-commit run --all-files` to verify validity.
 4.  **Files**: When creating new apps, follow the pattern of existing apps in `kubernetes/apps`.
+5.  **Git Operations**: **NEVER commit or push changes automatically.** Always wait for explicit user approval before running any `git commit` or `git push` commands. Present a summary of changes and ask the user if they want to proceed with committing/pushing.
