@@ -6,7 +6,6 @@ namespace: observability
 components:
   - ../../components/common
 resources:
-  - ./namespace.yaml
   - ./prometheus-operator-crds/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./kromgo/ks.yaml
