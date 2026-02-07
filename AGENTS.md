@@ -123,4 +123,8 @@ kubectl top nodes
 2.  **Context**: Always check `Taskfile.yaml` and included taskfiles to understand how commands are constructed.
 3.  **Verification**: After modifying YAML files, always run `task kubernetes:kubeconform` and `pre-commit run --all-files` to verify validity.
 4.  **Files**: When creating new apps, follow the pattern of existing apps in `kubernetes/apps`.
-5.  **Git Operations**: **NEVER commit or push changes automatically.** Always wait for explicit user approval before running any `git commit` or `git push` commands. Present a summary of changes and ask the user if they want to proceed with committing/pushing.
+5.  **Cluster Diagnostics**: When the user asks about cluster status, errors, or logs, **ALWAYS use `kubectl`** to gather information before responding. Use commands like:
+    - `kubectl get kustomizations.kustomize.toolkit.fluxcd.io -A` to see kustomization status
+    - `kubectl describe kustomization <name> -n <namespace>` for detailed errors
+    - `kubectl logs -n flux-system deploy/kustomize-controller` for controller logs
+6.  **Git Operations**: **NEVER commit or push changes automatically.** Always wait for explicit user approval before running any `git commit` or `git push` commands. Present a summary of changes and ask the user if they want to proceed with committing/pushing.
