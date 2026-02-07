@@ -17,7 +17,7 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: coroot
+          name: coroot-coroot
           namespace: observability
           port: 8080
           weight: 1
