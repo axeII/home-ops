@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./authentik.yaml
   - ./backube.yaml
+  - ./coroot.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
   - ./grafana.yaml

@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coroot
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: coroot
+    app.kubernetes.io/instance: coroot
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: coroot
+    app.kubernetes.io/instance: coroot
