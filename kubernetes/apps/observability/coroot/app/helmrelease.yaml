@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: coroot
+  namespace: observability
+spec:
+  interval: 15m
+  timeout: 15m
+  chart:
+    spec:
+      chart: coroot-ce
+      version: 0.3.1
+      sourceRef:
+        kind: HelmRepository
+        name: coroot
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    authBootstrapAdminPassword: ${COROOT_ADMIN_PASSWORD}
+    ingress:
+      enabled: false
+    clusterAgent:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 100Mi
+          ephemeral-storage: 100Mi
+        limits:
+          memory: 300Mi
+          ephemeral-storage: 200Mi
+    externalPrometheus:
+      url: http://prometheus-operated.observability.svc.cluster.local:9090
+    storage:
+      className: ceph-block
+    clickhouse:
+      storage:
+        className: ceph-block
+      resources:
+        requests:
+          cpu: 400m
+          memory: 1Gi
+          ephemeral-storage: 100Mi
+        limits:
+          memory: 3Gi
+          ephemeral-storage: 200Mi
+    node-agent:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 500Mi
+          ephemeral-storage: 100Mi
+        limits:
+          memory: 1.2Gi
+          ephemeral-storage: 200Mi
