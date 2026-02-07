@@ -15,5 +15,6 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: coroot
-    app.kubernetes.io/instance: coroot
+    app.kubernetes.io/component: coroot
+    app.kubernetes.io/managed-by: coroot-operator
+    app.kubernetes.io/part-of: coroot
