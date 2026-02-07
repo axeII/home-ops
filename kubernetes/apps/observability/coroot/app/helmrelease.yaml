@@ -49,7 +49,8 @@ spec:
     storage:
       className: ceph-block
     clickhouse:
-      replicas: 1
+      keeper:
+        replicas: 1
       storage:
         className: ceph-block
       resources:
@@ -61,7 +62,6 @@ spec:
           memory: 3Gi
           ephemeral-storage: 200Mi
     node-agent:
-      replicas: 1
       resources:
         requests:
           cpu: 200m
