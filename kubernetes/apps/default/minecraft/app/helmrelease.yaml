@@ -65,6 +65,8 @@ spec:
       lbipam.cilium.io/ips: "192.168.69.102"
     serviceLabels:
       io.cilium/ippool: public
+    extraPodSpec:
+      priorityClassName: high-priority
     minecraftServer:
       eula: true
       # renovate: datasource=custom.minecraft-release

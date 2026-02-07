@@ -55,6 +55,7 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
+      priorityClassName: high-priority
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
