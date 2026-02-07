@@ -27,8 +27,12 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  valuesFrom:
+    - kind: Secret
+      name: coroot-secret
+      valuesKey: COROOT_ADMIN_PASSWORD
+      targetPath: authBootstrapAdminPassword
   values:
-    authBootstrapAdminPassword: ${COROOT_ADMIN_PASSWORD}
     ingress:
       enabled: false
     clusterAgent:
@@ -45,6 +49,7 @@ spec:
     storage:
       className: ceph-block
     clickhouse:
+      replicas: 1
       storage:
         className: ceph-block
       resources:
@@ -56,6 +61,7 @@ spec:
           memory: 3Gi
           ephemeral-storage: 200Mi
     node-agent:
+      replicas: 1
       resources:
         requests:
           cpu: 200m
