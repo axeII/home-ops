@@ -18,3 +18,4 @@ resources:
   - ./blackbox-exporter/ks.yaml
   - ./unpoller/ks.yaml
   - ./silence-operator/ks.yaml
+  - ./coroot/ks.yaml
