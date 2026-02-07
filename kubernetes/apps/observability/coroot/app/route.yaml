@@ -25,19 +25,3 @@ spec:
         - path:
             type: PathPrefix
             value: /
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: coroot
-  namespace: observability
-  labels:
-    app.kubernetes.io/name: coroot
-    app.kubernetes.io/instance: coroot
-subsets:
-  - addresses:
-      - ip: 127.0.0.1
-    ports:
-      - port: 8080
-        protocol: TCP
-        name: http
