@@ -24,6 +24,7 @@ spec:
     remediation:
       retries: 3
   values:
+    fullnameOverride: vm
     victoria-metrics-operator:
       enabled: true
 
@@ -59,7 +60,7 @@ spec:
         externalLabels:
           cluster: main
         remoteWrite:
-          - url: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428/api/v1/write
+          - url: http://vm-vmsingle.observability.svc.cluster.local:8428/api/v1/write
 
     grafana:
       enabled: false
