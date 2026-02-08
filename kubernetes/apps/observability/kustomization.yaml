@@ -6,16 +6,19 @@ namespace: observability
 components:
   - ../../components/common
 resources:
-  - ./prometheus-operator-crds/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
+  # Replaced with victoria-metrics instead
+  # - ./prometheus-operator-crds/ks.yaml
+  # - ./kube-prometheus-stack/ks.yaml
+  - ./victoria-metrics/ks.yaml
+  - ./victoria-logs/ks.yaml
   - ./kromgo/ks.yaml
-  - ./karma/ks.yaml
+  # - ./karma/ks.yaml
   - ./gatus/ks.yaml
-  - ./grafana/ks.yaml
-  - ./loki/ks.yaml
+  # - ./grafana/ks.yaml
+  # - ./loki/ks.yaml
   - ./alloy/ks.yaml
   - ./keda/ks.yaml
-  - ./blackbox-exporter/ks.yaml
-  - ./unpoller/ks.yaml
-  - ./silence-operator/ks.yaml
+  # - ./blackbox-exporter/ks.yaml
+  # - ./unpoller/ks.yaml
+  # - ./silence-operator/ks.yaml
   - ./coroot/ks.yaml
