@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: victoria-metrics-k8s-stack
-      version: 0.24.0
+      version: 0.70.0
       sourceRef:
         kind: HelmRepository
         name: victoria-metrics
@@ -57,6 +57,9 @@ spec:
             - src_paths: ["/api/v1/.+"]
               url_prefix:
                 - http://vmsingle-vm:8429/prometheus/
+
+    vmalert:
+      enabled: false
 
     vmagent:
       enabled: true
