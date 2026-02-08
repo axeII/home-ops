@@ -45,7 +45,7 @@ spec:
           memory: 300Mi
           ephemeral-storage: 200Mi
     externalPrometheus:
-      url: http://vmauth-vm.observability.svc.cluster.local:8427
+      url: http://vmsingle-vm.observability.svc.cluster.local:8429
     storage:
       className: ceph-block
     clickhouse:

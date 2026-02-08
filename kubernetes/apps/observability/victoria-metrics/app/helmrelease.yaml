@@ -47,16 +47,7 @@ spec:
               storage: 30Gi
 
     vmauth:
-      enabled: true
-      spec:
-        port: "8427"
-        unauthorizedUserAccessSpec:
-          disabled: false
-          discover_backend_ips: true
-          url_map:
-            - src_paths: ["/api/v1/.+"]
-              url_prefix:
-                - http://vmsingle-vm:8429/
+      enabled: false
 
     vmalert:
       enabled: false
