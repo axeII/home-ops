@@ -31,9 +31,6 @@ spec:
       enabled: true
       spec:
         retentionPeriod: 30d
-        extraArgs:
-          - name: graphiteListenAddr
-            value: ""
         resources:
           requests:
             cpu: 100m
