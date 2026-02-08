@@ -17,7 +17,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: http://prometheus-operated.observability.svc.cluster.local:9090
+        serverAddress: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428
         query: probe_success{instance=~".+:2049"}
         threshold: "1"
         ignoreNullValues: "0"

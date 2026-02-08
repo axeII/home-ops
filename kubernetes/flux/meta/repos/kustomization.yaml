@@ -10,3 +10,4 @@ resources:
   - ./grafana.yaml
   - ./piraeus.yaml
   - ./prometheus-community.yaml
+  - ./victoria-metrics.yaml

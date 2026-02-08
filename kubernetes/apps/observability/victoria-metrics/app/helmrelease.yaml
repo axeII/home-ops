@@ -1,0 +1,94 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app victoria-metrics
+  namespace: observability
+spec:
+  interval: 30m
+  timeout: 15m
+  chart:
+    spec:
+      chart: victoria-metrics-k8s-stack
+      version: 0.24.0
+      sourceRef:
+        kind: HelmRepository
+        name: victoria-metrics
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    victoria-metrics-operator:
+      enabled: true
+
+    vmsingle:
+      enabled: true
+      spec:
+        retentionPeriod: 30d
+        extraArgs:
+          - name: graphiteListenAddr
+            value: ""
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        storage:
+          storageClassName: ceph-block
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 30Gi
+
+    vmagent:
+      enabled: true
+      spec:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 50m
+            memory: 512Mi
+          limits:
+            memory: 1Gi
+        scrapeInterval: 15s
+        externalLabels:
+          cluster: main
+        remoteWrite:
+          - url: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428/api/v1/write
+
+    grafana:
+      enabled: false
+      # adminPassword: changeme
+      # persistence:
+      #   enabled: true
+      #   storageClassName: ceph-block
+      #   size: 5Gi
+      # datasources:
+      #   datasources.yaml:
+      #     apiVersion: 1
+      #     datasources:
+      #       - name: VictoriaMetrics
+      #         type: prometheus
+      #         url: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428
+      #         access: proxy
+      #         isDefault: true
+
+    prometheus:
+      enabled: false
+
+    alertmanager:
+      enabled: false
+
+    nodeExporter:
+      enabled: false
+
+    kubeStateMetrics:
+      enabled: false
