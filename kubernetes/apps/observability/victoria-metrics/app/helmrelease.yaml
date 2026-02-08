@@ -56,7 +56,7 @@ spec:
           url_map:
             - src_paths: ["/api/v1/.+"]
               url_prefix:
-                - http://vmsingle-vm:8429/prometheus/
+                - http://vmsingle-vm:8429/
 
     vmalert:
       enabled: false
