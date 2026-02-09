@@ -66,7 +66,10 @@ spec:
         externalLabels:
           cluster: main
         remoteWrite:
-          - url: http://vm-vmsingle.observability.svc.cluster.local:8428/api/v1/write
+          - url: http://vmsingle-vm.observability.svc.cluster.local:8428/api/v1/write
+        extraArgs:
+          promscrape.dropOriginalLabels: "true"
+          promscrape.streamParse: "true"
 
     grafana:
       enabled: false
@@ -96,3 +99,23 @@ spec:
 
     kubeStateMetrics:
       enabled: false
+
+    kubeScheduler:
+      enabled: true
+      spec:
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              insecureSkipVerify: true
+
+    kubeControllerManager:
+      enabled: true
+      spec:
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              insecureSkipVerify: true
