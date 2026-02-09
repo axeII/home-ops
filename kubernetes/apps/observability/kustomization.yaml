@@ -12,6 +12,7 @@ resources:
   - ./coroot/ks.yaml
   - ./gatus/ks.yaml
   - ./keda/ks.yaml
+  - ./blackbox-exporter/ks.yaml
   # Replaced with victoria-metrics instead
   # If testing with coroot/victoria metrics will have good resulsts
   # I should remove these
@@ -21,6 +22,5 @@ resources:
   # - ./grafana/ks.yaml
   # - ./loki/ks.yaml
   # - ./alloy/ks.yaml
-  # - ./blackbox-exporter/ks.yaml
   # - ./unpoller/ks.yaml
   # - ./silence-operator/ks.yaml
