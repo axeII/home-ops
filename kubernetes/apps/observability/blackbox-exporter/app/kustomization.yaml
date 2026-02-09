@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./repository.yaml
   - ./probes.yaml
+  - ./vmrule.yaml
