@@ -16,7 +16,7 @@ resources:
   # Replaced with victoria-metrics instead
   # If testing with coroot/victoria metrics will have good resulsts
   # I should remove these
-  # - ./prometheus-operator-crds/ks.yaml
+  - ./prometheus-operator-crds/ks.yaml
   # - ./kube-prometheus-stack/ks.yaml
   # - ./karma/ks.yaml
   # - ./grafana/ks.yaml
