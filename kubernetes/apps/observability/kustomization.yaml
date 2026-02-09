@@ -7,7 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./victoria-metrics/ks.yaml
-  - ./victoria-logs/ks.yaml
+  # - ./victoria-logs/ks.yaml
   - ./kromgo/ks.yaml
   - ./coroot/ks.yaml
   - ./gatus/ks.yaml
