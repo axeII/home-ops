@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: docmost/docmost
-              tag: 0.25.2
+              tag: 0.25.3
             env:
               TZ: "Europe/Paris"
               APP_URL: "https://hub.juno.moe"
