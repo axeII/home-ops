@@ -109,6 +109,7 @@ spec:
             scheme: https
             tlsConfig:
               insecureSkipVerify: true
+              serverName: localhost
 
     kubeControllerManager:
       enabled: true
@@ -119,3 +120,4 @@ spec:
             scheme: https
             tlsConfig:
               insecureSkipVerify: true
+              serverName: localhost
