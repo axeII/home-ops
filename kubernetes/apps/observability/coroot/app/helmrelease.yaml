@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: coroot-ce
-      version: 0.3.1
+      version: 0.3.3
       sourceRef:
         kind: HelmRepository
         name: coroot
