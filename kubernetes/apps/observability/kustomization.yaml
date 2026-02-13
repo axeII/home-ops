@@ -7,19 +7,17 @@ components:
   - ../../components/common
 resources:
   - ./victoria-metrics/ks.yaml
-  # - ./victoria-logs/ks.yaml
   - ./kromgo/ks.yaml
   - ./coroot/ks.yaml
   - ./gatus/ks.yaml
   - ./keda/ks.yaml
   - ./blackbox-exporter/ks.yaml
-  # Replaced with victoria-metrics instead
-  # If testing with coroot/victoria metrics will have good resulsts
-  # I should remove these
+  - ./grafana/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
+  # - ./victoria-logs/ks.yaml
+  # I should remove these?
   # - ./kube-prometheus-stack/ks.yaml
   # - ./karma/ks.yaml
-  # - ./grafana/ks.yaml
   # - ./loki/ks.yaml
   # - ./alloy/ks.yaml
   # - ./unpoller/ks.yaml

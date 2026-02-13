@@ -66,11 +66,11 @@ spec:
             url: http://loki-headless.observability.svc.cluster.local:3100
             jsonData:
               maxLines: 250
-          - name: Prometheus
+          - name: VictoriaMetrics
             type: prometheus
             uid: prometheus
             access: proxy
-            url: http://prometheus-operated.observability.svc.cluster.local:9090
+            url: http://vmsingle-vm.observability.svc.cluster.local:8428
             jsonData:
               timeInterval: 1m
             isDefault: true
