@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/dragonflydb.io/dragonfly_v1alpha1.json
 apiVersion: dragonflydb.io/v1alpha1
 kind: Dragonfly
 metadata:
@@ -18,6 +17,16 @@ spec:
     - --proactor_threads=1
     - --cluster_mode=emulated
     - --default_lua_flags=allow-undeclared-keys
+    - --cache_mode
+  snapshot:
+    cron: "0 */6 * * *"
+    persistentVolumeClaimSpec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: ceph-block
+      resources:
+        requests:
+          storage: 1Gi
   resources:
     requests:
       cpu: 100m

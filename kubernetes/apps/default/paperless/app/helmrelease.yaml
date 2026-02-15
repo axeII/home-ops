@@ -50,7 +50,7 @@ spec:
               PAPERLESS_OCR_LANGUAGES: ces eng
               PAPERLESS_OCR_LANGUAGE: ces
               PAPERLESS_PORT: &port 8000
-              PAPERLESS_REDIS: redis://dragonfly.database.svc.cluster.local.:6379
+              PAPERLESS_REDIS: redis://dragonfly.database.svc.cluster.local:6379
               PAPERLESS_TASK_WORKERS: 2
               PAPERLESS_TIME_ZONE: Europe/Paris
               PAPERLESS_TIKA_ENABLED: 1
