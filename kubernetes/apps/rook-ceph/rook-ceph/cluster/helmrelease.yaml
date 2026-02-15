@@ -35,6 +35,21 @@ spec:
       bdev_enable_discard = true
       bdev_async_discard = true
       osd_class_update_on_start = false
+      # Throttle recovery/backfill to reduce network pressure on 1GbE
+      osd_recovery_max_active = 1
+      osd_max_backfills = 1
+      osd_recovery_sleep = 0.5
+      # Schedule scrubbing overnight (2:00 - 6:00)
+      osd_scrub_begin_hour = 2
+      osd_scrub_end_hour = 6
+      # Reduce scrub impact
+      osd_scrub_sleep = 0.1
+      osd_scrub_priority = 1
+      osd_scrub_chunk_min = 1
+      osd_scrub_chunk_max = 5
+      osd_deep_scrub_interval = 604800
+      # Reduce mon warnings threshold
+      mon_data_avail_warn = 20
 
     operatorNamespace: rook-ceph
     route:
@@ -144,11 +159,11 @@ spec:
           dataPools:
             - failureDomain: host
               replicated:
-                size: 3
+                size: 2
               name: data0
           metadataPool:
             replicated:
-              size: 3
+              size: 2
           metadataServer:
             activeCount: 1
             activeStandby: true
@@ -193,7 +208,7 @@ spec:
         spec:
           failureDomain: host
           replicated:
-            size: 3
+            size: 2
         storageClass:
           enabled: true
           name: ceph-block
