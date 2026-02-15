@@ -1,15 +1,18 @@
 {
     "files.associations": {
-      "*.json5": "jsonc",
-      "**/kubernetes/**/*.sops.toml": "plaintext"
-  },
-  "yaml.schemas": {
-      "Kubernetes": "./kubernetes/**/*.yaml"
-  },
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": true,
-  "editor.guides.bracketPairsHorizontal": true,
-  "editor.guides.highlightActiveBracketPair": true,
-  "editor.hover.delay": 1500,
-  "files.trimTrailingWhitespace": true
+        "*.json5": "jsonc",
+        "**/kubernetes/**/*.sops.toml": "plaintext"
+    },
+    "yaml.schemas": {
+        "Kubernetes": "./kubernetes/**/*.yaml"
+    },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.guides.bracketPairsHorizontal": true,
+    "editor.guides.highlightActiveBracketPair": true,
+    "editor.hover.delay": 1500,
+    "files.trimTrailingWhitespace": true,
+    "chat.tools.terminal.autoApprove": {
+        "pre-commit": true
+    }
 }
