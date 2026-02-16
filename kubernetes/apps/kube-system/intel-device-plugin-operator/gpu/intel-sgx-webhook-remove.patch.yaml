@@ -1,0 +1,13 @@
+---
+# Remove SGX webhook from MutatingWebhookConfiguration
+# The Intel device plugin controller doesn't implement the SGX webhook,
+# causing errors when it tries to call the endpoint.
+# This patch removes the sgx.mutator.webhooks.intel.com entry.
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: inteldeviceplugins-mutating-webhook-configuration
+spec:
+  webhooks:
+    - name: sgx.mutator.webhooks.intel.com
+      $patch: delete
