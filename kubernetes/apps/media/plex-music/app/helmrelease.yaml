@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/axeii/chromatix
-              tag: v2@sha256:0cc580b8f36df0b780e32b675140b1d99f5e33ccbd27c8dde2ddd75613c0254b
+              tag: v2
             # env:
             #   HTTP_PORT: &port 80
             probes:
