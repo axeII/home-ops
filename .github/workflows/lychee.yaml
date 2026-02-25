@@ -24,7 +24,7 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Scan for broken links
-        uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0 # v2
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2
         id: lychee
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
