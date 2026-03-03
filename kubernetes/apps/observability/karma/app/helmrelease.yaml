@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/prymitive/karma
-              tag: v0.122@sha256:87312daa8b8ca740e2acd427fc996724f8c69e36b9f0ad15c1961c1e4ccb1987
+              tag: v0.126@sha256:1cfdecaf91bfe0af19f8be294b6b54e8f12d811156b59d60fcaf5afc85292e9c
             env:
               CONFIG_FILE: &config /config/config.yaml
             probes:
