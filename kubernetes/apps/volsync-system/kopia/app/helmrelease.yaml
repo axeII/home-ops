@@ -96,6 +96,8 @@ spec:
               "enableActions": false
             }
     persistence:
+      config:
+        type: emptyDir
       repository:
         type: nfs
         server: nas.internal
