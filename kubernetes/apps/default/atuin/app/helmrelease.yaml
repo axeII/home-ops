@@ -44,7 +44,7 @@ spec:
               ATUIN_METRICS__PORT: &metricsPort 8080
               ATUIN_TLS__ENABLE: "false"
             envFrom: *envFrom
-            args: ["server", "start"]
+            args: ["start"]
             probes:
               liveness: &probes
                 enabled: true
