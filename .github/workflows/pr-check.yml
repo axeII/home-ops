@@ -16,7 +16,7 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@22103cc46bda19c2b464ffe86db46df6922fd323 # v47.0.5
-      - uses: harupy/find-trailing-whitespace@master
+      - uses: harupy/find-trailing-whitespace@56310d70ae8fd21afec8d4307d2d9ab6c15e7c5d # master
       - name: "Gitleaks checks"
         uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
@@ -33,7 +33,7 @@ jobs:
             fi
           done
       - name: "Yamllint checks"
-        uses: karancode/yamllint-github-action@master
+        uses: karancode/yamllint-github-action@4052d365f09b8d34eb552c363d1141fd60e2aeb2 # master
         with:
           yamllint_config_filepath: .github/linters/.yamllint.yaml
           yamllint_file_or_dir: "testfiles"
