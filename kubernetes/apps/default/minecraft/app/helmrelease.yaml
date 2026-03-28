@@ -17,10 +17,10 @@ spec:
       tag: 2026.3.2-java21
     resources:
       limits:
-        memory: 16Gi
+        memory: 10Gi
       requests:
         cpu: 1000m
-        memory: 15Gi
+        memory: 9Gi
     securityContext:
       runAsUser: 1000
     podSecurityContext:
@@ -80,7 +80,7 @@ spec:
       worldSaveName: "The Forgotten Realm"
       viewDistance: 16
       forceReDownload: true
-      memory: 14G
+      memory: 8G
       jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+AlwaysPreTouch"
       rcon:
         enabled: true
