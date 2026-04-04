@@ -65,6 +65,8 @@ spec:
               capabilities: { drop: ["ALL"] }
 
         pod:
+          labels:
+            control-plane: controller-manager
           securityContext:
             runAsUser: 65534
             runAsGroup: 65534
