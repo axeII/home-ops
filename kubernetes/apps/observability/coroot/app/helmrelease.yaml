@@ -33,12 +33,17 @@ spec:
       valuesKey: COROOT_ADMIN_PASSWORD
       targetPath: authBootstrapAdminPassword
   values:
+    metricsRefreshInterval: 60s
     env:
-      - name: GLOBAL_PROMETHEUS_USE_CLICKHOUSE
-        value: "true"
+      - name: GLOBAL_PROMETHEUS_URL
+        value: http://vmsingle-vm.observability.svc.cluster.local:8428
+      - name: GLOBAL_PROMETHEUS_REMOTE_WRITE_URL
+        value: http://vmsingle-vm.observability.svc.cluster.local:8428/api/v1/write
       - name: CACHE_TTL
         value: 24h
     ingress:
+      enabled: false
+    prometheus:
       enabled: false
     clusterAgent:
       resources:
@@ -57,6 +62,7 @@ spec:
         replicas: 1
       storage:
         className: ceph-block
+        size: 20Gi
       resources:
         requests:
           cpu: 400m
