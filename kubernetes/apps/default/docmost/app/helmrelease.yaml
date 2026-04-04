@@ -53,6 +53,15 @@ spec:
               limits:
                 memory: 1Gi
         pod:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: NotIn
+                        values:
+                          - k8s-1
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
