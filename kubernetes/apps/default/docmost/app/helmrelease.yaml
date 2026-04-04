@@ -53,6 +53,7 @@ spec:
               limits:
                 memory: 1Gi
         pod:
+          # TODO: Find a better way to fix issue with Unsupported CPU: Prebuilt binaries for linux-x64 require v2 microarchitecture
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -61,7 +62,7 @@ spec:
                       - key: kubernetes.io/hostname
                         operator: NotIn
                         values:
-                          - k8s-1
+                          - k8s-1 # Only AMD node
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

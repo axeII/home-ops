@@ -17,7 +17,7 @@ spec:
     - --proactor_threads=2
     - --cluster_mode=emulated
     - --default_lua_flags=allow-undeclared-keys
-    - --hz=100
+    - --hz=10
   snapshot:
     cron: "0 */6 * * *"
     persistentVolumeClaimSpec:
