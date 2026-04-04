@@ -9,6 +9,9 @@ on: # yamllint disable-line rule:truthy
       - "kubernetes/**/*.yaml"
       - "kubernetes/**/*.yml"
 
+permissions:
+  contents: read
+
 jobs:
   detect-file-changes:
     name: Detect File Changes
@@ -37,7 +40,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Install Jo
         run: |
-          sudo apt-get install jo
+          sudo apt-get update && sudo apt-get install -y jo
       - name: Detect Containers in Files
         id: containers
         run: |
@@ -50,12 +53,18 @@ jobs:
     name: Scan Containers
     runs-on: ubuntu-latest
     needs: detect-containers
+    permissions:
+      security-events: write
     strategy:
       matrix: ${{ fromJSON(needs.detect-containers.outputs.containers) }}
       fail-fast: false
     steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Cache Trivy DB
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2164 # v4
+        with:
+          path: .trivy-cache
+          key: trivy-db-${{ github.run_id }}
+          restore-keys: trivy-db-
       - name: Scan Container
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:
@@ -64,6 +73,7 @@ jobs:
           severity: CRITICAL,HIGH
           format: sarif
           output: trivy-results.sarif
+          cache-dir: .trivy-cache
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4
         with:
