@@ -30,6 +30,7 @@ spec:
               tag: 2026.4.1@sha256:1000851ce4d5bf2f6790bfc8b9052daa2c33a84f92e0bad7d60e0a9333ff4dc2
             env:
               TZ: Europe/Paris
+              HASS_HTTP_USE_X_FORWARDED_FOR: "true"
               HASS_HTTP_TRUSTED_PROXY_1: 192.168.69.0/24
               HASS_HTTP_TRUSTED_PROXY_2: 10.42.0.0/16
             envFrom:
