@@ -7,6 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./victoria-metrics/ks.yaml
+  - ./blackbox-exporter/ks.yaml # keep for scaled objects
   - ./kromgo/ks.yaml
   - ./coroot/ks.yaml
   - ./gatus/ks.yaml
