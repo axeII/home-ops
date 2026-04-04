@@ -17,7 +17,6 @@ spec:
     - --proactor_threads=2
     - --cluster_mode=emulated
     - --default_lua_flags=allow-undeclared-keys
-    - --cache_mode
     - --hz=100
   snapshot:
     cron: "0 */6 * * *"
