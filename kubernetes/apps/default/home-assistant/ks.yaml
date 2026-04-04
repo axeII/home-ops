@@ -10,13 +10,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/volsync
     - ../../../../components/gatus
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
     - name: external-secrets-stores
       namespace: kube-system
   interval: 1h
@@ -24,7 +21,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
       GATUS_SUBDOMAIN: hass
   prune: true
   retryInterval: 2m
