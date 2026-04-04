@@ -14,10 +14,12 @@ spec:
           divisor: 1Mi
   args:
     - --maxmemory=$(MAX_MEMORY)Mi
-    - --proactor_threads=1
+    - --proactor_threads=2
     - --cluster_mode=emulated
     - --default_lua_flags=allow-undeclared-keys
     - --cache_mode
+    - --hz=100
+    - --repl_diskless_load=on-empty-db
   snapshot:
     cron: "0 */6 * * *"
     persistentVolumeClaimSpec:
@@ -31,4 +33,4 @@ spec:
     requests:
       cpu: 100m
     limits:
-      memory: 256Mi
+      memory: 512Mi
