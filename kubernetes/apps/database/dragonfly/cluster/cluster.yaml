@@ -19,7 +19,6 @@ spec:
     - --default_lua_flags=allow-undeclared-keys
     - --cache_mode
     - --hz=100
-    - --repl_diskless_load=on-empty-db
   snapshot:
     cron: "0 */6 * * *"
     persistentVolumeClaimSpec:
