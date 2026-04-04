@@ -33,6 +33,11 @@ spec:
       valuesKey: COROOT_ADMIN_PASSWORD
       targetPath: authBootstrapAdminPassword
   values:
+    env:
+      - name: GLOBAL_PROMETHEUS_USE_CLICKHOUSE
+        value: "true"
+      - name: CACHE_TTL
+        value: 24h
     ingress:
       enabled: false
     clusterAgent:
@@ -44,10 +49,9 @@ spec:
         limits:
           memory: 300Mi
           ephemeral-storage: 200Mi
-    externalPrometheus:
-      url: http://vmsingle-vm.observability.svc.cluster.local:8428
     storage:
       className: ceph-block
+      size: 10Gi
     clickhouse:
       keeper:
         replicas: 1

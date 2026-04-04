@@ -11,7 +11,6 @@ resources:
   - ./coroot/ks.yaml
   - ./gatus/ks.yaml
   - ./keda/ks.yaml
-  - ./blackbox-exporter/ks.yaml
   - ./grafana/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
   # - ./victoria-logs/ks.yaml
