@@ -62,7 +62,7 @@ spec:
             memory: 512Mi
           limits:
             memory: 1Gi
-        scrapeInterval: 15s
+        scrapeInterval: 60s
         externalLabels:
           cluster: main
         remoteWrite:

@@ -44,8 +44,6 @@ spec:
         limits:
           memory: 300Mi
           ephemeral-storage: 200Mi
-    externalPrometheus:
-      url: http://vmsingle-vm.observability.svc.cluster.local:8428
     storage:
       className: ceph-block
     clickhouse:
