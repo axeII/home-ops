@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/sct/overseerr
-              tag: 1.35.0@sha256:6197516c9d7b58ccf113455e32aafb94df5d91995fe50e8c2cae6ba6c7c7b7de
+              repository: ghcr.io/seerr-team/seerr
+              tag: v3.1.0@sha256:b35ba0461c4a1033d117ac1e5968fd4cbe777899e4cbfbdeaf3d10a42a0eb7e9
             env:
               LOG_LEVEL: info
               PORT: &port 5055
@@ -64,7 +64,7 @@ spec:
         globalMounts:
           - path: /app/config
       config-cache:
-        existingClaim: overseerr-cache
+        type: emptyDir
         globalMounts:
           - path: /app/config/cache
       config-logs:
@@ -77,7 +77,6 @@ spec:
       app:
         hostnames:
           - requests.juno.moe
-          # - overseer.juno.moe
         parentRefs:
           - name: external
             namespace: kube-system
