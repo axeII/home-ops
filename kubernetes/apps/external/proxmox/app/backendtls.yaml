@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxmox-ca
+  namespace: external
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIFzTCCA7WgAwIBAgIUdD0fL7KEPSPeEV8cvl0WIcwCTEMwDQYJKoZIhvcNAQEL
+    BQAwdjEkMCIGA1UEAwwbUHJveG1veCBWaXJ0dWFsIEVudmlyb25tZW50MS0wKwYD
+    VQQLDCQwNWU3NTk0Yi1kMTliLTQwNmYtYmM5OC1iNjE4NWJlMzg3NmExHzAdBgNV
+    BAoMFlBWRSBDbHVzdGVyIE1hbmFnZXIgQ0EwHhcNMjUwNzE5MTIyNDUwWhcNMzUw
+    NzE3MTIyNDUwWjB2MSQwIgYDVQQDDBtQcm94bW94IFZpcnR1YWwgRW52aXJvbm1l
+    bnQxLTArBgNVBAsMJDA1ZTc1OTRiLWQxOWItNDA2Zi1iYzk4LWI2MTg1YmUzODc2
+    YTEfMB0GA1UECgwWUFZFIENsdXN0ZXIgTWFuYWdlciBDQTCCAiIwDQYJKoZIhvcN
+    AQEBBQADggIPADCCAgoCggIBAK2rHEEB8GM07yBeeUuwy8mxsQmkNarEibHBT8hW
+    DmA7fuE4F8mTfi6WDxC2rOYxJj+TwMaYPfLBS8okoy+up9JTul5G57Pt6w/Xx/N2
+    YJHE6Kzp+ghEA57ffUtjV3Xux+sikXblzqLtXHugfpLe33WM2K/1gaeOoqud1kCz
+    j0XfRK8/Nvhvvjs6jG3lqt5gR5Pv2jTKNQb5hd7rgLHfVhRoYNQtsybVKDRLhPt3
+    gKVeqdaENtziGIX8Q20rfpnF0u8PPHSEsEwB6FergaYBK7xLjdyzXbDLfcIaUe2L
+    oBYaiQAHLwGORhNEJ0rbvB90LGdRo4ghaS5eUv9IZJijnrfo9XcVn4ZEI6z7j3e5
+    BbpXs5YxuL6xX1/nJ8vES4Y5ccINfwNpwOGLEiPtRFhYf9qpyNdlILIveat5VGSN
+    Ye1gccP5Hs8wHrF4tLBADsufY/AFmoKl2rinQPf6pW2p4k2uzu5xsAO/VgpK9+RP
+    sdJakb6Ac6ldxjh1DR01NcCUZNYOi1s8R+kYX0DEh0ASOVi6749rif+COp30AM3L
+    exUNU/b3DcTofHWnI5b0DvPmveDYJIr35HEcedMW4H7jPQ9mwXEHeyNKUN1b5H6b
+    JM2/Ic3LTFxcVyeCanRnORNnn/qz0bKpR0VbksOMKd/joacSBYXgSZtS6umFhz/B
+    TCX1AgMBAAGjUzBRMB0GA1UdDgQWBBTtPzuA9Xix84uy7SPcmsYsRofHbzAfBgNV
+    HSMEGDAWgBTtPzuA9Xix84uy7SPcmsYsRofHbzAPBgNVHRMBAf8EBTADAQH/MA0G
+    CSqGSIb3DQEBCwUAA4ICAQB1pXStQxvHTy4eC95JchlJLhVZH4084F8yv4Mwl5B4
+    Hy0+9+Zj2ZFuByKA5detn+c50Z/jeMg1bXhHyTvd3njiJYSaFBoXtSh5e+UrKw/L
+    s4nSICZSGWZd4IwtRVIl1BIz1gvqYFEN7LQfLeqtmy26Kd48rWyYAFeATw5X6X5/
+    gv7AQ6f2Lfy8ZbMmwVYqx9fuaJEaYu75eF0OKJb9ifKrczvgVu+msI1nm73WHqhd
+    1KH3zL7aGvbMlgQX1NwYBJC67Q6SfzGEEwIOM5vIlK4U3xC7cFbmEA03kV7Xcjrc
+    YxbNSWMoMb0x+Rn0c8MvONNb7EFwLRQfs4mkNeoAtdLzp0N15ySaOJk6pSKfXPFj
+    CnnCrEeoG9cqgry6n/IV3sx4fgc1Di/Ga4X1zEFaC2jxnChmQqUQ9QDvVewtQENq
+    QIGStambg57Ii+lFJ16TgljGGCwA0gFBvj+/+QL4371CP2ltx0XD17RMMQfVDFKh
+    MBQEuGw+JQvIXhj7WDmBPBzdNilqaYtzkhogR2/WDyHDfPdD7iyaweeXE9bYYzkZ
+    z6AUr54cIg3RhnGn62bvzo1XM/9Wd+05JbbvGAbQWeyi4ab6lB1yyZyy8hHUuqXK
+    u4WjVVH4AD4xAhu1RkbofORdUqNDsd0wsDKaB1C/lftixOuAI/YG6ZNj2azzp9fz
+    tQ==
+    -----END CERTIFICATE-----
+
+---
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: proxmox-tls
+  namespace: external
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: proxmox
+  validation:
+    caCertificateRefs:
+      - group: ""
+        kind: ConfigMap
+        name: proxmox-ca
+    hostname: pve.juno.moe
