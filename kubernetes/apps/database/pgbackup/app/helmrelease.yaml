@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -23,15 +23,36 @@ spec:
       postgres-backup:
         type: cronjob
         cronjob:
-          schedule: "@weekly"
+          schedule: "0 3 1,15 * *"
+          concurrencyPolicy: Forbid
           ttlSecondsAfterFinished: 43200
         pod:
           restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
         containers:
           app:
             image:
-              repository: ghcr.io/axeii/pgbackup
-              tag: v3@sha256:247b274e2603070aae467351106cd3fb3fdfad0edf9185ff77201eaf1b6d907c
+              repository: mirror.gcr.io/prodrigestivill/postgres-backup-local
+              tag: 18@sha256:f70742ebe42b2277689b028d1fd15aa80f77cffa01da163cc9f85a6ff1866e7f
+            command:
+              - /bin/bash
+              - -x
+              - /backup.sh
+            env:
+              TZ: Europe/Paris
+              POSTGRES_HOST: db.internal
+              POSTGRES_PORT: "5432"
+              POSTGRES_DB: "atuin,docmost,gatus,prowlarr_main,radarr_main,sonarr_main"
             envFrom:
               - secretRef:
                   name: pgbackup-secret
+    persistence:
+      nas:
+        type: nfs
+        server: nas.internal
+        path: /mnt/storage0/pgbackup
+        globalMounts:
+          - path: /backups
