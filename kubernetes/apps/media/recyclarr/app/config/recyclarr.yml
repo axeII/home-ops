@@ -9,7 +9,7 @@ sonarr:
       type: series
     quality_profiles:
       - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
-        name: WEB-1080p
+        name: Web-1080p
         reset_unmatched_scores:
           enabled: true
     custom_formats:
