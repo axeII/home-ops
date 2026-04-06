@@ -4,6 +4,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: "${APP}"
   labels:
+    # IfNotPresent: Flux creates this PVC once and never updates it.
+    # PVC specs are immutable after binding (except storage size).
+    # To resize: kubectl patch pvc <app> -n <ns> --type=merge -p '{"spec":{"resources":{"requests":{"storage":"<new-size>"}}}}'
+    # To restore from backup: delete the PVC and remove this label so Flux recreates it via the ReplicationDestination.
     kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
 spec:
   accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
