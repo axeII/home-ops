@@ -101,3 +101,15 @@ spec:
         ports:
           http:
             port: *port
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seerr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 56Mi
+  storageClassName: ceph-block
