@@ -2,7 +2,7 @@
 
 # on macos don't forget to updates bash to 5.x
 
-DB_HOST="localhost"
+DB_HOST="db.internal"
 DB_PORT="5432"
 DB_USER=postgres
 
@@ -10,9 +10,9 @@ variables=("ROOT_PASSWORD" "DATABASE_NAME" "USERNAME" "PASSWORD")
 
 declare -A map_of_answers
 
-for var in ${variables[@]}; do
+for var in "${variables[@]}"; do
     echo -n "Enter a value for $var: "
-    read input
+    read -r input
 
     map_of_answers[$var]=$input
 done
