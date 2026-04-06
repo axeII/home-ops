@@ -4,6 +4,11 @@ kind: HTTPRoute
 metadata:
   name: &app proxmox
   namespace: external
+  annotations:
+    glance/name: Proxmox
+    glance/show: "true"
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png
+    glance/description: "Virtualization and container management."
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app

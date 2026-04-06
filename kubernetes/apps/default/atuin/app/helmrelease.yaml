@@ -84,6 +84,11 @@ spec:
             port: *metricsPort
     route:
       app:
+        annotations:
+          glance/name: Atuin
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/atuin.png
+          glance/description: "Shell history sync and search."
         hostnames:
           - sh.juno.moe
         parentRefs:

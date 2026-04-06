@@ -4,6 +4,11 @@ kind: HTTPRoute
 metadata:
   name: &app truenas
   namespace: external
+  annotations:
+    glance/name: TrueNAS
+    glance/show: "true"
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
+    glance/description: "Network-attached storage management."
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app

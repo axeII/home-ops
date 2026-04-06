@@ -93,6 +93,11 @@ spec:
         runAsGroup: 1000
     route:
       app:
+        annotations:
+          glance/name: Gatus
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gatus.png
+          glance/description: "Service health and status monitoring."
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
           - "status.juno.moe"

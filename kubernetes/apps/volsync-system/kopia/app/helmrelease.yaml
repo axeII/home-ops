@@ -73,6 +73,11 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          glance/name: Kopia
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kopia.png
+          glance/description: "Backup and restore management."
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:
