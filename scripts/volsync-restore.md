@@ -2,7 +2,13 @@
 
 <!-- **Path:** `kubernetes/components/volsync/MANUAL_RESTORE.md` -->
 
-Use this procedure to restore a **specific** snapshot ID (found via Kopia UI) when the standard VolSync `ReplicationDestination` cannot be used (e.g., needed specific point-in-time recovery).
+> **Prefer automated restore for most cases:**
+> ```bash
+> task volsync:restore NS=<namespace> APP=<app>
+> ```
+> Use this manual guide **only** when you need to restore a *specific* snapshot ID (point-in-time recovery beyond the latest snapshot).
+
+Use this procedure to restore a **specific** snapshot ID (found via Kopia UI) when the automated `task volsync:restore` cannot be used (e.g., needed specific point-in-time recovery).
 
 ## 1. Set Variables
 
@@ -10,11 +16,11 @@ Define the target application and environment details.
 
 ```bash
 # === CONFIGURATION ===
-export APP=plex                        # Deployment / PVC name
-export NS=media                        # Namespace
-export NFS_SERVER=10.10.x.x            # TrueNAS IP address
-export NFS_PATH=/mnt/storage0/backups  # VolSync/Kopia repo parent folder
-export UID=1000                        # File ownership UID (1000 for most apps, 999 for Postgres)
+export APP=plex                           # Deployment / PVC name
+export NS=media                           # Namespace
+export NFS_SERVER=nas.internal            # TrueNAS hostname or IP
+export NFS_PATH=/mnt/storage0/volsync     # Kopia repo parent folder (NFS share)
+export UID=1000                           # File ownership UID (1000 for most apps, 999 for Postgres)
 ```
 
 ## 2. Stop the World
