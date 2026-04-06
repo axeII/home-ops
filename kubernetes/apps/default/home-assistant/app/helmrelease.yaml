@@ -65,6 +65,11 @@ spec:
             port: &port 8123
     route:
       app:
+        annotations:
+          glance/name: Home Assistant
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
+          glance/description: "Home automation platform."
         hostnames:
           - hass.juno.moe
         parentRefs:

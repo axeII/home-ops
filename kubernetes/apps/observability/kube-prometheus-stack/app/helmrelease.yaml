@@ -36,6 +36,11 @@ spec:
       route:
         main:
           enabled: true
+          annotations:
+            glance/name: Alertmanager
+            glance/show: "false"
+            glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alertmanager.png
+            glance/description: "Prometheus alert management."
           hostnames:
             - am.juno.moe
           parentRefs:
@@ -94,6 +99,11 @@ spec:
       route:
         main:
           enabled: true
+          annotations:
+            glance/name: Prometheus
+            glance/show: "false"
+            glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
+            glance/description: "Metrics and monitoring system."
           hostnames:
             - prometheus.juno.moe
           parentRefs:

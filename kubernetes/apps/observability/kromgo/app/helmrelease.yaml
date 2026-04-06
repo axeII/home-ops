@@ -77,6 +77,11 @@ spec:
               app.kubernetes.io/name: *app
     route:
       app:
+        annotations:
+          glance/name: Kromgo
+          glance/show: "false"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kubernetes.png
+          glance/description: "Kubernetes metrics badge service."
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

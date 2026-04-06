@@ -4,6 +4,11 @@ kind: HTTPRoute
 metadata:
   name: coroot
   namespace: observability
+  annotations:
+    glance/name: Coroot
+    glance/show: "true"
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/coroot.png
+    glance/description: "Observability and infrastructure monitoring."
 spec:
   hostnames:
     - coroot.juno.moe

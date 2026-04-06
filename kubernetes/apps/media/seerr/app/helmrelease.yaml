@@ -86,6 +86,11 @@ spec:
         type: emptyDir
     route:
       app:
+        annotations:
+          glance/name: Seerr
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
+          glance/description: "Media request management."
         hostnames:
           - requests.juno.moe
         parentRefs:
