@@ -45,7 +45,7 @@ spec:
               TZ: Europe/Paris
               POSTGRES_HOST: db.internal
               POSTGRES_PORT: "5432"
-              POSTGRES_DB: "atuin,docmost,gatus,prowlarr_main,radarr_main,sonarr_main"
+              POSTGRES_DB: "atuin,docmost,gatus,prowlarr_main,radarr_main,seerr,sonarr_main"
             envFrom:
               - secretRef:
                   name: pgbackup-secret
