@@ -6,3 +6,10 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./pvc.yaml
+patches:
+  - target:
+      kind: PersistentVolumeClaim
+      name: home-assistant
+    patch: |
+      - op: remove
+        path: /spec/dataSourceRef
