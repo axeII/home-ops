@@ -2,8 +2,8 @@ server:
   port: 80
   proxied: true
 theme:
-  light: true
-  background-color: 240 5 98
+  light: false
+  background-color: 240 10 10
   contrast-multiplier: 1.2
   primary-color: 217 70 25
   positive-color: 115 60 30
