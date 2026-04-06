@@ -75,7 +75,7 @@ spec:
         globalMounts:
           - path: /app/config
       config-cache:
-        type: emptyDir
+        existingClaim: seerr-cache
         globalMounts:
           - path: /app/config/cache
       config-logs:
