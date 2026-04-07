@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: proxmox-nginx-config
+  name: truenas-nginx-config
   namespace: external
 data:
   nginx.conf: |
@@ -11,7 +11,7 @@ data:
       server {
         listen 8080;
         location / {
-          proxy_pass https://192.168.69.80:8006;
+          proxy_pass https://192.168.69.69:443;
           proxy_ssl_verify off;
           proxy_http_version 1.1;
           proxy_set_header Host $http_host;
@@ -31,25 +31,25 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: proxmox-nginx
+  name: truenas-nginx
   namespace: external
   annotations:
     glance/show: "true"
-    glance/name: Proxmox
-    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png
-    glance/description: "Virtualization and container management."
+    glance/name: TrueNAS
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
+    glance/description: "Network-attached storage management."
   labels:
-    app.kubernetes.io/name: proxmox-nginx
-    app.kubernetes.io/instance: proxmox-nginx
+    app.kubernetes.io/name: truenas-nginx
+    app.kubernetes.io/instance: truenas-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: proxmox-nginx
+      app.kubernetes.io/name: truenas-nginx
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: proxmox-nginx
+        app.kubernetes.io/name: truenas-nginx
     spec:
       containers:
         - name: nginx
@@ -63,4 +63,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: proxmox-nginx-config
+            name: truenas-nginx-config
