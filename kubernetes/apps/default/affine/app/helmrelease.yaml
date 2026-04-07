@@ -35,8 +35,8 @@ spec:
           init-config:
             dependsOn: init-db
             image:
-              repository: ghcr.io/toeverything/affine-graphql
-              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
+              repository: ghcr.io/toeverything/affine
+              tag: 0.26.6@sha256:d1c65f5d545d3e0a51c1696c482739915fbf402ba37cefb31539a1de095531e8
             command: ["/bin/sh", "-c"]
             args:
               - |
@@ -52,8 +52,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/toeverything/affine-graphql
-              tag: stable-0ab8655@sha256:b461dd09b968bd2f067e98ed3c4988f4711dd811df7624f19d53c899061c4347
+              repository: ghcr.io/toeverything/affine
+              tag: 0.26.6@sha256:d1c65f5d545d3e0a51c1696c482739915fbf402ba37cefb31539a1de095531e8
             env:
               TZ: "Europe/Paris"
             envFrom: *envFrom
