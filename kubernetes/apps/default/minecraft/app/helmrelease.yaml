@@ -70,7 +70,7 @@ spec:
     minecraftServer:
       eula: true
       # renovate: datasource=custom.minecraft-release
-      version: 1.21.11
+      version: 26.1.2
       type: FABRIC
       difficulty: normal
       whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHelen1980,Morgoth_the_3rd,CrazyRogueE" # Pridat bioaldu
