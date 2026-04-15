@@ -32,14 +32,14 @@ pages:
               - title: Infrastructure
                 color: 200 50 50
                 links:
-                  - title: Unifi
-                    url: https://unifi.ui.com/consoles
-                  - title: Cloudflare
-                    url: https://dash.cloudflare.com/
                   - title: News page
                     url: https://glance.juno.moe/news
                   - title: Home-Ops Repo
                     url: https://github.com/axeII/home-ops
+                  - title: Unifi
+                    url: https://unifi.ui.com/consoles
+                  - title: Cloudflare
+                    url: https://dash.cloudflare.com/
                   # - title: Git Cleaner
                   #   url: https://gitcleaner.com
                   # - title: GitHub Folder Download
@@ -80,6 +80,8 @@ pages:
               - title: Utilities
                 color: 270 50 50
                 links:
+                  - title: ProtonDB
+                    url: https://www.protondb.com/
                   - title: GPP Tools
                     url: https://gpptools.com
                   - title: Archive.si
@@ -90,12 +92,12 @@ pages:
               - title: Personal
                 color: 160 50 50
                 links:
+                  - title: Selfhosted blog
+                    url: https://selfh.st
                   - title: Music (Squid)
                     url: https://tidal.squid.wtf/
                   - title: Diving Sites
                     url: https://divesites.com
-                  - title: Selfhosted blog
-                    url: https://selfh.st
                   - title: Dashboard Icons
                     url: https://dashboardicons.com/
   - name: News
