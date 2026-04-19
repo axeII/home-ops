@@ -184,7 +184,7 @@ pages:
                 collapse-after: 10
                 comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
-                subreddit: nvim
+                subreddit: neovim
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
