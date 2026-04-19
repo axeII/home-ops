@@ -52,20 +52,6 @@ spec:
           - { name: Loki, orgId: 1 }
           - { name: Prometheus, orgId: 1 }
         datasources:
-          - name: Alertmanager
-            type: alertmanager
-            uid: alertmanager
-            access: proxy
-            url: http://alertmanager-operated.observability.svc.cluster.local:9093
-            jsonData:
-              implementation: prometheus
-          - name: Loki
-            type: loki
-            uid: loki
-            access: proxy
-            url: http://loki-headless.observability.svc.cluster.local:3100
-            jsonData:
-              maxLines: 250
           - name: VictoriaMetrics
             type: prometheus
             uid: prometheus
@@ -74,6 +60,13 @@ spec:
             jsonData:
               timeInterval: 1m
             isDefault: true
+          - name: VictoriaLogs
+            type: loki
+            uid: loki
+            access: proxy
+            url: http://victoria-logs.observability.svc.cluster.local:9428
+            jsonData:
+              maxLines: 500
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
