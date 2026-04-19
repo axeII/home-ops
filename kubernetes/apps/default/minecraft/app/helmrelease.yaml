@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://crd.movishell.pl/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -48,9 +47,9 @@ spec:
       command:
         - mc-health
       enabled: true
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       periodSeconds: 10
-      failureThreshold: 30
+      failureThreshold: 60
       timeoutSeconds: 5
     extraEnv:
       GENERATE_LOG4J2_CONFIG: true # https://github.com/itzg/docker-minecraft-server/issues/3857
@@ -79,7 +78,7 @@ spec:
       motd: Meh
       worldSaveName: "The Forgotten Realm"
       viewDistance: 16
-      forceReDownload: true
+      forceReDownload: false
       memory: 8G
       jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+AlwaysPreTouch"
       rcon:
