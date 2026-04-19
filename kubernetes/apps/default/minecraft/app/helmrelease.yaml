@@ -32,7 +32,7 @@ spec:
         - mc-health
       initialDelaySeconds: 60
       periodSeconds: 10
-      failureThreshold: 120 # temporarily increased - SQL migration (DistantHorizons) causes slow startup
+      failureThreshold: 360 # temporarily increased - SQL migration (DistantHorizons) causes slow startup
       successThreshold: 1
       timeoutSeconds: 5
     readinessProbe:
@@ -49,7 +49,7 @@ spec:
       enabled: true
       initialDelaySeconds: 60
       periodSeconds: 10
-      failureThreshold: 60
+      failureThreshold: 360 # temporarily increased - SQL migration (DistantHorizons) causes slow startup
       timeoutSeconds: 5
     extraEnv:
       GENERATE_LOG4J2_CONFIG: true # https://github.com/itzg/docker-minecraft-server/issues/3857
@@ -72,7 +72,8 @@ spec:
       version: 1.21.11
       type: FABRIC
       difficulty: normal
-      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHelen1980,Morgoth_the_3rd,CrazyRogueE" # Pridat bioaldu
+      whitelist: "Speeddrat,Anty0,phonyAustralian,TheHnatekmar,DemTriangles,MountHele\
+        n1980,Morgoth_the_3rd,CrazyRogueE" # Pridat bioaldu
       ops: "phonyAustralian,DemTriangles"
       pvp: true
       motd: Meh
@@ -80,7 +81,9 @@ spec:
       viewDistance: 16
       forceReDownload: false
       memory: 8G
-      jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+AlwaysPreTouch"
+      jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC
+        -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions
+        -XX:+AlwaysPreTouch"
       rcon:
         enabled: true
         serviceType: ClusterIP
