@@ -7,14 +7,14 @@ components:
   - ../../components/common
 resources:
   - ./victoria-metrics/ks.yaml
+  - ./victoria-logs/ks.yaml
   - ./blackbox-exporter/ks.yaml # keep for scaled objects
   - ./kromgo/ks.yaml
-  - ./coroot/ks.yaml
+  # - ./coroot/ks.yaml
   - ./gatus/ks.yaml
   - ./keda/ks.yaml
   - ./grafana/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
-  # - ./victoria-logs/ks.yaml
   # I should remove these?
   # - ./kube-prometheus-stack/ks.yaml
   # - ./karma/ks.yaml
