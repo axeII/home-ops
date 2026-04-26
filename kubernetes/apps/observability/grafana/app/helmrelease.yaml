@@ -259,7 +259,7 @@ spec:
 
     sidecar:
       dashboards:
-        enabled: true
+        enabled: false
         searchNamespace: ALL
         labelValue: ""
         label: grafana_dashboard
