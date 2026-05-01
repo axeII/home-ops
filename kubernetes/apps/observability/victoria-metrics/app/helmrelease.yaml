@@ -1,35 +1,96 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app victoria-metrics
-  namespace: observability
+  name: victoria-metrics
 spec:
-  interval: 30m
-  timeout: 15m
-  chart:
-    spec:
-      chart: victoria-metrics-k8s-stack
-      version: 0.74.1
-      sourceRef:
-        kind: HelmRepository
-        name: victoria-metrics
-        namespace: flux-system
-  install:
-    createNamespace: true
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
+  chartRef:
+    kind: OCIRepository
+    name: victoria-metrics
+  interval: 1h
   values:
     fullnameOverride: vm
     victoria-metrics-operator:
+      admissionWebhooks:
+        policy: Ignore
+      crds:
+        cleanup:
+          enabled: false
+      operator:
+        enable_converter_ownership: true
+    grafana:
+      enabled: false
+    defaultDashboards:
+      grafanaOperator:
+        enabled: true
+        spec:
+          allowCrossNamespaceImport: true
+    defaultDatasources:
+      grafanaOperator:
+        enabled: true
+        spec:
+          allowCrossNamespaceImport: true
+    kube-state-metrics:
+      enabled: false
+    prometheus-node-exporter:
+      enabled: false
+    alertmanager:
+      enabled: false
+    vmalert:
+      enabled: false
+    kubeControllerManager:
+      vmScrape:
+        spec:
+          endpoints:
+            - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+              port: http-metrics
+              scheme: https
+              tlsConfig:
+                insecureSkipVerify: true
+    kubeEtcd:
+      service:
+        selector:
+          component: kube-apiserver
+        port: 2381
+        targetPort: 2381
+      vmScrape:
+        spec:
+          endpoints:
+            - scheme: http
+    kubeScheduler:
+      vmScrape:
+        spec:
+          endpoints:
+            - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+              port: http-metrics
+              scheme: https
+              tlsConfig:
+                insecureSkipVerify: true
+    vmagent:
+      spec:
+        scrapeInterval: 60s
+        externalLabels:
+          cluster: main
+        extraArgs:
+          promscrape.dropOriginalLabels: "true"
+          promscrape.maxScrapeSize: 50MiB
+          promscrape.streamParse: "true"
+    vmauth:
       enabled: true
-
+      spec:
+        extraArgs:
+          requestBufferSize: "65536"
+        unauthorizedUserAccessSpec:
+          url_map:
+            - src_paths:
+                - /api/v1/query.*
+                - /api/v1/label/.*
+              url_prefix: http://vmsingle-vm.observability.svc.cluster.local:8428
+            - src_paths:
+                - /select/logsql/.*
+              url_prefix: http://victoria-logs.observability.svc.cluster.local:9428
     vmsingle:
-      enabled: true
       spec:
         retentionPeriod: 30d
         resources:
@@ -39,84 +100,9 @@ spec:
           limits:
             memory: 2Gi
         storage:
-          storageClassName: ceph-block
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
               storage: 30Gi
-
-    vmauth:
-      enabled: false
-
-    vmalert:
-      enabled: false
-
-    vmagent:
-      enabled: true
-      spec:
-        replicas: 1
-        resources:
-          requests:
-            cpu: 50m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        scrapeInterval: 60s
-        externalLabels:
-          cluster: main
-        remoteWrite:
-          - url: http://vmsingle-vm.observability.svc.cluster.local:8428/api/v1/write
-        extraArgs:
-          promscrape.streamParse: "true"
-
-    grafana:
-      enabled: false
-      # adminPassword: changeme
-      # persistence:
-      #   enabled: true
-      #   storageClassName: ceph-block
-      #   size: 5Gi
-      # datasources:
-      #   datasources.yaml:
-      #     apiVersion: 1
-      #     datasources:
-      #       - name: VictoriaMetrics
-      #         type: prometheus
-      #         url: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428
-      #         access: proxy
-      #         isDefault: true
-
-    prometheus:
-      enabled: false
-
-    alertmanager:
-      enabled: false
-
-    nodeExporter:
-      enabled: false
-
-    kubeStateMetrics:
-      enabled: false
-
-    kubeScheduler:
-      enabled: true
-      vmScrape:
-        spec:
-          endpoints:
-            - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-              port: http-metrics
-              scheme: https
-              tlsConfig:
-                insecureSkipVerify: true
-
-    kubeControllerManager:
-      enabled: true
-      vmScrape:
-        spec:
-          endpoints:
-            - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-              port: http-metrics
-              scheme: https
-              tlsConfig:
-                insecureSkipVerify: true
+          storageClassName: ceph-block
