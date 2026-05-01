@@ -8,6 +8,7 @@ components:
 resources:
   - ./victoria-metrics/ks.yaml
   - ./victoria-logs/ks.yaml
+  - ./alloy/ks.yaml
   - ./blackbox-exporter/ks.yaml # keep for scaled objects
   - ./kromgo/ks.yaml
   - ./gatus/ks.yaml

@@ -18,6 +18,7 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 - Run `python3 scripts/find_mistakes.py` to check for broken Kustomize references (needs `fd`).
 - Run `pre-commit run --all-files` to lint YAML, fix whitespace, and scan for leaked secrets.
 - Fix all errors before committing. The commit should pass all checks.
+- Add always new line at the end of files
 
 ## Talos changes
 
