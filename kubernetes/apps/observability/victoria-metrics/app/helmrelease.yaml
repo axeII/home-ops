@@ -68,7 +68,6 @@ spec:
         remoteWrite:
           - url: http://vmsingle-vm.observability.svc.cluster.local:8428/api/v1/write
         extraArgs:
-          promscrape.dropOriginalLabels: "true"
           promscrape.streamParse: "true"
 
     grafana:

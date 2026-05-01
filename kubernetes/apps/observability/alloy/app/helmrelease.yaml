@@ -64,6 +64,6 @@ spec:
 
         loki.write "victoria_logs" {
           endpoint {
-            url = "http://victoria-logs.observability.svc.cluster.local:9428/loki/api/v1/push"
+            url = "http://victoria-logs-server.observability.svc.cluster.local:9428/loki/api/v1/push"
           }
         }
