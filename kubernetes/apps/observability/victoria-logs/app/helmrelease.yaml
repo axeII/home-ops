@@ -1,33 +1,17 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: victoria-logs
-  namespace: observability
 spec:
-  interval: 30m
-  timeout: 15m
-  chart:
-    spec:
-      chart: victoria-logs-single
-      version: 0.12.2
-      sourceRef:
-        kind: HelmRepository
-        name: victoria-metrics
-        namespace: flux-system
-  install:
-    createNamespace: false
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
+  chartRef:
+    kind: OCIRepository
+    name: victoria-logs
+  interval: 1h
   values:
-    fullnameOverride: victoria-logs
-
     server:
-      enabled: true
+      fullnameOverride: victoria-logs
       persistentVolume:
         enabled: true
         storageClassName: ceph-block
@@ -61,3 +45,5 @@ spec:
               - path:
                   type: Exact
                   value: /
+    vector:
+      enabled: false
