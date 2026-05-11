@@ -6,14 +6,17 @@ namespace: observability
 components:
   - ../../components/common
 resources:
-  - ./victoria-metrics/ks.yaml
-  - ./victoria-logs/ks.yaml
-  - ./alloy/ks.yaml
-  - ./blackbox-exporter/ks.yaml # keep for scaled objects
-  - ./kromgo/ks.yaml
+  - ./blackbox-exporter/ks.yaml
   - ./gatus/ks.yaml
-  - ./keda/ks.yaml
   - ./grafana/ks.yaml
+  - ./keda/ks.yaml
+  - ./kromgo/ks.yaml
+  - ./kube-state-metrics/ks.yaml
+  - ./node-exporter/ks.yaml
+  - ./prometheus-adapter/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
+  - ./smartctl-exporter/ks.yaml
+  - ./victoria-logs/ks.yaml
+  - ./victoria-metrics/ks.yaml
   # - ./coroot/ks.yaml
   # - ./unpoller/ks.yaml
