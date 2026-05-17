@@ -22,7 +22,7 @@ spec:
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: hub
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 2Gi
   prune: true
   retryInterval: 2m
   sourceRef:
