@@ -149,14 +149,28 @@ pages:
                 collapse-after: 10
                 comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
-                subreddit: europe
+                subreddit: hardware
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
                 comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
-                subreddit: plex
+                subreddit: amd
+                show-thumbnails: true
+                sort-by: "top"
+                limit: 15
+                collapse-after: 10
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
+              - type: reddit
+                subreddit: steam
+                show-thumbnails: true
+                sort-by: "top"
+                limit: 15
+                collapse-after: 10
+                comments-url-template: "https://redlib.lol/{POST-PATH}"
+              - type: reddit
+                subreddit: opencode
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
@@ -184,7 +198,7 @@ pages:
                 collapse-after: 10
                 comments-url-template: "https://redlib.lol/{POST-PATH}"
               - type: reddit
-                subreddit: neovim
+                subreddit: azure
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
