@@ -51,6 +51,8 @@ nodes:
           - network: 0.0.0.0/0
             gateway: "192.168.69.1"
         mtu: 1500
+        vip:
+          ip: "192.168.69.254"
   - hostname: "k8s-2"
     ipAddress: "192.168.69.112"
     installDisk: "/dev/sda"
@@ -68,6 +70,8 @@ nodes:
           - network: 0.0.0.0/0
             gateway: "192.168.69.1"
         mtu: 1500
+        vip:
+          ip: "192.168.69.254"
 
 # Global patches
 patches:
