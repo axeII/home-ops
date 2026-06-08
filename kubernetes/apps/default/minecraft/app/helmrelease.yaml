@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://crd.movishell.pl/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -8,7 +9,16 @@ spec:
     kind: OCIRepository
     name: minecraft
   interval: 1h
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths: ["/spec/replicas"]
+        target:
+          kind: StatefulSet
+          name: minecraft
   values:
+    workloadAsStatefulSet: true
+    replicaCount: 0
     deploymentAnnotations:
       secret.reloader.stakater.com/reload: &secret minecraft-secret
     image:
@@ -61,9 +71,7 @@ spec:
         enabled: true
         existingClaim: *app
     serviceAnnotations:
-      lbipam.cilium.io/ips: "192.168.69.102"
-    serviceLabels:
-      io.cilium/ippool: public
+      mc-router.itzg.me/defaultServer: "true"
     extraPodSpec:
       priorityClassName: system-cluster-critical
     minecraftServer:
@@ -87,7 +95,7 @@ spec:
       rcon:
         enabled: true
         serviceType: ClusterIP
-      serviceType: LoadBalancer
+      serviceType: ClusterIP
       spigetResources:
         - 36618
       spigotConfig: |
