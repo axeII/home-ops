@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://crd.movishell.pl/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -11,7 +12,7 @@ spec:
   driftDetection:
     mode: enabled
     ignore:
-      - paths: [ "/spec/replicas" ]
+      - paths: ["/spec/replicas"]
         target:
           kind: StatefulSet
           name: minecraft
