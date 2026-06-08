@@ -5,4 +5,5 @@ resources:
   - ./helmrelease.yaml
   - ./repository.yaml
   - ./externalsecret.yaml
-  - ./scaledobject.yaml
+  - ./mc-router-repository.yaml
+  - ./mc-router-helmrelease.yaml
