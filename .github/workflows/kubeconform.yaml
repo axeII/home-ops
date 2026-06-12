@@ -8,6 +8,7 @@ on:
 
 env:
   KUBERNETES_DIR: ./kubernetes
+  HOMEBREW_NO_SANDBOX_LINUX: 1
 
 jobs:
   kubeconform:
