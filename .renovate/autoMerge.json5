@@ -51,6 +51,27 @@
       ignoreTests: false,
     },
     {
+      description: "Auto-merge minor updates across all managers/datasources",
+      matchUpdateTypes: ["minor"],
+      matchDatasources: ["docker", "helm", "github-releases", "github-tags"],
+      automerge: true,
+      automergeType: "pr",
+      minimumReleaseAge: "7 days",
+      ignoreTests: false,
+    },
+    {
+      description: "DENY minor auto-merge for DNS-related components",
+      matchUpdateTypes: ["minor"],
+      matchPackageNames: [
+        "/coredns/",
+        "/blocky/",
+        "/k8s-gateway/",
+        "/k8s_gateway/",
+        "/external-dns/",
+      ],
+      automerge: false,
+    },
+    {
       description: "DENY auto-merge for high-blast-radius components",
       matchPackageNames: [
         "/plex/",
