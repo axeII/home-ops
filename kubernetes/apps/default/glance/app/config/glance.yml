@@ -100,6 +100,10 @@ pages:
                     url: https://divesites.com
                   - title: Dashboard Icons
                     url: https://dashboardicons.com/
+                  - title: Gaming calendar
+                    url: https://axeii.github.io/gaming-calendar/
+                  - title: Cachyos tuning
+                    url: https://axeii.github.io/cachyos-labs/
   - name: News
     head-widgets:
       - type: markets
