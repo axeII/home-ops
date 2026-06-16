@@ -7,6 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./atuin/ks.yaml
+  - ./affine/ks.yaml
   - ./glance/ks.yaml
   - ./karakeep/ks.yaml
   - ./docmost/ks.yaml
