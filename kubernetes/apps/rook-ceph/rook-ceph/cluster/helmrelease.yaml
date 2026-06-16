@@ -32,7 +32,7 @@ spec:
           memory: 64Mi
     cephImage:
       repository: quay.io/ceph/ceph
-      tag: v19.2.4
+      tag: v20.2.2
     operatorNamespace: rook-ceph
     route:
       dashboard:
