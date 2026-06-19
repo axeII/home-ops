@@ -21,6 +21,7 @@ spec:
         enable_converter_ownership: true
     grafana:
       enabled: false
+      forceDeployDatasource: true
     defaultDashboards:
       grafanaOperator:
         enabled: true
