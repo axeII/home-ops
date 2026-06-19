@@ -1,0 +1,134 @@
+---
+name: Auto-Merge
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: Dry Run
+        type: boolean
+        default: false
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    name: Auto-Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Merge Eligible PRs
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          DRY_RUN: ${{ inputs.dryRun || 'false' }}
+        run: |
+          set -euo pipefail
+
+          PR_AGE_DAYS=2
+          BOT_APP="bot-akira"
+
+          DENY_PATTERNS=(
+            "rook-ceph"
+            "ceph-ceph"
+            "cilium"
+            "siderolabs"
+            "talos"
+            "flux-operator"
+            "flux-instance"
+            "controlplaneio-fluxcd"
+            "coredns"
+            "external-dns"
+            "blocky"
+            "k8s-gateway"
+            "k8s_gateway"
+            "home-operations-plex-"
+          )
+
+          CUTOFF=$(date -u -d "${PR_AGE_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+
+          echo "=============================="
+          echo " Auto-Merge Run"
+          echo " Cutoff:  ${CUTOFF}"
+          echo " Dry run: ${DRY_RUN}"
+          echo "=============================="
+
+          merged=0
+          skipped=0
+          denied=0
+
+          while IFS=$'\t' read -r number branch title state; do
+            echo ""
+            echo "---"
+            echo "PR #${number}: ${title}"
+            echo "  Branch: ${branch}"
+            echo "  Checks: ${state}"
+
+            denied_reason=""
+            for pattern in "${DENY_PATTERNS[@]}"; do
+              if [[ "${branch}" == *"${pattern}"* ]]; then
+                denied_reason="deny-listed (branch: ${pattern})"
+                break
+              fi
+            done
+
+            if [ -z "${denied_reason}" ]; then
+              for pattern in "${DENY_PATTERNS[@]}"; do
+                if [[ "${title}" == *"${pattern}"* ]]; then
+                  denied_reason="deny-listed (title: ${pattern})"
+                  break
+                fi
+              done
+            fi
+
+            if [ -n "${denied_reason}" ]; then
+              echo "  → SKIP (${denied_reason})"
+              denied=$((denied + 1))
+              continue
+            fi
+
+            if [ "${DRY_RUN}" = "true" ]; then
+              echo "  → WOULD MERGE"
+              merged=$((merged + 1))
+            else
+              echo "  → MERGING..."
+              if gh pr merge "${number}" --squash 2>&1; then
+                echo "  → MERGED"
+                merged=$((merged + 1))
+              else
+                echo "  → FAILED"
+                skipped=$((skipped + 1))
+              fi
+            fi
+          done < <(
+            gh pr list \
+              --app "${BOT_APP}" \
+              --state open \
+              --json number,headRefName,title,createdAt,labels,mergeStateStatus \
+              --jq "[.[] | select(.createdAt <= \"${CUTOFF}\") | select([.labels[].name | contains(\"type/major\")] | any | not) | select([.labels[].name | contains(\"do not merge\")] | any | not) | {number, headRefName, title, mergeStateStatus}]" |
+            jq -r '.[] | "\(.number)\t\(.headRefName)\t\(.title)\t\(.mergeStateStatus)"'
+          )
+
+          echo ""
+          echo "=============================="
+          echo " Summary"
+          echo " Merged:  ${merged}"
+          echo " Errors:  ${skipped}"
+          echo " Denied:  ${denied}"
+          echo "=============================="
