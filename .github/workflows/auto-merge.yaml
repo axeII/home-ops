@@ -59,6 +59,7 @@ jobs:
             "k8s-gateway"
             "k8s_gateway"
             "home-operations-plex-"
+            "dragonfly"
           )
 
           CUTOFF=$(date -u -d "${PR_AGE_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
