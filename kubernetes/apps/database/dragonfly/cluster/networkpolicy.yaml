@@ -14,6 +14,11 @@ spec:
     - Ingress
   ingress:
     - from:
+        - namespaceSelector: {}
+      ports:
+        - port: 6379
+          protocol: TCP
+    - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: observability
