@@ -74,6 +74,8 @@ spec:
         annotations:
           glance/show: "false"
           glance/description: "A simple HTTP and HTTPS echo server"
+          gatus.home-operations.com/endpoint: |
+            path: /healthz
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: external

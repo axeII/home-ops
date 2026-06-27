@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

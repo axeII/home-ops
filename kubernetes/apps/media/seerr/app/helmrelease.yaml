@@ -91,6 +91,8 @@ spec:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
           glance/description: "Media request management."
+          gatus.home-operations.com/endpoint: |
+            path: /api/v1/status
         hostnames:
           - requests.juno.moe
         parentRefs:

@@ -44,13 +44,6 @@ endpoints:
       - "[STATUS] == 200"
     alerts:
       - type: pushover
-  - name: flux-webhook
-    url: https://flux-webhook.juno.moe
-    interval: 1m
-    client:
-      dns-resolver: tcp://8.8.8.8:53
-    conditions:
-      - "[STATUS] == 404"
 
 web:
   port: ${GATUS_WEB_PORT}
