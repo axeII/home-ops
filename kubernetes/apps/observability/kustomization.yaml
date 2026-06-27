@@ -17,5 +17,7 @@ resources:
   - ./smartctl-exporter/ks.yaml
   - ./victoria-logs/ks.yaml
   - ./victoria-metrics/ks.yaml
+  - ./alerts/ks.yaml
+  - ./chaski/ks.yaml
   # - ./coroot/ks.yaml
   # - ./unpoller/ks.yaml

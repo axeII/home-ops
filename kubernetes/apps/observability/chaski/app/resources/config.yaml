@@ -1,0 +1,27 @@
+---
+templates:
+  severity: '[{{ .payload.commonLabels.severity | default "info" | toUpper }}]'
+
+targets:
+  pushover:
+    apprise:
+      url: '{{ env "PUSHOVER_URL" }}'
+
+routes:
+  alertmanager:
+    target: pushover
+    whenExpr: payload.status == "firing"
+    title: '{{ template "severity" . }} {{ .payload.commonLabels.alertname }}{{ if gt (len .payload.alerts) 1 }} ({{ len .payload.alerts }} alerts){{ end }}'
+    message: |-
+      {{- range $i, $a := .payload.alerts }}
+      {{- if $i }}
+      ---
+      {{ end }}
+      {{ $a.annotations.summary | default $a.annotations.description | default $a.labels.alertname }}
+      {{- if $a.annotations.runbook_url }}
+      Runbook: {{ $a.annotations.runbook_url }}
+      {{- end }}
+      {{- end }}
+    params:
+      priority: '{{ ternary "2" "0" (eq .payload.commonLabels.severity "critical") }}'
+      sound: '{{ ternary "alien" "pushover" (eq .payload.commonLabels.severity "critical") }}'
