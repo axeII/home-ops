@@ -23,6 +23,8 @@ spec:
       retries: 3
   values:
     alloy:
+      mounts:
+        varlog: true
       configMap:
         create: true
         content: |
@@ -60,21 +62,9 @@ spec:
 
           // Collect container logs from /var/log/pods
           loki.source.file "pods" {
-            targets    = loki.discovery.kubernetes.pods.targets
-            forward_to = [loki.process.filter.receiver]
-          }
-
-          // Discover pod log files
-          loki.discovery.kubernetes "pods" {
-            role = "pod"
-          }
-
-          // Filter noisy logs (optional — can be tuned)
-          loki.process "filter" {
-            stage.match {
-              selector = "{namespace=~\"kube-system\"}"
-              stage.drop {}
-            }
+            targets = [
+              {__path__ = "/var/log/pods/*/*/*.log"},
+            ]
             forward_to = [loki.write.cloud.receiver]
           }
 
