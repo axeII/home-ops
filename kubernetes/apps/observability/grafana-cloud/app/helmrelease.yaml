@@ -68,6 +68,22 @@ spec:
             targets = [
               {__path__ = "/var/log/pods/*/*/*.log"},
             ]
+            forward_to = [loki.process.add_k8s_labels.receiver]
+          }
+
+          // Extract Kubernetes metadata from the log file path
+          loki.process "add_k8s_labels" {
+            stage.regex {
+              expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>.+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/"
+              source     = "__path__"
+            }
+            stage.labels {
+              values = {
+                namespace  = "",
+                pod        = "",
+                container  = "",
+              }
+            }
             forward_to = [loki.write.cloud.receiver]
           }
 
