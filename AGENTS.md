@@ -26,6 +26,10 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 - Apply to each control plane node: `task talos:apply-node IP=192.168.69.110` (repeat for .111, .112).
 - Static pod resources (apiserver, etcd, etc.) live in `talos/patches/controller/`. Always set both `requests` and `limits`.
 - Check for OOM issues: `talosctl -n <node-ip> dmesg | grep -i "oom\|kill"`.
+- Talos/K8s upgrades are automated via [tuppr](https://github.com/home-operations/tuppr) in `system-upgrade` namespace.
+  - Renovate bumps versions in `TalosUpgrade`/`KubernetesUpgrade` CRs — merge the PR, Flux applies, tuppr orchestrates.
+  - Upgrades run during maintenance window (Sunday 02:00 Europe/Paris) with Ceph noout pre/post hooks.
+  - Manual upgrade still possible: `task talos:upgrade-node IP=192.168.69.110`.
 
 ## Secrets
 
