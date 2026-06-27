@@ -23,6 +23,9 @@ spec:
       retries: 3
   values:
     alloy:
+      envFrom:
+        - secretRef:
+            name: grafana-cloud-credentials
       mounts:
         varlog: true
       configMap:
@@ -78,6 +81,3 @@ spec:
               }
             }
           }
-    envFrom:
-      - secretRef:
-          name: grafana-cloud-credentials
