@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus
     - ../../../../components/keda/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -27,7 +26,6 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
-      GATUS_PATH: /identity
   prune: true
   retryInterval: 2m
   sourceRef:
