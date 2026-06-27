@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: cluster-critical
+spec:
+  groups:
+    - name: node-alerts
+      rules:
+        - alert: NodeDown
+          expr: up{job="node-exporter"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Node {{ $labels.kubernetes_node }} is unreachable
+
+        - alert: NodeDiskSpaceWarning
+          expr: (1 - (node_filesystem_avail_bytes{fstype!="tmpfs",fstype!="squashfs"} / node_filesystem_size_bytes)) * 100 > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Disk {{ $labels.mountpoint }} on {{ $labels.kubernetes_node }} > 80%
+
+        - alert: NodeDiskSpaceCritical
+          expr: (1 - (node_filesystem_avail_bytes{fstype!="tmpfs",fstype!="squashfs"} / node_filesystem_size_bytes)) * 100 > 90
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: Disk {{ $labels.mountpoint }} on {{ $labels.kubernetes_node }} > 90%
+
+        - alert: OOMKillDetected
+          expr: increase(node_vmstat_oom_kill[5m]) > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: OOM kill on {{ $labels.kubernetes_node }}
+
+    - name: flux-alerts
+      rules:
+        - alert: FluxResourceFailing
+          expr: gotk_resource_info{ready="False"} == 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "{{ $labels.kind }}/{{ $labels.name }} in {{ $labels.exported_namespace }} is failing"
+
+    - name: cert-alerts
+      rules:
+        - alert: TLSCertExpirySoon
+          expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 14
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: TLS cert for {{ $labels.target }} expires in < 14 days
+
+        - alert: TLSCertExpiryCritical
+          expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 3
+          for: 1h
+          labels:
+            severity: critical
+          annotations:
+            summary: TLS cert for {{ $labels.target }} expires in < 3 days
+
+    - name: smart-alerts
+      rules:
+        - alert: SmartDeviceHighTemperature
+          expr: smartctl_device_temperature{temperature_type="current"} > 65
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Drive {{ $labels.device }} on {{ $labels.instance }} > 65°C
+
+        - alert: SmartDeviceTestFailed
+          expr: smartctl_device_smart_status != 1 or smartctl_device_status != 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Drive {{ $labels.device }} on {{ $labels.instance }} failed SMART test
+
+        - alert: SmartDeviceCriticalWarning
+          expr: smartctl_device_critical_warning != 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Drive {{ $labels.device }} on {{ $labels.instance }} has critical warning

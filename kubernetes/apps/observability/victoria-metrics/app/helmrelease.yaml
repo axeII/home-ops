@@ -37,9 +37,34 @@ spec:
     prometheus-node-exporter:
       enabled: false
     alertmanager:
-      enabled: false
+      enabled: true
+      spec:
+        config: |
+          global:
+            resolve_timeout: 5m
+          route:
+            receiver: chaski
+            group_by: [alertname, severity]
+            group_wait: 10s
+            group_interval: 10s
+            repeat_interval: 12h
+            routes:
+              - match:
+                  severity: critical
+                repeat_interval: 4h
+          receivers:
+            - name: chaski
+              webhook_configs:
+                - url: http://chaski.observability.svc.cluster.local:8080/hooks/alertmanager
+                  send_resolved: true
     vmalert:
-      enabled: false
+      enabled: true
+      spec:
+        datasource:
+          url: http://vmsingle-vm.observability.svc.cluster.local:8428
+        notifiers:
+          - url: http://vm-alertmanager.observability.svc.cluster.local:9093
+        selectAllByDefault: true
     kubeControllerManager:
       vmScrape:
         spec:
