@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tuppr
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: tuppr
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controller:
+      logLevel: info
+      leaderElection:
+        enabled: true
+      metrics:
+        enabled: true
+        port: 8081
+    webhook:
+      enabled: true
+    notification:
+      enabled: true
+      secretName: tuppr-notification
+      secretKey: url
+    monitoring:
+      serviceMonitor:
+        enabled: true
+        labels:
+          app.kubernetes.io/name: tuppr
+      prometheusRule:
+        enabled: true
+        labels:
+          app.kubernetes.io/name: tuppr
+      dashboards:
+        enabled: true
+        labels:
+          grafana.integreatly.org/grafana: observability
+        grafanaOperator:
+          enabled: true
+          allowCrossNamespaceImport: true
+          matchLabels:
+            dashboards: grafana
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
