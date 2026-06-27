@@ -7,6 +7,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/target: "internal.juno.moe"
     gatus.home-operations.com/endpoint: |
+      group: internal
       client:
         dns-resolver: tcp://192.168.69.1:53
       alerts:
