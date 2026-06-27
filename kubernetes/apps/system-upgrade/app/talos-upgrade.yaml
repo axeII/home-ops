@@ -14,9 +14,6 @@ spec:
     placement: hard
     timeout: 30m
     stage: false
-    priorityClassName: system-node-critical
-  drain:
-    enabled: true
   parallelism: 1
   maintenance:
     windows:
