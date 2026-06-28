@@ -73,6 +73,11 @@ spec:
 
           // Extract Kubernetes metadata from the log file path
           loki.process "add_k8s_labels" {
+            stage.static_labels {
+              values = {
+                source = "k8s",
+              }
+            }
             stage.regex {
               expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>.+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/"
               source     = "__path__"
