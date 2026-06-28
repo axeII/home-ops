@@ -1,4 +1,5 @@
 ---
 kubernetes:
   enabled: true
+  schemaUrl: "https://kubernetes-schemas.pages.dev/{groupSeg}{kind}_{version}.json"
 catalog: true
