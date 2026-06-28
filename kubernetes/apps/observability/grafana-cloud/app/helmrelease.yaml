@@ -63,11 +63,16 @@ spec:
             }
           }
 
+          // Discover log files matching the pod log pattern
+          local.file_match "pods" {
+            path_targets = [
+              {"__path__" = "/var/log/pods/*/*/*.log"},
+            ]
+          }
+
           // Collect container logs from /var/log/pods
           loki.source.file "pods" {
-            targets = [
-              {__path__ = "/var/log/pods/*/*/*.log"},
-            ]
+            targets    = local.file_match.pods.targets
             forward_to = [loki.process.add_k8s_labels.receiver]
           }
 
