@@ -36,10 +36,8 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup flate
+        uses: home-operations/flate/action@v0.4.10
+
       - name: Run flate test
-        uses: docker://ghcr.io/home-operations/flate:v0.4.10
-        with:
-          args: >-
-            test all
-            --path /github/workspace/kubernetes/flux
-            --verbose
+        run: flate test all --path kubernetes/flux --verbose
