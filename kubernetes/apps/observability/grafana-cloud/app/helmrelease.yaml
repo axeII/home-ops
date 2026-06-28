@@ -79,9 +79,9 @@ spec:
             }
             stage.labels {
               values = {
-                namespace  = "",
-                pod        = "",
-                container  = "",
+                namespace = "namespace",
+                pod       = "pod",
+                container = "container",
               }
             }
             forward_to = [loki.write.cloud.receiver]
