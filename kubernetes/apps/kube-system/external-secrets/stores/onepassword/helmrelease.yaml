@@ -110,6 +110,8 @@ spec:
         runAsGroup: 999
     route:
       app:
+        annotations:
+          gatus.home-operations.com/enabled: "false"
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

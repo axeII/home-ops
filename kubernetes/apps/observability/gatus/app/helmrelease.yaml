@@ -30,24 +30,6 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: gatus-secret
-          init-config:
-            dependsOn: init-db
-            image:
-              repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 1.30.9@sha256:74d65c3def9276b24b5bfe41f8efb773174e7a1ecf3c9b5a31bd02cfdee232c9
-            env:
-              FOLDER: /config
-              LABEL: gatus.io/enabled
-              NAMESPACE: ALL
-              RESOURCE: both
-              UNIQUE_FILENAMES: true
-              METHOD: WATCH
-            resources: &resources
-              requests:
-                cpu: 10m
-              limits:
-                memory: 128Mi
-            restartPolicy: Always
         containers:
           app:
             image:
@@ -73,6 +55,25 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+            resources: &resources
+              requests:
+                cpu: 10m
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+          gatus-sidecar:
+            image:
+              repository: ghcr.io/home-operations/gatus-sidecar
+              tag: 0.3.5@sha256:aad3780968860cc4c9e8c63ed21595b1c8574a34678a6adfebe8dcb4b36f8dd2
+            args:
+              - --auto-httproute
+              - --gateway-name=external
+              - --gateway-name=internal
             resources: *resources
             securityContext:
               allowPrivilegeEscalation: false

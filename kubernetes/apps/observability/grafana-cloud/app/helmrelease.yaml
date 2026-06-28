@@ -1,0 +1,142 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-cloud
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: alloy
+      version: 1.10.0
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    alloy:
+      envFrom:
+        - secretRef:
+            name: grafana-cloud-credentials
+      mounts:
+        varlog: true
+      configMap:
+        create: true
+        content: |
+          // Discover ServiceMonitors and scrape metrics
+          prometheus.operator.servicemonitors "default" {
+            namespaces = []
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
+
+          prometheus.operator.podmonitors "default" {
+            namespaces = []
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
+
+          // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
+          prometheus.relabel "trim_metrics" {
+            // Rule 1: Drop entire noise groups (envoy, grafana self-metrics, Go runtime, etc.)
+            rule {
+              action        = "drop"
+              source_labels = ["__name__"]
+              regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|apiserver_.*|controller_.*|workqueue_.*|rest_client_.*|scheduler_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*|container_.*|cilium_.*|hubble_.*"
+            }
+
+            // Rule 2: Drop noisy ceph sub-groups, keep key health metrics (~12 kept)
+            rule {
+              action        = "drop"
+              source_labels = ["__name__"]
+              regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_pg_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_daemon_.*|ceph_disk_.*|ceph_fs_.*|ceph_health_.*|ceph_mgr_.*|ceph_op_.*|ceph_rados_.*|ceph_osd_op_.*|ceph_rbd_.*|ceph_rgw_.*|ceph_throttle_.*"
+            }
+
+            // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
+            rule {
+              action        = "drop"
+              source_labels = ["__name__"]
+              regex         = "kube_pod_annotations|kube_pod_labels|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
+            }
+
+            // Rule 4: Drop noisy node kernel internals, keep essential hardware/OS metrics
+            rule {
+              action        = "drop"
+              source_labels = ["__name__"]
+              regex         = "node_xfs_.*|node_netstat_.*|node_vmstat_.*|node_sockstat_.*|node_timex_.*|node_hwmon_.*|node_nf_.*|node_softnet_.*|node_schedstat_.*|node_selinux_.*|node_bonding_.*|node_cooling_.*|node_watchdog_.*|node_ipvs_.*|node_thermal_.*|node_udp_.*|node_textfile_.*|node_arp_.*|node_dmi_.*|node_forks_.*|node_intr_.*|node_nvme_.*|node_context_.*|node_exporter_.*|node_filefd_.*|node_procs_.*|node_scrape_.*|node_entropy_.*|node_pressure_.*"
+            }
+
+            forward_to = [prometheus.remote_write.cloud.receiver]
+          }
+
+          // Remote write to Grafana Cloud Prometheus
+          prometheus.remote_write "cloud" {
+            endpoint {
+              url = env("GRAFANA_CLOUD_PROMETHEUS_URL")
+              basic_auth {
+                username = env("GRAFANA_CLOUD_PROMETHEUS_USER")
+                password = env("GRAFANA_CLOUD_API_TOKEN")
+              }
+            }
+          }
+
+          // Discover log files matching the pod log pattern
+          local.file_match "pods" {
+            path_targets = [
+              {"__path__" = "/var/log/pods/*/*/*.log"},
+            ]
+          }
+
+          // Copy __path__ to a non-internal label so it's available in loki.process
+          discovery.relabel "pods" {
+            targets = local.file_match.pods.targets
+
+            rule {
+              source_labels = ["__path__"]
+              target_label  = "filepath"
+            }
+          }
+
+          // Collect container logs from /var/log/pods
+          loki.source.file "pods" {
+            targets    = discovery.relabel.pods.output
+            forward_to = [loki.process.add_k8s_labels.receiver]
+          }
+
+          // Extract Kubernetes metadata from the log file path
+          loki.process "add_k8s_labels" {
+            stage.static_labels {
+              values = {
+                source = "k8s",
+              }
+            }
+            stage.regex {
+              expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>.+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/"
+              source     = "filepath"
+            }
+            stage.labels {
+              values = {
+                namespace = "namespace",
+                pod       = "pod",
+                container = "container",
+              }
+            }
+            forward_to = [loki.write.cloud.receiver]
+          }
+
+          // Send logs to Grafana Cloud Loki
+          loki.write "cloud" {
+            endpoint {
+              url = env("GRAFANA_CLOUD_LOKI_URL") + "/loki/api/v1/push"
+              basic_auth {
+                username = env("GRAFANA_CLOUD_LOKI_USER")
+                password = env("GRAFANA_CLOUD_API_TOKEN")
+              }
+            }
+          }

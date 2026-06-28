@@ -75,6 +75,10 @@ spec:
         annotations:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
+          gatus.home-operations.com/endpoint: |
+            path: /auth/login
+            conditions:
+              - "[STATUS] == 200"
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

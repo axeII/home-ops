@@ -78,6 +78,8 @@ spec:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
           glance/description: "Plex Media server"
+          gatus.home-operations.com/endpoint: |
+            path: /identity
         hostnames: ["{{ .Release.Name }}.juno.moe"]
         parentRefs:
           - name: external

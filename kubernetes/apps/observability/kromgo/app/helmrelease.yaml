@@ -27,12 +27,16 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/kashalls/kromgo
-              tag: v0.10.0@sha256:965ecc92d68dc1a4a969397855367bbc70da03227a941ea607b73bb7e0b78fd6
+              repository: ghcr.io/home-operations/kromgo
+              tag: 0.14.11@sha256:12ff4049710f325ba94db0fff593f0289dacd94c4b59d5cf0349dba84a926ea3
             env:
               HEALTH_HOST: 0.0.0.0
               HEALTH_PORT: &healthPort 8888
-              PROMETHEUS_URL: http://vmsingle-vm.observability.svc.cluster.local:8428
+              PROMETHEUS_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-cloud-credentials
+                    key: KROMGO_PROMETHEUS_URL
               SERVER_HOST: 0.0.0.0
               SERVER_PORT: &port 8080
             probes:
@@ -82,6 +86,8 @@ spec:
           glance/show: "false"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kubernetes.png
           glance/description: "Kubernetes metrics badge service."
+          gatus.home-operations.com/endpoint: |
+            path: /talos_version
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:
@@ -97,7 +103,7 @@ spec:
         type: configMap
         name: kromgo-configmap
         globalMounts:
-          - path: /kromgo/config.yaml
+          - path: /config/config.yaml
             subPath: config.yaml
             readOnly: true
     service:
