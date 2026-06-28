@@ -1,4 +1,5 @@
 ---
+# yayamlls-disable-file
 apiVersion: keda.sh/v1alpha1
 kind: ClusterTriggerAuthentication
 metadata:

@@ -2,3 +2,13 @@
 kubernetes:
   enabled: true
 catalog: true
+schemas:
+  .yayamlls-schemas/any.json:
+    - "**/secret.sops.yaml"
+    - "**/cluster-secrets.sops.yaml"
+    - "**/sops-age.sops.yaml"
+    - "**/talsecret.sops.yaml"
+    - "**/volsync/externalsecret.yaml"
+    - "**/volsync/replicationdestination.yaml"
+    - "**/volsync/replicationsource.yaml"
+    - "**/dragonfly/cluster/cluster.yaml"
