@@ -32,7 +32,11 @@ spec:
             env:
               HEALTH_HOST: 0.0.0.0
               HEALTH_PORT: &healthPort 8888
-              PROMETHEUS_URL: http://vmsingle-vm.observability.svc.cluster.local:8428
+              PROMETHEUS_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-cloud-credentials
+                    key: KROMGO_PROMETHEUS_URL
               SERVER_HOST: 0.0.0.0
               SERVER_PORT: &port 8080
             probes:
