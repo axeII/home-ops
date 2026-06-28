@@ -70,9 +70,19 @@ spec:
             ]
           }
 
+          // Copy __path__ to a non-internal label so it's available in loki.process
+          discovery.relabel "pods" {
+            targets = local.file_match.pods.targets
+
+            rule {
+              source_labels = ["__path__"]
+              target_label  = "filepath"
+            }
+          }
+
           // Collect container logs from /var/log/pods
           loki.source.file "pods" {
-            targets    = local.file_match.pods.targets
+            targets    = discovery.relabel.pods.output
             forward_to = [loki.process.add_k8s_labels.receiver]
           }
 
@@ -85,7 +95,7 @@ spec:
             }
             stage.regex {
               expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>.+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/"
-              source     = "__path__"
+              source     = "filepath"
             }
             stage.labels {
               values = {
