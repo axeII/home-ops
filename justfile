@@ -28,7 +28,7 @@ validate:
 
 # Test Flux resources render successfully with flate
 flate-test:
-    flate test all --path kubernetes/flux --verbose
+    flate test all --path kubernetes/flux
 
 # ─── Bootstrap ───────────────────────────────────────────────────────────────
 
