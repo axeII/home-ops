@@ -17,7 +17,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: https://prometheus-prod-65-prod-eu-west-2.grafana.net
+        serverAddress: https://prometheus-prod-65-prod-eu-west-2.grafana.net/api/prom
         authModes: basic
         query: probe_success{instance=~".+:2049"}
         threshold: "1"
