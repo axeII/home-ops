@@ -58,11 +58,11 @@ spec:
               regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_pg_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_daemon_.*|ceph_disk_.*|ceph_fs_.*|ceph_health_.*|ceph_mgr_.*|ceph_op_.*|ceph_rados_.*|ceph_osd_op_.*|ceph_rbd_.*|ceph_rgw_.*|ceph_throttle_.*"
             }
 
-            // Rule 3: Drop high-cardinality kube metrics (per-resource details not needed)
+            // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
             rule {
               action        = "drop"
               source_labels = ["__name__"]
-              regex         = "kube_pod_annotations|kube_pod_labels|kube_secret_.*|kube_configmap_.*|kube_endpointslice_.*|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_volumeattachment_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
+              regex         = "kube_pod_annotations|kube_pod_labels|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
             }
 
             // Rule 4: Drop noisy node kernel internals, keep essential hardware/OS metrics
