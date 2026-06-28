@@ -8,16 +8,16 @@ components:
 resources:
   - ./blackbox-exporter/ks.yaml
   - ./gatus/ks.yaml
-  - ./grafana/ks.yaml
+  # - ./grafana/ks.yaml
   - ./grafana-cloud/ks.yaml
   - ./keda/ks.yaml
   - ./kromgo/ks.yaml
   - ./kube-state-metrics/ks.yaml
   - ./node-exporter/ks.yaml
-  - ./prometheus-operator-crds/ks.yaml
+  # - ./prometheus-operator-crds/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  - ./victoria-logs/ks.yaml
-  - ./victoria-metrics/ks.yaml
+  # - ./victoria-logs/ks.yaml
+  # - ./victoria-metrics/ks.yaml
   # - ./alerts/ks.yaml
   # - ./chaski/ks.yaml
   # - ./coroot/ks.yaml
