@@ -20,11 +20,11 @@ configure:
             sops --encrypt --in-place "$file"
         fi
     done
-    yayamlls validate --render kubernetes/
+    yayamlls validate kubernetes/
 
 # Validate Kubernetes manifests with yayamlls (source + rendered Flux output)
 validate:
-    yayamlls validate --render kubernetes/
+    yayamlls validate kubernetes/
 
 # Test Flux resources render successfully with flate
 flate-test:

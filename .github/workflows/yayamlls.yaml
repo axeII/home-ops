@@ -20,4 +20,4 @@ jobs:
       - name: Validate manifests
         run: |
           export PATH="$(go env GOPATH)/bin:$PATH"
-          yayamlls validate --render kubernetes/
+          yayamlls validate kubernetes/
