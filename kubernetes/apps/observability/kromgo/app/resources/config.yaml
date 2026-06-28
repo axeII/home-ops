@@ -9,7 +9,7 @@ badges:
     colorExpr: '"green"'
 
   - id: cluster_cpu_usage
-    query: round((1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))) * 100, 0.1)
+    query: round(avg(instance:node_cpu_utilisation:rate5m{pod!=""}) * 100, 0.1)
     valueExpr: 'string(result) + "%"'
     colorExpr: 'colorScale(result, [35.0, 75.0], ["green", "orange", "red"])'
 
@@ -29,7 +29,7 @@ badges:
     colorExpr: 'colorScale(result, [180.0, 360.0], ["green", "orange", "red"])'
 
   - id: kubernetes_version
-    query: kubernetes_build_info{service="kubernetes"}
+    query: label_replace(kubernetes_build_info{service="kubernetes"}, "git_version", "$1", "git_version", "v(.+)")
     valueExpr: 'labels[?"git_version"].orValue("unknown")'
 
   - id: talos_version
