@@ -27,8 +27,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/kashalls/kromgo
-              tag: v0.10.0@sha256:965ecc92d68dc1a4a969397855367bbc70da03227a941ea607b73bb7e0b78fd6
+              repository: ghcr.io/home-operations/kromgo
+              tag: 0.14.11@sha256:12ff4049710f325ba94db0fff593f0289dacd94c4b59d5cf0349dba84a926ea3
             env:
               HEALTH_HOST: 0.0.0.0
               HEALTH_PORT: &healthPort 8888
