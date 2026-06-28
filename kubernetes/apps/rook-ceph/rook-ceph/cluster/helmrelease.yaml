@@ -17,6 +17,11 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  valuesFrom:
+    - kind: Secret
+      name: grafana-cloud-credentials
+      valuesKey: PROMETHEUS_ENDPOINT
+      targetPath: cephClusterSpec.dashboard.prometheusEndpoint
   values:
     # https://artifacthub.io/packages/helm/rook/rook-ceph-cluster?modal=values
     monitoring:
@@ -94,7 +99,6 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://vmsingle-vm.observability.svc.cluster.local:8429
       storage:
         useAllNodes: false
         useAllDevices: false
