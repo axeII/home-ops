@@ -20,11 +20,15 @@ configure:
             sops --encrypt --in-place "$file"
         fi
     done
-    bash .taskfiles/scripts/kubeconform.sh kubernetes
+    yayamlls validate kubernetes/
 
-# Validate Kubernetes manifests with kubeconform
-kubeconform:
-    bash .taskfiles/scripts/kubeconform.sh kubernetes
+# Validate Kubernetes manifests with yayamlls (source + rendered Flux output)
+validate:
+    yayamlls validate kubernetes/
+
+# Test Flux resources render successfully with flate
+flate-test:
+    flate test all --path kubernetes/flux
 
 # ─── Bootstrap ───────────────────────────────────────────────────────────────
 

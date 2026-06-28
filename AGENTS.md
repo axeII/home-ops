@@ -14,7 +14,8 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 ## Validation
 
 - Run `just configure` to render templates, check secrets, and validate manifests.
-- Run `just kubeconform` to validate Kubernetes manifests with kubeconform.
+- Run `just validate` to validate YAML schemas on source files via yayamlls.
+- Run `just flate-test` to verify all Flux resources render successfully with flate.
 - Run `python3 scripts/find_mistakes.py` to check for broken Kustomize references (needs `fd`).
 - Run `pre-commit run --all-files` to lint YAML, fix whitespace, and scan for leaked secrets.
 - Fix all errors before committing. The commit should pass all checks.
@@ -38,6 +39,12 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 - `just reconcile` — Force Flux to reconcile the cluster.
 - `kubectl get pods -n <namespace>` — Check pod status.
 - `kubectl top nodes` — Check resource usage.
+
+## CI tools
+
+- **flate** — Offline Flux renderer. `flate test all --path kubernetes/flux` validates all resources render. Used in CI as a synchronous merge gate.
+- **yayamlls** — YAML language server with Kubernetes schema validation. `yayamlls validate --render kubernetes/` validates source + rendered Flux output. Also provides editor LSP support via `.yayamlls.yaml`.
+- **konflate** — PR review service deployed in the `flux-system` namespace. Renders PRs with flate, surfaces blast radius, image changes, and danger flags. Posts status checks and summary comments. Web UI at `konflate.juno.moe`.
 
 ## Observability
 
