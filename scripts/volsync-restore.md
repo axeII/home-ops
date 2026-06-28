@@ -4,11 +4,11 @@
 
 > **Prefer automated restore for most cases:**
 > ```bash
-> task volsync:restore NS=<namespace> APP=<app>
+> just volsync-restore APP=<app> NS=<namespace>
 > ```
 > Use this manual guide **only** when you need to restore a *specific* snapshot ID (point-in-time recovery beyond the latest snapshot).
 
-Use this procedure to restore a **specific** snapshot ID (found via Kopia UI) when the automated `task volsync:restore` cannot be used (e.g., needed specific point-in-time recovery).
+Use this procedure to restore a **specific** snapshot ID (found via Kopia UI) when the automated `just volsync-restore` cannot be used (e.g., needed specific point-in-time recovery).
 
 ## 1. Set Variables
 
