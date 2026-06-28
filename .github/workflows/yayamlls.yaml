@@ -1,0 +1,21 @@
+---
+name: Yayamlls
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths: ["kubernetes/**"]
+
+jobs:
+  validate:
+    name: Yayamlls - Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Install yayamlls
+        run: go install github.com/home-operations/yayamlls/cmd/yayamlls@0.1.11
+
+      - name: Validate manifests
+        run: yayamlls validate --render kubernetes/
