@@ -42,37 +42,72 @@ spec:
             forward_to = [prometheus.relabel.trim_metrics.receiver]
           }
 
-          // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
-          prometheus.relabel "trim_metrics" {
-            // Rule 1: Drop entire noise groups (envoy, grafana self-metrics, Go runtime, etc.)
+          // Scrape blackbox-exporter probe targets (replaces orphaned VMProbes)
+          prometheus.scrape "blackbox_nfs" {
+            targets = [{
+              __address__    = "blackbox-exporter.observability:9115",
+              __param_target = "nas.internal:2049",
+              __param_module = "tcp_connect",
+            }]
+            job_name     = "blackbox-nfs"
+            metrics_path = "/probe"
             rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|apiserver_.*|controller_.*|workqueue_.*|rest_client_.*|scheduler_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*|container_.*|cilium_.*|hubble_.*"
+              target_label = "instance"
+              replacement  = "nas.internal:2049"
             }
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
 
-            // Rule 2: Drop noisy ceph sub-groups, keep key health metrics (~12 kept)
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_pg_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_daemon_.*|ceph_disk_.*|ceph_fs_.*|ceph_health_.*|ceph_mgr_.*|ceph_op_.*|ceph_rados_.*|ceph_osd_op_.*|ceph_rbd_.*|ceph_rgw_.*|ceph_throttle_.*"
-            }
+          prometheus.scrape "blackbox_devices" {
+            targets = [
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "nas.internal",
+                __param_module = "icmp",
+              },
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "db.internal",
+                __param_module = "icmp",
+              },
+            ]
+            job_name     = "blackbox-icmp"
+            metrics_path = "/probe"
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
 
-            // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "kube_pod_annotations|kube_pod_labels|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
-            }
+            // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
+            // Budget: ~6K of 10K used — comfortable headroom for control-plane, cilium, and cAdvisor
+            prometheus.relabel "trim_metrics" {
+              // Rule 1: Drop high-cardinality noise; keep useful infra (apiserver, cilium, container, controller, etc.)
+              rule {
+                action        = "drop"
+                source_labels = ["__name__"]
+                regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|apiserver_.*|controller_.*|workqueue_.*|rest_client_.*|scheduler_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*|container_.*|cilium_.*|hubble_.*"
+              }
 
-            // Rule 4: Drop noisy node kernel internals, keep essential hardware/OS metrics
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "node_xfs_.*|node_netstat_.*|node_vmstat_.*|node_sockstat_.*|node_timex_.*|node_hwmon_.*|node_nf_.*|node_softnet_.*|node_schedstat_.*|node_selinux_.*|node_bonding_.*|node_cooling_.*|node_watchdog_.*|node_ipvs_.*|node_thermal_.*|node_udp_.*|node_textfile_.*|node_arp_.*|node_dmi_.*|node_forks_.*|node_intr_.*|node_nvme_.*|node_context_.*|node_exporter_.*|node_filefd_.*|node_procs_.*|node_scrape_.*|node_entropy_.*|node_pressure_.*"
-            }
+              // Rule 2: Drop noisy ceph sub-groups, keep key health metrics (~12 kept)
+              rule {
+                action        = "drop"
+                source_labels = ["__name__"]
+                regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_pg_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_daemon_.*|ceph_disk_.*|ceph_fs_.*|ceph_health_.*|ceph_mgr_.*|ceph_op_.*|ceph_rados_.*|ceph_osd_op_.*|ceph_rbd_.*|ceph_rgw_.*|ceph_throttle_.*"
+              }
 
-            forward_to = [prometheus.remote_write.cloud.receiver]
+              // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
+              rule {
+                action        = "drop"
+                source_labels = ["__name__"]
+                regex         = "kube_pod_annotations|kube_pod_labels|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
+              }
+
+              // Rule 4: Drop noisy node kernel internals, keep essential hardware/OS metrics
+              rule {
+                action        = "drop"
+                source_labels = ["__name__"]
+                regex         = "node_xfs_.*|node_netstat_.*|node_vmstat_.*|node_sockstat_.*|node_timex_.*|node_hwmon_.*|node_nf_.*|node_softnet_.*|node_schedstat_.*|node_selinux_.*|node_bonding_.*|node_cooling_.*|node_watchdog_.*|node_ipvs_.*|node_thermal_.*|node_udp_.*|node_textfile_.*|node_arp_.*|node_dmi_.*|node_forks_.*|node_intr_.*|node_nvme_.*|node_context_.*|node_exporter_.*|node_filefd_.*|node_procs_.*|node_scrape_.*|node_entropy_.*|node_pressure_.*"
+              }
+
+              forward_to = [prometheus.remote_write.cloud.receiver]
           }
 
           // Remote write to Grafana Cloud Prometheus
