@@ -42,20 +42,21 @@ spec:
             forward_to = [prometheus.relabel.trim_metrics.receiver]
           }
 
-          // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
-          prometheus.relabel "trim_metrics" {
-            // Rule 1: Drop entire noise groups (envoy, grafana self-metrics, Go runtime, etc.)
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|apiserver_.*|controller_.*|workqueue_.*|rest_client_.*|scheduler_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*|container_.*|cilium_.*|hubble_.*"
-            }
+            // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
+            // Budget: ~6K of 10K used — comfortable headroom for control-plane, cilium, and cAdvisor
+            prometheus.relabel "trim_metrics" {
+              // Rule 1: Drop high-cardinality noise; keep useful infra (apiserver, cilium, container, controller, etc.)
+              rule {
+                action        = "drop"
+                source_labels = ["__name__"]
+                regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*"
+              }
 
-            // Rule 2: Drop noisy ceph sub-groups, keep key health metrics (~12 kept)
+            // Rule 2: Drop noisy ceph internals; keep dashboard-essential groups (pg, mon, mgr, health, osd — not ops)
             rule {
               action        = "drop"
               source_labels = ["__name__"]
-              regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_pg_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_daemon_.*|ceph_disk_.*|ceph_fs_.*|ceph_health_.*|ceph_mgr_.*|ceph_op_.*|ceph_rados_.*|ceph_osd_op_.*|ceph_rbd_.*|ceph_rgw_.*|ceph_throttle_.*"
+              regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_disk_.*|ceph_osd_op_.*"
             }
 
             // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
