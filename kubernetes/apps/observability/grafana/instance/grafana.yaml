@@ -9,6 +9,7 @@ metadata:
 spec:
   external:
     url: https://chippermagpie793.grafana.net
+    tenantNamespace: observability
     apiKey:
       name: grafana-cloud-credentials
       key: GRAFANA_CLOUD_GRAFANA_TOKEN
