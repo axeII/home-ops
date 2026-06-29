@@ -8,9 +8,7 @@ spec:
   secretTargetRef:
     - parameter: username
       name: grafana-cloud-credentials
-      namespace: observability
       key: GRAFANA_CLOUD_PROMETHEUS_USER
     - parameter: password
       name: grafana-cloud-credentials
-      namespace: observability
       key: GRAFANA_CLOUD_API_TOKEN
