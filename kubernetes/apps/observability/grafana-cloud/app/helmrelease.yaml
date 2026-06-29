@@ -42,6 +42,40 @@ spec:
             forward_to = [prometheus.relabel.trim_metrics.receiver]
           }
 
+          // Scrape blackbox-exporter probe targets (replaces orphaned VMProbes)
+          prometheus.scrape "blackbox_nfs" {
+            targets = [{
+              __address__    = "blackbox-exporter.observability:9115",
+              __param_target = "nas.internal:2049",
+              __param_module = "tcp_connect",
+            }]
+            job_name     = "blackbox-nfs"
+            metrics_path = "/probe"
+            rule {
+              target_label = "instance"
+              replacement  = "nas.internal:2049"
+            }
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
+
+          prometheus.scrape "blackbox_devices" {
+            targets = [
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "nas.internal",
+                __param_module = "icmp",
+              },
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "db.internal",
+                __param_module = "icmp",
+              },
+            ]
+            job_name     = "blackbox-icmp"
+            metrics_path = "/probe"
+            forward_to = [prometheus.relabel.trim_metrics.receiver]
+          }
+
           // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
           prometheus.relabel "trim_metrics" {
             // Rule 1: Drop entire noise groups (envoy, grafana self-metrics, Go runtime, etc.)
