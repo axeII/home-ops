@@ -162,6 +162,14 @@ resources:
     @just ingresses
     @just pods
 
+# Forward VictoriaMetrics to localhost for IDE PromQL queries
+metrics-forward:
+    kubectl port-forward -n observability svc/vmsingle-vm 8428:8428
+
+# Proxy Grafana Cloud metrics to localhost (reads creds from 1Password)
+metrics-proxy:
+    bash scripts/metrics-proxy.sh
+
 # ─── Talos ───────────────────────────────────────────────────────────────────
 
 # Generate Talos node configuration
