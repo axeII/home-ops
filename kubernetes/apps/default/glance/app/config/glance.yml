@@ -68,6 +68,8 @@ pages:
               - title: Security Intelligence
                 color: 347 70 35
                 links:
+                  - title: Zero day clock
+                    url: https://zerodayclock.com
                   - title: Shodan
                     url: https://shodan.io
                   - title: GreyNoise
