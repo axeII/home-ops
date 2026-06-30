@@ -1,0 +1,84 @@
+---
+apiVersion: tuppr.home-operations.com/v1alpha1
+kind: TalosUpgrade
+metadata:
+  name: cluster
+spec:
+  talos:
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+    version: v1.12.2
+  policy:
+    debug: false
+    force: false
+    rebootMode: default
+    placement: hard
+    timeout: 30m
+    stage: false
+  parallelism: 1
+  maintenance:
+    windows:
+      - start: "0 2 * * 0"
+        duration: "4h"
+        timezone: "Europe/Paris"
+  healthChecks:
+    - apiVersion: v1
+      kind: Node
+      expr: status.conditions.exists(c, c.type == "Ready" && c.status == "True")
+    - apiVersion: ceph.rook.io/v1
+      kind: CephCluster
+      name: rook-ceph
+      namespace: rook-ceph
+      expr: status.ceph.health in ["HEALTH_OK"]
+  hooks:
+    pre:
+      - name: ceph-set-noout
+        image: docker.io/rook/ceph:v1.19.3
+        command:
+          - sh
+          - -c
+        args:
+          - >-
+            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
+            > /tmp/ceph.conf &&
+            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd set noout
+        env:
+          - name: CEPH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rook-ceph-mon
+                key: ceph-secret
+        volumeMounts:
+          - name: ceph-config
+            mountPath: /etc/ceph
+        volumes:
+          - name: ceph-config
+            secret:
+              secretName: rook-ceph-config
+    post:
+      - name: ceph-unset-noout
+        image: docker.io/rook/ceph:v1.19.3
+        command:
+          - sh
+          - -c
+        args:
+          - >-
+            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
+            > /tmp/ceph.conf &&
+            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd unset noout
+        env:
+          - name: CEPH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rook-ceph-mon
+                key: ceph-secret
+        volumeMounts:
+          - name: ceph-config
+            mountPath: /etc/ceph
+        volumes:
+          - name: ceph-config
+            secret:
+              secretName: rook-ceph-config
