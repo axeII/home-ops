@@ -39,6 +39,8 @@ spec:
       repository: quay.io/ceph/ceph
       tag: v19.2.4
     operatorNamespace: rook-ceph
+    # Cilium Gateway envoy can't EDS-proxy to hostNetwork pods (mgr). The
+    # dashboard-proxy deployment below intercepts the service selector instead.
     route:
       dashboard:
         annotations:
@@ -87,16 +89,6 @@ spec:
         allowMultiplePerNode: false
       mgr:
         count: 1
-        placement:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: kubernetes.io/hostname
-                      operator: In
-                      values:
-                        - k8s-0
-                        - k8s-1
         modules:
           - name: pg_autoscaler
             enabled: true

@@ -1,0 +1,67 @@
+---
+# Cilium Gateway envoy has an issue proxying via EDS to hostNetwork pods.
+# The rook-ceph-mgr uses hostNetwork, so the mgr dashboard (rook-ceph-mgr-dashboard
+# service) is unreachable through the Gateway. As a workaround, this proxy pod
+# uses regular pod networking (gets a proper CiliumEndpoint) and carries the
+# service selector labels so rook-ceph-mgr-dashboard routes to it instead of the
+# mgr. It forwards / to the mgr dashboard at its host IP.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rook-ceph-dashboard-proxy
+  labels:
+    app.kubernetes.io/name: rook-ceph-dashboard-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rook-ceph-mgr
+      mgr_role: active
+      rook_cluster: rook-ceph
+  template:
+    metadata:
+      labels:
+        app: rook-ceph-mgr
+        mgr_role: active
+        rook_cluster: rook-ceph
+    spec:
+      containers:
+        - name: nginx
+          image: docker.io/nginxinc/nginx-unprivileged:stable-alpine
+          ports:
+            - containerPort: 7000
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 7000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: rook-ceph-dashboard-proxy-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rook-ceph-dashboard-proxy-config
+data:
+  default.conf: |
+    server {
+        listen 7000;
+        location / {
+            proxy_pass http://192.168.69.112:7000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
