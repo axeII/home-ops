@@ -1,10 +1,7 @@
 ---
-# Cilium Gateway envoy has an issue proxying via EDS to hostNetwork pods.
-# The rook-ceph-mgr uses hostNetwork, so the mgr dashboard (rook-ceph-mgr-dashboard
-# service) is unreachable through the Gateway. As a workaround, this proxy pod
-# uses regular pod networking (gets a proper CiliumEndpoint) and carries the
-# service selector labels so rook-ceph-mgr-dashboard routes to it instead of the
-# mgr. It forwards / to the mgr dashboard at its host IP.
+# Cilium Gateway envoy can't EDS-proxy to hostNetwork pods (rook-ceph-mgr).
+# This proxy uses regular pod networking so the envoy can reach it, then
+# forwards to the mgr dashboard at its host IP.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,15 +12,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rook-ceph-mgr
-      mgr_role: active
-      rook_cluster: rook-ceph
+      app.kubernetes.io/name: rook-ceph-dashboard-proxy
   template:
     metadata:
       labels:
-        app: rook-ceph-mgr
-        mgr_role: active
-        rook_cluster: rook-ceph
+        app.kubernetes.io/name: rook-ceph-dashboard-proxy
     spec:
       containers:
         - name: nginx
@@ -65,3 +58,40 @@ data:
             proxy_set_header X-Real-IP $remote_addr;
         }
     }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rook-ceph-dashboard-proxy
+  annotations:
+    glance/description: Rook Ceph Dashboard
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
+    glance/name: Rook Ceph
+    glance/show: "true"
+spec:
+  selector:
+    app.kubernetes.io/name: rook-ceph-dashboard-proxy
+  ports:
+    - port: 7000
+      targetPort: 7000
+      name: http
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rook-ceph-dashboard
+spec:
+  hostnames:
+    - rook.juno.moe
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - name: rook-ceph-dashboard-proxy
+          port: 7000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
