@@ -87,7 +87,7 @@ spec:
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kubernetes.png
           glance/description: "Kubernetes metrics badge service."
           gatus.home-operations.com/endpoint: |
-            path: /talos_version
+            path: /badges/talos_version
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:

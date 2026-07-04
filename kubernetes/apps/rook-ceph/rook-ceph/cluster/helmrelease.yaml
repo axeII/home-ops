@@ -87,6 +87,16 @@ spec:
         allowMultiplePerNode: false
       mgr:
         count: 1
+        placement:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - k8s-0
+                        - k8s-1
         modules:
           - name: pg_autoscaler
             enabled: true
