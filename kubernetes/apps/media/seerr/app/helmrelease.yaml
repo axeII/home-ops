@@ -51,7 +51,10 @@ spec:
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
-                  failureThreshold: 3
+                  # High threshold tolerates ~150s of DNS blip (UniFi dnsmasq
+                  # restarts) before Kubernetes kills the pod. The app doesn't
+                  # crash — it just becomes unhealthy when DB DNS fails.
+                  failureThreshold: 15
               readiness: *probes
             resources:
               requests:
