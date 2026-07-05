@@ -1,0 +1,32 @@
+---
+name: Konflate Refresh
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, labeled]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Trigger Konflate Render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger konflate re-render
+        env:
+          KONFLATE_PUSH_TOKEN: ${{ secrets.KONFLATE_PUSH_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ -z "${KONFLATE_PUSH_TOKEN}" ]; then
+            echo "KONFLATE_PUSH_TOKEN not set — skipping refresh"
+            exit 0
+          fi
+          echo "Triggering konflate re-render for PR #${PR_NUMBER}..."
+          curl -fsS -X POST --max-time 30 \
+            -H "Authorization: Bearer ${KONFLATE_PUSH_TOKEN}" \
+            "https://konflate.juno.moe/api/prs/${PR_NUMBER}/refresh" 2>/dev/null && \
+            echo "Done" || \
+            echo "konflate refresh unavailable (will rely on polling interval)"

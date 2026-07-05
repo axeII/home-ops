@@ -46,6 +46,26 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 - **yayamlls** — YAML language server with Kubernetes schema validation. `yayamlls validate --render kubernetes/` validates source + rendered Flux output. Also provides editor LSP support via `.yayamlls.yaml`.
 - **konflate** — PR review service deployed in the `flux-system` namespace. Renders PRs with flate, surfaces blast radius, image changes, and danger flags. Posts status checks and summary comments. Web UI at `konflate.juno.moe`.
 
+## Auto-merge policy
+
+The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and applies these rules:
+
+| Category | Detection | Min age | Days | Konflate gate |
+|---|---|---|---|---|
+| **patch / digest** | `type/patch`, `type/digest` | **2d** | any | no failures, no cautions |
+| **minor** (release train) | `type/minor` | **3d** | **Fri–Sat** (Europe/Berlin) | no failures, no cautions |
+| **major (ci/gh-action)** | `type/major` + `renovate/github-action` | **2d** | any | no failures (cautions allowed) |
+| **major (other)** | `type/major`, not `renovate/github-action` | — | MANUAL | — |
+| **rook-ceph** | title/branch matches `rook-ceph` | — | MANUAL | — |
+| **area/talos** | `area/talos` label (`talos/**`) | — | MANUAL | — |
+
+- **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
+- **Sleep between merges:** 300 seconds to let Flux reconcile before the next merge.
+- Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
+- **Bulk merge** (`.github/workflows/bulk-merge-prs.yaml`) also excludes rook-ceph, `area/talos`, `type/major`, `type/minor`, and `hold`.
+- **Konflate write-back** posts a summary PR comment + commit status after each render. Set `Konflate` as a required status check in branch protection for `main`.
+- **Setup:** add `KONFLATE_PUSH_TOKEN` (random 32-byte hex) to 1Password `konflate` item and as a GitHub Actions secret; confirm the GitHub App has `checks: write` + `pull-requests: write` permissions.
+
 ## Observability
 
 - Metrics and logs are shipped to **Grafana Cloud** via Alloy (in `observability` namespace).

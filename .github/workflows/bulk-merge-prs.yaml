@@ -39,14 +39,19 @@ jobs:
           args=()
           args+=(--state open)
           args+=(--app bot-akira)
-          args+=(--search "-label:hold -label:type/major -label:type/minor")
+          args+=(--search "-label:hold -label:type/major -label:type/minor -label:area/talos")
           if [ "${{ github.event.inputs.labels }}" != "any" ]; then
               IFS=',' read -ra labels <<< "${{ github.event.inputs.labels }}"
               for label in "${labels[@]}"; do
                   args+=(--label "${label}")
               done
           fi
-          for id in $(gh pr list "${args[@]}" --jq '.[].number' --json number); do
+          for row in $(gh pr list "${args[@]}" --jq '.[] | {number, title}' --json number,title | jq -r '[.number, .title] | @tsv'); do
+              IFS=$'\t' read -r id title <<< "$row"
+              if echo "${title}" | grep -qi "rook-ceph"; then
+                  echo "Skipping #${id} (rook-ceph)"
+                  continue
+              fi
               if [ "${{ github.event.inputs.dryRun }}" = "true" ]; then
                   echo "Dry run: gh pr merge $id --squash"
                   continue

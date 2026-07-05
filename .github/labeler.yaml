@@ -15,3 +15,6 @@ area/taskfile:
 area/minecraft:
   - changed-files:
       - any-glob-to-any-file: kubernetes/**/minecraft/*
+area/talos:
+  - changed-files:
+      - any-glob-to-any-file: talos/**
