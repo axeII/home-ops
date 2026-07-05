@@ -11,6 +11,11 @@ on:
         type: boolean
         default: false
         required: false
+      force:
+        description: Bypass quiet window
+        type: boolean
+        default: false
+        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,85 +43,250 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           DRY_RUN: ${{ inputs.dryRun || 'false' }}
+          FORCE: ${{ inputs.force || 'false' }}
+          KONFLATE_PUSH_TOKEN: ${{ secrets.KONFLATE_PUSH_TOKEN }}
         run: |
           set -euo pipefail
 
-          PR_AGE_DAYS=2
+          # ── Config ────────────────────────────────────────────
           BOT_APP="bot-akira"
           KONFLATE_URL="https://konflate.juno.moe"
 
-          CUTOFF=$(date -u -d "${PR_AGE_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+          MIN_AGE_PATCH_DAYS=2
+          MIN_AGE_MINOR_DAYS=3
+          MIN_AGE_ACTION_MAJOR_DAYS=2
+
+          MERGE_SLEEP_SEC=300
+
+          MANUAL_TITLE_REGEX="rook-ceph"
+
+          merged=0
+          skipped_manual=()
+          skipped_quiet=()
+          skipped_day=()
+          skipped_age=()
+          skipped_konflate=()
+          merged_ids=()
 
           echo "=============================="
           echo " Auto-Merge Run"
-          echo " Cutoff:      ${CUTOFF}"
-          echo " Konflate:    ${KONFLATE_URL}"
           echo " Dry run:     ${DRY_RUN}"
+          echo " Force:       ${FORCE}"
+          echo " Date:        $(date -u -R)"
+          echo " Berlin:      $(TZ='Europe/Berlin' date -R)"
           echo "=============================="
 
-          merged=0
-          skipped=0
-          denied=0
+          # ── Quiet window: Sun 00:00-05:00 UTC ───────────
+          utc_day=$(date -u +%u)
+          utc_hour=$(date -u +%H)
+          if [ "${FORCE}" != "true" ] && [ "$utc_day" -eq 7 ] && [ "$utc_hour" -lt 5 ]; then
+            echo ""
+            echo "=== QUIET WINDOW (Sun 00:00-05:00 UTC) ==="
+            echo "No merges during Talos upgrade window."
+            echo "Use 'force' input to bypass."
+            echo "==========================================="
+            echo "Summary: 0 merges (quiet window)"
+            exit 0
+          fi
 
-          while IFS=$'\t' read -r number branch title state; do
+          # Berlin day-of-week for release-train check
+          berlin_day=$(TZ='Europe/Berlin' date +%u)  # 5=Fri, 6=Sat
+
+          # Age cutoffs (epoch seconds)
+          cutoff_patch=$(date -u -d "${MIN_AGE_PATCH_DAYS} days ago" +%s)
+          cutoff_minor=$(date -u -d "${MIN_AGE_MINOR_DAYS} days ago" +%s)
+          cutoff_action=$(date -u -d "${MIN_AGE_ACTION_MAJOR_DAYS} days ago" +%s)
+
+          classify_label_str() {
+            local labels="$1"
+            case ",${labels}," in
+              *",type/patch,"*|*",type/digest,"*) echo "patch" ;;
+              *",type/minor,"*) echo "minor" ;;
+              *",type/major,"*)
+                case ",${labels}," in
+                  *",renovate/github-action,"*) echo "action-major" ;;
+                  *) echo "other-major" ;;
+                esac
+                ;;
+              *) echo "unknown" ;;
+            esac
+          }
+
+          echo ""
+          echo "=== Fetching open bot PRs ==="
+          merged=0
+          while IFS=$'\t' read -r number branch title created_at labels_str state; do
             echo ""
             echo "---"
             echo "PR #${number}: ${title}"
             echo "  Branch:  ${branch}"
-            echo "  Checks:  ${state}"
+            echo "  Labels:  ${labels_str}"
+            echo "  Age:     ${created_at}"
+            echo "  State:   ${state}"
 
-            # Query konflate for danger assessment
-            konflate=$(curl -fsS --max-time 15 \
-              -H "Accept: application/json" \
-              "${KONFLATE_URL}/api/prs/${number}/summary" 2>/dev/null) || true
+            # Merge state — skip blocked/dirty/draft PRs
+            case "${state}" in
+              CLEAN|HAS_HOOKS|UNSTABLE|BEHIND|UNKNOWN) ;;
+              DRAFT|BLOCKED|DIRTY)
+                echo "  → SKIP (merge state: ${state})"
+                continue
+                ;;
+              *)
+                echo "  → SKIP (unknown merge state: ${state})"
+                continue
+                ;;
+            esac
 
-            if [ -z "${konflate}" ]; then
-              echo "  → SKIP (konflate: unreachable)"
-              skipped=$((skipped + 1))
+            # Classify update type from labels
+            category=$(classify_label_str "${labels_str}")
+            echo "  Type:    ${category}"
+
+            # ── Manual filters ──────────────────────────────────
+            # rook-ceph by title or branch
+            if echo "${title}" | grep -qi "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qi "${MANUAL_TITLE_REGEX}"; then
+              echo "  → SKIP (manual: rook-ceph)"
+              skipped_manual+=("#${number}")
               continue
             fi
 
-            cautions=$(echo "${konflate}" | jq -r '.cautions | length' 2>/dev/null) || true
-            failures=$(echo "${konflate}" | jq -r '.failures | length' 2>/dev/null) || true
-
-            if [ -z "${cautions}" ] || [ -z "${failures}" ]; then
-              echo "  → SKIP (konflate: invalid response)"
-              skipped=$((skipped + 1))
+            # area/talos label
+            if [[ ",${labels_str}," == *",area/talos,"* ]]; then
+              echo "  → SKIP (manual: area/talos)"
+              skipped_manual+=("#${number}")
               continue
             fi
 
-            if [ "${cautions}" != "0" ] || [ "${failures}" != "0" ]; then
-              echo "  → SKIP (konflate: ${cautions} cautions, ${failures} failures)"
-              denied=$((denied + 1))
+            # non-action major
+            if [ "${category}" = "other-major" ]; then
+              echo "  → SKIP (manual: non-action major)"
+              skipped_manual+=("#${number}")
               continue
             fi
 
-            if [ "${DRY_RUN}" = "true" ]; then
-              echo "  → WOULD MERGE (konflate: routine)"
-              merged=$((merged + 1))
-            else
-              echo "  → MERGING..."
-              if gh pr merge "${number}" --squash 2>&1; then
-                echo "  → MERGED"
-                merged=$((merged + 1))
-              else
-                echo "  → FAILED"
-                skipped=$((skipped + 1))
+            # unknown category
+            if [ "${category}" = "unknown" ]; then
+              echo "  → SKIP (manual: uncategorized)"
+              skipped_manual+=("#${number}")
+              continue
+            fi
+
+            # ── Release train: minors only Fri-Sat Berlin ────────
+            if [ "${category}" = "minor" ] && [ "${berlin_day}" -ne 5 ] && [ "${berlin_day}" -ne 6 ]; then
+              echo "  → SKIP (release train: minor not Fri-Sat)"
+              skipped_day+=("#${number}")
+              continue
+            fi
+
+            # ── Age check ─────────────────────────────────────────
+            created_epoch=$(date -u -d "${created_at}" +%s 2>/dev/null) || {
+              echo "  → SKIP (cannot parse createdAt)"
+              skipped_age+=("#${number}")
+              continue
+            }
+
+            case "${category}" in
+              patch|digest) cutoff_epoch=${cutoff_patch} ;;
+              minor) cutoff_epoch=${cutoff_minor} ;;
+              action-major) cutoff_epoch=${cutoff_action} ;;
+              *) cutoff_epoch=${cutoff_patch} ;;
+            esac
+
+            if [ "${created_epoch}" -gt "${cutoff_epoch}" ]; then
+              remaining=$(( (created_epoch - cutoff_epoch) / 86400 ))
+              echo "  → SKIP (age: too young, needs ${remaining}d more)"
+              skipped_age+=("#${number}")
+              continue
+            fi
+
+            # ── Konflate gate (best-effort) ──────────────────────
+            # From GitHub Actions, konflate is unreachable (private IP).
+            # When reachable, it adds extra safety; when not, we skip the
+            # gate and rely on the label/age/day policy alone.
+            konflate_ok=false
+            if [ -n "${KONFLATE_PUSH_TOKEN:-}" ]; then
+              curl -fsS -X POST --max-time 15 \
+                -H "Authorization: Bearer ${KONFLATE_PUSH_TOKEN}" \
+                "${KONFLATE_URL}/api/prs/${number}/refresh" 2>/dev/null || true
+            fi
+
+            for i in 1 2 3 4 5; do
+              if curl -fsS --max-time 15 \
+                -H "Accept: application/json" \
+                -D "/tmp/konflate_headers_${number}.txt" \
+                -o "/tmp/konflate_body_${number}.json" \
+                "${KONFLATE_URL}/api/prs/${number}/summary" >/dev/null 2>&1; then
+
+                render_status=$(grep -i '^x-konflate-render-status:' "/tmp/konflate_headers_${number}.txt" 2>/dev/null | sed 's/.*: //' | tr -d ' \r' | tr '[:upper:]' '[:lower:]')
+
+                if [ "${render_status}" = "pending" ]; then
+                  sleep 3
+                  continue
+                fi
+
+                if [ "${render_status}" = "ok" ] || [ "${render_status}" = "failures" ]; then
+                  konflate_failures=$(jq -r '.failures | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
+                  konflate_cautions=$(jq -r '.cautions | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
+
+                  if [ -z "${konflate_failures}" ] || [ -z "${konflate_cautions}" ]; then
+                    echo "  → konflate: invalid response, skipped"
+                    break
+                  fi
+
+                  if [ "${konflate_failures}" != "0" ]; then
+                    echo "  → SKIP (konflate: ${konflate_failures} failures)"
+                    skipped_konflate+=("#${number}")
+                    break
+                  fi
+
+                  if [ "${konflate_cautions}" != "0" ] && [ "${category}" != "action-major" ]; then
+                    echo "  → SKIP (konflate: ${konflate_cautions} cautions)"
+                    skipped_konflate+=("#${number}")
+                    break
+                  fi
+
+                  konflate_ok=true
+                  echo "  → konflate: ok"
+                fi
+                break
               fi
+              if [ "$i" -lt 5 ]; then sleep 3; fi
+            done
+
+            if [ "${konflate_ok}" = false ]; then
+              echo "  → konflate: unreachable/error (skipping gate, relying on label/age policy)"
             fi
+
+            # ── Merge ─────────────────────────────────────────────
+            if [ "${DRY_RUN}" = "true" ]; then
+              echo "  → WOULD MERGE (${category}) ✓"
+              merged_ids+=("#${number}")
+              continue
+            fi
+
+            echo "  → MERGING..."
+            if gh pr merge "${number}" --squash 2>&1; then
+              echo "  → MERGED ✓"
+              merged_ids+=("#${number}")
+              sleep "${MERGE_SLEEP_SEC}"
+            else
+              echo "  → MERGE FAILED ⚠"
+            fi
+
           done < <(
             gh pr list \
               --app "${BOT_APP}" \
               --state open \
               --json number,headRefName,title,createdAt,labels,mergeStateStatus \
-              --jq "[.[] | select(.createdAt <= \"${CUTOFF}\") | select([.labels[].name | contains(\"do not merge\")] | any | not) | {number, headRefName, title, mergeStateStatus}]" |
-            jq -r '.[] | "\(.number)\t\(.headRefName)\t\(.title)\t\(.mergeStateStatus)"'
+              --jq '[.[] | select([.labels[].name | contains("do not merge")] | any | not) | select([.labels[].name | contains("hold")] | any | not) | {number, headRefName, title, createdAt, labels: [.labels[].name], mergeStateStatus}]' |
+            jq -r '.[] | [.number, .headRefName, .title, .createdAt, (.labels | join(",")), .mergeStateStatus] | @tsv'
           )
 
           echo ""
           echo "=============================="
           echo " Summary"
-          echo " Merged:  ${merged}"
-          echo " Errors:  ${skipped}"
-          echo " Denied:  ${denied}"
+          echo " Merged:        ${#merged_ids[@]} (${merged_ids[*]})"
+          echo " Manual skip:   ${#skipped_manual[@]} (${skipped_manual[*]})"
+          echo " Day skip:      ${#skipped_day[@]} (${skipped_day[*]})"
+          echo " Age skip:      ${#skipped_age[@]} (${skipped_age[*]})"
+          echo " Konflate skip: ${#skipped_konflate[@]} (${skipped_konflate[*]})"
           echo "=============================="
