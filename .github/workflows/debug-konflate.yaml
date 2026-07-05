@@ -1,0 +1,85 @@
+---
+name: Debug Konflate
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: PR number to test
+        default: "3547"
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  debug:
+    name: Debug Konflate Connectivity
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS resolution
+        run: |
+          echo "=== DNS: konflate.juno.moe ==="
+          dig +short konflate.juno.moe A || echo "dig failed"
+          dig +short konflate.juno.moe AAAA || true
+          echo ""
+          echo "=== DNS: external.juno.moe ==="
+          dig +short external.juno.moe A || echo "dig failed"
+
+      - name: DNS trace
+        run: |
+          echo "=== dig +trace konflate.juno.moe A ==="
+          dig +trace +short konflate.juno.moe A 2>&1 || true
+
+      - name: curl root (verbose)
+        run: |
+          echo "=== curl -v GET https://konflate.juno.moe/ ==="
+          curl -v --max-time 15 "https://konflate.juno.moe/" 2>&1 || true
+
+      - name: curl API summary with headers
+        run: |
+          echo "=== curl -D /dev/stderr GET /api/prs/${{ inputs.pr_number }}/summary ==="
+          curl -fsS --max-time 15 \
+            -H "Accept: application/json" \
+            -D - \
+            "https://konflate.juno.moe/api/prs/${{ inputs.pr_number }}/summary" 2>&1 || true
+
+      - name: curl with detailed timing
+        run: |
+          echo "=== curl timing ==="
+          # printf with %% escapes to keep yamllint happy
+          printf '  DNS lookup:     %%{time_namelookup}s\n' > /tmp/curl_fmt.txt
+          printf '  TCP connect:    %%{time_connect}s\n' >> /tmp/curl_fmt.txt
+          printf '  TLS handshake:  %%{time_appconnect}s\n' >> /tmp/curl_fmt.txt
+          printf '  TTFB:           %%{time_starttransfer}s\n' >> /tmp/curl_fmt.txt
+          printf '  Total:          %%{time_total}s\n' >> /tmp/curl_fmt.txt
+          printf '  HTTP code:      %%{http_code}\n' >> /tmp/curl_fmt.txt
+          printf '  Remote IP:      %%{remote_ip}:%%{remote_port}\n' >> /tmp/curl_fmt.txt
+          printf '  Content-Type:   %%{content_type}\n' >> /tmp/curl_fmt.txt
+          printf '  Size:           %%{size_download}b\n' >> /tmp/curl_fmt.txt
+          curl -sS --max-time 15 \
+            -H "Accept: application/json" \
+            -o /tmp/konflate_body.json \
+            -w @/tmp/curl_fmt.txt \
+            "https://konflate.juno.moe/api/prs/${{ inputs.pr_number }}/summary" 2>&1 || true
+          echo ""
+          echo "=== Response body (first 500b) ==="
+          head -c 500 /tmp/konflate_body.json 2>/dev/null || echo "(empty)"
+
+      - name: curl with --resolve (force Cloudflare edge IP to isolate DNS from WAF)
+        run: |
+          echo "=== curl --resolve (force 104.21.38.72) ==="
+          curl -v --max-time 15 \
+            -H "Accept: application/json" \
+            --resolve konflate.juno.moe:443:104.21.38.72 \
+            "https://konflate.juno.moe/api/prs/${{ inputs.pr_number }}/summary" 2>&1 || true
+
+      - name: Network diagnostics
+        run: |
+          echo "=== Check if 104.21.38.72:443 is reachable ==="
+          timeout 5 bash -c 'echo > /dev/tcp/104.21.38.72/443 && echo "reachable"' || echo "unreachable"
+          echo ""
+          echo "=== Source IP ==="
+          curl -sS --max-time 10 "https://ifconfig.me" 2>/dev/null || echo "ifconfig.me failed"
+          curl -sS --max-time 10 "https://ipinfo.io/json" 2>/dev/null | jq '{ip, city, region, country}' || echo "ipinfo.io failed"
