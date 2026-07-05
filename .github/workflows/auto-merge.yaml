@@ -58,7 +58,9 @@ jobs:
 
           MERGE_SLEEP_SEC=300
 
-          MANUAL_TITLE_REGEX="rook-ceph"
+          # Matches rook-ceph chart/operator PRs *and* standalone quay.io/ceph/ceph
+          # image PRs (separate Renovate package, not part of the rook-ceph group).
+          MANUAL_TITLE_REGEX="ceph"
 
           merged=0
           skipped_manual=()
@@ -142,9 +144,9 @@ jobs:
             echo "  Type:    ${category}"
 
             # ── Manual filters ──────────────────────────────────
-            # rook-ceph by title or branch
+            # rook-ceph / ceph image by title or branch
             if echo "${title}" | grep -qi "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qi "${MANUAL_TITLE_REGEX}"; then
-              echo "  → SKIP (manual: rook-ceph)"
+              echo "  → SKIP (manual: ceph)"
               skipped_manual+=("#${number}")
               continue
             fi
