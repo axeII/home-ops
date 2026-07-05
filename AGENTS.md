@@ -63,7 +63,8 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 - **Sleep between merges:** 300 seconds to let Flux reconcile before the next merge.
 - Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
 - **Bulk merge** (`.github/workflows/bulk-merge-prs.yaml`) also excludes rook-ceph, `area/talos`, `type/major`, `type/minor`, and `hold`.
-- **Konflate write-back** posts a summary PR comment + commit status after each render. Set `Konflate` as a required status check in branch protection for `main`.
+- **Konflate** is reachable only from inside the home network (private IP). From GitHub Actions, the konflate gate is skipped — the auto-merge relies on label/age/day rules alone. `Konflate` as a required status check in branch protection won't work from outside the network.
+- **Konflate write-back** posts a summary PR comment + commit status after each render when reachable (inside the network).
 - **Setup:** add `KONFLATE_PUSH_TOKEN` (random 32-byte hex) to 1Password `konflate` item and as a GitHub Actions secret; confirm the GitHub App has `checks: write` + `pull-requests: write` permissions.
 
 ## Observability

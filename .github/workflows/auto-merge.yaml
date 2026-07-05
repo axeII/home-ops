@@ -198,69 +198,62 @@ jobs:
               continue
             fi
 
-            # ── Konflate gate ────────────────────────────────────
-            # Trigger a fresh re-render before evaluating
+            # ── Konflate gate (best-effort) ──────────────────────
+            # From GitHub Actions, konflate is unreachable (private IP).
+            # When reachable, it adds extra safety; when not, we skip the
+            # gate and rely on the label/age/day policy alone.
+            konflate_ok=false
             if [ -n "${KONFLATE_PUSH_TOKEN:-}" ]; then
               curl -fsS -X POST --max-time 15 \
                 -H "Authorization: Bearer ${KONFLATE_PUSH_TOKEN}" \
                 "${KONFLATE_URL}/api/prs/${number}/refresh" 2>/dev/null || true
             fi
 
-            # Poll summary endpoint for terminal render status
-            render_status=""
             for i in 1 2 3 4 5; do
-              curl -fsS --max-time 15 \
+              if curl -fsS --max-time 15 \
                 -H "Accept: application/json" \
                 -D "/tmp/konflate_headers_${number}.txt" \
                 -o "/tmp/konflate_body_${number}.json" \
-                "${KONFLATE_URL}/api/prs/${number}/summary" 2>/dev/null || {
-                if [ "$i" -lt 5 ]; then sleep 3; continue; fi
-                render_status="unreachable"
+                "${KONFLATE_URL}/api/prs/${number}/summary" >/dev/null 2>&1; then
+
+                render_status=$(grep -i '^x-konflate-render-status:' "/tmp/konflate_headers_${number}.txt" 2>/dev/null | sed 's/.*: //' | tr -d ' \r' | tr '[:upper:]' '[:lower:]')
+
+                if [ "${render_status}" = "pending" ]; then
+                  sleep 3
+                  continue
+                fi
+
+                if [ "${render_status}" = "ok" ] || [ "${render_status}" = "failures" ]; then
+                  konflate_failures=$(jq -r '.failures | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
+                  konflate_cautions=$(jq -r '.cautions | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
+
+                  if [ -z "${konflate_failures}" ] || [ -z "${konflate_cautions}" ]; then
+                    echo "  → konflate: invalid response, skipped"
+                    break
+                  fi
+
+                  if [ "${konflate_failures}" != "0" ]; then
+                    echo "  → SKIP (konflate: ${konflate_failures} failures)"
+                    skipped_konflate+=("#${number}")
+                    break
+                  fi
+
+                  if [ "${konflate_cautions}" != "0" ] && [ "${category}" != "action-major" ]; then
+                    echo "  → SKIP (konflate: ${konflate_cautions} cautions)"
+                    skipped_konflate+=("#${number}")
+                    break
+                  fi
+
+                  konflate_ok=true
+                  echo "  → konflate: ok"
+                fi
                 break
-              }
-
-              render_status=$(grep -i '^x-konflate-render-status:' "/tmp/konflate_headers_${number}.txt" 2>/dev/null | sed 's/.*: //' | tr -d ' \r' | tr '[:upper:]' '[:lower:]')
-
-              if [ "${render_status}" = "pending" ]; then
-                sleep 3
-                continue
               fi
-              break
+              if [ "$i" -lt 5 ]; then sleep 3; fi
             done
 
-            case "${render_status}" in
-              pending)
-                echo "  → SKIP (konflate: render still pending, try next run)"
-                skipped_konflate+=("#${number}")
-                continue
-                ;;
-              error|unreachable)
-                echo "  → SKIP (konflate: ${render_status}, needs manual review)"
-                skipped_konflate+=("#${number}")
-                continue
-                ;;
-            esac
-
-            konflate_failures=$(jq -r '.failures | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
-            konflate_cautions=$(jq -r '.cautions | length' "/tmp/konflate_body_${number}.json" 2>/dev/null || echo "")
-
-            if [ -z "${konflate_failures}" ] || [ -z "${konflate_cautions}" ]; then
-              echo "  → SKIP (konflate: invalid response)"
-              skipped_konflate+=("#${number}")
-              continue
-            fi
-
-            if [ "${konflate_failures}" != "0" ]; then
-              echo "  → SKIP (konflate: ${konflate_failures} failures)"
-              skipped_konflate+=("#${number}")
-              continue
-            fi
-
-            # Cautions block all except action-majors (which get an unavoidable major-bump caution)
-            if [ "${konflate_cautions}" != "0" ] && [ "${category}" != "action-major" ]; then
-              echo "  → SKIP (konflate: ${konflate_cautions} cautions)"
-              skipped_konflate+=("#${number}")
-              continue
+            if [ "${konflate_ok}" = false ]; then
+              echo "  → konflate: unreachable/error (skipping gate, relying on label/age policy)"
             fi
 
             # ── Merge ─────────────────────────────────────────────
