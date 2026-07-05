@@ -26,6 +26,17 @@ spec:
   values:
     fullnameOverride: *app
     provider: cloudflare
+    # Retry wrapper: external-dns exits on transient DNS failures (e.g., UniFi
+    # dnsmasq restarting). This retries up to 5× with exponential backoff
+    # instead of restarting the pod, giving DNS time to recover.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        for i in 1 2 3 4 5; do
+          /external-dns $0 "$@" && break
+          sleep "$((i * 5))"
+        done
     env:
       - name: &name CF_API_TOKEN
         valueFrom:

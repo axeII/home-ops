@@ -24,6 +24,17 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            # Retry wrapper: cloudflared exits when edge-DNS discovery fails
+            # (UniFi dnsmasq restarting or WAN blip). Retries 5× with
+            # exponential backoff instead of restarting the pod.
+            command:
+              - /bin/sh
+              - -c
+              - |
+                for i in 1 2 3 4 5; do
+                  cloudflared $0 "$@" && break
+                  sleep "$((i * 5))"
+                done
             image:
               repository: docker.io/cloudflare/cloudflared
               tag: 2026.6.1
