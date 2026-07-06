@@ -56,11 +56,13 @@ jobs:
           MIN_AGE_MINOR_DAYS=3
           MIN_AGE_ACTION_MAJOR_DAYS=2
 
-          MERGE_SLEEP_SEC=300
+          MERGE_SLEEP_PATCH_SEC=300
+          MERGE_SLEEP_MINOR_TRAIN_SEC=600
 
           # Matches rook-ceph chart/operator PRs *and* standalone quay.io/ceph/ceph
           # image PRs (separate Renovate package, not part of the rook-ceph group).
-          MANUAL_TITLE_REGEX="ceph"
+          # Also matches flux and dragonfly — all three are manual-only.
+          MANUAL_TITLE_REGEX="ceph|flux|dragonfly"
 
           merged=0
           skipped_manual=()
@@ -265,11 +267,18 @@ jobs:
               continue
             fi
 
+            # Sleep longer during release train (minor Fri-Sat) to let Flux reconcile
+            if [ "${category}" = "minor" ]; then
+              sleep_sec=${MERGE_SLEEP_MINOR_TRAIN_SEC}
+            else
+              sleep_sec=${MERGE_SLEEP_PATCH_SEC}
+            fi
+
             echo "  → MERGING..."
             if gh pr merge "${number}" --squash 2>&1; then
               echo "  → MERGED ✓"
               merged_ids+=("#${number}")
-              sleep "${MERGE_SLEEP_SEC}"
+              sleep "${sleep_sec}"
             else
               echo "  → MERGE FAILED ⚠"
             fi

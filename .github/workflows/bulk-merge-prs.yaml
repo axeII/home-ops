@@ -48,8 +48,8 @@ jobs:
           fi
           for row in $(gh pr list "${args[@]}" --jq '.[] | {number, title}' --json number,title | jq -r '[.number, .title] | @tsv'); do
               IFS=$'\t' read -r id title <<< "$row"
-              if echo "${title}" | grep -qi "rook-ceph"; then
-                  echo "Skipping #${id} (rook-ceph)"
+              if echo "${title}" | grep -qiE "rook-ceph|flux|dragonfly"; then
+                  echo "Skipping #${id} (manual: rook-ceph/flux/dragonfly)"
                   continue
               fi
               if [ "${{ github.event.inputs.dryRun }}" = "true" ]; then
