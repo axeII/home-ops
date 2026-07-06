@@ -13,12 +13,11 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 
 ## Validation
 
+- **BEFORE** asking the user to commit, ALWAYS run `pre-commit run --all-files` and fix any errors first. The commit must pass all pre-commit checks.
 - Run `just configure` to render templates, check secrets, and validate manifests.
 - Run `just validate` to validate YAML schemas on source files via yayamlls.
 - Run `just flate-test` to verify all Flux resources render successfully with flate.
 - Run `python3 scripts/find_mistakes.py` to check for broken Kustomize references (needs `fd`).
-- Run `pre-commit run --all-files` to lint YAML, fix whitespace, and scan for leaked secrets.
-- Fix all errors before committing. The commit should pass all checks.
 - Add always new line at the end of files
 
 ## Talos changes

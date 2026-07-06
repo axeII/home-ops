@@ -7,8 +7,9 @@ components:
   - ../../components/common
 resources:
   - ./blackbox-exporter/ks.yaml
+  - ./etcd-scrape/ks.yaml
   - ./gatus/ks.yaml
-  # - ./grafana/ks.yaml
+  - ./grafana/ks.yaml
   - ./grafana-cloud/ks.yaml
   - ./keda/ks.yaml
   - ./kromgo/ks.yaml
