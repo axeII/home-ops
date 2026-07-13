@@ -65,7 +65,7 @@ services:
       - "3000"
 
   caddy:
-    image: caddy:2.10.0
+    image: caddy:2.11.4
     container_name: caddy
     restart: unless-stopped
     ports:
