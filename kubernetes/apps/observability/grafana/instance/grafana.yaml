@@ -8,8 +8,8 @@ metadata:
     dashboards: grafana
 spec:
   external:
-    url: https://chippermagpie793.grafana.net
+    url: http://grafana.internal
     tenantNamespace: observability
     apiKey:
       name: grafana-cloud-credentials
-      key: GRAFANA_CLOUD_GRAFANA_TOKEN
+      key: GRAFANA_API_TOKEN

@@ -1,0 +1,10 @@
+---
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+# Receive metrics via remote_write from Alloy in the cluster
+remote_write: []
+
+# No local scrape targets — all metrics arrive via remote_write from Alloy
+scrape_configs: []

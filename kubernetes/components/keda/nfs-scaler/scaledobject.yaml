@@ -17,11 +17,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: https://prometheus-prod-65-prod-eu-west-2.grafana.net/api/prom
-        authModes: basic
+        serverAddress: http://metrics.internal
         query: probe_success{instance=~".+:2049"}
         threshold: "1"
-        ignoreNullValues: "0"
-      authenticationRef:
-        kind: ClusterTriggerAuthentication
-        name: keda-prometheus-credentials
+        ignoreNullValues: "1"

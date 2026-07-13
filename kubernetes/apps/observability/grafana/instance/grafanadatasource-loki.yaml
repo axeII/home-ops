@@ -3,7 +3,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
-  name: grafanacloud-prometheus
+  name: loki
   labels:
     dashboards: grafana
 spec:
@@ -12,8 +12,7 @@ spec:
     matchLabels:
       dashboards: grafana
   datasource:
-    name: Prometheus
-    type: prometheus
+    name: Loki
+    type: loki
     access: proxy
-    url: http://metrics.internal
-    isDefault: true
+    url: http://logs.internal

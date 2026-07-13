@@ -34,12 +34,12 @@ spec:
           // Discover ServiceMonitors and scrape metrics
           prometheus.operator.servicemonitors "default" {
             namespaces = []
-            forward_to = [prometheus.relabel.trim_metrics.receiver]
+            forward_to = [prometheus.remote_write.vm.receiver]
           }
 
           prometheus.operator.podmonitors "default" {
             namespaces = []
-            forward_to = [prometheus.relabel.trim_metrics.receiver]
+            forward_to = [prometheus.remote_write.vm.receiver]
           }
 
           // Blackbox probe targets for NFS health (replaces orphaned VMProbes)
@@ -59,7 +59,7 @@ spec:
             targets      = discovery.relabel.blackbox_nfs.output
             job_name     = "blackbox-nfs"
             metrics_path = "/probe"
-            forward_to   = [prometheus.relabel.trim_metrics.receiver]
+            forward_to   = [prometheus.remote_write.vm.receiver]
           }
 
           // Blackbox probe targets for ICMP health (nas, db)
@@ -86,51 +86,13 @@ spec:
             targets      = discovery.relabel.blackbox_devices.output
             job_name     = "blackbox-icmp"
             metrics_path = "/probe"
-            forward_to   = [prometheus.relabel.trim_metrics.receiver]
+            forward_to   = [prometheus.remote_write.vm.receiver]
           }
 
-          // Drop high-cardinality metrics to fit Grafana Cloud free tier (<10K series)
-          // Budget: ~6K of 10K used — comfortable headroom for control-plane, cilium, and cAdvisor
-          prometheus.relabel "trim_metrics" {
-            // Rule 1: Drop high-cardinality noise; keep useful infra (apiserver, cilium, container, controller, etc.)
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "envoy_.*|grafana_.*|go_.*|process_.*|libp2p_.*|quic_.*|vm_.*|vl_.*|vlagent_.*|http_.*|metrics_.*|scrape_.*|promhttp_.*|prometheus_.*|snapshot_.*|field_.*"
-            }
-
-            // Rule 2: Drop noisy ceph internals; keep dashboard-essential groups (pg, mon, mgr, health, osd — not ops)
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "ceph_mds_.*|ceph_bluestore_.*|ceph_bluefs_.*|ceph_paxos_.*|ceph_rocksdb_.*|ceph_prioritycache.*|ceph_purge_.*|ceph_blk_.*|ceph_objecter_.*|ceph_AsyncMessenger_.*|ceph_num_.*|ceph_prometheus_.*|ceph_healthcheck_.*|ceph_exporter_.*|ceph_disk_.*|ceph_osd_op_.*"
-            }
-
-            // Rule 3: Drop high-cardinality or noisy kube metrics, keep useful small groups
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "kube_pod_annotations|kube_pod_labels|kube_mutatingwebhookconfiguration_.*|kube_validatingwebhookconfiguration_.*|kube_networkpolicy_.*|kube_lease_.*|kube_resourcequota_.*|kube_storageclass_.*|kube_job_.*|kube_cronjob_.*|kube_replicaset_.*"
-            }
-
-            // Rule 4: Drop noisy node kernel internals, keep essential hardware/OS metrics
-            rule {
-              action        = "drop"
-              source_labels = ["__name__"]
-              regex         = "node_xfs_.*|node_netstat_.*|node_vmstat_.*|node_sockstat_.*|node_timex_.*|node_hwmon_.*|node_nf_.*|node_softnet_.*|node_schedstat_.*|node_selinux_.*|node_bonding_.*|node_cooling_.*|node_watchdog_.*|node_ipvs_.*|node_thermal_.*|node_udp_.*|node_textfile_.*|node_arp_.*|node_dmi_.*|node_forks_.*|node_intr_.*|node_nvme_.*|node_context_.*|node_exporter_.*|node_filefd_.*|node_procs_.*|node_scrape_.*|node_entropy_.*|node_pressure_.*"
-            }
-
-            forward_to = [prometheus.remote_write.cloud.receiver]
-          }
-
-          // Remote write to Grafana Cloud Prometheus
-          prometheus.remote_write "cloud" {
+          // Remote write to self-hosted Prometheus on VM (no auth, IP-allowlisted)
+          prometheus.remote_write "vm" {
             endpoint {
-              url = env("GRAFANA_CLOUD_PROMETHEUS_URL")
-              basic_auth {
-                username = env("GRAFANA_CLOUD_PROMETHEUS_USER")
-                password = env("GRAFANA_CLOUD_API_TOKEN")
-              }
+              url = env("PROMETHEUS_URL") + "/api/v1/write"
             }
           }
 
@@ -175,16 +137,12 @@ spec:
                 container = "container",
               }
             }
-            forward_to = [loki.write.cloud.receiver]
+            forward_to = [loki.write.vm.receiver]
           }
 
-          // Send logs to Grafana Cloud Loki
-          loki.write "cloud" {
+          // Send logs to self-hosted Loki on VM (no auth, IP-allowlisted)
+          loki.write "vm" {
             endpoint {
-              url = env("GRAFANA_CLOUD_LOKI_URL") + "/loki/api/v1/push"
-              basic_auth {
-                username = env("GRAFANA_CLOUD_LOKI_USER")
-                password = env("GRAFANA_CLOUD_API_TOKEN")
-              }
+              url = env("LOKI_URL") + "/loki/api/v1/push"
             }
           }
