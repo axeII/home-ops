@@ -6,4 +6,5 @@ resources:
   - ./grafana.yaml
   - ./grafanadashboards.yaml
   - ./grafanadatasource.yaml
+  - ./grafanadatasource-loki.yaml
   - ./servicemonitor.yaml
