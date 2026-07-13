@@ -1,7 +1,7 @@
 ---
 # Cilium Gateway envoy can't EDS-proxy to hostNetwork pods (rook-ceph-mgr).
 # This proxy uses regular pod networking so the envoy can reach it, then
-# forwards to the mgr dashboard at its host IP.
+# forwards to the mgr dashboard via the mgr-dashboard service.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,7 +53,7 @@ data:
     server {
         listen 7000;
         location / {
-            proxy_pass http://192.168.69.112:7000;
+            proxy_pass http://rook-ceph-mgr-dashboard:7000;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
