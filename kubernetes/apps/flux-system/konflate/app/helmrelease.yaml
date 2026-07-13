@@ -19,6 +19,11 @@ spec:
       existingSecret: konflate-secret
     httpRoute:
       enabled: true
+      annotations:
+        glance/show: "true"
+        glance/name: Konflate
+        glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kubernetes.png
+        glance/description: "Pull request review and validation."
       parentRefs:
         - name: external
           namespace: kube-system
