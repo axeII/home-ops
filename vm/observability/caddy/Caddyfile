@@ -1,0 +1,31 @@
+# Caddy reverse proxy for observability stack
+# IP-allowlisted to home LAN
+
+:80 {
+    @allowed {
+        remote_ip 192.168.69.0/24 192.168.88.0/24
+    }
+
+    # Serve content for allowed IPs
+    handle @allowed {
+        @metrics host metrics.internal
+        handle @metrics {
+            reverse_proxy prometheus:9090
+        }
+
+        @logs host logs.internal
+        handle @logs {
+            reverse_proxy loki:3100
+        }
+
+        @grafana host grafana.internal
+        handle @grafana {
+            reverse_proxy grafana:3000
+        }
+    }
+
+    # Block everything else
+    handle {
+        abort
+    }
+}
