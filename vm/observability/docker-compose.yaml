@@ -13,7 +13,7 @@
 
 services:
   prometheus:
-    image: prom/prometheus:v3.4.2
+    image: prom/prometheus:v3.13.1
     container_name: prometheus
     restart: unless-stopped
     command:
