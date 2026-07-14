@@ -37,7 +37,7 @@ spec:
           memory: 64Mi
     cephImage:
       repository: quay.io/ceph/ceph
-      tag: v19.2.4
+      tag: v19.2.5
     operatorNamespace: rook-ceph
     # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
     # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
