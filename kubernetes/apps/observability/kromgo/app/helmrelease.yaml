@@ -30,23 +30,21 @@ spec:
               repository: ghcr.io/home-operations/kromgo
               tag: 0.15.0@sha256:f3c01a0624c95db0f50a65ef901661774da5d2922a3187a2741e7149dee45f2a
             env:
-              HEALTH_HOST: 0.0.0.0
-              HEALTH_PORT: &healthPort 8888
-              PROMETHEUS_URL:
+              KROMGO_SERVER_HOST: 0.0.0.0
+              KROMGO_SERVER_PORT: &port 8080
+              KROMGO_PROMETHEUS_URL:
                 valueFrom:
                   secretKeyRef:
                     name: grafana-cloud-credentials
                     key: KROMGO_PROMETHEUS_URL
-              SERVER_HOST: 0.0.0.0
-              SERVER_PORT: &port 8080
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /-/ready
-                    port: *healthPort
+                    path: /readyz
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -111,5 +109,3 @@ spec:
         ports:
           http:
             port: *port
-          health:
-            port: *healthPort
