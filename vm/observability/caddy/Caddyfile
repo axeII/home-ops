@@ -1,12 +1,27 @@
 # Caddy reverse proxy for observability stack
 # IP-allowlisted to home LAN
 
+grafana.internal {
+    tls internal
+
+    @allowed {
+        remote_ip 192.168.69.0/24 192.168.88.0/24
+    }
+
+    handle @allowed {
+        reverse_proxy grafana:3000
+    }
+
+    handle {
+        abort
+    }
+}
+
 :80 {
     @allowed {
         remote_ip 192.168.69.0/24 192.168.88.0/24
     }
 
-    # Serve content for allowed IPs
     handle @allowed {
         @metrics host metrics.internal
         handle @metrics {
@@ -19,12 +34,9 @@
         }
 
         @grafana host grafana.internal
-        handle @grafana {
-            reverse_proxy grafana:3000
-        }
+        redir @grafana https://grafana.internal{uri}
     }
 
-    # Block everything else
     handle {
         abort
     }

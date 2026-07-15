@@ -27,13 +27,14 @@ ssh "${VM_USER}@${VM_IP}" "sudo mkdir -p ${REMOTE_DIR} && sudo chown ${VM_USER}:
 
 # Sync files
 log "Syncing config files..."
+ssh "${VM_USER}@${VM_IP}" "sudo chown -R ${VM_USER}:${VM_USER} ${REMOTE_DIR}"
 rsync -avz --delete \
   "${SCRIPT_DIR}/docker-compose.yaml" \
   "${SCRIPT_DIR}/.env.example" \
-  "${SCRIPT_DIR}/prometheus/" \
-  "${SCRIPT_DIR}/loki/" \
-  "${SCRIPT_DIR}/grafana/" \
-  "${SCRIPT_DIR}/caddy/" \
+  "${SCRIPT_DIR}/prometheus" \
+  "${SCRIPT_DIR}/loki" \
+  "${SCRIPT_DIR}/grafana" \
+  "${SCRIPT_DIR}/caddy" \
   "${VM_USER}@${VM_IP}:${REMOTE_DIR}/"
 
 # Copy .env if it doesn't exist
@@ -47,7 +48,7 @@ fi
 
 # Start services
 log "Starting services..."
-ssh "${VM_USER}@${VM_IP}" "cd ${REMOTE_DIR} && docker compose up -d"
+ssh "${VM_USER}@${VM_IP}" "cd ${REMOTE_DIR} && sudo docker compose up -d"
 
 # Wait for health
 log "Waiting for services to start..."
@@ -56,7 +57,7 @@ sleep 10
 # Verify
 log "Verifying services..."
 for svc in prometheus loki grafana caddy; do
-  status=$(ssh "${VM_USER}@${VM_IP}" "docker inspect --format='{{.State.Status}}' ${svc}" 2>/dev/null)
+  status=$(ssh "${VM_USER}@${VM_IP}" "sudo docker inspect --format='{{.State.Status}}' ${svc}" 2>/dev/null)
   if [[ "$status" == "running" ]]; then
     log "  ${svc}: running"
   else
@@ -69,7 +70,7 @@ log ""
 log "Services available at:"
 log "  Prometheus: http://metrics.internal"
 log "  Loki:       http://logs.internal"
-log "  Grafana:    http://grafana.internal"
+log "  Grafana:    https://grafana.internal"
 log ""
 log "Next steps:"
 log "  1. Add DNS records to UniFi router:"
@@ -77,3 +78,4 @@ log "     - metrics.internal → ${VM_IP}"
 log "     - logs.internal    → ${VM_IP}"
 log "     - grafana.internal → ${VM_IP}"
 log "  2. Verify from cluster: kubectl run curl-test --rm -it --image=curlimages/curl -- curl http://metrics.internal/-/healthy"
+log "  3. Import Caddy root CA into browser trust store for HTTPS (or accept warning)"; log "     CA at: ${REMOTE_DIR}/caddy-data/pki/authorities/local/root.crt"

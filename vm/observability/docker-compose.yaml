@@ -13,7 +13,7 @@
 
 services:
   prometheus:
-    image: prom/prometheus:v3.4.2
+    image: prom/prometheus:v3.13.1
     container_name: prometheus
     restart: unless-stopped
     command:
@@ -33,7 +33,7 @@ services:
       - "9090"
 
   loki:
-    image: grafana/loki:3.4.2
+    image: grafana/loki:3.7.3
     container_name: loki
     restart: unless-stopped
     command: -config.file=/etc/loki/loki-config.yml
@@ -46,13 +46,13 @@ services:
       - "3100"
 
   grafana:
-    image: grafana/grafana:11.6.0
+    image: grafana/grafana:13.1.0
     container_name: grafana
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-      GF_SERVER_ROOT_URL: "http://grafana.internal"
+      GF_SERVER_ROOT_URL: "https://grafana.internal"
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
@@ -65,11 +65,12 @@ services:
       - "3000"
 
   caddy:
-    image: caddy:2.10.0
+    image: caddy:2.11.4
     container_name: caddy
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
