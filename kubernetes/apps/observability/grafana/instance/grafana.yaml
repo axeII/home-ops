@@ -8,7 +8,9 @@ metadata:
     dashboards: grafana
 spec:
   external:
-    url: http://grafana.internal
+    url: https://grafana.internal
+    tls:
+      insecureSkipVerify: true
     tenantNamespace: observability
     apiKey:
       name: grafana-cloud-credentials
