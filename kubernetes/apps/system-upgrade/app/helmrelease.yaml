@@ -33,12 +33,8 @@ spec:
     monitoring:
       serviceMonitor:
         enabled: true
-        labels:
-          app.kubernetes.io/name: tuppr
       prometheusRule:
         enabled: true
-        labels:
-          app.kubernetes.io/name: tuppr
       dashboards:
         enabled: true
         labels:
