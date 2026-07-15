@@ -23,7 +23,6 @@ spec:
         enabled: true
       metrics:
         enabled: true
-        port: 8081
     webhook:
       enabled: true
     notification:
