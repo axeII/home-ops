@@ -1,0 +1,148 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-cloud
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: alloy
+      version: 1.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    alloy:
+      envFrom:
+        - secretRef:
+            name: grafana-cloud-credentials
+      mounts:
+        varlog: true
+      configMap:
+        create: true
+        content: |
+          // Discover ServiceMonitors and scrape metrics
+          prometheus.operator.servicemonitors "default" {
+            namespaces = []
+            forward_to = [prometheus.remote_write.vm.receiver]
+          }
+
+          prometheus.operator.podmonitors "default" {
+            namespaces = []
+            forward_to = [prometheus.remote_write.vm.receiver]
+          }
+
+          // Blackbox probe targets for NFS health (replaces orphaned VMProbes)
+          discovery.relabel "blackbox_nfs" {
+            targets = [{
+              __address__    = "blackbox-exporter.observability:9115",
+              __param_target = "nas.internal:2049",
+              __param_module = "tcp_connect",
+            }]
+            rule {
+              source_labels = ["__param_target"]
+              target_label  = "instance"
+            }
+          }
+
+          prometheus.scrape "blackbox_nfs" {
+            targets      = discovery.relabel.blackbox_nfs.output
+            job_name     = "blackbox-nfs"
+            metrics_path = "/probe"
+            forward_to   = [prometheus.remote_write.vm.receiver]
+          }
+
+          // Blackbox probe targets for ICMP health (nas, db)
+          discovery.relabel "blackbox_devices" {
+            targets = [
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "nas.internal",
+                __param_module = "icmp",
+              },
+              {
+                __address__    = "blackbox-exporter.observability:9115",
+                __param_target = "db.internal",
+                __param_module = "icmp",
+              },
+            ]
+            rule {
+              source_labels = ["__param_target"]
+              target_label  = "instance"
+            }
+          }
+
+          prometheus.scrape "blackbox_devices" {
+            targets      = discovery.relabel.blackbox_devices.output
+            job_name     = "blackbox-icmp"
+            metrics_path = "/probe"
+            forward_to   = [prometheus.remote_write.vm.receiver]
+          }
+
+          // Remote write to self-hosted Prometheus on VM (no auth, IP-allowlisted)
+          prometheus.remote_write "vm" {
+            endpoint {
+              url = env("PROMETHEUS_URL") + "/api/v1/write"
+            }
+          }
+
+          // Discover log files matching the pod log pattern
+          local.file_match "pods" {
+            path_targets = [
+              {"__path__" = "/var/log/pods/*/*/*.log"},
+            ]
+          }
+
+          // Copy __path__ to a non-internal label so it's available in loki.process
+          discovery.relabel "pods" {
+            targets = local.file_match.pods.targets
+
+            rule {
+              source_labels = ["__path__"]
+              target_label  = "filepath"
+            }
+          }
+
+          // Collect container logs from /var/log/pods
+          loki.source.file "pods" {
+            targets    = discovery.relabel.pods.output
+            forward_to = [loki.process.add_k8s_labels.receiver]
+          }
+
+          // Extract Kubernetes metadata from the log file path
+          loki.process "add_k8s_labels" {
+            stage.static_labels {
+              values = {
+                source = "k8s",
+              }
+            }
+            stage.regex {
+              expression = "^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>.+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/"
+              source     = "filepath"
+            }
+            stage.labels {
+              values = {
+                namespace = "namespace",
+                pod       = "pod",
+                container = "container",
+              }
+            }
+            forward_to = [loki.write.vm.receiver]
+          }
+
+          // Send logs to self-hosted Loki on VM (no auth, IP-allowlisted)
+          loki.write "vm" {
+            endpoint {
+              url = env("LOKI_URL") + "/loki/api/v1/push"
+            }
+          }

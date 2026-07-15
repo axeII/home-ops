@@ -51,7 +51,10 @@ spec:
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
-                  failureThreshold: 3
+                  # High threshold tolerates ~150s of DNS blip (UniFi dnsmasq
+                  # restarts) before Kubernetes kills the pod. The app doesn't
+                  # crash — it just becomes unhealthy when DB DNS fails.
+                  failureThreshold: 15
               readiness: *probes
             resources:
               requests:
@@ -91,6 +94,8 @@ spec:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
           glance/description: "Media request management."
+          gatus.home-operations.com/endpoint: |
+            path: /api/v1/status
         hostnames:
           - requests.juno.moe
         parentRefs:

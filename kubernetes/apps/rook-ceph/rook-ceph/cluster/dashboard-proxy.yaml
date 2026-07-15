@@ -1,0 +1,97 @@
+---
+# Cilium Gateway envoy can't EDS-proxy to hostNetwork pods (rook-ceph-mgr).
+# This proxy uses regular pod networking so the envoy can reach it, then
+# forwards to the mgr dashboard via the mgr-dashboard service.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rook-ceph-dashboard-proxy
+  labels:
+    app.kubernetes.io/name: rook-ceph-dashboard-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rook-ceph-dashboard-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rook-ceph-dashboard-proxy
+    spec:
+      containers:
+        - name: nginx
+          image: docker.io/nginxinc/nginx-unprivileged:stable-alpine
+          ports:
+            - containerPort: 7000
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 7000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: rook-ceph-dashboard-proxy-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rook-ceph-dashboard-proxy-config
+data:
+  default.conf: |
+    server {
+        listen 7000;
+        location / {
+            proxy_pass http://rook-ceph-mgr-dashboard:7000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rook-ceph-dashboard-proxy
+  annotations:
+    glance/description: Rook Ceph Dashboard
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
+    glance/name: Rook Ceph
+    glance/show: "true"
+spec:
+  selector:
+    app.kubernetes.io/name: rook-ceph-dashboard-proxy
+  ports:
+    - port: 7000
+      targetPort: 7000
+      name: http
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rook-ceph-dashboard
+spec:
+  hostnames:
+    - rook.juno.moe
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - name: rook-ceph-dashboard-proxy
+          port: 7000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

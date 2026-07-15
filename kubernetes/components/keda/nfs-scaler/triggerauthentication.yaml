@@ -1,0 +1,14 @@
+---
+# yayamlls-disable-file
+apiVersion: keda.sh/v1alpha1
+kind: ClusterTriggerAuthentication
+metadata:
+  name: keda-prometheus-credentials
+spec:
+  secretTargetRef:
+    - parameter: username
+      name: grafana-cloud-credentials
+      key: GRAFANA_CLOUD_PROMETHEUS_USER
+    - parameter: password
+      name: grafana-cloud-credentials
+      key: GRAFANA_CLOUD_API_TOKEN

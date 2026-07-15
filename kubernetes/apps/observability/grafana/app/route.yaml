@@ -1,0 +1,21 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana
+  annotations:
+    glance/name: grafana.internal
+    glance/show: "true"
+    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
+    glance/description: "Observability and analytics dashboards."
+spec:
+  hostnames:
+    - grafana.internal.juno.moe
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - name: grafana
+          port: 80

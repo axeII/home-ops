@@ -24,9 +24,14 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            # NOTE: cloudflared's image is distroless (no /bin/sh), so a
+            # shell-based retry wrapper is impossible. It isn't needed either:
+            # cloudflared auto-reconnects to the edge on internet loss. The
+            # real cause of restart churn was the liveness probe — see the
+            # tolerant probe settings below.
             image:
               repository: docker.io/cloudflare/cloudflared
-              tag: 2026.6.0
+              tag: 2026.7.1
             env:
               NO_AUTOUPDATE: true
               TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
@@ -34,6 +39,10 @@ spec:
               TUNNEL_ORIGIN_ENABLE_HTTP2: true
               TUNNEL_TRANSPORT_PROTOCOL: quic
               TUNNEL_POST_QUANTUM: true
+              # Number of edge connection retries before cloudflared gives up
+              # on a given attempt (it keeps retrying regardless). Raising it
+              # makes reconnection more persistent during longer outages.
+              TUNNEL_RETRIES: 10
               TUNNEL_ID:
                 valueFrom:
                   secretKeyRef:
@@ -46,18 +55,34 @@ spec:
               - run
               - "$(TUNNEL_ID)"
             probes:
-              liveness: &probes
+              # cloudflared auto-reconnects to the Cloudflare edge on its own
+              # (with backoff) when the internet drops, so a brief outage must
+              # NOT restart the pod. Keep liveness very tolerant (~5 min) so
+              # only a genuinely hung process gets restarted, while readiness
+              # stays responsive to pull the pod from Service endpoints while
+              # the tunnel is disconnected.
+              liveness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /ready
                     port: &port 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 10
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ready
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  timeoutSeconds: 2
                   failureThreshold: 3
-              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

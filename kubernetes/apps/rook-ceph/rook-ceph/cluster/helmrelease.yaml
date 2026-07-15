@@ -17,6 +17,11 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  valuesFrom:
+    - kind: Secret
+      name: grafana-cloud-credentials
+      valuesKey: PROMETHEUS_ENDPOINT
+      targetPath: cephClusterSpec.dashboard.prometheusEndpoint
   values:
     # https://artifacthub.io/packages/helm/rook/rook-ceph-cluster?modal=values
     monitoring:
@@ -34,21 +39,8 @@ spec:
       repository: quay.io/ceph/ceph
       tag: v20.2.2
     operatorNamespace: rook-ceph
-    route:
-      dashboard:
-        annotations:
-          glance/show: "true"
-          glance/name: Rook Ceph
-          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rook.png
-          glance/description: Rook Ceph Dashboard
-        host:
-          name: rook.juno.moe
-          path: /
-          pathType: PathPrefix
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+    # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
+    # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
     cephClusterSpec:
       cephConfig:
         global:
@@ -94,7 +86,6 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://vmsingle-vm.observability.svc.cluster.local:8429
       storage:
         useAllNodes: false
         useAllDevices: false

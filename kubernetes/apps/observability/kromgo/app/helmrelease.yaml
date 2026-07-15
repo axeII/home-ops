@@ -27,22 +27,24 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/kashalls/kromgo
-              tag: v0.10.0@sha256:965ecc92d68dc1a4a969397855367bbc70da03227a941ea607b73bb7e0b78fd6
+              repository: ghcr.io/home-operations/kromgo
+              tag: 0.15.0@sha256:f3c01a0624c95db0f50a65ef901661774da5d2922a3187a2741e7149dee45f2a
             env:
-              HEALTH_HOST: 0.0.0.0
-              HEALTH_PORT: &healthPort 8888
-              PROMETHEUS_URL: http://vmsingle-vm.observability.svc.cluster.local:8428
-              SERVER_HOST: 0.0.0.0
-              SERVER_PORT: &port 8080
+              KROMGO_SERVER_HOST: 0.0.0.0
+              KROMGO_SERVER_PORT: &port 8080
+              KROMGO_PROMETHEUS_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-cloud-credentials
+                    key: KROMGO_PROMETHEUS_URL
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /-/ready
-                    port: *healthPort
+                    path: /readyz
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -82,6 +84,8 @@ spec:
           glance/show: "false"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kubernetes.png
           glance/description: "Kubernetes metrics badge service."
+          gatus.home-operations.com/endpoint: |
+            path: /badges/talos_version
         hostnames:
           - "{{ .Release.Name }}.juno.moe"
         parentRefs:
@@ -97,7 +101,7 @@ spec:
         type: configMap
         name: kromgo-configmap
         globalMounts:
-          - path: /kromgo/config.yaml
+          - path: /config/config.yaml
             subPath: config.yaml
             readOnly: true
     service:
@@ -105,5 +109,3 @@ spec:
         ports:
           http:
             port: *port
-          health:
-            port: *healthPort

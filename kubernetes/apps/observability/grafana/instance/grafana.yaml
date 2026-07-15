@@ -7,70 +7,11 @@ metadata:
   labels:
     dashboards: grafana
 spec:
-  config:
-    analytics:
-      check_for_updates: "false"
-      check_for_plugin_updates: "false"
-      feedback_links_enabled: "false"
-      reporting_enabled: "false"
-    auth:
-      disable_login_form: "false"
-    auth.anonymous:
-      enabled: "true"
-    log:
-      mode: console
-    metrics:
-      enabled: "true"
-    news:
-      news_feed_enabled: "false"
-    plugins:
-      plugin_admin_enabled: "false"
-    security:
-      angular_support_enabled: "true"
-    server:
-      enable_gzip: "true"
-  deployment:
-    spec:
-      strategy:
-        type: Recreate
-      template:
-        spec:
-          containers:
-            - name: grafana
-              env:
-                - name: GF_SECURITY_ADMIN_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: grafana-admin-password-secret
-                      key: GF_SECURITY_ADMIN_PASSWORD
-              securityContext:
-                allowPrivilegeEscalation: false
-                readOnlyRootFilesystem: true
-                capabilities: { drop: ["ALL"] }
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
-          volumes:
-            - name: grafana-data
-              persistentVolumeClaim:
-                claimName: grafana-pvc
-  httpRoute:
-    spec:
-      hostnames:
-        - grafana.juno.moe
-      parentRefs:
-        - name: internal
-          namespace: kube-system
-          sectionName: https
-  persistentVolumeClaim:
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 5Gi
-      storageClassName: ceph-block
-  disableDefaultSecurityContext: All
+  external:
+    url: https://grafana.internal
+    tls:
+      insecureSkipVerify: true
+    tenantNamespace: observability
+    apiKey:
+      name: grafana-cloud-credentials
+      key: GRAFANA_API_TOKEN

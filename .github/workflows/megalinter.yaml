@@ -25,14 +25,12 @@ jobs:
           fetch-depth: 0
 
       - name: MegaLinter
-        uses: megalinter/megalinter@0e3ce9b9c8c10effb9b269509cc47ca17cae31c7 # v9
+        uses: megalinter/megalinter@ef3e84b8b836d76db562d0f3ed7da61e8fd538bc # v9
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'workflow_dispatch' }}
           PRINT_ALPACA: false
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          ENABLE_LINTERS: ACTION_ACTIONLINT, BASH_SHELLCHECK, DOCKERFILE_HADOLINT, ENV_DOTENV_LINTER, GIT_GIT_DIFF, JSON_JSONLINT, KUBERNETES_KUBEVAL, MARKDOWN_MARKDOWNLINT, YAML_YAMLLINT
-          KUBERNETES_DIRECTORY: kubernetes
-          KUBERNETES_KUBEVAL_ARGUMENTS: --ignore-missing-schemas
+          ENABLE_LINTERS: ACTION_ACTIONLINT, BASH_SHELLCHECK, DOCKERFILE_HADOLINT, ENV_DOTENV_LINTER, GIT_GIT_DIFF, JSON_JSONLINT, MARKDOWN_MARKDOWNLINT, YAML_YAMLLINT
           MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .github/linters/.markdownlint.yaml
           YAML_YAMLLINT_CONFIG_FILE: .github/linters/.yamllint.yaml
           SHELLCHECK_OPTS: "-e SC2086"
