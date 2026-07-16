@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - ./service.yaml
   - ./route.yaml
-  - ./endpoints.yaml
-  - ./backendtls.yaml
+  - ./nginx-proxy.yaml
