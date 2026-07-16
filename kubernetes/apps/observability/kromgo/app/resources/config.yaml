@@ -29,8 +29,8 @@ badges:
     colorExpr: 'colorScale(result, [180.0, 360.0], ["green", "orange", "red"])'
 
   - id: kubernetes_version
-    query: kubernetes_build_info
-    valueExpr: 'labels[?"git_version"].orValue("unknown")'
+    query: kube_node_info
+    valueExpr: 'labels[?"kubelet_version"].orValue("unknown")'
 
   - id: talos_version
     query: node_os_info{name="Talos"}
