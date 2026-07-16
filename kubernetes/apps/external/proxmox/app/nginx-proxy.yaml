@@ -33,11 +33,6 @@ kind: Deployment
 metadata:
   name: proxmox-nginx
   namespace: external
-  annotations:
-    glance/show: "true"
-    glance/name: Proxmox
-    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png
-    glance/description: "Virtualization and container management."
   labels:
     app.kubernetes.io/name: proxmox-nginx
     app.kubernetes.io/instance: proxmox-nginx
