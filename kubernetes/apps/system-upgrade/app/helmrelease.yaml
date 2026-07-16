@@ -26,9 +26,7 @@ spec:
     webhook:
       enabled: true
     notification:
-      enabled: true
-      secretName: tuppr-notification
-      secretKey: url
+      enabled: false
     monitoring:
       serviceMonitor:
         enabled: true

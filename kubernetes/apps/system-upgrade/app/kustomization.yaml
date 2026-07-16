@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - ./repository.yaml
   - ./helmrelease.yaml
-  - ./externalsecret.yaml
