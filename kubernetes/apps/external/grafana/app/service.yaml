@@ -9,9 +9,7 @@ metadata:
     app.kubernetes.io/instance: *app
 spec:
   type: ClusterIP
-  selector:
-    app.kubernetes.io/name: grafana-nginx
   ports:
     - port: 443
       protocol: TCP
-      targetPort: 8080
+      targetPort: 443
