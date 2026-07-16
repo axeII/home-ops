@@ -33,11 +33,6 @@ kind: Deployment
 metadata:
   name: truenas-nginx
   namespace: external
-  annotations:
-    glance/show: "true"
-    glance/name: TrueNAS
-    glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
-    glance/description: "Network-attached storage management."
   labels:
     app.kubernetes.io/name: truenas-nginx
     app.kubernetes.io/instance: truenas-nginx

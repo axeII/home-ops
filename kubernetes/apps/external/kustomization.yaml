@@ -6,5 +6,6 @@ namespace: external
 components:
   - ../../components/common
 resources:
+  - ./grafana/ks.yaml
   - ./truenas/ks.yaml
   - ./proxmox/ks.yaml
