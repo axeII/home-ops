@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./repository.yaml
   - ./helmrelease.yaml
-  - ./ceph-secrets.yaml
+  - ./ceph-secrets.sops.yaml
