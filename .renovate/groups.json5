@@ -25,20 +25,18 @@
       minimumGroupSize: 2,
     },
     {
-      description: "Kubernetes Group",
-      groupName: "kubernetes",
+      description: "Talos Group",
+      groupName: "talos",
       matchDatasources: ["docker"],
       matchPackageNames: [
-        "/kube-apiserver/",
-        "/kube-controller-manager/",
-        "/kube-proxy/",
-        "/kube-scheduler/",
+        "/installer/",
         "/kubelet/",
+        "/talosctl/",
       ],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 5,
+      minimumGroupSize: 2,
     },
     {
       description: "Cert-Manager Group",
@@ -114,16 +112,7 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
     },
-    {
-      description: "Talos Group",
-      groupName: "talos",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/installer/", "/talosctl/"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group",
-      },
-      minimumGroupSize: 2,
-    },
+
     {
       description: "Dragonfly Group",
       groupName: "dragonfly",
