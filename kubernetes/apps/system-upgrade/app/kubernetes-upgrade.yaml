@@ -9,7 +9,7 @@ spec:
     version: v1.35.0
   maintenance:
     windows:
-      - start: "15 23 * * *"
+      - start: "0 2 * * 0"
         duration: "4h"
         timezone: "Europe/Paris"
   healthChecks:
