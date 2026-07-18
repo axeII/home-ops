@@ -17,7 +17,7 @@ spec:
   parallelism: 1
   maintenance:
     windows:
-      - start: "0 2 * * 0"
+      - start: "15 23 * * *"
         duration: "4h"
         timezone: "Europe/Paris"
   healthChecks:
