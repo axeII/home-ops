@@ -1,7 +1,7 @@
 # Caddy reverse proxy for observability stack
 # IP-allowlisted to home LAN
 
-grafana.internal, grafana.juno.moe {
+grafana.internal {
     tls internal
 
     @allowed {
@@ -34,7 +34,9 @@ grafana.internal, grafana.juno.moe {
         }
 
         @grafana host grafana.internal grafana.juno.moe
-        redir @grafana https://{host}{uri}
+        handle @grafana {
+            reverse_proxy grafana:3000
+        }
     }
 
     handle {
