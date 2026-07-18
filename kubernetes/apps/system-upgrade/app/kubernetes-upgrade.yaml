@@ -6,7 +6,7 @@ metadata:
 spec:
   kubernetes:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-    version: v1.35.0
+    version: v1.36.2
   maintenance:
     windows:
       - start: "0 2 * * 0"
