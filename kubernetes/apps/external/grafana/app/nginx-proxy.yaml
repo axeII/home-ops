@@ -45,6 +45,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: grafana-nginx
+      annotations:
+        reloader.stakater.com/auto: "true"
     spec:
       containers:
         - name: nginx
