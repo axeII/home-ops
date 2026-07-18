@@ -33,14 +33,7 @@ spec:
       prometheusRule:
         enabled: true
       dashboards:
-        enabled: true
-        labels:
-          grafana.integreatly.org/grafana: observability
-        grafanaOperator:
-          enabled: true
-          allowCrossNamespaceImport: true
-          matchLabels:
-            dashboards: grafana
+        enabled: false
     resources:
       requests:
         cpu: 50m
