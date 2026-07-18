@@ -29,3 +29,56 @@ spec:
       name: rook-ceph
       namespace: rook-ceph
       expr: status.ceph.health in ["HEALTH_OK"]
+  hooks:
+    pre:
+      - name: ceph-set-noout
+        image: docker.io/rook/ceph:v1.20.2
+        command:
+          - sh
+          - -c
+        args:
+          - >-
+            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
+            > /tmp/ceph.conf &&
+            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd set noout
+        env:
+          - name: CEPH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rook-ceph-mon
+                key: ceph-secret
+        volumeMounts:
+          - name: ceph-config
+            mountPath: /etc/ceph
+        volumes:
+          - name: ceph-config
+            secret:
+              secretName: rook-ceph-config
+    post:
+      - name: ceph-unset-noout
+        image: docker.io/rook/ceph:v1.20.2
+        command:
+          - sh
+          - -c
+        args:
+          - >-
+            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
+            > /tmp/ceph.conf &&
+            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd unset noout
+        env:
+          - name: CEPH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rook-ceph-mon
+                key: ceph-secret
+        volumeMounts:
+          - name: ceph-config
+            mountPath: /etc/ceph
+        volumes:
+          - name: ceph-config
+            secret:
+              secretName: rook-ceph-config
