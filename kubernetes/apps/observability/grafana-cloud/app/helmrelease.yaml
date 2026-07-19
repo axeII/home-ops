@@ -28,6 +28,12 @@ spec:
             name: grafana-cloud-credentials
       mounts:
         varlog: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          memory: 1Gi
       configMap:
         create: true
         content: |
