@@ -88,9 +88,10 @@ Required WAF rules for the `juno.moe` zone (effective only when DNS records are 
 
 ## Observability
 
-- Metrics and logs are shipped to **Grafana Cloud** via Alloy (in `observability` namespace).
-- `kubernetes/apps/observability/grafana-cloud/` — Alloy deployment with River config.
-- `kubernetes/apps/observability/kromgo/` — README badges, queries Grafana Cloud Prometheus API.
+- Metrics and logs ship to **self-hosted VM** (`metrics.internal`, `logs.internal`) via Alloy (in `observability` namespace).
+- `kubernetes/apps/observability/grafana-cloud/` — Alloy deployment with River config (remote-writes to VM Prometheus/Loki).
+- `kubernetes/apps/observability/kromgo/` — README badges, queries VM Prometheus API.
 - `kubernetes/apps/observability/gatus/` — HTTP health checks, independent of metrics backend.
-- Exporters (node-exporter, kube-state-metrics, etc.) still run locally, scraped by Alloy.
-- To set up Grafana Cloud: create account at grafana.com, create a stack, store credentials in 1Password as `grafana-cloud` item with keys: `GRAFANA_CLOUD_PROMETHEUS_URL`, `GRAFANA_CLOUD_PROMETHEUS_USER`, `GRAFANA_CLOUD_LOKI_URL`, `GRAFANA_CLOUD_LOKI_USER`, `GRAFANA_CLOUD_API_TOKEN`.
+- `kubernetes/apps/observability/grafana/instance/` — Self-hosted Grafana instance managed by grafana-operator (ingress at grafana.internal).
+- Exporters (node-exporter, kube-state-metrics, smartctl-exporter, etc.) run locally, scraped by Alloy via ServiceMonitors.
+- Credentials stored in 1Password as `observability-vm` (Prometheus URL/user, Loki URL/user, API token).
