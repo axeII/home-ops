@@ -3,6 +3,10 @@ global:
   scrape_interval: 30s
   evaluation_interval: 30s
 
+storage:
+  tsdb:
+    out_of_order_time_window: 5m
+
 # Receive metrics via remote_write from Alloy in the cluster
 remote_write: []
 
