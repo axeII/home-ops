@@ -21,7 +21,6 @@ services:
       - --storage.tsdb.path=/prometheus
       - --storage.tsdb.retention.time=14d
       - --storage.tsdb.retention.size=10GB
-      - --storage.tsdb.out-of-order.time-window=5m
       - --web.enable-remote-write-receiver
       - --web.enable-lifecycle
       - --web.enable-admin-api
