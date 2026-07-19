@@ -93,10 +93,10 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 - labelSelector:
                     matchExpressions:
-                      - key: app.kubernetes.io/name
+                      - key: app.kubernetes.io/controller
                         operator: In
                         values:
-                          - *app
+                          - karakeep
                   topologyKey: kubernetes.io/hostname
         containers:
           app:
