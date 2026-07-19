@@ -80,6 +80,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 256Mi
               limits:
                 memory: 3Gi
 
@@ -89,16 +90,14 @@ spec:
         pod:
           affinity:
             podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 100
-                  podAffinityTerm:
-                    labelSelector:
-                      matchExpressions:
-                        - key: app.kubernetes.io/name
-                          operator: In
-                          values:
-                            - *app
-                    topologyKey: kubernetes.io/hostname
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values:
+                          - *app
+                  topologyKey: kubernetes.io/hostname
         containers:
           app:
             image:
