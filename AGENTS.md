@@ -95,3 +95,25 @@ Required WAF rules for the `juno.moe` zone (effective only when DNS records are 
 - `kubernetes/apps/observability/grafana/instance/` — Self-hosted Grafana instance managed by grafana-operator (ingress at grafana.internal).
 - Exporters (node-exporter, kube-state-metrics, smartctl-exporter, etc.) run locally, scraped by Alloy via ServiceMonitors.
 - Credentials stored in 1Password as `observability-vm` (Prometheus URL/user, Loki URL/user, API token).
+
+## opencode agents and skills
+
+This project has opencode agents and skills configured in `.opencode/` to speed up common tasks.
+
+### Agents (`.opencode/agent/`)
+
+- **cloudflare** — Cloudflare API ops for `juno.moe` zone: DNS, WAF rules, tunnel, Workers. Uses the globally installed Cloudflare MCP servers (cloudflare_docs, cloudflare_search, cloudflare_execute).
+- **gitops** — Flux/Kustomize manifest work: repo layout, validation pipeline, konflate PR review, SOPS rules.
+- **talos** — Talos Linux node operations: talosctl, patch regen, tuppr upgrades, OOM diagnostics.
+
+### Skills (`.opencode/skills/`)
+
+- **cloudflare** — How to use the Cloudflare MCP tools with zone specifics (WAF table, tunnel, DNS).
+- **flux-validate** — The five-step validation pipeline in order with common failures and fixes.
+- **sops-secrets** — SOPS/Age encryption workflow for creating and verifying `*.sops.yaml` files.
+
+### Commands (`.opencode/command/`)
+
+- `/validate` — Run the full validation chain (`just configure` → `just validate` → `just flate-test` → `find_mistakes.py` → `pre-commit`).
+
+**Restart opencode after changing any file in `.opencode/`** — config is loaded at startup only.

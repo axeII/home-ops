@@ -1,0 +1,175 @@
+---
+name: "PR Classify"
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  classify:
+    name: Classify PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+
+      - name: Classify and Label PRs
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          # ── Config ────────────────────────────────────────────
+          BOT_APP="bot-akira"
+          MANUAL_TITLE_REGEX="ceph|cilium|flux|dragonfly"
+
+          echo "=============================="
+          echo " PR Classification Run"
+          echo " Date:  $(date -u -R)"
+          echo "=============================="
+
+          labeled_prs=0
+          skipped_hold=0
+
+          echo ""
+          echo "=== Fetching open bot PRs ==="
+
+          while IFS=$'\t' read -r number branch title labels_str; do
+            echo ""
+            echo "---"
+            echo "PR #${number}: ${title}"
+            echo "  Labels: ${labels_str}"
+
+            # Skip hold / do not merge
+            if [[ ",${labels_str}," == *",hold,"* ]] || [[ ",${labels_str}," == *",do not merge,"* ]]; then
+              echo "  → SKIP (blocked: hold/do not merge)"
+              ((skipped_hold++)) || true
+              continue
+            fi
+
+            # ── Classify ──────────────────────────────────────────
+            is_manual=false
+            is_critical=false
+
+            # risk/critical by title or branch
+            if echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; then
+              echo "  → risk/critical (critical infra pattern)"
+              is_manual=true
+              is_critical=true
+            fi
+
+            # area/talos label
+            if [[ ",${labels_str}," == *",area/talos,"* ]]; then
+              echo "  → risk/critical (area/talos)"
+              is_manual=true
+              is_critical=true
+            fi
+
+            # Classify by type labels if not yet decided
+            if [ "${is_manual}" = "false" ]; then
+              case ",${labels_str}," in
+                *",type/patch,"*|*",type/digest,"*)
+                  echo "  → type: patch/digest → auto-merge"
+                  ;;
+                *",type/minor,"*)
+                  echo "  → type: minor → auto-merge"
+                  ;;
+                *",type/major,"*)
+                  if [[ ",${labels_str}," == *",renovate/github-action,"* ]]; then
+                    echo "  → type: action-major → auto-merge"
+                  else
+                    echo "  → type: other-major → needs-review"
+                    is_manual=true
+                  fi
+                  ;;
+                *)
+                  echo "  → type: unknown → needs-review"
+                  is_manual=true
+                  ;;
+              esac
+            fi
+
+            # ── Determine desired labels ──────────────────────────
+            wants_auto=false
+            wants_review=false
+            wants_critical=false
+
+            if [ "${is_manual}" = "false" ]; then
+              wants_auto=true
+            else
+              wants_review=true
+            fi
+
+            if [ "${is_critical}" = "true" ]; then
+              wants_critical=true
+            fi
+
+            # ── Check current labels ──────────────────────────────
+            has_auto=false; has_review=false; has_critical=false
+            [[ ",${labels_str}," == *",auto-merge,"* ]] && has_auto=true
+            [[ ",${labels_str}," == *",needs-review,"* ]] && has_review=true
+            [[ ",${labels_str}," == *",risk/critical,"* ]] && has_critical=true
+
+            add_labels=""
+            remove_labels=""
+
+            if [ "${wants_auto}" = "true" ] && [ "${has_auto}" = "false" ]; then
+              add_labels="${add_labels}auto-merge,"
+            elif [ "${wants_auto}" = "false" ] && [ "${has_auto}" = "true" ]; then
+              remove_labels="${remove_labels}auto-merge,"
+            fi
+
+            if [ "${wants_review}" = "true" ] && [ "${has_review}" = "false" ]; then
+              add_labels="${add_labels}needs-review,"
+            elif [ "${wants_review}" = "false" ] && [ "${has_review}" = "true" ]; then
+              remove_labels="${remove_labels}needs-review,"
+            fi
+
+            if [ "${wants_critical}" = "true" ] && [ "${has_critical}" = "false" ]; then
+              add_labels="${add_labels}risk/critical,"
+            elif [ "${wants_critical}" = "false" ] && [ "${has_critical}" = "true" ]; then
+              remove_labels="${remove_labels}risk/critical,"
+            fi
+
+            add_labels="${add_labels%,}"
+            remove_labels="${remove_labels%,}"
+
+            # ── Apply ─────────────────────────────────────────────
+            if [ -n "${add_labels}" ] || [ -n "${remove_labels}" ]; then
+              echo "  → Updating:"
+              [ -n "${add_labels}" ] && echo "    Add: ${add_labels}"
+              [ -n "${remove_labels}" ] && echo "    Remove: ${remove_labels}"
+
+              [ -n "${add_labels}" ] && gh pr edit "${number}" --add-label "${add_labels}" 2>&1 || echo "    FAILED to add labels"
+              [ -n "${remove_labels}" ] && gh pr edit "${number}" --remove-label "${remove_labels}" 2>&1 || echo "    FAILED to remove labels"
+
+              ((labeled_prs++)) || true
+            else
+              echo "  → Labels correct, no change"
+            fi
+
+          done < <(
+            gh pr list \
+              --app "${BOT_APP}" \
+              --state open \
+              --json number,headRefName,title,labels \
+              --jq '[.[] | {number, headRefName, title, labels: [.labels[].name]}]' |
+            jq -r '.[] | [.number, .headRefName, .title, (.labels | join(","))] | @tsv'
+          )
+
+          echo ""
+          echo "=============================="
+          echo " Summary"
+          echo " Updated:  ${labeled_prs}"
+          echo " Skipped:  ${skipped_hold}"
+          echo "=============================="

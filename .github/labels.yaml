@@ -32,6 +32,11 @@
 - { name: "broken", color: "ee0701" }
 # Status
 - { name: "status/priority", color: "519fd0" }
+# Merge Action
+- { name: "auto-merge", color: "0e8a16" }
+- { name: "needs-review", color: "ff9800" }
+# Risk
+- { name: "risk/critical", color: "ee0701" }
 # Community
 - { name: "documentation", color: "0075ca" }
 - { name: "good first issue", color: "7057ff" }
