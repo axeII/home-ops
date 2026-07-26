@@ -62,7 +62,7 @@ jobs:
           # Matches rook-ceph chart/operator PRs *and* standalone quay.io/ceph/ceph
           # image PRs (separate Renovate package, not part of the rook-ceph group).
           # Also matches flux and dragonfly — all three are manual-only.
-          MANUAL_TITLE_REGEX="ceph|flux|dragonfly"
+          MANUAL_TITLE_REGEX="ceph|cilium|flux|dragonfly"
 
           merged=0
           skipped_manual=()
