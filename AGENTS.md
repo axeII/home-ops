@@ -2,6 +2,21 @@
 
 Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and SOPS/Age encryption.
 
+## Project model
+
+opencode/AI works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
+
+- AI **does**: write code, run validation, create commits via `but`, open PRs via `but pr new`, check konflate blast radius, report cautions.
+- AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run `but pr auto-merge` or `but merge` without explicit human approval.
+- Every change goes through `pre-commit` and the full validation pipeline before a PR is opened.
+- The PR description must summarize what changed and why so the human reviewer can assess it efficiently.
+
+### When to create PRs
+
+- **Task complete**: when a discrete set of related, validated changes is done — commit, push, and open a PR.
+- **Session end**: if there are uncommitted changes that pass validation, commit and open a PR before ending the session. Every session leaves a clean working tree or a ready-to-review PR.
+- **One concern per PR**: separate unrelated changes into their own PRs so each can be reviewed and merged independently.
+
 ## Project layout
 
 - `kubernetes/apps/` — App manifests organized by namespace (e.g. `observability/`, `media/`, `default/`).
@@ -13,7 +28,7 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 
 ## Validation
 
-- **BEFORE** asking the user to commit, ALWAYS run `pre-commit run --all-files` and fix any errors first. The commit must pass all pre-commit checks.
+- **BEFORE** committing, ALWAYS run `pre-commit run --all-files` and fix any errors first. The commit must pass all pre-commit checks.
 - Run `just configure` to render templates, check secrets, and validate manifests.
 - Run `just validate` to validate YAML schemas on source files via yayamlls.
 - Run `just flate-test` to verify all Flux resources render successfully with flate.
@@ -36,6 +51,37 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 - NEVER commit unencrypted secrets. All secrets use SOPS with Age encryption.
 - Secret files are named `*.sops.yaml`. The `age.key` must never be committed.
 - Ask the user to handle encryption, or use `just configure` to auto-encrypt.
+
+## Commits and PRs
+
+Use GitButler CLI (`but`) for all version control. Delegate VCS to the gitbutler skill for command detail. Never use `git add`, `git commit`, `git push`, or `gh pr create` for write operations. Never force-push, never skip hooks.
+
+### Before committing
+
+1. Always run `pre-commit run --all-files` and fix any errors.
+2. Run the full validation pipeline if Kubernetes manifests changed:
+   - `just configure` → `just validate` → `just flate-test` → `python3 scripts/find_mistakes.py`
+3. Inspect the diff: `but diff` (selected dirty files/hunks), `but status` (commit/branch layout).
+
+### Making commits
+
+- Use `but commit <branch> -c -m "<msg>" --changes <ids>` to create a branch and commit in one step.
+- Use file/hunk IDs from `but diff` — never stage blindly.
+- Write concise, imperative-mood commit messages matching the existing repo style.
+
+### Creating PRs
+
+- Use `but pr new <branch-id> -m $'Title\n\nBody'` — it pushes the branch and creates the PR in one step (do not run `but push` first).
+- The PR body must summarize what changed, why, and note any risks or cautions found.
+- Present the PR URL to the human maintainer for review.
+
+### Review flow
+
+- After pushing, check konflate for blast radius: `konflate_list_pull_requests` → `konflate_get_pr_summary(<number>)`.
+- Address any konflate cautions (data-loss, immutable-field, RBAC) before requesting review.
+- Wait for CI (flate, yayamlls) to pass.
+- Report the konflate summary and any cautions in the PR description so the human reviewer can assess risk.
+- **Never merge your own PRs.** The human maintainer reviews and merges approved PRs.
 
 ## Useful commands
 

@@ -9,6 +9,28 @@ author: GitButler Team
 
 Use GitButler CLI (`but`) as the default version-control interface.
 
+## Project workflow
+
+This skill is used inside the home-ops repo, which runs a **medior/senior model**:
+
+- **You (the AI) are the medior developer.** You implement, validate, commit, and open PRs.
+- **The human maintainer is the senior.** They review and merge approved PRs.
+
+### Default flow for every completed task
+
+1. Run the validation pipeline (see AGENTS.md "Validation" and "Commits and PRs").
+2. `but diff` — identify files/hunks to commit.
+3. `but commit <branch> -c -m "<msg>" --changes <ids>` — create branch + commit.
+4. `but pr new <branch-id> -m $'Title\n\nBody'` — push + create PR.
+5. Present the PR URL to the human maintainer for review. **Do not merge.**
+
+### Guardrails
+
+- **NEVER run `but pr auto-merge` or `but merge` unless the human explicitly says to merge.**
+- Never leave uncommitted work at session end — commit and open a PR.
+- One concern per PR: separate unrelated changes into their own branches.
+- Use `but` for ALL write operations. Never `git add` / `git commit` / `git push` / `gh pr create`.
+
 ## Start Here
 
 Choose the first command by task:

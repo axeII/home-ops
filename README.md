@@ -47,9 +47,9 @@ A production-grade Kubernetes homelab running real services — fully managed as
 
 It is also a reference for anyone curious about running Kubernetes at home. Whether you want to borrow a single app configuration or bootstrap your own cluster from scratch, everything you need is here.
 
-## 📊 Cluster at a glance
+## ⛵ Kubernetes Cluster at a glance
 
-Three [Talos Linux](https://www.talos.dev) control-plane nodes — a minimal, immutable, API-driven Kubernetes distribution — running on Proxmox with [Rook-Ceph](https://rook.io) for distributed storage.
+My setup is a three [Talos Linux](https://www.talos.dev) control-plane nodes — a minimal, immutable, API-driven Kubernetes distribution — running on Proxmox with [Rook-Ceph](https://rook.io) for distributed storage.
 
 | Area | What's running |
 | --- | --- |
