@@ -46,8 +46,6 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 Here, I perform DevOps best practices at home. I adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions). My cluster runs on three control-plane Talos nodes virtualized on Proxmox with Rook-Ceph for distributed storage.
 
-![Alt](https://repobeats.axiom.co/api/embed/ac9d545da659ac0aa72d1a74c05aa89fed08418b.svg "Repobeats analytics image")
-
 ## ⛵ Kubernetes
 
 My Kubernetes cluster runs [Talos Linux](https://www.talos.dev) on three control-plane nodes. Two are deployed bare metal and one is deployed as Proxmox VM. Talos is a fantastic lightweight Kubernetes distribution that provides a minimal, hardened, and API-driven OS — I highly recommend it to anyone seeking a secure and reproducible Kubernetes setup.
