@@ -6,8 +6,8 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 
 opencode/AI works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
 
-- AI **does**: write code, run validation, create commits via `but`, open PRs via `but pr new`, check konflate blast radius, report cautions.
-- AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run `but pr auto-merge` or `but merge` without explicit human approval.
+- AI **does**: write code, run validation, create commits via `but`, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
+- AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge without explicit human approval.
 - Every change goes through `pre-commit` and the full validation pipeline before a PR is opened.
 - The PR description must summarize what changed and why so the human reviewer can assess it efficiently.
 
@@ -54,7 +54,7 @@ opencode/AI works as the **medior developer** — it implements changes, validat
 
 ## Commits and PRs
 
-Use GitButler CLI (`but`) for all version control. Delegate VCS to the gitbutler skill for command detail. Never use `git add`, `git commit`, `git push`, or `gh pr create` for write operations. Never force-push, never skip hooks.
+Use GitButler CLI (`but`) for all version control writes (commits, branches, pushes). Delegate VCS to the gitbutler skill for command detail. Use GitHub MCP tools (`github_create_pull_request`, `github_issue_write`, etc.) for all GitHub API operations. Never use `git add`, `git commit`, `git push`, or `gh pr create` for write operations. Never force-push, never skip hooks.
 
 ### Before committing
 
@@ -71,9 +71,10 @@ Use GitButler CLI (`but`) for all version control. Delegate VCS to the gitbutler
 
 ### Creating PRs
 
-- Use `but pr new <branch-id> -m $'Title\n\nBody'` — it pushes the branch and creates the PR in one step (do not run `but push` first).
-- The PR body must summarize what changed, why, and note any risks or cautions found.
-- Present the PR URL to the human maintainer for review.
+1. Push the branch with `but push <branch-name>`.
+2. Create the PR via MCP: `github_create_pull_request` with title, body (`head` branch, `base: "main"`, `owner: "axeII"`, `repo: "home-ops"`).
+3. The PR body must summarize what changed, why, and note any risks or cautions found.
+4. Present the PR URL to the human maintainer for review.
 
 ### Review flow
 
@@ -82,6 +83,17 @@ Use GitButler CLI (`but`) for all version control. Delegate VCS to the gitbutler
 - Wait for CI (flate, yayamlls) to pass.
 - Report the konflate summary and any cautions in the PR description so the human reviewer can assess risk.
 - **Never merge your own PRs.** The human maintainer reviews and merges approved PRs.
+
+### Creating issues
+
+For bugs, tech debt, or tasks outside a PR workflow, create a GitHub issue. The GitHub MCP server (`github` tool prefix) is configured in `.opencode/opencode.json` — use its structured tools for issue operations.
+
+- `github_issue_write` with `method: "create"` — Create a new issue with title, body, labels, assignees.
+- `github_search_issues` / `github_list_issues` — Find existing issues.
+- The body must document: what the issue is, why it exists, what's needed to fix it, and any resources/state gathered during investigation.
+- Keep issues scoped to one concern. Reference related PRs/issues by number.
+
+Fallback: `gh issue create` is also permitted if MCP tools are unavailable.
 
 ## Useful commands
 

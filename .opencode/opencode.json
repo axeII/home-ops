@@ -1,6 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "small_model": "opencode/deepseek-v4-flash-free",
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    }
+  },
   "permission": {
     "bash": {
       "*": "ask",
@@ -18,7 +29,21 @@
       "flux get*": "allow",
       "git status*": "allow",
       "git diff*": "allow",
-      "git log*": "allow"
+      "git log*": "allow",
+      "but diff*": "allow",
+      "but status*": "allow",
+      "but commit*": "allow",
+      "but push*": "allow",
+      "but show*": "allow",
+      "but pull*": "allow",
+      "but branch*": "allow",
+      "but amend*": "allow",
+      "but undo*": "allow",
+      "but move*": "allow",
+      "but squash*": "allow",
+      "but uncommit*": "allow",
+      "gh issue*": "allow",
+      "gh api*": "allow"
     }
   }
 }

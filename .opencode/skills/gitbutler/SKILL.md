@@ -21,15 +21,16 @@ This skill is used inside the home-ops repo, which runs a **medior/senior model*
 1. Run the validation pipeline (see AGENTS.md "Validation" and "Commits and PRs").
 2. `but diff` — identify files/hunks to commit.
 3. `but commit <branch> -c -m "<msg>" --changes <ids>` — create branch + commit.
-4. `but pr new <branch-id> -m $'Title\n\nBody'` — push + create PR.
-5. Present the PR URL to the human maintainer for review. **Do not merge.**
+4. `but push <branch-name>` — push the branch.
+5. `github_create_pull_request` via MCP — create PR with title, body, head/base.
+6. Present the PR URL to the human maintainer for review. **Do not merge.**
 
 ### Guardrails
 
-- **NEVER run `but pr auto-merge` or `but merge` unless the human explicitly says to merge.**
+- **Never merge your own PRs.**
 - Never leave uncommitted work at session end — commit and open a PR.
 - One concern per PR: separate unrelated changes into their own branches.
-- Use `but` for ALL write operations. Never `git add` / `git commit` / `git push` / `gh pr create`.
+- Use `but` for VCS write operations. Use GitHub MCP tools for PR/issue API calls. Never `git add` / `git commit` / `git push` / `gh pr create`.
 
 ## Start Here
 
@@ -160,9 +161,9 @@ To make one existing branch depend on another: `but move <child-branch> <parent-
 
 ### Create or manage pull requests
 
-`but pr new <branch-id>` pushes the branch and creates the PR in one step — no prior `but push`. Provide `-F pr_message.txt`, `-t`, or `-m` with real newlines (zsh/bash: `-m $'Title\n\nBody'`) so no editor opens. If forge auth is missing, run `but config forge auth`.
+Push the branch with `but push <branch-name>`, then use `github_create_pull_request` via MCP to create the PR. The MCP tool handles the API call — no forge auth needed.
 
-For stacked branches `but pr` is mandatory (it sets PR bases and stack metadata; `gh pr create` breaks that). To publish a whole stack: `but pr new <top-branch-id> -t`. Manage with `but pr auto-merge|set-draft|set-ready <selector>`. See `references/reference.md` for details.
+For stacked branches push each branch with `but push <branch-name>`, then create one PR from the top branch via MCP using the correct head branch. Do not use `but pr` as it relies on forge auth which may not be configured.
 
 ### Dependency conflict with another branch
 
