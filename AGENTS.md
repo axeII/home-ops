@@ -72,7 +72,7 @@ Use GitButler CLI (`but`) for all version control writes (commits, branches, pus
 ### Creating PRs
 
 1. Push the branch with `but push <branch-name>`.
-2. Create the PR via MCP: `github_create_pull_request` with title, body (`head` branch, `base: "main"`, `owner: "akira"`, `repo: "home-ops"`).
+2. Create the PR via MCP: `github_create_pull_request` with title, body (`head` branch, `base: "main"`, `owner: "axeII"`, `repo: "home-ops"`).
 3. The PR body must summarize what changed, why, and note any risks or cautions found.
 4. Present the PR URL to the human maintainer for review.
 
