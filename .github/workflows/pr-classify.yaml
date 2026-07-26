@@ -22,6 +22,11 @@ jobs:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
       - name: Classify and Label PRs
         shell: bash
         env:
@@ -147,11 +152,20 @@ jobs:
             # ── Apply ─────────────────────────────────────────────
             if [ -n "${add_labels}" ] || [ -n "${remove_labels}" ]; then
               echo "  → Updating:"
-              [ -n "${add_labels}" ] && echo "    Add: ${add_labels}"
-              [ -n "${remove_labels}" ] && echo "    Remove: ${remove_labels}"
 
-              [ -n "${add_labels}" ] && gh pr edit "${number}" --add-label "${add_labels}" 2>&1 || echo "    FAILED to add labels"
-              [ -n "${remove_labels}" ] && gh pr edit "${number}" --remove-label "${remove_labels}" 2>&1 || echo "    FAILED to remove labels"
+              if [ -n "${add_labels}" ]; then
+                echo "    Add: ${add_labels}"
+                if ! gh pr edit "${number}" --add-label "${add_labels}" 2>&1; then
+                  echo "    FAILED to add labels"
+                fi
+              fi
+
+              if [ -n "${remove_labels}" ]; then
+                echo "    Remove: ${remove_labels}"
+                if ! gh pr edit "${number}" --remove-label "${remove_labels}" 2>&1; then
+                  echo "    FAILED to remove labels"
+                fi
+              fi
 
               ((labeled_prs++)) || true
             else
