@@ -22,7 +22,7 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 <div align="center">
 
-[![Home-Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fd7bbc17d-0348-4fbf-9db6-946c4b7d5bf0.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://github.com/axeII/home-ops/blob/main/README.md#file_cabinet-hardware)&nbsp;&nbsp;
+[![Home-Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fhealthchecks.io%2Fb%2F2%2Fd7bbc17d-0348-4fbf-9db6-946c4b7d5bf0.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://github.com/axeII/home-ops/blob/main/README.md#-hardware)&nbsp;&nbsp;
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=for-the-badge)](https://github.com/pre-commit/pre-commit)&nbsp;&nbsp;
 [![Alertmanager](https://img.shields.io/badge/Alertmanager-on-brightgreen?style=for-the-badge&logo=prometheus&logoColor=white)](https://grafana.com/cloud)
 
@@ -35,87 +35,34 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 [![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_node_count%3Fformat%3Dshields&style=flat-square&label=Nodes)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
 [![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_pod_count%3Fformat%3Dshields&style=flat-square&label=Pods)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
 [![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_cpu_usage%3Fformat%3Dshields&style=flat-square&label=CPU)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
-[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_memory_usage%3Fformat%3Dshields&style=flat-square&label=Memory)](https://github.com/kashalls/kromgo)&nbsp;&nbsp;
-<!--[![Power-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_power_usage%3Fformat%3Dshields&style=flat-square&label=Power)](https://github.com/kashalls/kromgo)-->
+[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.juno.moe%2Fbadges%2Fcluster_memory_usage%3Fformat%3Dshields&style=flat-square&label=Memory)](https://github.com/kashalls/kromgo)
 
 </div>
 
 ---
 
-## 📖 Overview
+## 🤔 What is this?
 
-Here, I perform DevOps best practices at home. I adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Kubernetes](https://github.com/kubernetes/kubernetes), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions). My cluster runs on three control-plane Talos nodes virtualized on Proxmox with Rook-Ceph for distributed storage.
+A production-grade Kubernetes homelab running real services — fully managed as code, fully automated, and fully in the open. This repository is the single source of truth for the cluster: every deployment, every network policy, and every secret lives here. Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline lands safe changes without human toil. The cluster reconciles itself through Flux.
 
-## ⛵ Kubernetes
+It is also a reference for anyone curious about running Kubernetes at home. Whether you want to borrow a single app configuration or bootstrap your own cluster from scratch, everything you need is here.
 
-My Kubernetes cluster runs [Talos Linux](https://www.talos.dev) on three control-plane nodes. Two are deployed bare metal and one is deployed as Proxmox VM. Talos is a fantastic lightweight Kubernetes distribution that provides a minimal, hardened, and API-driven OS — I highly recommend it to anyone seeking a secure and reproducible Kubernetes setup.
+## ⛵ Kubernetes Cluster at a glance
 
-There is a template over at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you wanted to try and follow along with some of the practices I use here.
+My setup is a three [Talos Linux](https://www.talos.dev) control-plane nodes — a minimal, immutable, API-driven Kubernetes distribution — running on Proxmox with [Rook-Ceph](https://rook.io) for distributed storage.
 
-### Core Components
+| Area | What's running |
+| --- | --- |
+| **Networking** | [Cilium](https://cilium.io) — eBPF-based CNI, kube-proxy replacement · [Gateway API](https://gateway-api.sigs.k8s.io/) — dual gateways with cert-manager TLS · [cloudflared](https://github.com/cloudflare/cloudflared) — tunnel ingress · [external-dns](https://github.com/kubernetes-sigs/external-dns) — DNS sync |
+| **Storage** | [Rook-Ceph](https://rook.io) — distributed block storage · [csi-driver-nfs](https://github.com/kubernetes-csi/csi-driver-nfs) — NFS media shares · [VolSync](https://github.com/backube/volsync) + [Kopia](https://kopia.io) — PVC backup and replication |
+| **Secrets** | [SOPS](https://github.com/getsops/sops) + Age — encrypted secrets in Git · [external-secrets](https://github.com/external-secrets/external-secrets) + 1Password Connect · [cert-manager](https://cert-manager.io/) — Let's Encrypt TLS |
+| **GitOps** | [Flux CD](https://fluxcd.io) — GitOps operator · [Renovate](https://github.com/renovatebot/renovate) — automated updates · [Reloader](https://github.com/stakater/Reloader) — pod restart on config change · [KEDA](https://keda.sh/) — event-driven autoscaling |
+| **Observability** | [VictoriaMetrics](https://victoriametrics.com/) + [VictoriaLogs](https://victoriametrics.com/victorialogs/) — metrics and logs · [Grafana](https://grafana.com/) — dashboards · [Gatus](https://gatus.io/) — health checks · [Coroot](https://coroot.com/) — APM · [Kromgo](https://github.com/kashalls/kromgo) — badges · [Chaski](https://github.com/axeII/chaski) — alert routing |
+| **Utilities** | [Spegel](https://github.com/spegel-org/spegel) — P2P image mirroring · [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) · [Intel GPU Plugin](https://github.com/intel/intel-device-plugins-for-kubernetes) — hardware transcoding · [Dragonfly](https://www.dragonflydb.io/) — Redis-compatible cache |
 
-**Networking:**
-- [cilium](https://github.com/cilium/cilium) — eBPF-based CNI providing networking, observability, and security (kube-proxy replacement)
-- [cloudflared](https://github.com/cloudflare/cloudflared) — Cloudflare Tunnel for secure external ingress
-- [external-dns](https://github.com/kubernetes-sigs/external-dns) — automatic DNS record synchronization to Cloudflare (public) and UniFi (private)
-- [Gateway API](https://gateway-api.sigs.k8s.io/) — dual external/internal gateways with cert-manager TLS via Cilium
+### 💾 Hardware
 
-**Storage:**
-- [rook-ceph](https://rook.io) — distributed block storage for persistent volumes
-- [csi-driver-nfs](https://github.com/kubernetes-csi/csi-driver-nfs) — NFS volume provisioning for media shares
-- [volsync](https://github.com/backube/volsync) — PVC backup and replication
-- [kopia](https://kopia.io) — snapshot-based backup client
-
-**Secrets & Security:**
-- [external-secrets](https://github.com/external-secrets/external-secrets) — syncs secrets from 1Password Connect into Kubernetes
-- [cert-manager](https://cert-manager.io/) — automated TLS certificate management with Let's Encrypt
-- [sops](https://github.com/getsops/sops) — encrypted secrets committed to Git with Age
-
-**GitOps & Automation:**
-- [flux](https://toolkit.fluxcd.io/) — GitOps operator watching my `kubernetes/` directory
-- [renovate](https://github.com/renovatebot/renovate) — automated dependency updates via PRs
-- [reloader](https://github.com/stakater/Reloader) — restarts pods when ConfigMaps or Secrets change
-- [keda](https://keda.sh/) — event-driven autoscaling
-
-**Observability:**
-- [victoria-metrics](https://victoriametrics.com/) — Prometheus-compatible metrics storage and querying
-- [victoria-logs](https://victoriametrics.com/victorialogs/) — log storage and querying
-- [grafana](https://grafana.com/) — dashboards and visualizations
-- [gatus](https://gatus.io/) — service health monitoring and status page
-- [kromgo](https://github.com/kashalls/kromgo) — custom badges for README
-- [coroot](https://coroot.com/) — APM and root-cause analysis
-- [chaski](https://github.com/axeII/chaski) — custom alert routing and webhook receiver
-
-**Cluster Utilities:**
-- [spegel](https://github.com/spegel-org/spegel) — peer-to-peer OCI image mirroring between nodes
-- [metrics-server](https://github.com/kubernetes-sigs/metrics-server) — resource metrics for HPA and `kubectl top`
-- [intel-device-plugin-operator](https://github.com/intel/intel-device-plugins-for-kubernetes) — Intel GPU device plugin for hardware transcoding
-- [dragonfly](https://www.dragonflydb.io/) — Redis-compatible in-memory datastore
-
-### ☸ GitOps
-
-[Flux](https://github.com/fluxcd/flux2) watches my [kubernetes](./kubernetes) folder (see Directories below) and makes the changes to my cluster based on the YAML manifests.
-
-The way Flux works for me here is it will recursively search the [kubernetes/apps](./kubernetes/apps) folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations. Those Flux kustomizations will generally have a `HelmRelease` or other resources related to the application underneath it which will be applied.
-
-[Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged [Flux](https://github.com/fluxcd/flux2) applies the changes to my cluster.
-
-### Directories
-
-This Git repository contains the following directories under [kubernetes](./kubernetes).
-
-```sh
-📁 kubernetes      # Kubernetes cluster defined as code
-├─📁 flux          # Main Flux configuration of repository
-├─📁 apps          # Apps deployed into my cluster grouped by namespace
-└─📁 components    # Reusable Kustomize components
-
-📁 talos           # Talos Linux node configuration and patches
-```
-
-### :file_cabinet: Hardware
-
-My homelab runs on the following hardware. All Kubernetes nodes are Talos Linux VMs running on Proxmox.
+All Kubernetes nodes are Talos Linux VMs running on Proxmox.
 
 | Device                         | OS Disk   | Data Disk | RAM  | Details                                   |
 | ------------------------------ | --------- | --------- | ---- | ----------------------------------------- |
@@ -128,9 +75,53 @@ My homelab runs on the following hardware. All Kubernetes nodes are Talos Linux 
 | Unifi Switch 16 PoE            | N/A       | N/A       | N/A  | PoE+ switch                               |
 | Offsite VM                     | 60GB      | 8TB       | 8GB  | Offsite backup target                     |
 
-### 🏠 Applications
+## 🔧 How it stays automated
 
-**Media:**
+Every dependency update follows the same fully-automated path from Renovate to the cluster — no human toil for routine changes.
+
+```mermaid
+flowchart LR
+    RV[Renovate<br/>opens PRs hourly] --> LB[Labeler<br/>classifies PR by<br/>labels and path]
+    LB --> KL[Konflate<br/>renders cluster diff<br/>flags cautions]
+    KL --> FG{CI gates<br/>flate + yayamlls}
+    FG --> AM[Auto-Merge<br/>evaluates policy<br/>daily at 02:00 UTC]
+    AM -->|gates passed| MG[Merge PR]
+    MG --> FX[Flux<br/>applies to cluster]
+```
+
+**Auto-merge policy** — the rules that decide whether a Renovate PR gets merged automatically or waits for human review:
+
+| Category | Min age | Day constraint | Konflate gate | Auto-merge |
+| --- | --- | --- | --- | --- |
+| Patch / digest (`type/patch`, `type/digest`) | 2 days | Any | No failures, no cautions | Yes |
+| Minor (`type/minor`) | 3 days | Fri–Sat (Europe/Berlin) | No failures, no cautions | Yes |
+| Major — GitHub Actions (`type/major` + `renovate/github-action`) | 2 days | Any | No failures (cautions allowed) | Yes |
+| Major — other (`type/major`) | — | — | — | Manual |
+| Rook-Ceph, Cilium, Flux, Dragonfly | — | — | — | Manual |
+| `area/talos` label | — | — | — | Manual |
+
+- **Quiet window**: Sunday 00:00–05:00 UTC — no merges scheduled (Talos upgrade window).
+- **Sleep between merges**: 5 minutes (10 for minor release train) to let Flux reconcile before the next merge.
+- **Konflate** renders the full cluster diff for each PR, posts a blast-radius summary comment, and gates merges on render status. It runs inside the home network and is reachable as a best-effort check from GitHub Actions — the label/age/day gates are the hard floor.
+- Safe PRs are squash-merged automatically; high-blast-radius changes (Ceph, Talos, non-action majors) always require a human review.
+
+## 📂 Repo layout
+
+```sh
+📁 kubernetes      # Cluster defined as code
+├─📁 flux          # Flux configuration — meta repos, cluster kustomization
+├─📁 apps          # Applications grouped by namespace
+└─📁 components    # Reusable Kustomize components (common labels, volsync, keda)
+
+📁 talos           # Talos Linux node configuration, patches, and secrets
+📁 scripts         # Bootstrap, backup, and validation helpers
+📁 bootstrap       # Core-operator Helmfile for initial cluster bootstrapping
+```
+
+## 📱 Applications
+
+### Media
+
 | App | Description |
 | --- | ----------- |
 | [Plex](https://plex.tv) | Media server and streaming |
@@ -147,7 +138,8 @@ My homelab runs on the following hardware. All Kubernetes nodes are Talos Linux 
 | [Komga](https://komga.org) | Comic/manga/ebook library |
 | [Kapowarr](https://github.com/Casvt/Kapowarr) | Comic book collection manager |
 
-**Home & Productivity:**
+### Home & Productivity
+
 | App | Description |
 | --- | ----------- |
 | [Home Assistant](https://www.home-assistant.io) | Home automation platform |
@@ -158,7 +150,8 @@ My homelab runs on the following hardware. All Kubernetes nodes are Talos Linux 
 | [AFFiNE](https://affine.pro) | Knowledge base workspace |
 | [Atuin](https://atuin.sh) | Shell history sync server |
 
-**Infrastructure & Networking:**
+### Infrastructure & Networking
+
 | App | Description |
 | --- | ----------- |
 | [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks) | Secure external ingress |
@@ -167,18 +160,56 @@ My homelab runs on the following hardware. All Kubernetes nodes are Talos Linux 
 | [TrueNAS](https://www.truenas.com) | Reverse proxy to storage |
 | [Minecraft](https://minecraft.net) | Game server |
 
-### 📰 Blog post
+## 🚀 Self-host your own
 
-Feel free to checkout my blog [axell.dev](https://axell.dev) which is also [open source](https://github.com/axeII/my-blog)!
-I also have made a blog post about HW, what were my choices... which ones were good and which ones were bad. [Click here](https://axell.dev/favorite/my-home-lab/).
+This repo is a living reference — borrow what you like, ignore what you don't. Here is how to go from zero to your own cluster.
 
-## 🤝 Gratitude and Thanks
+### Prerequisites
 
-I am proud to be a member of the home operations (previously k8s-at-home) community! I received a lot of help and inspiration for my Kubernetes cluster from this community which helped a lot. Thanks! :heart:
+- **A domain** with DNS managed by a provider external-dns supports (Cloudflare, Route53, etc.).
+- **A secrets backend** — this repo uses 1Password Connect + external-secrets, but anything with an external-secrets provider works.
+- **An Age key** for SOPS-encrypted secrets (`age-keygen`).
+- **Workstation tooling**: `talosctl`, `flux`, `just`, `helmfile`, `talhelper`, `sops`, `kubectl`.
+- **Nodes**: at least one Talos-capable machine (bare metal, Proxmox VM, or any hypervisor). Three control-plane nodes are recommended.
 
-If you are interested in running your own k8s cluster at home, I highly recommend you to check out the [k8s-at-home](https://k8s-at-home.com) website.
+### What to swap when forking
 
-Be sure to check out [kubesearch.dev](https://kubesearch.dev) for ideas on how to deploy applications or get ideas on what you may deploy.
+This repo is opinionated and personal. These are the hardcoded values you will need to change:
+
+| Find | Replace with |
+| --- | --- |
+| `juno.moe` (Cloudflare zone) | Your domain |
+| `CZ` (WAF country filter) | Your country |
+| `192.168.69.x` (node IPs) | Your subnet |
+| 1Password Connect references | Your secret backend |
+| Proxmox / TrueNAS backends | Your hypervisor and NAS |
+| `external.juno.moe` (tunnel hostname) | Your tunnel endpoint |
+| `kromgo.juno.moe`, `konflate.juno.moe` | Your monitoring hosts |
+
+### Bootstrap path
+
+Once you have edited `talos/patches/` to match your hardware, follow these steps:
+
+```sh
+just talos-genconfig      # Regenerate Talos configs from patches
+just bootstrap-age-key    # Generate SOPS Age key (age.key)
+just bootstrap-talos      # Apply Talos config, bootstrap cluster, fetch kubeconfig
+just bootstrap-apps       # Deploy core operators (Cilium, cert-manager, Flux) via Helmfile
+```
+
+At this point Flux takes over and reconciles everything under `kubernetes/` into the cluster.
+
+### Reference material
+
+- [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) — a friendlier fork target and step-by-step guide.
+- [kubesearch.dev](https://kubesearch.dev) — search homelab Kubernetes configs for app-level examples.
+- [k8s-at-home](https://k8s-at-home.com) — community hub for running Kubernetes at home.
+
+## 💬 Community
+
+This project is part of the [home operations](https://discord.gg/home-operations) community (previously k8s-at-home). Join us on Discord for discussion, help, and inspiration.
+
+Feel free to check out my blog at [axell.dev](https://axell.dev) — also [open source](https://github.com/axeII/my-blog) — which includes a [hardware walkthrough](https://axell.dev/favorite/my-home-lab/) covering what worked and what didn't.
 
 ## 🔏 License
 
