@@ -30,6 +30,18 @@
       "git status*": "allow",
       "git diff*": "allow",
       "git log*": "allow",
+      "but diff*": "allow",
+      "but status*": "allow",
+      "but commit*": "allow",
+      "but push*": "allow",
+      "but show*": "allow",
+      "but pull*": "allow",
+      "but branch*": "allow",
+      "but amend*": "allow",
+      "but undo*": "allow",
+      "but move*": "allow",
+      "but squash*": "allow",
+      "but uncommit*": "allow",
       "gh issue*": "allow",
       "gh api*": "allow"
     }
