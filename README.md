@@ -45,7 +45,7 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 A production-grade Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s :D. This repository is the single source of truth for the cluster: every deployment, every network policy, and every secret lives here (some are SOPS encrypted others use 1password connection). Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline lands safe changes without human toil. The cluster reconciles itself through Flux. 
 
-> _Side note_: Though I mentioned this is automated some PRs like cilium upgrade, rook update are very critical and I have minimal time for my cluster and cannot jump in when PR automatically breaks my cluster for that reason I have three types of PR - automated, deployed during release train (Friday/Saturday as during the weekend I can fix stuff) and critical which can be merged only by me. This way I try to safely automate as possible.
+> _Side note_: Though I mentioned this is automated some PRs like cilium upgrade, rook update are very critical and I have minimal time for my cluster and cannot jump in when PR automatically breaks my cluster for that reason I have three types of PR - automated, deployed during release train (Friday/Saturday as during the weekend I can fix stuff) and critical which can be merged only by me. This way I try to safely automate as possible the upgrade process.
 
 It is also a reference for anyone curious about running Kubernetes at home. Whether you want to borrow a single app configuration or bootstrap your own cluster from scratch, everything you need is here.
 
