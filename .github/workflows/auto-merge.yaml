@@ -147,8 +147,15 @@ jobs:
 
             # ── Manual filters ──────────────────────────────────
             # rook-ceph / ceph image by title or branch
-            if echo "${title}" | grep -qi "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qi "${MANUAL_TITLE_REGEX}"; then
-              echo "  → SKIP (manual: ceph)"
+            if echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; then
+              echo "  → SKIP (manual: critical infra)"
+              skipped_manual+=("#${number}")
+              continue
+            fi
+
+            # needs-review label (set by pr-classify; defense in depth)
+            if [[ ",${labels_str}," == *",needs-review,"* ]]; then
+              echo "  → SKIP (manual: needs-review label)"
               skipped_manual+=("#${number}")
               continue
             fi
