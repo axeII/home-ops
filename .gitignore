@@ -17,5 +17,6 @@ talosconfig
 .private/
 .task/
 .venv/
+.opencode/skills/cloudflare/
 .DS_Store
 Thumbs.db
