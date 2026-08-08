@@ -43,9 +43,14 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 ## 🤔 What is this?
 
-A production-grade Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s :D. This repository is the single source of truth for the cluster: every deployment, every network policy, and every secret lives here (some are SOPS encrypted others use 1password connection). Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline lands safe changes without human toil. The cluster reconciles itself through Flux.
+A Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s :D. In this repository every deployment, every network policy, and every secret lives here. Some are SOPS encrypted, others use 1password connection. Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline deploys them to the cluster via flux.
 
-> _Side note_: Though I mentioned this is automated some PRs like cilium upgrade, rook update are very critical and I have minimal time for my cluster and cannot jump in when PR automatically breaks my cluster for that reason I have three types of PR - automated, deployed during release train (Friday/Saturday as during the weekend I can fix stuff) and critical which can be merged only by me. This way I try to safely automate as possible the upgrade process.
+> _Side note_: Though I mentioned this is automated some PRs like cilium upgrade, rook update are very critical and I have minimal time for my cluster and cannot jump in when PR automatically breaks my cluster for that reason.
+
+This repository has three types of PR. This way I try to safely automate as possible the upgrade process:
+- automated
+- deployed during release train (Friday/Saturday as during the weekend I can fix stuff)
+- critical which can be merged only by me.
 
 It is also a reference for anyone curious about running Kubernetes at home. Whether you want to borrow a single app configuration or bootstrap your own cluster from scratch, everything you need is here.
 
@@ -64,14 +69,14 @@ My setup is a three [Talos Linux](https://www.talos.dev) control-plane nodes - a
 
 ### 💾 Hardware
 
-All Kubernetes nodes are Talos Linux VMs running on Proxmox.
+All Kubernetes nodes are Talos Linux machines. Two are baremetal and one is a VM running on Proxmox.
 
 | Device                         | OS Disk   | Data Disk | RAM  | Details                                   |
 | ------------------------------ | --------- | --------- | ---- | ----------------------------------------- |
 | **Proxmox VE**                 | NVMe      | NVMe      | 64GB | Main hypervisor                           |
 | k8s-0 (VM)                     | 250GB     | 250GB     | 32GB | Talos control-plane, Intel ARC GPU        |
-| k8s-1 (VM)                     | eMMC 30GB | 250GB     | 32GB | Talos control-plane                       |
-| k8s-2 (VM)                     | 1TB SSD   | 250GB     | 32GB | Talos control-plane, e1000e driver        |
+| k8s-1                     | eMMC 30GB | 250GB     | 32GB | Talos control-plane                       |
+| k8s-2                    | 1TB SSD   | 250GB     | 32GB | Talos control-plane, e1000e driver        |
 | TrueNAS SCALE (VM)             | SSD 20GB  | 40TB ZFS  | 64GB | NFS/SMB storage - 4x10TB HDD RAIDZ2       |
 | Unifi UDM Pro                  | SSD 14GB  | HDD 1TB   | 4GB  | Router and security gateway               |
 | Unifi Switch 16 PoE            | N/A       | N/A       | N/A  | PoE+ switch                               |
@@ -181,7 +186,7 @@ This repo is opinionated and personal. These are the hardcoded values you will n
 | Find | Replace with |
 | --- | --- |
 | `juno.moe` (Cloudflare zone) | Your domain |
-| `CZ` (WAF country filter) | Your country |
+| `EU` (WAF country filter) | Your country |
 | `192.168.69.x` (node IPs) | Your subnet |
 | 1Password Connect references | Your secret backend |
 | Proxmox / TrueNAS backends | Your hypervisor and NAS |
