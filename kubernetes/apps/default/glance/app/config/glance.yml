@@ -146,67 +146,67 @@ pages:
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: kubernetes
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: hardware
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: amd
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: steam
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: opencode
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: linux_gaming
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: linux
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: cachyos
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
               - type: reddit
                 subreddit: azure
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
                 collapse-after: 10
-                comments-url-template: "https://redlib.lol/{POST-PATH}"
+                comments-url-template: "https://red.artemislena.eu/{POST-PATH}"
