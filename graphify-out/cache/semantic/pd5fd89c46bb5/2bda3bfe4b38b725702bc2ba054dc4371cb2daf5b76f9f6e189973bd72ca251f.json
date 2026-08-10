@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_kube_system_coredns_app_helm_values_configmap", "label": "CoreDNS Helm Values (kube-dns config)", "file_type": "code", "source_file": "kubernetes/apps/kube-system/coredns/app/helm/values.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

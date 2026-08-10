@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_observability_etcd_scrape_service_etcd_metrics", "label": "Service: etcd-metrics (headless)", "file_type": "code", "source_file": "kubernetes/apps/observability/etcd-scrape/service.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

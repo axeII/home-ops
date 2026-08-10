@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_components_common_sops_cluster_secrets_sops_secret", "label": "SOPS Secret: cluster-secrets", "file_type": "code", "source_file": "kubernetes/components/common/sops/cluster-secrets.sops.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

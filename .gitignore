@@ -22,3 +22,8 @@ talosconfig
 Thumbs.db
 
 .opencode/skills/cloudflare/SKILL.md
+
+# graphify: machine-local state, not portable across machines/agents
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/cost.json

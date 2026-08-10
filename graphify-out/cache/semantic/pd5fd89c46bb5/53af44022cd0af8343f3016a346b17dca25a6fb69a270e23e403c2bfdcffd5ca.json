@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_default_karakeep_app_externalsecret_karakeep", "label": "ExternalSecret karakeep", "file_type": "code", "source_file": "kubernetes/apps/default/karakeep/app/externalsecret.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

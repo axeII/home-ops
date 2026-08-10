@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_observability_keda_app_repository_ocirepository_keda", "label": "OCIRepository: keda chart", "file_type": "code", "source_file": "kubernetes/apps/observability/keda/app/repository.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

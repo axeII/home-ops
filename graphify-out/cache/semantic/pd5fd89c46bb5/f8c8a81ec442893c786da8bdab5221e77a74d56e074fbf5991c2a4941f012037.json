@@ -1,0 +1,1 @@
+{"nodes": [{"id": "talos_patches_global_machine_features_patch", "label": "Global Patch: machine.features (Talos API access)", "file_type": "code", "source_file": "talos/patches/global/machine-features.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

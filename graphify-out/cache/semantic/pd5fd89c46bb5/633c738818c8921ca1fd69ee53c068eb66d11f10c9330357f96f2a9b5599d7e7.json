@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_flux_meta_repos_prometheus_community_prometheuscommunity", "label": "HelmRepository: prometheus-community (OCI)", "file_type": "code", "source_file": "kubernetes/flux/meta/repos/prometheus-community.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

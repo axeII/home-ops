@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_default_minecraft_app_externalsecret_minecraft_secret", "label": "ExternalSecret minecraft-secret", "file_type": "code", "source_file": "kubernetes/apps/default/minecraft/app/externalsecret.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

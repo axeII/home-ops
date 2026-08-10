@@ -1,0 +1,10 @@
+title = "home-ops gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "graphify output is extracted/derived text (resource names, IDs), not source secrets"
+paths = [
+  '''graphify-out/.*''',
+]

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_external_grafana_app_service_grafana", "label": "Service grafana (external)", "file_type": "code", "source_file": "kubernetes/apps/external/grafana/app/service.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

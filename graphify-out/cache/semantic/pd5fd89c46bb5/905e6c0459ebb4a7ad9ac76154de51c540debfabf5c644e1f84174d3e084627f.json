@@ -1,0 +1,1 @@
+{"nodes": [{"id": "kubernetes_apps_system_upgrade_app_repository_tuppr", "label": "OCIRepository: tuppr", "file_type": "code", "source_file": "kubernetes/apps/system-upgrade/app/repository.yaml", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}
