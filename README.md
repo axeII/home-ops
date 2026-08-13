@@ -1,3 +1,5 @@
+
+
 # Home Operations
 
 <div align="center">
@@ -186,7 +188,7 @@ This repo is opinionated and personal. These are the hardcoded values you will n
 | Find | Replace with |
 | --- | --- |
 | `juno.moe` (Cloudflare zone) | Your domain |
-| `EU` (WAF country filter) | Your country |
+| `CZ` (WAF country filter) | Your country |
 | `192.168.69.x` (node IPs) | Your subnet |
 | 1Password Connect references | Your secret backend |
 | Proxmox / TrueNAS backends | Your hypervisor and NAS |
