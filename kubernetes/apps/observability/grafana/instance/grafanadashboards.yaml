@@ -338,3 +338,187 @@ spec:
       inputName: DS_PROMETHEUS
   # renovate: depName="etcd"
   url: https://grafana.com/api/dashboards/15055/revisions/9/download
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: cluster-reliability
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  json: |
+      {
+        "__inputs": [
+          {
+            "name": "DS_PROMETHEUS",
+            "label": "Prometheus",
+            "description": "",
+            "type": "datasource",
+            "pluginId": "prometheus",
+            "pluginName": "Prometheus"
+          }
+        ],
+        "title": "Cluster Reliability",
+        "uid": "cluster-reliability",
+        "tags": [
+          "Kubernetes",
+          "reliability"
+        ],
+        "timezone": "browser",
+        "schemaVersion": 39,
+        "version": 1,
+        "editable": true,
+        "graphTooltip": 1,
+        "time": {
+          "from": "now-7d",
+          "to": "now"
+        },
+        "refresh": "1m",
+        "panels": [
+          {
+            "id": 1,
+            "type": "table",
+            "title": "Pod Restarts (Top 15, by pod, with last reason)",
+            "description": "Restart count per pod over the dashboard time range, joined with its last termination reason (e.g. OOMKilled, Error). No data is generally a good thing here.",
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 0,
+              "y": 0
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  }
+                }
+              },
+              "overrides": []
+            },
+            "options": {
+              "showHeader": true,
+              "sortBy": [
+                {
+                  "displayName": "Restarts",
+                  "desc": true
+                }
+              ]
+            },
+            "transformations": [
+              {
+                "id": "merge",
+                "options": {}
+              },
+              {
+                "id": "organize",
+                "options": {
+                  "excludeByName": {
+                    "Time": true,
+                    "container": true,
+                    "Value #B": true
+                  },
+                  "renameByName": {
+                    "Value #A": "Restarts",
+                    "reason": "Last Reason"
+                  }
+                }
+              }
+            ],
+            "targets": [
+              {
+                "refId": "A",
+                "format": "table",
+                "instant": true,
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${DS_PROMETHEUS}"
+                },
+                "expr": "topk(15, sum by (namespace, pod) (increase(kube_pod_container_status_restarts_total[$__range])) > 0)"
+              },
+              {
+                "refId": "B",
+                "format": "table",
+                "instant": true,
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${DS_PROMETHEUS}"
+                },
+                "expr": "max by (namespace, pod, reason) (kube_pod_container_status_last_terminated_reason == 1)"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "type": "table",
+            "title": "Node Conditions (problems only)",
+            "description": "Shows a row only when a node is NotReady or under Disk/Memory/PID pressure. No data is generally a good thing here.",
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 12,
+              "y": 0
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  }
+                }
+              },
+              "overrides": []
+            },
+            "options": {
+              "showHeader": true
+            },
+            "transformations": [
+              {
+                "id": "organize",
+                "options": {
+                  "excludeByName": {
+                    "Time": true,
+                    "Value": true,
+                    "container": true,
+                    "endpoint": true,
+                    "instance": true,
+                    "job": true,
+                    "pod": true,
+                    "service": true,
+                    "status": true,
+                    "namespace": true
+                  }
+                }
+              }
+            ],
+            "targets": [
+              {
+                "refId": "A",
+                "format": "table",
+                "instant": true,
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${DS_PROMETHEUS}"
+                },
+                "expr": "(kube_node_status_condition{condition=\"Ready\", status!=\"true\"}) or (kube_node_status_condition{condition=~\"DiskPressure|MemoryPressure|PIDPressure\", status=\"true\"})"
+              }
+            ]
+          }
+        ]
+      }
