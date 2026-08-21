@@ -4,6 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # renovate: datasource=github-releases depName=dragonflydb/dragonfly-operator
-  - https://raw.githubusercontent.com/dragonflydb/dragonfly-operator/v1.6.1/manifests/crd.yaml
+  # vendored crd.yaml pinned to v1.6.1 — re-vendor manually on bump
+  - ./crd.yaml
   - ./helmrelease.yaml
   - ./rbac.yaml

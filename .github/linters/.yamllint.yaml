@@ -2,6 +2,7 @@
 ignore: |
   *.sops.*
   gotk-components.yaml
+  **/kubernetes/apps/database/dragonfly/app/crd.yaml
 extends: default
 rules:
   truthy:
