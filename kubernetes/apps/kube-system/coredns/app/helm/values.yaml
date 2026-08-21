@@ -31,7 +31,7 @@ servers:
       - name: template
         parameters: ANY AAAA
         configBlock: |-
-          rcode NXDOMAIN
+          rcode NOERROR
       - name: forward
         parameters: . /etc/resolv.conf
       - name: cache
