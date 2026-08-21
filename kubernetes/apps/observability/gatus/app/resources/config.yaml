@@ -45,5 +45,27 @@ endpoints:
     alerts:
       - type: pushover
 
+  - name: ceph-health
+    group: infra
+    url: http://rook-ceph-mgr.rook-ceph.svc.cluster.local:9283/metrics
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY] != pat(*ceph_health_status{* 2*)"
+    alerts:
+      - type: pushover
+        description: "Ceph cluster is in HEALTH_ERR"
+
+  - name: flux-health
+    group: infra
+    url: http://kube-state-metrics.observability.svc.cluster.local:8080/metrics
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY] != pat(*ready=\"False\"*)"
+    alerts:
+      - type: pushover
+        description: "a Flux-managed resource is not Ready"
+
 web:
   port: ${GATUS_WEB_PORT}
