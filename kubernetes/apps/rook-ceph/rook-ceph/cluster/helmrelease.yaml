@@ -42,6 +42,15 @@ spec:
     # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
     # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
     cephClusterSpec:
+      # All daemons (mon/mgr/mds/osd) now run v20.2.4 and support AES256K cephx
+      # keys (CVE-2025-30156 fix). Rotate off the old insecure AES key type to
+      # clear HEALTH_ERR/AUTH_INSECURE_SERVICE_KEY_TYPE. Bump keyGeneration to
+      # a higher integer to trigger another rotation in the future.
+      security:
+        cephx:
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
       cephConfig:
         global:
           bdev_enable_discard: "true"
