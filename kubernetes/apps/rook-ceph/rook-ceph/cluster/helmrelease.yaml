@@ -42,15 +42,6 @@ spec:
     # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
     # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
     cephClusterSpec:
-      # Temporary: unblock the OSD image rollout to v20.2.4 while the cluster is
-      # HEALTH_ERR from the CVE-2025-30156 cephx key-type transition (mon/mgr/mds
-      # already on v20.2.4, OSDs stuck on v20.2.2 can't decode the new rotating
-      # keys). continueUpgradeAfterChecksEvenIfNotHealthy alone wasn't enough -
-      # the operator's pre-upgrade version check needs skipUpgradeChecks too
-      # ("failed the ceph version check ... refusing to upgrade"). Revert both
-      # to false once all OSDs report v20.2.4 and health clears.
-      continueUpgradeAfterChecksEvenIfNotHealthy: true
-      skipUpgradeChecks: true
       cephConfig:
         global:
           bdev_enable_discard: "true"
