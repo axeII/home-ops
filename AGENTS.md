@@ -4,7 +4,7 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 
 ## Project model
 
-opencode/AI works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
+Claude works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
 
 - AI **does**: write code, run validation, create commits via `but`, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
 - AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge without explicit human approval.
@@ -54,7 +54,10 @@ opencode/AI works as the **medior developer** — it implements changes, validat
 
 ## Commits and PRs
 
-Use GitButler CLI (`but`) for all version control writes (commits, branches, pushes). Delegate VCS to the gitbutler skill for command detail. Use GitHub MCP tools (`github_create_pull_request`, `github_issue_write`, etc.) for all GitHub API operations. Never use `git add`, `git commit`, `git push`, or `gh pr create` for write operations. Never force-push, never skip hooks.
+Use GitButler CLI (`but`) for all version control writes (commits, branches, pushes). Delegate VCS to the
+gitbutler skill for command detail. Use GitHub MCP tools (`github_create_pull_request`,
+`github_issue_write`, etc.) for all GitHub API operations. Never use `git add`, `git commit`, `git push`,
+or `gh pr create` for write operations. Never force-push, never skip hooks.
 
 ### Before committing
 
@@ -65,7 +68,7 @@ Use GitButler CLI (`but`) for all version control writes (commits, branches, pus
 
 ### Making commits
 
-- Use `but commit <branch> -c -m "<msg>" --changes <ids>` to create a branch and commit in one step.
+- Use `but commit -b <branch> -m "<msg>" <ids>` to create a branch and commit in one step.
 - Use file/hunk IDs from `but diff` — never stage blindly.
 - Write concise, imperative-mood commit messages matching the existing repo style.
 
@@ -86,7 +89,7 @@ Use GitButler CLI (`but`) for all version control writes (commits, branches, pus
 
 ### Creating issues
 
-For bugs, tech debt, or tasks outside a PR workflow, create a GitHub issue. The GitHub MCP server (`github` tool prefix) is configured in `.opencode/opencode.json` — use its structured tools for issue operations.
+For bugs, tech debt, or tasks outside a PR workflow, create a GitHub issue. Use the `github` MCP server's structured tools for issue operations.
 
 - `github_issue_write` with `method: "create"` — Create a new issue with title, body, labels, assignees.
 - `github_search_issues` / `github_list_issues` — Find existing issues.
@@ -124,8 +127,13 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 - **Sleep between merges:** 300 seconds to let Flux reconcile before the next merge.
 - Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
 - **Bulk merge** (`.github/workflows/bulk-merge-prs.yaml`) also excludes rook-ceph, `area/talos`, `type/major`, `type/minor`, and `hold`.
-- **Defense in depth:** The `pr-classify` workflow applies `needs-review` and `risk/critical` labels to critical-infra PRs. Auto-merge hard-skips any PR with the `needs-review` label regardless of the title/branch regex — two independent detection layers must both fail for a critical upgrade to auto-merge.
-- **Konflate** is reachable only from inside the home network (private IP). From GitHub Actions, the konflate gate is skipped — the auto-merge relies on label/age/day rules alone. `Konflate` as a required status check in branch protection won't work from outside the network.
+- **Defense in depth:** The `pr-classify` workflow applies `needs-review` and `risk/critical` labels to
+  critical-infra PRs. Auto-merge hard-skips any PR with the `needs-review` label regardless of the
+  title/branch regex — two independent detection layers must both fail for a critical upgrade to
+  auto-merge.
+- **Konflate** is reachable only from inside the home network (private IP). From GitHub Actions, the
+  konflate gate is skipped — the auto-merge relies on label/age/day rules alone. `Konflate` as a
+  required status check in branch protection won't work from outside the network.
 - **Konflate write-back** posts a summary PR comment + commit status after each render when reachable (inside the network).
 - **Setup:** add `KONFLATE_PUSH_TOKEN` (random 32-byte hex) to 1Password `konflate` item and as a GitHub Actions secret; confirm the GitHub App has `checks: write` + `pull-requests: write` permissions.
 
@@ -155,24 +163,50 @@ Required WAF rules for the `juno.moe` zone (effective only when DNS records are 
 - Exporters (node-exporter, kube-state-metrics, smartctl-exporter, etc.) run locally, scraped by Alloy via ServiceMonitors.
 - Credentials stored in 1Password as `observability-vm` (Prometheus URL/user, Loki URL/user, API token).
 
-## opencode agents and skills
+## Claude Code agents, skills, and commands
 
-This project has opencode agents and skills configured in `.opencode/` to speed up common tasks.
+This project ships its Claude Code configuration in `.claude/` (tracked in git, so it is reviewed
+like any other change). `CLAUDE.md` at the repo root imports this file, so everything below loads
+automatically at session start.
 
-### Agents (`.opencode/agent/`)
+### Agents (`.claude/agents/`)
 
-- **cloudflare** — Cloudflare API ops for `juno.moe` zone: DNS, WAF rules, tunnel, Workers. Uses the globally installed Cloudflare MCP servers (cloudflare_docs, cloudflare_search, cloudflare_execute).
-- **gitops** — Flux/Kustomize manifest work: repo layout, validation pipeline, konflate PR review, SOPS rules.
-- **talos** — Talos Linux node operations: talosctl, patch regen, tuppr upgrades, OOM diagnostics.
+- **cluster-radar** — Read-only live-cluster investigator. Triages via the radar MCP server
+  (`issues` → `diagnose` → `get_events` → `get_changes` → logs) and falls back to
+  `kubectl`/`flux`/`talosctl` when radar is unavailable. It never mutates the cluster — fixes come
+  back as manifest changes so they land through Flux.
+- **grafana-logs** — Loki and Prometheus query agent. Holds the datasource UIDs and Loki label
+  schema, grinds through log volume in its own context, and returns a summary plus a Grafana
+  deeplink instead of raw lines.
+- **ship** — Runs the full validation chain, commits with `but`, pushes, and opens the PR via the
+  GitHub MCP server. It cannot merge — that capability is deliberately withheld.
 
-### Skills (`.opencode/skills/`)
+Delegate to these rather than doing cluster or log investigation inline: their output stays out of
+the main context window.
 
-- **cloudflare** — How to use the Cloudflare MCP tools with zone specifics (WAF table, tunnel, DNS).
+### Skills (`.claude/skills/`)
+
+- **gitbutler** — GitButler CLI (`but`) reference: commits, hunk selection, stacks, history edits.
 - **flux-validate** — The five-step validation pipeline in order with common failures and fixes.
 - **sops-secrets** — SOPS/Age encryption workflow for creating and verifying `*.sops.yaml` files.
 
-### Commands (`.opencode/command/`)
+The Cloudflare skills come from the `cloudflare` plugin marketplace, enabled in
+`.claude/settings.json`.
 
-- `/validate` — Run the full validation chain (`just configure` → `just validate` → `just flate-test` → `find_mistakes.py` → `pre-commit`).
+### Commands (`.claude/commands/`)
 
-**Restart opencode after changing any file in `.opencode/`** — config is loaded at startup only.
+- `/validate` — Run the full validation chain (`just configure` → `just validate` → `just flate-test`
+  → `find_mistakes.py` → `pre-commit`).
+- `/triage [namespace|app]` — Cluster health sweep via the cluster-radar agent.
+- `/ship [description]` — Validate, commit, push, and open a PR via the ship agent.
+
+### MCP servers
+
+- **radar** — `http://localhost:49412/mcp`, served by Radar.app. **Radar.app must be running**, or
+  every radar tool fails; agents fall back to `kubectl`/`flux` and say so.
+- **grafana** — points at `grafana.juno.moe`. Datasources: Prometheus `PBFA97CFB590B2093`,
+  Loki `P8E80F9AEF21F6940`.
+- **github** — repository, issue, and pull request operations.
+
+These are configured per-project in `~/.claude.json`, not in the repo, because the Grafana service
+account token would otherwise be committed.
