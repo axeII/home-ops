@@ -67,6 +67,13 @@ rather than Flux CD. `kubectl get kustomizations -A` and `kubectl get helmreleas
 CRDs and are a safe substitute. A `TLS handshake timeout` against `192.168.69.254:6443` is usually
 transient — retry once before treating it as an outage.
 
+## Shell note
+
+The shell here is zsh, not bash. It does **not** word-split unquoted `$var`, and an unmatched glob
+is a fatal error rather than a literal. Always quote expansions (`"$var"`) and any argument
+containing `[`, `*`, or `?` — otherwise a command silently does the wrong thing or dies with
+`no matches found`.
+
 ## Namespaces
 
 `cert-manager`, `database`, `default`, `external`, `flux-system`, `kube-system`, `media`,

@@ -232,9 +232,23 @@ copilot --agent cluster-radar -p "<question>"
 ```
 
 Repository agents live in `.github/agents/`; user-level ones in `~/.copilot/agents/`, and a
-user-level agent of the same name wins. The two agent sets are deliberate duplicates: the schemas
-differ (Copilot namespaces MCP tools as `server/tool` and requires `description`), so **a change to
-an agent must be made in both places** or the tools drift apart.
+user-level agent of the same name wins.
+
+**`.github/agents/*.agent.md` is generated — do not edit it.** The two tools cannot share a file:
+Copilot namespaces MCP tools as `server/tool` where Claude Code uses `mcp__server__tool`, and the
+built-ins have different names (`Bash` vs `execute`), so a symlink would leave one tool with an
+unusable frontmatter. The bodies are identical, so `.claude/agents/` is the single source and the
+Copilot copies are generated from it:
+
+```bash
+python3 scripts/sync_agents.py           # regenerate after editing .claude/agents/
+python3 scripts/sync_agents.py --check   # what the pre-commit hook runs
+```
+
+The `sync-agents` pre-commit hook fails on any drift in either direction — an edit to a source
+that was not regenerated, or a hand-edit to a generated file. If an agent gains a tool with no
+Copilot equivalent, the script exits with the tool name rather than silently dropping it; add the
+mapping to `BUILTINS` in the script.
 
 ### MCP servers for Copilot
 

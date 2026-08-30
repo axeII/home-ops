@@ -29,16 +29,18 @@ pre-commit run --all-files          # yamllint, gitleaks, sops forbid-secrets, w
 Steps 1-4 are skippable **only** when nothing under `kubernetes/` or `talos/` changed. Step 5 always
 runs.
 
-On failure: read the error, fix the underlying cause rather than the symptom, re-run that step
-alone to confirm, then re-run the whole chain once before continuing. Do not commit around a
-failing check.
+**First ask whether a failure is yours.** Parts of the local toolchain fail identically on a clean
+tree. The "Environment failures vs. real failures" section of the `flux-validate` skill lists the
+known ones and how to tell them apart. Reporting a pre-existing environment failure as "your change
+broke 78 HelmReleases" is worse than useless; so is silently treating a skipped step as a passing
+one. Say which steps really ran.
 
-**First ask whether the failure is yours.** Parts of the local toolchain are currently broken and
-fail identically on a clean tree — ghcr.io 403s from a stale Docker credential, upstream schema
-URLs that stop serving JSON. The `flux-validate` skill lists the known ones and how to tell them
-apart. Reporting a
-pre-existing environment failure as "your change broke 78 HelmReleases" is worse than useless; so is
-silently treating a skipped step as a passing one. Say which steps really ran.
+`pre-commit run --all-files` only covers files git already tracks — it **silently skips untracked
+files**. When a change adds new files, commit them first or pass the paths explicitly with
+`pre-commit run --files <paths>`, or the hooks never see them.
+
+On a genuine failure: fix the underlying cause rather than the symptom, re-run that step alone to
+confirm, then re-run the whole chain once before continuing. Do not commit around a failing check.
 
 Note that `pre-commit` reformats files (end-of-file-fixer, trailing-whitespace, fix-smartquotes).
 If it modifies anything, that is a change to commit — re-read the diff after it runs.
@@ -109,6 +111,13 @@ Check konflate for blast radius if it is reachable (it is only served inside the
 Then give the human the PR URL, one line on what it does, and anything you want them to look at
 closely. If validation surfaced something you worked around rather than fixed, say so — that is
 exactly what the review is for.
+
+## Shell note
+
+The shell is zsh, not bash: unquoted `$var` is **not** word-split, and an unmatched glob is fatal.
+Quote expansions and any argument containing `[`, `*`, or `?`. A loop like
+`for s in "just validate"; do $s; done` looks for a command literally named `just validate` and
+returns 127 — which looks exactly like a validation failure but isn't.
 
 ## Labels that matter
 
