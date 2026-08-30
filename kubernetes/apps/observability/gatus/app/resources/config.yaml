@@ -25,7 +25,7 @@ storage:
 ui:
   title: Status | Gatus
   header: Status
-  logo: https://i.imgur.com/gdvBkNE.png 
+  logo: https://i.imgur.com/gdvBkNE.png
   link: https://github.com/axeII
   buttons:
     - name: Github
