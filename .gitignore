@@ -17,9 +17,9 @@ talosconfig
 .private/
 .task/
 .venv/
-.opencode/skills/cloudflare/
 .DS_Store
 Thumbs.db
 
-.opencode/skills/cloudflare/SKILL.md
-.claude
+# Claude Code - track agents/skills/commands, ignore local state
+.claude/settings.local.json
+.claude/scheduled_tasks.lock

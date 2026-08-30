@@ -1,0 +1,52 @@
+{
+  "enabledPlugins": {
+    "cloudflare@cloudflare": true
+  },
+  "extraKnownMarketplaces": {
+    "cloudflare": {
+      "source": {
+        "source": "github",
+        "repo": "cloudflare/skills"
+      }
+    }
+  },
+  "permissions": {
+    "allow": [
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(kubectl top:*)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl explain:*)",
+      "Bash(kubectl api-resources:*)",
+      "Bash(flux get:*)",
+      "Bash(flux check:*)",
+      "Bash(flux tree:*)",
+      "Bash(flux stats:*)",
+      "Bash(talosctl get:*)",
+      "Bash(talosctl health:*)",
+      "Bash(talosctl dmesg:*)",
+      "Bash(talosctl version:*)",
+      "Bash(just --list)",
+      "Bash(just configure)",
+      "Bash(just validate)",
+      "Bash(just flate-test)",
+      "Bash(just resources)",
+      "Bash(just nodes:*)",
+      "Bash(just pods:*)",
+      "Bash(just kustomizations:*)",
+      "Bash(just helmreleases:*)",
+      "Bash(just helmrepositories:*)",
+      "Bash(just gitrepositories:*)",
+      "Bash(just ingresses:*)",
+      "Bash(just certificates:*)",
+      "Bash(pre-commit run:*)",
+      "Bash(python3 scripts/find_mistakes.py)",
+      "Bash(kustomize build:*)",
+      "Bash(helm template:*)",
+      "Bash(but status:*)",
+      "Bash(but diff:*)",
+      "Bash(but show:*)",
+      "Bash(but log:*)"
+    ]
+  }
+}
