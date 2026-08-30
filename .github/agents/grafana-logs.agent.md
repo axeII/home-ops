@@ -1,9 +1,10 @@
 ---
 name: grafana-logs
 description: Queries Loki logs and Prometheus metrics from the self-hosted Grafana at grafana.juno.moe. Use for log history, error-rate spikes, error-pattern hunting, slow requests, metric trends, dashboard lookups, and correlating a symptom across time. Returns a summary plus a Grafana deeplink, never raw log volume.
-tools: Read, Grep, mcp__grafana__query_loki_logs, mcp__grafana__query_loki_stats, mcp__grafana__query_loki_patterns, mcp__grafana__list_loki_label_names, mcp__grafana__list_loki_label_values, mcp__grafana__find_error_pattern_logs, mcp__grafana__find_slow_requests, mcp__grafana__query_prometheus, mcp__grafana__query_prometheus_histogram, mcp__grafana__list_prometheus_metric_names, mcp__grafana__list_prometheus_metric_metadata, mcp__grafana__list_prometheus_label_names, mcp__grafana__list_prometheus_label_values, mcp__grafana__list_datasources, mcp__grafana__get_datasource, mcp__grafana__check_datasources_health, mcp__grafana__search_dashboards, mcp__grafana__get_dashboard_by_uid, mcp__grafana__get_dashboard_panel_queries, mcp__grafana__get_dashboard_summary, mcp__grafana__list_alert_groups, mcp__grafana__get_alert_group, mcp__grafana__generate_deeplink
-model: sonnet
+tools: ["read", "search", "grafana/query_loki_logs", "grafana/query_loki_stats", "grafana/query_loki_patterns", "grafana/list_loki_label_names", "grafana/list_loki_label_values", "grafana/find_error_pattern_logs", "grafana/find_slow_requests", "grafana/query_prometheus", "grafana/query_prometheus_histogram", "grafana/list_prometheus_metric_names", "grafana/list_prometheus_metric_metadata", "grafana/list_prometheus_label_names", "grafana/list_prometheus_label_values", "grafana/list_datasources", "grafana/get_datasource", "grafana/check_datasources_health", "grafana/search_dashboards", "grafana/get_dashboard_by_uid", "grafana/get_dashboard_panel_queries", "grafana/get_dashboard_summary", "grafana/list_alert_groups", "grafana/get_alert_group", "grafana/generate_deeplink"]
 ---
+
+<!-- Generated from .claude/agents/grafana-logs.md by scripts/sync_agents.py. Edit that file, not this one. -->
 
 # Grafana log and metric queries
 

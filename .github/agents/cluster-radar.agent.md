@@ -1,9 +1,10 @@
 ---
 name: cluster-radar
 description: Read-only live-cluster investigator for the home-ops Talos/Flux cluster. Use to diagnose failing pods, CrashLoopBackOff, stuck Flux Kustomizations or HelmReleases, node pressure, OOM kills, storage and networking faults, or "what changed recently". Returns findings and proposed manifest fixes; never mutates the cluster.
-tools: Read, Grep, Glob, Bash, mcp__radar__diagnose, mcp__radar__discover_metrics, mcp__radar__get_changes, mcp__radar__get_cluster_audit, mcp__radar__get_cluster_upgrade_readiness, mcp__radar__get_dashboard, mcp__radar__get_events, mcp__radar__get_helm_release, mcp__radar__get_neighborhood, mcp__radar__get_pod_logs, mcp__radar__get_prometheus_rules, mcp__radar__get_resource, mcp__radar__get_subject_permissions, mcp__radar__get_topology, mcp__radar__get_workload_logs, mcp__radar__issues, mcp__radar__list_helm_releases, mcp__radar__list_namespaces, mcp__radar__list_packages, mcp__radar__list_resources, mcp__radar__query_prometheus, mcp__radar__search, mcp__radar__top_resources
-model: inherit
+tools: ["read", "search", "execute", "radar/diagnose", "radar/discover_metrics", "radar/get_changes", "radar/get_cluster_audit", "radar/get_cluster_upgrade_readiness", "radar/get_dashboard", "radar/get_events", "radar/get_helm_release", "radar/get_neighborhood", "radar/get_pod_logs", "radar/get_prometheus_rules", "radar/get_resource", "radar/get_subject_permissions", "radar/get_topology", "radar/get_workload_logs", "radar/issues", "radar/list_helm_releases", "radar/list_namespaces", "radar/list_packages", "radar/list_resources", "radar/query_prometheus", "radar/search", "radar/top_resources"]
 ---
+
+<!-- Generated from .claude/agents/cluster-radar.md by scripts/sync_agents.py. Edit that file, not this one. -->
 
 # Cluster investigator
 

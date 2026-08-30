@@ -33,3 +33,11 @@ repos:
     rev: v8.18.3
     hooks:
       - id: gitleaks
+  - repo: local
+    hooks:
+      - id: sync-agents
+        name: Copilot agents match .claude/agents
+        entry: python3 scripts/sync_agents.py --check
+        language: system
+        files: ^\.(claude|github)/agents/.*\.md$
+        pass_filenames: false

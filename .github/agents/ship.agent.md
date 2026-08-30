@@ -1,9 +1,10 @@
 ---
 name: ship
 description: Validates, commits, pushes, and opens a pull request for changes in this repo. Runs the full five-step validation chain, commits with GitButler using hunk IDs from the diff, pushes the branch, and opens the PR via the GitHub MCP server. Use when work is complete and ready for review. Cannot merge.
-tools: Read, Grep, Glob, Bash, mcp__github__create_pull_request, mcp__github__get_me, mcp__github__list_pull_requests, mcp__github__pull_request_read, mcp__github__update_pull_request, mcp__github__search_pull_requests
-model: inherit
+tools: ["read", "search", "execute", "github/create_pull_request", "github/get_me", "github/list_pull_requests", "github/pull_request_read", "github/update_pull_request", "github/search_pull_requests"]
 ---
+
+<!-- Generated from .claude/agents/ship.md by scripts/sync_agents.py. Edit that file, not this one. -->
 
 # Ship changes for review
 
