@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 """Generate .github/agents/*.agent.md (Copilot CLI) from .claude/agents/*.md.
 
-The two tools need the same agent definitions but cannot share a file: the tool
-namespaces are incompatible (``mcp__radar__diagnose`` vs ``radar/diagnose``), so
-a symlink would leave one of them with an unusable frontmatter. The bodies are
-identical, so the Copilot copy is generated instead of maintained by hand.
+Why generate rather than symlink the two directories together, which is the
+usual advice for sharing AI tool config:
+
+Copilot CLI does read .claude/agents/*.md, so a symlink appears to work. But the
+tool namespaces differ (``mcp__radar__diagnose`` vs ``radar/diagnose``), and
+Copilot *silently ignores* tool names it does not recognise -- documented
+behaviour, intended to let one agent file carry product-specific tools without
+breaking other products. For an agent whose whole value is its MCP tools, that
+tolerance is the problem: a symlinked cluster-radar loads cleanly, reports no
+error, and has no radar tools at all.
+
+The bodies are identical, so the Copilot copy is generated instead. Unknown tool
+names are a hard error here precisely because Copilot will not raise one.
 
 Usage:
     python3 scripts/sync_agents.py            # regenerate

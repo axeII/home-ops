@@ -234,11 +234,33 @@ copilot --agent cluster-radar -p "<question>"
 Repository agents live in `.github/agents/`; user-level ones in `~/.copilot/agents/`, and a
 user-level agent of the same name wins.
 
-**`.github/agents/*.agent.md` is generated — do not edit it.** The two tools cannot share a file:
-Copilot namespaces MCP tools as `server/tool` where Claude Code uses `mcp__server__tool`, and the
-built-ins have different names (`Bash` vs `execute`), so a symlink would leave one tool with an
-unusable frontmatter. The bodies are identical, so `.claude/agents/` is the single source and the
-Copilot copies are generated from it:
+**`.github/agents/*.agent.md` is generated — do not edit it.**
+
+Copilot CLI *does* read `.claude/agents/*.md`, so symlinking the two directories — the usual advice
+for sharing AI config — looks like it works. It does not, and it fails silently. Verified against
+CLI v1.0.82:
+
+| Agent file | `tools:` entry | Result |
+| --- | --- | --- |
+| `.claude/agents/probe.md` | `mcp__github__get_me` | **silently dropped**; agent had built-ins only |
+| `.github/agents/probe.agent.md` | `github/get_me` | granted and invoked successfully |
+
+This is deliberate on GitHub's part — the docs state that "all unrecognized tool names are ignored,
+which allows product-specific tools to be specified in an agent profile without causing problems."
+That tolerance is what makes sharing *instruction* files across tools work so well, and it is
+exactly what makes sharing *agent* files dangerous: `cluster-radar` symlinked into Copilot would
+load cleanly, report no error, and have zero radar tools.
+
+Two facts worth keeping in mind:
+
+- `.github/agents/` **wins** over `.claude/agents/` on a name conflict, so the generated files are
+  the ones in effect. Deleting them does not fall back gracefully — it silently strips every MCP
+  tool from all three agents.
+- Copilot ignores `model:` with a warning (`specifies model "inherit" which is not available`), so
+  model selection cannot be shared either.
+
+The bodies are identical, so `.claude/agents/` is the single source and the Copilot copies are
+generated from it:
 
 ```bash
 python3 scripts/sync_agents.py           # regenerate after editing .claude/agents/
