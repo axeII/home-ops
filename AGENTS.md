@@ -184,15 +184,17 @@ automatically at session start.
 Delegate to these rather than doing cluster or log investigation inline: their output stays out of
 the main context window.
 
-Two behaviours worth knowing, both observed directly rather than inferred:
+Two behaviours worth knowing, both observed directly rather than inferred (Claude Code
+2.1.236, 2026-08-30 — re-check before relying on either if your build is much newer):
 
 - **Editing an agent file does not take effect until Claude Code restarts.** A `.claude/agents/*.md`
   edited mid-session keeps running with the definition loaded at startup — the agent will answer
   from its old instructions and give no indication they are stale. Restart before testing a change.
 - **Declared built-in tools can be silently dropped.** `cluster-radar` declares `Grep` and `Glob`
-  but a backgrounded run received neither — 25 tools instead of 27, with no error. It falls back to
-  `Bash` (`grep -rn …`) so nothing breaks, but do not assume a declared built-in is present.
-  MCP tools were unaffected.
+  but a backgrounded run received neither — 25 tools instead of 27, with no error. Seen once, in a
+  backgrounded subagent; whether foreground runs differ was not tested. It falls back to `Bash`
+  (`grep -rn …`) so nothing breaks, but do not assume a declared built-in is present. MCP tools
+  were unaffected.
 
 ### Skills (`.claude/skills/`)
 
