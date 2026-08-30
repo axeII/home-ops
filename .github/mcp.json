@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "radar": {
+      "type": "http",
+      "url": "http://localhost:49412/mcp",
+      "tools": ["*"]
+    }
+  }
+}

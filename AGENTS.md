@@ -210,3 +210,48 @@ The Cloudflare skills come from the `cloudflare` plugin marketplace, enabled in
 
 These are configured per-project in `~/.claude.json`, not in the repo, because the Grafana service
 account token would otherwise be committed.
+
+## GitHub Copilot CLI
+
+Copilot CLI works in this repo too, sharing the same instructions and an equivalent set of agents.
+
+### What is shared automatically
+
+Copilot CLI discovers `AGENTS.md` and `CLAUDE.md` at the repository root on its own, and supports
+the same `@relative/path` include syntax, so `CLAUDE.md` → `@AGENTS.md` resolves there exactly as
+it does in Claude Code. **This file is the single source of truth for both tools** — no
+`.github/copilot-instructions.md` is needed, and adding one would only duplicate this.
+
+### Agents (`.github/agents/*.agent.md`)
+
+The same three agents as `.claude/agents/`, in Copilot's schema — `cluster-radar`, `grafana-logs`,
+and `ship`, with the same read-only and no-merge boundaries. Invoke one with:
+
+```bash
+copilot --agent cluster-radar -p "<question>"
+```
+
+Repository agents live in `.github/agents/`; user-level ones in `~/.copilot/agents/`, and a
+user-level agent of the same name wins. The two agent sets are deliberate duplicates: the schemas
+differ (Copilot namespaces MCP tools as `server/tool` and requires `description`), so **a change to
+an agent must be made in both places** or the tools drift apart.
+
+### MCP servers for Copilot
+
+Copilot CLI reads `~/.copilot/mcp-config.json` — it does **not** auto-load a repo-level
+`.github/mcp.json` (that path applies to other Copilot surfaces). `github-mcp-server` is built in,
+so only `radar` and `grafana` need configuring, and both live in the user config because of the
+Grafana token.
+
+`.github/mcp.json` is kept as the committed, secret-free definition of the radar server. Apply it
+explicitly with:
+
+```bash
+copilot --additional-mcp-config @.github/mcp.json
+```
+
+### Not shared
+
+Slash commands (`.claude/commands/`) and skills (`.claude/skills/`) are Claude Code only. Copilot
+CLI can load `.github/skills/`, but the skills are not duplicated there — their content is either
+already in this file or reachable by reading `.claude/skills/`.
