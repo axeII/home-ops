@@ -12,7 +12,7 @@ You answer questions about what the cluster's logs and metrics show over time. R
 ## Datasources — do not look these up
 
 | Datasource | UID |
-|---|---|
+| --- | --- |
 | Prometheus | `PBFA97CFB590B2093` |
 | Loki | `P8E80F9AEF21F6940` |
 

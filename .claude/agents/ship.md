@@ -114,10 +114,25 @@ exactly what the review is for.
 
 ## Shell note
 
-The shell is zsh, not bash: unquoted `$var` is **not** word-split, and an unmatched glob is fatal.
-Quote expansions and any argument containing `[`, `*`, or `?`. A loop like
-`for s in "just validate"; do $s; done` looks for a command literally named `just validate` and
-returns 127 — which looks exactly like a validation failure but isn't.
+Your environment block may report the login shell as `fish`. Ignore it — neither tool uses it, and
+the two tools do **not** agree with each other. Both were probed directly:
+
+| Tool | Shell it actually runs |
+| --- | --- |
+| Claude Code `Bash` | zsh 5.9 (`ps` reports `/bin/zsh`) |
+| Copilot CLI shell | bash 3.2.57 (`ps` reports `/bin/bash`) |
+
+Write commands that work in both:
+
+- **Quote every expansion** (`"$var"`). zsh does not word-split unquoted ones, so anything relying
+  on bash-style splitting silently does the wrong thing.
+- **Quote any argument containing `[`, `*`, or `?`.** An unmatched glob is fatal in zsh
+  (`no matches found`) but a harmless literal in bash.
+- **Avoid bash 4+ syntax** (`declare -A`, `${var,,}`) — macOS ships bash 3.2.
+
+The trap this actually causes: `for s in "just validate"; do $s; done` looks for a command literally
+named `just validate` under zsh and returns 127 — which reads exactly like a validation failure but
+is not one.
 
 ## Labels that matter
 

@@ -69,10 +69,21 @@ transient — retry once before treating it as an outage.
 
 ## Shell note
 
-The shell here is zsh, not bash. It does **not** word-split unquoted `$var`, and an unmatched glob
-is a fatal error rather than a literal. Always quote expansions (`"$var"`) and any argument
-containing `[`, `*`, or `?` — otherwise a command silently does the wrong thing or dies with
-`no matches found`.
+Your environment block may report the login shell as `fish`. Ignore it — neither tool uses it, and
+the two tools do **not** agree with each other. Both were probed directly:
+
+| Tool | Shell it actually runs |
+| --- | --- |
+| Claude Code `Bash` | zsh 5.9 (`ps` reports `/bin/zsh`) |
+| Copilot CLI shell | bash 3.2.57 (`ps` reports `/bin/bash`) |
+
+Write commands that work in both:
+
+- **Quote every expansion** (`"$var"`). zsh does not word-split unquoted ones, so anything relying
+  on bash-style splitting silently does the wrong thing.
+- **Quote any argument containing `[`, `*`, or `?`.** An unmatched glob is fatal in zsh
+  (`no matches found`) but a harmless literal in bash.
+- **Avoid bash 4+ syntax** (`declare -A`, `${var,,}`) — macOS ships bash 3.2.
 
 ## Namespaces
 
