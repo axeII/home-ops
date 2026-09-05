@@ -51,6 +51,14 @@ spec:
           daemon:
             keyRotationPolicy: KeyGeneration
             keyGeneration: 2
+          # No CephRBDMirror is configured, so there are no peer clusters whose
+          # connection this rotation could break. Takes the insecure entity count
+          # from 5 to 4. The four client.csi-* keys cannot follow until every node
+          # runs Linux 7.0+ (see issue #3841); the chart default keeps them on aes.
+          rbdMirrorPeer:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keyType: aes256k
       cephConfig:
         global:
           bdev_enable_discard: "true"
@@ -86,9 +94,13 @@ spec:
         modules:
           - name: pg_autoscaler
             enabled: true
-          # Enable this if you want to use the Rook dashboard some features
+          # Upstream disables the rook mgr module on Ceph v20.2.2-v20.2.4 regardless
+          # of this value: v20.2.2 leaks memory, v20.2.3/v20.2.4 crash the mgr. Asking
+          # for it was a no-op that only made the manifest disagree with the cluster.
+          # The only cost of leaving it off is a few orchestrator pages in the Ceph
+          # dashboard. https://rook.io/docs/rook/latest-release/Upgrade/ceph-upgrade/
           - name: rook
-            enabled: true
+            enabled: false
       crashCollector:
         disable: false
       dashboard:
