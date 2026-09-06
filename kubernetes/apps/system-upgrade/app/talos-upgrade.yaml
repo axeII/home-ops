@@ -52,10 +52,17 @@ spec:
         volumeMounts:
           - name: ceph-config
             mountPath: /etc/ceph
+          # tuppr builds hook pods with readOnlyRootFilesystem: true, so the
+          # redirects above need a writable /tmp. fsGroup 65532 on the hook pod
+          # makes this emptyDir writable by the hook's uid.
+          - name: tmp
+            mountPath: /tmp
         volumes:
           - name: ceph-config
             secret:
               secretName: rook-ceph-config
+          - name: tmp
+            emptyDir: {}
     post:
       - name: ceph-unset-noout
         image: docker.io/rook/ceph:v1.20.7
@@ -78,7 +85,14 @@ spec:
         volumeMounts:
           - name: ceph-config
             mountPath: /etc/ceph
+          # tuppr builds hook pods with readOnlyRootFilesystem: true, so the
+          # redirects above need a writable /tmp. fsGroup 65532 on the hook pod
+          # makes this emptyDir writable by the hook's uid.
+          - name: tmp
+            mountPath: /tmp
         volumes:
           - name: ceph-config
             secret:
               secretName: rook-ceph-config
+          - name: tmp
+            emptyDir: {}
