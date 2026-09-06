@@ -38,29 +38,32 @@ spec:
           - -c
         args:
           - >-
-            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
-            > /tmp/ceph.conf &&
-            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            printf '[global]\n\tmon_host = %s\n' "$MON_HOST" > /tmp/ceph.conf
             &&
-            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd set noout
+            printf '[client.tuppr]\n\tkey = %s\n' "$CEPH_KEY" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring -n client.tuppr
+            osd set noout
         env:
-          - name: CEPH_SECRET
+          # Both values are mirrored live out of the rook-ceph namespace by the
+          # tuppr-ceph ExternalSecret, so they cannot go stale.
+          - name: CEPH_KEY
             valueFrom:
               secretKeyRef:
-                name: rook-ceph-mon
-                key: ceph-secret
+                name: tuppr-ceph
+                key: ceph-key
+          - name: MON_HOST
+            valueFrom:
+              secretKeyRef:
+                name: tuppr-ceph
+                key: mon_host
         volumeMounts:
-          - name: ceph-config
-            mountPath: /etc/ceph
           # tuppr builds hook pods with readOnlyRootFilesystem: true, so the
           # redirects above need a writable /tmp. fsGroup 65532 on the hook pod
           # makes this emptyDir writable by the hook's uid.
           - name: tmp
             mountPath: /tmp
         volumes:
-          - name: ceph-config
-            secret:
-              secretName: rook-ceph-config
           - name: tmp
             emptyDir: {}
     post:
@@ -71,28 +74,31 @@ spec:
           - -c
         args:
           - >-
-            printf '[global]\n\tmon_host = %s\n' "$(cat /etc/ceph/mon_host)"
-            > /tmp/ceph.conf &&
-            printf '[client.admin]\n\tkey = %s\n' "$CEPH_SECRET" > /tmp/keyring
+            printf '[global]\n\tmon_host = %s\n' "$MON_HOST" > /tmp/ceph.conf
             &&
-            ceph -c /tmp/ceph.conf --keyring /tmp/keyring osd unset noout
+            printf '[client.tuppr]\n\tkey = %s\n' "$CEPH_KEY" > /tmp/keyring
+            &&
+            ceph -c /tmp/ceph.conf --keyring /tmp/keyring -n client.tuppr
+            osd unset noout
         env:
-          - name: CEPH_SECRET
+          # Both values are mirrored live out of the rook-ceph namespace by the
+          # tuppr-ceph ExternalSecret, so they cannot go stale.
+          - name: CEPH_KEY
             valueFrom:
               secretKeyRef:
-                name: rook-ceph-mon
-                key: ceph-secret
+                name: tuppr-ceph
+                key: ceph-key
+          - name: MON_HOST
+            valueFrom:
+              secretKeyRef:
+                name: tuppr-ceph
+                key: mon_host
         volumeMounts:
-          - name: ceph-config
-            mountPath: /etc/ceph
           # tuppr builds hook pods with readOnlyRootFilesystem: true, so the
           # redirects above need a writable /tmp. fsGroup 65532 on the hook pod
           # makes this emptyDir writable by the hook's uid.
           - name: tmp
             mountPath: /tmp
         volumes:
-          - name: ceph-config
-            secret:
-              secretName: rook-ceph-config
           - name: tmp
             emptyDir: {}

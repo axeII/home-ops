@@ -1,0 +1,40 @@
+---
+# Identity the external-secrets kubernetes-provider ClusterSecretStore assumes
+# when reading Ceph credentials out of this namespace. Without it the store has
+# no way to authenticate against the rook-ceph namespace.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eso-rook-ceph-reader
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: eso-rook-ceph-reader
+rules:
+  # external-secrets requires get + list + watch on secrets for this provider.
+  # resourceNames cannot restrict a list, so this is namespace-scoped rather
+  # than secret-scoped. That is the tightest RBAC the provider supports; the
+  # external-secrets controller already reads secrets cluster-wide to do its
+  # job, so this grants no reach it did not already have.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  # Used by the store's validation path (SelfSubjectRulesReview, falling back
+  # to SelfSubjectAccessReview). Reviews the caller's own access only.
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["selfsubjectrulesreviews"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: eso-rook-ceph-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: eso-rook-ceph-reader
+subjects:
+  - kind: ServiceAccount
+    name: eso-rook-ceph-reader
+    namespace: rook-ceph
