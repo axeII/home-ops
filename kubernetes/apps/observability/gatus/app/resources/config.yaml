@@ -3,7 +3,13 @@ alerting:
   pushover:
     application-token: ${GATUS_PUSHOVER_APP_TOKEN}
     user-key: ${GATUS_PUSHOVER_USER_KEY}
-    priority: 1
+    # -1 delivers the notification immediately but with no sound and no
+    # vibration, so nothing here can wake anyone - alerts get read in the
+    # morning instead. This was 1 (high), which in Pushover explicitly
+    # bypasses Quiet Hours, so every check could alert at 3am.
+    priority: -1
+    # -2 puts recovery notices in the Pushover app with no alert at all.
+    resolved-priority: -2
     default-alert:
       description: healthcheck failed
       send-on-resolved: true
