@@ -15,17 +15,11 @@ spec:
     timeout: 30m
     stage: false
   parallelism: 1
-  # TEMPORARY - REVERT AFTER THE v1.13.9 RUN COMPLETES.
-  # tuppr treats an absent maintenance block as "always allowed", so dropping
-  # the window lets the upgrade start as soon as Flux applies this, attended,
-  # instead of waiting for Sunday 02:00. The 2026-09-06 window was consumed by
-  # the failed pre-hook (see #3870) and the nodes are still on v1.13.6.
-  # Restore the block below as soon as all three report v1.13.9.
-  # maintenance:
-  #   windows:
-  #     - start: "0 2 * * 0"
-  #       duration: "4h"
-  #       timezone: "Europe/Paris"
+  maintenance:
+    windows:
+      - start: "0 2 * * 0"
+        duration: "4h"
+        timezone: "Europe/Paris"
   healthChecks:
     - apiVersion: v1
       kind: Node
