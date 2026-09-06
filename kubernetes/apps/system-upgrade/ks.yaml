@@ -8,6 +8,14 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: kube-system
+  # ./app contains ceph-secrets.sops.yaml. Without this block Flux applies the
+  # file verbatim and the Secret ends up holding raw ENC[AES256_GCM,...]
+  # ciphertext, which is what the tuppr ceph hooks were mounting as their
+  # keyring and mon_host.
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   path: ./kubernetes/apps/system-upgrade/app
   prune: true
   sourceRef:
