@@ -48,6 +48,54 @@ spec:
             forward_to = [prometheus.remote_write.vm.receiver]
           }
 
+          // Kubelet cAdvisor - the source of every container CPU/memory series.
+          // Nothing was scraping it, which is why all pod/container resource
+          // panels rendered empty. Scraped directly on the kubelet's :10250
+          // rather than through the apiserver proxy, because the Alloy
+          // ClusterRole carries nodes/metrics but not nodes/proxy.
+          discovery.kubernetes "nodes" {
+            role = "node"
+          }
+
+          discovery.relabel "cadvisor" {
+            targets = discovery.kubernetes.nodes.targets
+            rule {
+              source_labels = ["__meta_kubernetes_node_name"]
+              target_label  = "node"
+            }
+            rule {
+              target_label = "__metrics_path__"
+              replacement  = "/metrics/cadvisor"
+            }
+          }
+
+          prometheus.scrape "cadvisor" {
+            targets           = discovery.relabel.cadvisor.output
+            job_name          = "kubelet-cadvisor"
+            scheme            = "https"
+            scrape_interval   = "60s"
+            bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+            tls_config {
+              ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+              insecure_skip_verify = true
+            }
+            forward_to = [prometheus.relabel.cadvisor_keep.receiver]
+          }
+
+          // Keep only the series the dashboards actually query. Measured against
+          // the live endpoints: this keep-list is 6580 series across the 3 nodes
+          // where an unfiltered scrape is 39222. Against a ~72550 baseline that
+          // is +9% rather than +54%, which matters because the VM Prometheus is
+          // capped at 10GB retention and /data is already 87% full (issue #3726).
+          prometheus.relabel "cadvisor_keep" {
+            forward_to = [prometheus.remote_write.vm.receiver]
+            rule {
+              source_labels = ["__name__"]
+              regex         = "container_(cpu_usage_seconds_total|cpu_cfs_periods_total|cpu_cfs_throttled_periods_total|memory_working_set_bytes|memory_rss|memory_cache|network_receive_bytes_total|network_transmit_bytes_total|fs_reads_bytes_total|fs_writes_bytes_total)"
+              action        = "keep"
+            }
+          }
+
           // Blackbox probe targets for NFS health (replaces orphaned VMProbes)
           discovery.relabel "blackbox_nfs" {
             targets = [{

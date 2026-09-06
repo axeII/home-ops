@@ -18,3 +18,14 @@ spec:
       retries: 3
   values:
     enableServiceLinks: false
+    # KEDA exposes metrics but ships no ServiceMonitor by default, so nothing
+    # was scraping it and the Grafana dashboard rendered empty panels. The
+    # chart can emit the ServiceMonitors itself, which is preferable to
+    # hand-maintaining them alongside the release.
+    prometheus:
+      metricServer:
+        serviceMonitor:
+          enabled: true
+      operator:
+        serviceMonitor:
+          enabled: true

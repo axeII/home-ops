@@ -290,7 +290,7 @@ spec:
   datasources:
     - datasourceName: Prometheus
       inputName: DS_PROMETHEUS
-  url: https://raw.githubusercontent.com/kedacore/keda/main/config/grafana/kubescaler.json
+  url: https://raw.githubusercontent.com/kedacore/keda/main/config/grafana/keda-dashboard.json
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
@@ -305,7 +305,7 @@ spec:
   datasources:
     - datasourceName: Prometheus
       inputName: DS_PROMETHEUS
-  url: https://raw.githubusercontent.com/cilium/cilium/main/examples/kubernetes/addons/prometheus/monitoring-example/dashboards/cilium.json
+  url: https://raw.githubusercontent.com/cilium/cilium/main/examples/kubernetes/addons/prometheus/files/grafana-dashboards/cilium-dashboard.json
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
@@ -327,6 +327,54 @@ spec:
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
+  name: kubernetes-namespaces
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  # renovate: depName="Kubernetes / Views / Namespaces"
+  url: https://grafana.com/api/dashboards/15758/revisions/46/download
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-nodes
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  # renovate: depName="Kubernetes / Views / Nodes"
+  url: https://grafana.com/api/dashboards/15759/revisions/40/download
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-pods
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  # renovate: depName="Kubernetes / Views / Pods"
+  url: https://grafana.com/api/dashboards/15760/revisions/39/download
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
   name: etcd
 spec:
   allowCrossNamespaceImport: true
@@ -337,7 +385,7 @@ spec:
     - datasourceName: Prometheus
       inputName: DS_PROMETHEUS
   # renovate: depName="etcd"
-  url: https://grafana.com/api/dashboards/15055/revisions/9/download
+  url: https://grafana.com/api/dashboards/15055/revisions/7/download
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
