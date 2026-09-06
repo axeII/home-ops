@@ -1,0 +1,25 @@
+---
+# Dedicated cephx user for the tuppr Talos upgrade hooks, replacing the
+# client.admin key that used to be hand-copied into system-upgrade.
+#
+# Rook owns this user's lifecycle and writes its key to the Secret
+# rook-ceph-client-tuppr (keys: tuppr, userID, userKey), so the key can never
+# drift the way the hand-maintained SOPS copy did.
+#
+# Caps are scoped to exactly the two commands the hooks run. Verified against
+# the live cluster before this was written:
+#   ceph -n client.tuppr osd set noout     -> "noout is set"
+#   ceph -n client.tuppr osd unset noout   -> "noout is unset"
+#   ceph -n client.tuppr osd set nodown    -> "Error EACCES: access denied"
+# The "with key=noout" clause is what produces that last denial; without it the
+# user could also set disruptive flags such as pause or full.
+#
+# "allow r" is required for the client to reach the mons at all; command caps
+# alone are not enough to establish the connection.
+apiVersion: ceph.rook.io/v1
+kind: CephClient
+metadata:
+  name: tuppr
+spec:
+  caps:
+    mon: 'allow r, allow command "osd set" with key=noout, allow command "osd unset" with key=noout'

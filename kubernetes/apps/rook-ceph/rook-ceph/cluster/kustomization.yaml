@@ -2,7 +2,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ./cephclient-tuppr.yaml
   - ./dashboard-proxy.yaml
+  - ./eso-reader-rbac.yaml
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./repository.yaml
