@@ -16,7 +16,7 @@
 
 # Pinned to match talos/talenv.yaml (talosVersion v1.13.9, kubernetesVersion v1.36.4)
 talosctl = "1.13.9"
-kubectl = "1.36.4"
+kubectl = "1.37.0"
 
 flux2 = "2.9.5"       # registry name is flux2; the binary is `flux`
 talhelper = "3.1.17"
