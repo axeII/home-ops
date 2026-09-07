@@ -27,11 +27,14 @@
     {
       description: "Talos Group",
       groupName: "talos",
-      matchDatasources: ["docker"],
+      // github-releases covers the talosctl/kubectl pins in mise.toml, which
+      // resolve via aqua rather than the docker datasource used by talenv.yaml.
+      matchDatasources: ["docker", "github-releases"],
       matchPackageNames: [
         "/installer/",
         "/kubelet/",
         "/talosctl/",
+        "/siderolabs\\/talos/",
       ],
       group: {
         commitMessageTopic: "{{{groupName}}} group",

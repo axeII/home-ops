@@ -176,7 +176,7 @@ This repo is a living reference - borrow what you like, ignore what you don't. H
 - **A domain** with DNS managed by a provider external-dns supports (Cloudflare, Route53, etc.).
 - **A secrets backend** - this repo uses 1Password Connect + external-secrets, but anything with an external-secrets provider works.
 - **An Age key** for SOPS-encrypted secrets (`age-keygen`).
-- **Workstation tooling**: `talosctl`, `flux`, `just`, `helmfile`, `talhelper`, `sops`, `kubectl`.
+- **Workstation tooling**: install [mise](https://mise.jdx.dev), then run `mise install`. `mise.toml` pins every tool the repo needs (`talosctl`, `flux`, `just`, `helmfile`, `talhelper`, `sops`, `kubectl`, `flate`, `yayamlls`, and others) and CI installs from the same file.
 - **Nodes**: at least one Talos-capable machine (bare metal, Proxmox VM, or any hypervisor). Three control-plane nodes are recommended.
 
 ### What to swap when forking

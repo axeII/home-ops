@@ -1,0 +1,41 @@
+# Workstation tooling for this repo. Local and CI both read this file, so the
+# validation pipeline runs identical binaries in both places.
+#
+#   mise install    installs everything below
+#   mise latest <t> shows the newest available version
+#
+# Renovate's built-in `mise` manager keeps these current.
+
+[tools]
+# Not in the mise registry, so these name the backend explicitly. Both publish
+# goreleaser darwin/linux binaries, so no Go toolchain is needed.
+# yayamlls is held at the version CI used before this migration; the bump to
+# 0.3.0 gets its own PR so a validation regression stays attributable.
+"github:home-operations/yayamlls" = "0.1.11"
+"github:home-operations/flate" = "0.6.5"
+
+# Pinned to match talos/talenv.yaml (talosVersion v1.13.9, kubernetesVersion v1.36.4)
+talosctl = "1.13.9"
+kubectl = "1.36.4"
+
+flux2 = "2.9.5"       # registry name is flux2; the binary is `flux`
+talhelper = "3.1.17"
+sops = "3.13.3"
+helmfile = "1.7.4"
+stern = "1.34.0"
+yq = "4.53.6"
+jq = "1.8.2"
+just = "1.58.0"
+fd = "10.5.0"
+pre-commit = "4.6.2"
+
+# pre-commit ships as a zipapp that runs on whatever python3 is on PATH, and
+# macOS still provides 3.9 — too old for pre-commit's bundled deps. Pinning
+# python here keeps the hooks working and also covers scripts/*.py.
+python = "3.13.15"
+
+# Replaces the former .envrc. Paths resolve against the repo root.
+[env]
+KUBECONFIG = "{{config_root}}/kubeconfig"
+SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
+TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"

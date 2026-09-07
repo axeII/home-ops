@@ -319,13 +319,9 @@ volsync-unlock-local APP NS="default":
 
 # ─── Workstation ─────────────────────────────────────────────────────────────
 
-# Install Homebrew tools
-brew:
-    brew bundle --file .taskfiles/workstation/Brewfile
-
-# Allow direnv
-direnv:
-    direnv allow .
+# Install the pinned toolchain from mise.toml
+tools:
+    mise install
 
 # Set up Python virtual environment
 venv:

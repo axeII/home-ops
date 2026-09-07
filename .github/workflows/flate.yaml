@@ -36,10 +36,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup flate
-        uses: home-operations/flate/action@631b76b69c4e58c6f4d1cb01e23616fa61aebafa # v0.6.5
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          base: ""
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "github:home-operations/flate"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run flate test
         run: flate test all --path kubernetes/flux

@@ -91,10 +91,11 @@ Warnings are not failures — the script exits 0. Two are currently expected on 
 change introduced.
 
 **Local tool versions**
-`yayamlls` is installed via `go install github.com/home-operations/yayamlls/cmd/yayamlls@<version>`
-into `~/go/bin`, pinned to the same version as `.github/workflows/yayamlls.yaml` so local results
-match the merge gate. If `yayamlls: command not found`, either it is not installed or `~/go/bin` is
-not on PATH.
+Every tool in this pipeline is pinned in `mise.toml` at the repo root, and CI installs from that
+same file via `jdx/mise-action`, so local results match the merge gate by construction. If a tool
+is missing or reports an unexpected version, run `mise install`. `mise ls --current` shows what is
+active. Do not install these tools by hand — an unpinned copy on PATH is what caused local and CI
+to diverge before this was introduced.
 
 ## When validation fails
 

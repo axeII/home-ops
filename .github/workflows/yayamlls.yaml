@@ -14,10 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Install yayamlls
-        run: go install github.com/home-operations/yayamlls/cmd/yayamlls@0.1.11
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "github:home-operations/yayamlls"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Validate manifests
-        run: |
-          export PATH="$(go env GOPATH)/bin:$PATH"
-          yayamlls validate kubernetes/
+        run: yayamlls validate kubernetes/
