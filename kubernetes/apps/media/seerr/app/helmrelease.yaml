@@ -50,12 +50,27 @@ spec:
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  # 1s was too tight for this Node.js app and produced
+                  # recurring near-miss liveness timeouts under normal load.
+                  timeoutSeconds: 5
                   # High threshold tolerates ~150s of DNS blip (UniFi dnsmasq
                   # restarts) before Kubernetes kills the pod. The app doesn't
                   # crash — it just becomes unhealthy when DB DNS fails.
                   failureThreshold: 15
               readiness: *probes
+              # Holds liveness off until the app has actually booted: up to
+              # 5min (5s x 60) of startup grace, then liveness takes over.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/status
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 60
             resources:
               requests:
                 cpu: 10m
