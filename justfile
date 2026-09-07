@@ -10,11 +10,10 @@ _default:
 
 # ─── Configure / Validate ────────────────────────────────────────────────────
 
-# Render templates, check secrets, and validate manifests
+# Encrypt any plaintext secrets and validate manifests
 configure:
     #!/usr/bin/env bash
     set -euo pipefail
-    .venv/bin/makejinja
     for file in $(find kubernetes -type f -name "*.sops.*"); do
         if sops filestatus "$file" | jq --exit-status ".encrypted == false" &>/dev/null; then
             sops --encrypt --in-place "$file"
@@ -326,12 +325,6 @@ brew:
 # Allow direnv
 direnv:
     direnv allow .
-
-# Set up Python virtual environment
-venv:
-    python3 -m venv .venv
-    .venv/bin/python3 -m pip install --upgrade pip setuptools wheel
-    .venv/bin/python3 -m pip install --upgrade --requirement requirements.txt
 
 # ─── Pre-commit ──────────────────────────────────────────────────────────────
 
