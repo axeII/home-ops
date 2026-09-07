@@ -11,7 +11,7 @@
 # goreleaser darwin/linux binaries, so no Go toolchain is needed.
 # yayamlls is held at the version CI used before this migration; the bump to
 # 0.3.0 gets its own PR so a validation regression stays attributable.
-"github:home-operations/yayamlls" = "0.1.11"
+"github:home-operations/yayamlls" = "0.3.0"
 "github:home-operations/flate" = "0.6.5"
 
 # Pinned to match talos/talenv.yaml (talosVersion v1.13.9, kubernetesVersion v1.36.4)
