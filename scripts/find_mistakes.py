@@ -10,6 +10,7 @@ Catches common mistakes before Flux applies them to the cluster:
 - Component paths that don't exist
 - dependsOn referencing Kustomizations that aren't defined
 - Duplicate resource references in kustomizations
+- talosctl/kubectl pins drifting from the cluster versions they talk to
 """
 
 import sys
@@ -19,6 +20,8 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 APPS_DIR = ROOT / "kubernetes" / "apps"
 FLUX_DIR = ROOT / "kubernetes" / "flux"
+MISE_TOML = ROOT / "mise.toml"
+TALENV = ROOT / "talos" / "talenv.yaml"
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -377,6 +380,39 @@ def check_common_component():
             continue
         if "components/common" not in content:
             warnings.append(f"Missing common component: {rel(ns_kustomization)}")
+
+
+def check_client_tool_versions():
+    """Client tools in mise.toml must match the cluster in talos/talenv.yaml.
+
+    talosctl and kubectl are pinned in mise.toml; the cluster they talk to is
+    pinned in talos/talenv.yaml. Renovate groups them so they move together, and
+    .renovate/allowedVersions.json5 stops talosctl leading the cluster. This
+    catches the remaining case: one side bumped without the other, which the
+    allowedVersions cap cannot see.
+    """
+    if not MISE_TOML.exists() or not TALENV.exists():
+        return
+    try:
+        mise = MISE_TOML.read_text()
+        talenv = TALENV.read_text()
+    except OSError:
+        return
+
+    pairs = [
+        ("talosctl", r'^talosctl\s*=\s*"([^"]+)"', r"^talosVersion:\s*v?(\S+)"),
+        ("kubectl", r'^kubectl\s*=\s*"([^"]+)"', r"^kubernetesVersion:\s*v?(\S+)"),
+    ]
+    for tool, tool_re, cluster_re in pairs:
+        pinned = re.search(tool_re, mise, re.MULTILINE)
+        cluster = re.search(cluster_re, talenv, re.MULTILINE)
+        if not pinned or not cluster:
+            continue
+        if pinned.group(1) != cluster.group(1):
+            errors.append(
+                f"{tool} is {pinned.group(1)} in mise.toml but the cluster is "
+                f"{cluster.group(1)} in talos/talenv.yaml - bump both together"
+            )
 
 
 # ── Main ──────────────────────────────────────────────────────────────────
