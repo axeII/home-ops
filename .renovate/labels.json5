@@ -30,6 +30,10 @@
       addLabels: ["renovate/github-action"],
     },
     {
+      matchManagers: ["mise"],
+      addLabels: ["renovate/mise"],
+    },
+    {
       matchDatasources: ["github-releases"],
       addLabels: ["renovate/github-release"],
     },

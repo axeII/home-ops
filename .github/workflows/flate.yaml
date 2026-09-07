@@ -23,7 +23,12 @@ jobs:
         id: changed-files
         uses: bjw-s-labs/action-changed-files@a9a36fb08ce06db9b02fbd8026cc2c0945eb9841 # v0.6.0
         with:
-          patterns: kubernetes/**/*
+          # mise.toml pins flate itself, so a version bump must re-run this gate —
+          # it changes no manifest and would otherwise skip validation entirely.
+          patterns: |
+            kubernetes/**/*
+            mise.toml
+            .github/workflows/flate.yaml
 
   test:
     if: ${{ needs.filter.outputs.changed-files != '[]' }}
@@ -36,10 +41,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup flate
-        uses: home-operations/flate/action@631b76b69c4e58c6f4d1cb01e23616fa61aebafa # v0.6.5
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          base: ""
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "github:home-operations/flate"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run flate test
         run: flate test all --path kubernetes/flux

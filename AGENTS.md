@@ -26,10 +26,25 @@ Claude works as the **medior developer** — it implements changes, validates th
 - `scripts/` — Helper scripts for validation, backups, and DNS.
 - `justfile` — All operations go through `just`. Run `just --list` to see available commands.
 
+## Toolchain
+
+Every CLI this repo needs is pinned in `mise.toml` at the repo root — `talosctl`, `kubectl`, `flux`,
+`talhelper`, `sops`, `helmfile`, `stern`, `yq`, `jq`, `just`, `fd`, `pre-commit`, plus `flate` and
+`yayamlls`. Install [mise](https://mise.jdx.dev) and run `just tools` (or `mise install`).
+
+CI installs from the same `mise.toml` via `jdx/mise-action`, so local runs and the merge gate use
+identical binaries. Do not install these tools by hand or with Homebrew — an unpinned copy on PATH
+is exactly what made local validation diverge from CI before. `mise ls --current` shows what is
+active.
+
+mise also supplies `KUBECONFIG`, `SOPS_AGE_KEY_FILE`, and `TALOSCONFIG` via its `[env]` block. This
+replaced direnv and `.envrc`; running both is explicitly unsupported by mise, so do not reintroduce
+direnv.
+
 ## Validation
 
 - **BEFORE** committing, ALWAYS run `pre-commit run --all-files` and fix any errors first. The commit must pass all pre-commit checks.
-- Run `just configure` to render templates, check secrets, and validate manifests.
+- Run `just configure` to encrypt any plaintext secrets and validate manifests.
 - Run `just validate` to validate YAML schemas on source files via yayamlls.
 - Run `just flate-test` to verify all Flux resources render successfully with flate.
 - Run `python3 scripts/find_mistakes.py` to check for broken Kustomize references (needs `fd`).
