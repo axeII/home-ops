@@ -27,8 +27,6 @@
     {
       description: "Talos Group",
       groupName: "talos",
-      // github-releases covers the talosctl/kubectl pins in mise.toml, which
-      // resolve via aqua rather than the docker datasource used by talenv.yaml.
       matchDatasources: ["docker", "github-releases"],
       matchPackageNames: [
         "/installer/",
@@ -40,6 +38,24 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
       minimumGroupSize: 2,
+    },
+    {
+      // mise pins talosctl and kubectl via the aqua backend, whose datasource is
+      // neither docker nor github-releases — so the rule above cannot reach them
+      // and they opened as standalone "feat(deps)" PRs. Match on the manager
+      // instead, so the client tools travel with the cluster version they target.
+      description: "Talos Group (mise-pinned client tools)",
+      groupName: "talos",
+      matchManagers: ["mise"],
+      matchPackageNames: [
+        "/talosctl/",
+        "/siderolabs\\/talos/",
+        "/kubectl/",
+        "/kubernetes\\/kubernetes/",
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
     },
     {
       description: "Cert-Manager Group",
