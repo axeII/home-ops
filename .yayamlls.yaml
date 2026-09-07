@@ -9,6 +9,7 @@ schemas:
     - "**/sops-age.sops.yaml"
     - "**/talsecret.sops.yaml"
     - "**/volsync/externalsecret.yaml"
+    - "**/volsync/pvc.yaml"
     - "**/volsync/replicationdestination.yaml"
     - "**/volsync/replicationsource.yaml"
     - "**/dragonfly/cluster/cluster.yaml"
