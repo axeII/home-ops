@@ -6,5 +6,19 @@
       matchPackageNames: ["/postgresql/"],
       allowedVersions: "<=17",
     },
+    {
+      // talosctl is a client for the cluster pinned in talos/talenv.yaml. Talos
+      // tolerates a minor of client skew, but leaving it free means the client
+      // silently leads the cluster (it proposed 1.14.0 against a v1.13.10
+      // cluster). Cap it at the cluster's minor so an upgrade is a deliberate,
+      // reviewed step rather than a side effect.
+      //
+      // KEEP IN LOCKSTEP with talosVersion in talos/talenv.yaml: when the
+      // cluster moves to v1.14.x, raise this to "<1.15".
+      description: "Hold talosctl at the cluster's Talos minor (talenv.yaml)",
+      matchManagers: ["mise"],
+      matchPackageNames: ["/talosctl/", "/siderolabs\\/talos/"],
+      allowedVersions: "<1.14",
+    },
   ],
 }
