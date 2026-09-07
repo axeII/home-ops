@@ -15,7 +15,7 @@
 "github:home-operations/flate" = "0.6.5"
 
 # Pinned to match talos/talenv.yaml (talosVersion v1.13.9, kubernetesVersion v1.36.4)
-talosctl = "1.13.9"
+talosctl = "1.14.0"
 kubectl = "1.36.4"
 
 flux2 = "2.9.5"       # registry name is flux2; the binary is `flux`
