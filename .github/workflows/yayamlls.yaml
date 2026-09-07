@@ -4,7 +4,9 @@ name: Yayamlls
 on:
   pull_request:
     branches: ["main"]
-    paths: ["kubernetes/**"]
+    # mise.toml pins yayamlls itself, so a version bump must re-run this gate —
+    # it changes no manifest and would otherwise skip validation entirely.
+    paths: ["kubernetes/**", "mise.toml", ".github/workflows/yayamlls.yaml"]
 
 jobs:
   validate:

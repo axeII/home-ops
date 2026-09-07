@@ -23,7 +23,12 @@ jobs:
         id: changed-files
         uses: bjw-s-labs/action-changed-files@a9a36fb08ce06db9b02fbd8026cc2c0945eb9841 # v0.6.0
         with:
-          patterns: kubernetes/**/*
+          # mise.toml pins flate itself, so a version bump must re-run this gate —
+          # it changes no manifest and would otherwise skip validation entirely.
+          patterns: |
+            kubernetes/**/*
+            mise.toml
+            .github/workflows/flate.yaml
 
   test:
     if: ${{ needs.filter.outputs.changed-files != '[]' }}
