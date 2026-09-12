@@ -1,5 +1,5 @@
 ---
-# yayamlls-disable-file
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/keda.sh/clustertriggerauthentication_v1alpha1.json
 apiVersion: keda.sh/v1alpha1
 kind: ClusterTriggerAuthentication
 metadata:
