@@ -25,6 +25,11 @@
 - { name: "type/digest", color: "ffeC19" }
 # Uncategorized
 - { name: "do not merge", color: "ee0701" }
+# Excluded by auto-merge and bulk-merge-prs; label-sync prunes anything not listed
+# here, so it has to be declared to survive.
+- { name: "hold", color: "ee0701" }
+# Applied by hand to tell the Flate CRD guard a deletion was reviewed and is intended.
+- { name: "crd-deletion-ack", color: "fbca04" }
 # General
 - { name: "bug", color: "a4ffae" }
 - { name: "deploy", color: "1f6feb" }

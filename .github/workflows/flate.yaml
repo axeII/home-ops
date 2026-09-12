@@ -51,3 +51,161 @@ jobs:
 
       - name: Run flate test
         run: flate test all --path kubernetes/flux
+
+  # Helm deletes any resource that was in the previous release manifest and is absent
+  # from the new one. A chart that moves its CRDs from templates/ (rendered into the
+  # manifest) to crds/ (excluded by Helm) therefore deletes them on upgrade — along
+  # with every custom resource they own. flate models this correctly, but --skip-crds
+  # defaults to true, so the removal never reaches the rendered diff and neither
+  # `flate test` nor konflate can see it. This job renders CRDs on both sides and,
+  # when one disappears, comments on the PR, labels it hold and fails. A reviewer who
+  # has checked the deletion is intended adds crd-deletion-ack and re-runs the job,
+  # which drops the hold and passes. Silent on every PR that removes no CRD.
+  crd-guard:
+    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    needs: filter
+    name: Flate - CRD Guard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # The base tree is rendered too, so its history must be present.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "github:home-operations/flate"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Guard against CRD deletion
+        shell: bash
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.number }}
+          GH_TOKEN: ${{ github.token }}
+          HOLD_LABEL: hold
+          ACK_LABEL: crd-deletion-ack
+          MARKER: "<!-- flate-crd-guard -->"
+        run: |
+          set -euo pipefail
+
+          render_crds() {
+            flate build hr --path kubernetes/flux --only-crds -o json --no-progress \
+              | jq -r '.[].metadata.name' | sort -u
+          }
+
+          render_crds > /tmp/head-crds.txt
+
+          # flate resolves the Flux GitRepository against a real repo, so the baseline
+          # tree needs to be one — git archive alone leaves a bare directory.
+          base_dir="$(mktemp -d)"
+          git archive "origin/${BASE_REF}" | tar -x -C "${base_dir}"
+          git -C "${base_dir}" init -q .
+          git -C "${base_dir}" add -A
+          git -C "${base_dir}" -c user.email=ci@local -c user.name=ci commit -qm baseline
+          (cd "${base_dir}" && render_crds) > /tmp/base-crds.txt
+
+          echo "baseline CRDs: $(wc -l < /tmp/base-crds.txt), this PR: $(wc -l < /tmp/head-crds.txt)"
+
+          removed="$(comm -23 /tmp/base-crds.txt /tmp/head-crds.txt || true)"
+          # A count, not the list: an empty multiline output can serialise as a bare
+          # newline rather than "", which would trip the guard on every PR.
+          count="$(printf '%s' "${removed}" | grep -c . || true)"
+
+          if [ "${count}" -eq 0 ]; then
+            echo "No CRD leaves the rendered output." >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          # Read labels live. "Re-run failed jobs" replays the original event payload,
+          # so github.event.pull_request.labels would still show the pre-ack set.
+          acked=false
+          if gh pr view "${PR}" --repo "${REPO}" --json labels --jq '.labels[].name' \
+              | grep -qx "${ACK_LABEL}"; then
+            acked=true
+          fi
+
+          if [ "${acked}" = true ]; then
+            {
+              echo "${MARKER}"
+              echo "### :white_check_mark: CRD deletion acknowledged"
+              echo
+              echo "Approved via the \`${ACK_LABEL}\` label. Merging this deletes the following"
+              echo "CRDs and every custom resource they own:"
+              echo
+              echo '```'
+              echo "${removed}"
+              echo '```'
+              echo
+              echo "\`${HOLD_LABEL}\` has been removed. If these CRDs must survive, confirm the live"
+              echo "objects carry \`helm.sh/resource-policy: keep\` before merging."
+            } > /tmp/crd-comment.md
+          else
+            {
+              echo "${MARKER}"
+              echo "### :rotating_light: This PR would delete CRDs"
+              echo
+              echo "Helm deletes whatever was in the previous release manifest and is absent from"
+              echo "the new one. These CRDs render from \`${BASE_REF}\` but not from this PR, so the"
+              echo "upgrade deletes them — **and every custom resource they own**:"
+              echo
+              echo '```'
+              echo "${removed}"
+              echo '```'
+              echo
+              echo "Labelled \`${HOLD_LABEL}\`, so auto-merge will skip it."
+              echo
+              echo "**If this is not intended**, the chart has most likely moved its CRDs from"
+              echo "\`templates/\` to \`crds/\`, which Helm excludes from the release manifest. Before"
+              echo "merging:"
+              echo
+              echo "1. Annotate the live CRDs so Helm skips the delete:"
+              echo "   \`kubectl annotate crd <name> helm.sh/resource-policy=keep --overwrite\`"
+              echo "2. Verify every one of them reports \`keep\`."
+              echo "3. Set \`upgrade.crds: Skip\` on the HelmRelease for the transition."
+              echo "   \`CreateReplace\` does **not** protect them: Flux force-replaces the live CRDs"
+              echo "   before the upgrade runs, stripping the annotation Helm is about to check."
+              echo
+              echo "**If this is intended and reviewed**, add the \`${ACK_LABEL}\` label and re-run"
+              echo "this job (*Re-run failed jobs*). That records the decision, drops \`${HOLD_LABEL}\`,"
+              echo "and turns this check green."
+              echo
+              echo "<sub>Inspect with \`flate diff hr --skip-crds=false\`.</sub>"
+            } > /tmp/crd-comment.md
+          fi
+
+          cat /tmp/crd-comment.md >> "${GITHUB_STEP_SUMMARY}"
+
+          # Upsert one comment rather than adding a new one on every push.
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
+            --jq '.[] | select(.body | contains("flate-crd-guard")) | .id' 2>/dev/null | head -1 || true)"
+          if [ -n "${existing}" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" \
+              -F body=@/tmp/crd-comment.md >/dev/null \
+              || echo "::warning::could not update the guard comment"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" \
+              -F body=@/tmp/crd-comment.md >/dev/null \
+              || echo "::warning::could not post the guard comment"
+          fi
+
+          if [ "${acked}" = true ]; then
+            gh pr edit "${PR}" --repo "${REPO}" --remove-label "${HOLD_LABEL}" >/dev/null 2>&1 || true
+            echo "Acknowledged via ${ACK_LABEL} — ${count} CRD(s) approved for deletion."
+            exit 0
+          fi
+
+          gh pr edit "${PR}" --repo "${REPO}" --add-label "${HOLD_LABEL}" >/dev/null \
+            || echo "::warning::could not apply '${HOLD_LABEL}' — a fork PR's token is read-only"
+
+          echo "::error::${count} CRD(s) would be deleted: ${removed//$'\n'/ }"
+          exit 1
