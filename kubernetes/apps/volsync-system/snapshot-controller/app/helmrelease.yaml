@@ -1,29 +1,43 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: snapshot-controller
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: snapshot-controller
-      version: 5.2.0
-      sourceRef:
-        kind: HelmRepository
-        name: piraeus
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: snapshot-controller
   install:
     crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
+    # Transitional, for the piraeus -> home-operations migration only. The piraeus
+    # chart rendered the six snapshot CRDs from templates/, so they are in the stored
+    # release manifest; this chart ships them in crds/, which Helm excludes. Helm's
+    # manifest diff would therefore delete them, and CreateReplace does not prevent
+    # that: it force-replaces the live CRDs before the upgrade runs, stripping the
+    # helm.sh/resource-policy=keep annotation that Helm checks a moment later.
+    # Skip leaves the annotation intact. The CRD content is identical between the two
+    # charts, so nothing is lost by not applying it. Restore CreateReplace in a
+    # follow-up once the CRDs are orphaned from the release manifest.
+    crds: Skip
     remediation:
       strategy: rollback
       retries: 3
   values:
     controller:
+      # Keeps the CSIVolumeGroupSnapshot feature gate on, as the previous chart had it.
+      volumeGroupSnapshots: true
+    monitoring:
       serviceMonitor:
-        create: true
+        enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
