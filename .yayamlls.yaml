@@ -3,12 +3,21 @@ kubernetes:
   enabled: true
 catalog: true
 schemas:
+  # `.yayamlls-schemas/any.json` is literally `{}` — mapping a file to it is how a
+  # document is exempted from validation. Keep this list as short as possible and
+  # always record why an entry is here.
   .yayamlls-schemas/any.json:
-    - "**/secret.sops.yaml"
-    - "**/cluster-secrets.sops.yaml"
-    - "**/sops-age.sops.yaml"
-    - "**/talsecret.sops.yaml"
+    # SOPS-encrypted documents cannot be validated: the payload is ciphertext and
+    # the `sops` block is not part of any upstream schema. The glob also stops the
+    # SchemaStore catalog matching on filename alone — it was resolving
+    # token.sops.yaml to an unrelated 1Password schema and failing to load it.
+    - "**/*.sops.yaml"
+    # Flux postBuild substitutions sit in typed fields in these four:
+    # `${VOLSYNC_PUID:=1000}` in an integer `runAsUser`, `${VOLSYNC_CAPACITY:=5Gi}`
+    # in a quantity, `${APP}-volsync-secret` in a DNS-pattern field. A correct
+    # schema rejects all of those pre-substitution, so the *source* is exempt and
+    # the real coverage comes from `yayamlls validate --render`, which validates
+    # the rendered output with substitutions applied.
     - "**/volsync/externalsecret.yaml"
     - "**/volsync/replicationdestination.yaml"
     - "**/volsync/replicationsource.yaml"
-    - "**/dragonfly/cluster/cluster.yaml"
