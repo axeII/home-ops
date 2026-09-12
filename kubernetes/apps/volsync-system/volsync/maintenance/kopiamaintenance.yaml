@@ -1,4 +1,7 @@
 ---
+# Only schema ref left on kubernetes-schemas.pages.dev: k8s-schemas.home-operations.com
+# publishes just replicationsource/replicationdestination for volsync.backube, so it has
+# no KopiaMaintenance schema to migrate to yet.
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/kopiamaintenance_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
 kind: KopiaMaintenance
