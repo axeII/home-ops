@@ -51,3 +51,111 @@ jobs:
 
       - name: Run flate test
         run: flate test all --path kubernetes/flux
+
+  # Helm deletes any resource that was in the previous release manifest and is absent
+  # from the new one. A chart that moves its CRDs from templates/ (rendered into the
+  # manifest) to crds/ (excluded by Helm) therefore deletes them on upgrade — along
+  # with every custom resource they own. flate models this correctly, but --skip-crds
+  # defaults to true, so the removal never reaches the rendered diff and neither
+  # `flate test` nor konflate can see it. This job renders CRDs on both sides and
+  # fails when one disappears. It is silent on every PR that does not do this.
+  crd-guard:
+    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    needs: filter
+    name: Flate - CRD Guard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # The base tree is rendered too, so its history must be present.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "github:home-operations/flate"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Compare rendered CRD sets
+        id: crds
+        shell: bash
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+
+          render_crds() {
+            flate build hr --path kubernetes/flux --only-crds -o json --no-progress \
+              | jq -r '.[].metadata.name' | sort -u
+          }
+
+          render_crds > /tmp/head-crds.txt
+
+          # flate resolves the Flux GitRepository against a real repo, so the baseline
+          # tree needs to be one — git archive alone leaves a bare directory.
+          base_dir="$(mktemp -d)"
+          git archive "origin/${BASE_REF}" | tar -x -C "${base_dir}"
+          git -C "${base_dir}" init -q .
+          git -C "${base_dir}" add -A
+          git -C "${base_dir}" -c user.email=ci@local -c user.name=ci commit -qm baseline
+          (cd "${base_dir}" && render_crds) > /tmp/base-crds.txt
+
+          echo "baseline CRDs: $(wc -l < /tmp/base-crds.txt), this PR: $(wc -l < /tmp/head-crds.txt)"
+
+          removed="$(comm -23 /tmp/base-crds.txt /tmp/head-crds.txt || true)"
+          # A count, not the list: an empty multiline output can serialise as a bare
+          # newline rather than "", which would trip the guard on every PR.
+          count="$(printf '%s' "${removed}" | grep -c . || true)"
+          echo "count=${count}" >> "${GITHUB_OUTPUT}"
+
+          if [ "${count}" -eq 0 ]; then
+            echo "No CRD leaves the rendered output." >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          {
+            echo "## :rotating_light: This upgrade would delete CRDs"
+            echo
+            echo "These CRDs render from the base branch but not from this PR, so Helm"
+            echo "will delete them on upgrade — **and every custom resource they own**:"
+            echo
+            echo '```'
+            echo "${removed}"
+            echo '```'
+            echo
+            echo "The PR has been labelled \`hold\` to keep auto-merge away from it."
+            echo
+            echo "### If this is a deliberate \`templates/\` to \`crds/\` migration"
+            echo
+            echo "1. Annotate the live CRDs so Helm skips the delete:"
+            echo "   \`kubectl annotate crd <name> helm.sh/resource-policy=keep --overwrite\`"
+            echo "2. Verify every one of them reports \`keep\` before merging."
+            echo "3. Set \`upgrade.crds: Skip\` on the HelmRelease for the transition."
+            echo "   \`CreateReplace\` does **not** protect them: Flux force-replaces the live"
+            echo "   CRDs before the upgrade runs, which strips the annotation Helm is about"
+            echo "   to check. Restore \`CreateReplace\` in a follow-up once the CRDs are"
+            echo "   orphaned from the release manifest."
+            echo
+            echo "Inspect the full picture with \`flate diff hr --skip-crds=false\`."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::error::${removed//$'\n'/ }"
+
+      - name: Hold the PR
+        if: ${{ steps.crds.outputs.count != '0' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr edit "${{ github.event.number }}" --add-label hold \
+            || echo "::warning::could not apply the 'hold' label — a fork PR's token is read-only"
+
+      - name: Fail when CRDs would be deleted
+        if: ${{ steps.crds.outputs.count != '0' }}
+        run: exit 1
