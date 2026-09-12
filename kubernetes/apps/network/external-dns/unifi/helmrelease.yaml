@@ -29,20 +29,15 @@ spec:
       name: webhook
       webhook:
         image:
-          repository: ghcr.io/kashalls/external-dns-unifi-webhook
-          tag: v0.9.0@sha256:22f4106f44a0b9ac3c97cf29bbfef93026c1164492152dc797a1d6dc86ddfbb5
+          repository: ghcr.io/home-operations/external-dns-unifi-webhook
+          tag: 0.10.12@sha256:5338b99662e2e15048b4e14b49e17279d384970fdcb3c29169f509f806f49cbe
         env:
           - name: UNIFI_HOST
             value: https://unifi.internal
-          - name: &name UNIFI_USER
+          - name: &name UNIFI_API_KEY
             valueFrom:
               secretKeyRef:
                 name: &secret external-dns-unifi-secret
-                key: *name
-          - name: &name UNIFI_PASS
-            valueFrom:
-              secretKeyRef:
-                name: *secret
                 key: *name
         livenessProbe:
           httpGet:
@@ -56,7 +51,9 @@ spec:
             port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
-    policy: sync
+    # TODO: restore `sync` once the 0.10.x Integration API provider is confirmed
+    # to be reconciling records correctly; upsert-only cannot prune.
+    policy: upsert-only
     sources: ["crd", "gateway-httproute", "service"]
     txtOwnerId: k8s
     txtPrefix: k8s.
