@@ -15,7 +15,16 @@ spec:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
+    # Transitional, for the piraeus -> home-operations migration only. The piraeus
+    # chart rendered the six snapshot CRDs from templates/, so they are in the stored
+    # release manifest; this chart ships them in crds/, which Helm excludes. Helm's
+    # manifest diff would therefore delete them, and CreateReplace does not prevent
+    # that: it force-replaces the live CRDs before the upgrade runs, stripping the
+    # helm.sh/resource-policy=keep annotation that Helm checks a moment later.
+    # Skip leaves the annotation intact. The CRD content is identical between the two
+    # charts, so nothing is lost by not applying it. Restore CreateReplace in a
+    # follow-up once the CRDs are orphaned from the release manifest.
+    crds: Skip
     remediation:
       strategy: rollback
       retries: 3
