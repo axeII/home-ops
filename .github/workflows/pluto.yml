@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@5de34fb0f529db53efc9ef3903150313d28493b9 # master
+        uses: FairwindsOps/pluto/github-action@ac2c42d55d5ff46a1af0f4b15faf3555119eea23 # master
 
       - name: Use pluto
         run: |
