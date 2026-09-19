@@ -32,6 +32,12 @@ spec:
             env:
               KROMGO_SERVER_HOST: 0.0.0.0
               KROMGO_SERVER_PORT: &port 8080
+              # kromgo is reachable from the public internet, so bound how long a
+              # single request can hold a connection or pin a Prometheus query.
+              # Upstream defaults are none, none, and 30s respectively.
+              KROMGO_SERVER_READ_TIMEOUT: 5s
+              KROMGO_SERVER_WRITE_TIMEOUT: 10s
+              KROMGO_QUERY_TIMEOUT: 10s
               KROMGO_PROMETHEUS_URL:
                 valueFrom:
                   secretKeyRef:
@@ -62,6 +68,9 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
+      # kromgo only queries Prometheus; it never calls the Kubernetes API, so it
+      # has no need for a projected ServiceAccount token.
+      automountServiceAccountToken: false
       dnsConfig:
         options:
           - name: ndots
