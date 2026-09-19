@@ -9,7 +9,7 @@ Claude works as the **medior developer** — it implements changes, validates th
 - AI **does**: write code, run validation, create commits via `but`, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
 - AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge without explicit human approval.
 - Every change goes through `pre-commit` and the full validation pipeline before a PR is opened.
-- The PR description must summarize what changed and why so the human reviewer can assess it efficiently.
+- The PR description must follow the shape under "Creating PRs" below. The reviewer skims it before reading the diff, so short and specific beats complete.
 
 ### When to create PRs
 
@@ -91,8 +91,28 @@ or `gh pr create` for write operations. Never force-push, never skip hooks.
 
 1. Push the branch with `but push <branch-name>`.
 2. Create the PR via MCP: `github_create_pull_request` with title, body (`head` branch, `base: "main"`, `owner: "axeII"`, `repo: "home-ops"`).
-3. The PR body must summarize what changed, why, and note any risks or cautions found.
+3. Write the body to the shape below.
 4. Present the PR URL to the human maintainer for review.
+
+#### PR body shape
+
+Four headings, nothing else, whole body under 30 lines.
+
+```markdown
+## What
+## Why
+## Risk
+## Validation
+```
+
+- One line under a heading is the target. Use bullets only for genuinely separate items.
+- **What.** The resources or files that changed and the behaviour that changes with them. The reviewer has the diff, so do not restate it file by file.
+- **Why.** The problem this solves, in a sentence or two. Link the issue instead of retelling it.
+- **Risk.** Blast radius: namespaces touched, whether storage, networking or RBAC is involved, whether Flux restarts anything on reconcile. Konflate cautions go here. "None, docs only" is a complete answer.
+- **Validation.** Which steps ran and that they passed. Name the steps, do not paste their output. Paste output only for a failure you are shipping around on purpose.
+- Leave out session narrative, summary preambles, emoji headings, and tables of changed files.
+- Investigation notes, rejected alternatives, and long logs go in a PR comment or a linked issue, not in the body.
+- Run the `unslop` skill over the body before posting, if it is installed.
 
 ### Review flow
 
@@ -108,8 +128,21 @@ For bugs, tech debt, or tasks outside a PR workflow, create a GitHub issue. Use 
 
 - `github_issue_write` with `method: "create"` — Create a new issue with title, body, labels, assignees.
 - `github_search_issues` / `github_list_issues` — Find existing issues.
-- The body must document: what the issue is, why it exists, what's needed to fix it, and any resources/state gathered during investigation.
-- Keep issues scoped to one concern. Reference related PRs/issues by number.
+- Keep issues scoped to one concern. Reference related PRs/issues by number rather than summarizing them.
+
+#### Issue body shape
+
+Three headings, nothing else, whole body under 25 lines.
+
+```markdown
+## What
+## Why
+## What's needed
+```
+
+- **What** is the observed problem, **Why** is what it costs or blocks, **What's needed** is the fix or the next step to find one.
+- Evidence gathered while investigating (logs, `kubectl` output, radar findings) goes in a follow-up comment, not the opening body. The body holds what a reader needs to decide whether to care.
+- Run the `unslop` skill over the body before posting, if it is installed.
 
 Fallback: `gh issue create` is also permitted if MCP tools are unavailable.
 

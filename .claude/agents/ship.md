@@ -100,8 +100,18 @@ Check for a template first — `.github/pull_request_template.md` or `.github/PU
 <which steps ran and that they passed>
 ```
 
-The description is the reviewer's primary artifact. A reviewer who has to read the whole diff to
-learn what you did has been handed an incomplete PR.
+Keep the whole body under 30 lines, one line per heading wherever one line does the job. **What**
+names what changed and the behaviour that changes with it, not every file, because the reviewer has
+the diff. **Validation** names the steps that ran and does not paste their output, unless you are
+shipping around a failure on purpose. Session narrative, rejected alternatives and long logs go in a
+PR comment, not the body.
+
+The description is the reviewer's primary artifact, and length works against it in both directions.
+A reviewer who has to read the whole diff to learn what you did has been handed an incomplete PR. A
+reviewer who has to read three screens of prose to find the one risky line has been handed a worse
+one.
+
+Run the `unslop` skill over the body before posting, if it is installed.
 
 ## 4. Report back
 
