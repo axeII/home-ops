@@ -9,7 +9,15 @@ spec:
     kind: OCIRepository
     name: mc-router
   interval: 1h
+  # Revert out-of-band changes: a manual scale to 0 left the router down with
+  # nothing reverting it.
+  driftDetection:
+    mode: enabled
   values:
+    image:
+      repository: itzg/mc-router
+      tag: 1.47.1
+      pullPolicy: IfNotPresent
     minecraftRouter:
       autoScale:
         up:

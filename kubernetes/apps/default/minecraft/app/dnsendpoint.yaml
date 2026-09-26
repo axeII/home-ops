@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: minecraft
+spec:
+  endpoints:
+    - dnsName: "mc.${SECRET_DOMAIN}"
+      recordType: A
+      recordTTL: 300
+      targets: ["${SECRET_WAN_IP}"]
+      providerSpecific:
+        # Must stay DNS-only: the Cloudflare proxy is HTTP-only and would break
+        # Minecraft. external-dns-cloudflare runs with --cloudflare-proxied, so
+        # this per-record override is required.
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: "false"
