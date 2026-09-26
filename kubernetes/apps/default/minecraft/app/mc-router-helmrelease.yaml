@@ -9,7 +9,15 @@ spec:
     kind: OCIRepository
     name: mc-router
   interval: 1h
+  # Flux reverts manual edits here, including a scale to 0. To take Minecraft
+  # offline, disable the port-forward on the router or set replicaCount: 0.
+  driftDetection:
+    mode: enabled
   values:
+    image:
+      repository: itzg/mc-router
+      tag: 1.47.1
+      pullPolicy: IfNotPresent
     minecraftRouter:
       autoScale:
         up:

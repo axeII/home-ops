@@ -74,7 +74,16 @@ spec:
         enabled: true
         existingClaim: *app
     serviceAnnotations:
-      mc-router.itzg.me/defaultServer: "true"
+      # mc-router only routes clients whose handshake carries one of these names,
+      # so scans of the WAN IP get no status reply and cannot wake the server.
+      # The LAN IP stays listed for local clients.
+      mc-router.itzg.me/externalServerName: "mc.${SECRET_DOMAIN},192.168.69.102"
+      # Without an asleep MOTD mc-router answers status pings with nothing, so the
+      # server list shows it offline and nobody sends the login that wakes it.
+      mc-router.itzg.me/autoScaleAsleepMOTD: "Sleeping - press Join to wake it (~2 min)"
+      mc-router.itzg.me/autoScaleLoadingMOTD: "Waking up - reconnect in a minute"
+      # The 60s default is shorter than a cold start of this modded server
+      mc-router.itzg.me/autoScaleWaitTimeout: "300s"
     extraPodSpec:
       priorityClassName: system-cluster-critical
     minecraftServer:
@@ -94,7 +103,7 @@ spec:
       memory: 8G
       jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC
         -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions
-        -XX:+AlwaysPreTouch -XX:SoftMaxHeapSize=7g -XX:ConcGCThreads=2"
+        -XX:SoftMaxHeapSize=7g -XX:ConcGCThreads=2"
       rcon:
         enabled: true
         serviceType: ClusterIP
