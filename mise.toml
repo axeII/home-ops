@@ -18,7 +18,7 @@
 talosctl = "1.13.9"
 kubectl = "1.36.4"
 
-flux2 = "2.9.5"       # registry name is flux2; the binary is `flux`
+flux2 = "2.9.6"       # registry name is flux2; the binary is `flux`
 talhelper = "3.1.17"
 sops = "3.13.3"
 helmfile = "1.8.1"
