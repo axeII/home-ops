@@ -27,7 +27,7 @@ yq = "4.54.1"
 jq = "1.8.2"
 just = "1.58.0"
 fd = "10.5.0"
-pre-commit = "4.6.2"
+pre-commit = "4.7.0"
 
 # pre-commit ships as a zipapp that runs on whatever python3 is on PATH, and
 # macOS still provides 3.9 — too old for pre-commit's bundled deps. Pinning
