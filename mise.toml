@@ -14,7 +14,9 @@
 "github:home-operations/yayamlls" = "0.3.2"
 "github:home-operations/flate" = "0.6.5"
 
-# Pinned to match talos/talenv.yaml (talosVersion v1.13.9, kubernetesVersion v1.36.4)
+# Must equal talosVersion / kubernetesVersion in talos/talenv.yaml — these are
+# clients for that cluster. Renovate groups each with its cluster version, and
+# scripts/find_mistakes.py errors if they ever disagree.
 talosctl = "1.13.9"
 kubectl = "1.36.4"
 

@@ -1,0 +1,41 @@
+---
+name: Find Mistakes
+
+on:
+  pull_request:
+    branches: ["main"]
+    # Talos and Kubernetes upgrade in separate Renovate PRs, so a reviewer never
+    # sees the pair side by side. find_mistakes.py fails when talosVersion and
+    # kubernetesVersion are not a supported pair, when the tuppr CRs disagree
+    # with talenv.yaml, or when the mise client tools drift from either. These
+    # paths are everything those checks read.
+    paths:
+      - "talos/talenv.yaml"
+      - "kubernetes/apps/system-upgrade/**"
+      - "mise.toml"
+      - "scripts/find_mistakes.py"
+      - ".github/workflows/find-mistakes.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Find Mistakes - Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        with:
+          # Only this job's tool — mise.toml also pins the workstation set.
+          install_args: "python"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run find_mistakes.py
+        run: python3 scripts/find_mistakes.py

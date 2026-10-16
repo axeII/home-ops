@@ -58,6 +58,8 @@ direnv.
 - Check for OOM issues: `talosctl -n <node-ip> dmesg | grep -i "oom\|kill"`.
 - Talos/K8s upgrades are automated via [tuppr](https://github.com/home-operations/tuppr) in `system-upgrade` namespace.
   - Renovate bumps versions in `TalosUpgrade`/`KubernetesUpgrade` CRs — merge the PR, Flux applies, tuppr orchestrates.
+  - Talos and Kubernetes arrive as separate PRs (`talos` and `kubernetes` groups). The `Find Mistakes` CI check fails a Kubernetes version the pinned Talos does not support, so a Kubernetes minor waits until the Talos upgrade that supports it has merged.
+  - Before moving to a new Talos minor, add its row to `TALOS_KUBERNETES_SUPPORT` in `scripts/find_mistakes.py`. The check fails on a Talos minor it does not know.
   - Upgrades run during maintenance window (Sunday 02:00 Europe/Paris) with Ceph noout pre/post hooks.
   - Manual upgrade still possible: `task talos:upgrade-node IP=192.168.69.110`.
 
