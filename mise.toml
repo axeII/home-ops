@@ -17,7 +17,7 @@
 # Must equal talosVersion / kubernetesVersion in talos/talenv.yaml — these are
 # clients for that cluster. Renovate groups each with its cluster version, and
 # scripts/find_mistakes.py errors if they ever disagree.
-talosctl = "1.13.9"
+talosctl = "1.14.4"
 kubectl = "1.36.4"
 
 flux2 = "2.9.6"       # registry name is flux2; the binary is `flux`
