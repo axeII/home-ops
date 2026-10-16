@@ -11,6 +11,8 @@ Catches common mistakes before Flux applies them to the cluster:
 - dependsOn referencing Kustomizations that aren't defined
 - Duplicate resource references in kustomizations
 - talosctl/kubectl pins drifting from the cluster versions they talk to
+- A Kubernetes version the pinned Talos does not support, or tuppr upgrade
+  CRs disagreeing with talos/talenv.yaml
 """
 
 import sys
@@ -22,6 +24,18 @@ APPS_DIR = ROOT / "kubernetes" / "apps"
 FLUX_DIR = ROOT / "kubernetes" / "flux"
 MISE_TOML = ROOT / "mise.toml"
 TALENV = ROOT / "talos" / "talenv.yaml"
+UPGRADE_DIR = APPS_DIR / "system-upgrade" / "app"
+
+# Kubernetes minors each Talos minor supports, inclusive. Copied from
+# MinimumKubernetesVersion / MaximumKubernetesVersion in Talos's
+# pkg/machinery/compatibility/talos1XX/talos1XX.go, which is what Talos itself
+# enforces on upgrade-k8s (the docs support matrix has lagged it before).
+# A Talos minor missing here is an error, not a pass: moving to a new Talos
+# minor starts with adding its row.
+TALOS_KUBERNETES_SUPPORT = {
+    (1, 13): ((1, 31), (1, 36)),
+    (1, 14): ((1, 32), (1, 37)),
+}
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -386,10 +400,9 @@ def check_client_tool_versions():
     """Client tools in mise.toml must match the cluster in talos/talenv.yaml.
 
     talosctl and kubectl are pinned in mise.toml; the cluster they talk to is
-    pinned in talos/talenv.yaml. Renovate groups them so they move together, and
-    .renovate/allowedVersions.json5 stops talosctl leading the cluster. This
-    catches the remaining case: one side bumped without the other, which the
-    allowedVersions cap cannot see.
+    pinned in talos/talenv.yaml. Renovate groups each tool with its cluster
+    version so they move together; this catches one side bumped without the
+    other.
     """
     if not MISE_TOML.exists() or not TALENV.exists():
         return
@@ -415,6 +428,76 @@ def check_client_tool_versions():
             )
 
 
+def minor(version: str):
+    m = re.match(r"v?(\d+)\.(\d+)", version)
+    return (int(m.group(1)), int(m.group(2))) if m else None
+
+
+def fmt(m) -> str:
+    return f"{m[0]}.{m[1]}"
+
+
+def check_cluster_versions():
+    """Kubernetes must be a version the pinned Talos supports.
+
+    Talos and Kubernetes arrive as separate Renovate PRs, so nothing in review
+    shows the pair side by side. This fails a PR that would leave
+    kubernetesVersion outside the range talosVersion supports - in either
+    direction, so a Talos bump that drops the running Kubernetes minor fails too.
+
+    tuppr applies the versions in its TalosUpgrade / KubernetesUpgrade CRs, not
+    talenv.yaml, so those must match talenv.yaml for the check to mean anything.
+    """
+    if not TALENV.exists():
+        return
+    try:
+        talenv = TALENV.read_text()
+    except OSError:
+        return
+
+    talos = re.search(r"^talosVersion:\s*(\S+)", talenv, re.MULTILINE)
+    k8s = re.search(r"^kubernetesVersion:\s*(\S+)", talenv, re.MULTILINE)
+    if not talos or not k8s:
+        errors.append("talos/talenv.yaml: talosVersion or kubernetesVersion not found")
+        return
+    talos, k8s = talos.group(1), k8s.group(1)
+
+    for cr, pinned in (("talos-upgrade.yaml", talos), ("kubernetes-upgrade.yaml", k8s)):
+        path = UPGRADE_DIR / cr
+        try:
+            found = re.search(r"^\s+version:\s*(\S+)", path.read_text(), re.MULTILINE)
+        except OSError:
+            errors.append(f"{rel(path)}: not found")
+            continue
+        if not found:
+            errors.append(f"{rel(path)}: spec version not found")
+        elif found.group(1).lstrip("v") != pinned.lstrip("v"):
+            errors.append(
+                f"{rel(path)} upgrades to {found.group(1)} but talos/talenv.yaml "
+                f"pins {pinned} - bump both together"
+            )
+
+    talos_minor, k8s_minor = minor(talos), minor(k8s)
+    if not talos_minor or not k8s_minor:
+        errors.append(f"talos/talenv.yaml: cannot parse {talos} / {k8s}")
+        return
+    supported = TALOS_KUBERNETES_SUPPORT.get(talos_minor)
+    if not supported:
+        errors.append(
+            f"Talos {fmt(talos_minor)} has no row in TALOS_KUBERNETES_SUPPORT "
+            "(scripts/find_mistakes.py) - add its Kubernetes range from the "
+            "Talos support matrix"
+        )
+        return
+    lo, hi = supported
+    if not lo <= k8s_minor <= hi:
+        first = "Talos" if k8s_minor > hi else "Kubernetes"
+        errors.append(
+            f"Kubernetes {k8s} is not supported by Talos {talos} "
+            f"(supports {fmt(lo)}-{fmt(hi)}) - upgrade {first} first"
+        )
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main():
@@ -427,6 +510,8 @@ def main():
         ("HelmRepository references", check_helm_repo_refs),
         ("dependsOn references", check_depends_on),
         ("Common component usage", check_common_component),
+        ("Client tool versions", check_client_tool_versions),
+        ("Talos/Kubernetes compatibility", check_cluster_versions),
     ]
 
     for name, check_fn in checks:
