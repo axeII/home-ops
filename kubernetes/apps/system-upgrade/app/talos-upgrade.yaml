@@ -32,7 +32,7 @@ spec:
   hooks:
     pre:
       - name: ceph-set-noout
-        image: docker.io/rook/ceph:v1.20.7
+        image: docker.io/rook/ceph:v1.21.0
         command:
           - sh
           - -c
@@ -68,7 +68,7 @@ spec:
             emptyDir: {}
     post:
       - name: ceph-unset-noout
-        image: docker.io/rook/ceph:v1.20.7
+        image: docker.io/rook/ceph:v1.21.0
         command:
           - sh
           - -c
