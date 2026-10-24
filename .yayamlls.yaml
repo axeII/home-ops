@@ -22,3 +22,8 @@ schemas:
     - "**/volsync/pvc.yaml"
     - "**/volsync/replicationdestination.yaml"
     - "**/volsync/replicationsource.yaml"
+    # Same reason: `${SECRET_DOMAIN}` in DNSEndpoint `dnsName`. The upstream
+    # schema gained a hostname `pattern` there in Oct 2026, which the
+    # unsubstituted source can never match.
+    - "kubernetes/apps/default/minecraft/app/dnsendpoint.yaml"
+    - "kubernetes/apps/network/cloudflare-tunnel/app/dnsendpoint.yaml"
