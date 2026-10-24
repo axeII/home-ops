@@ -54,7 +54,10 @@ spec:
     # TODO: restore `sync` once the 0.10.x Integration API provider is confirmed
     # to be reconciling records correctly; upsert-only cannot prune.
     policy: upsert-only
-    sources: ["crd", "gateway-httproute", "service"]
+    # No `crd` source: both DNSEndpoints (cloudflared tunnel CNAME, minecraft
+    # WAN A record) are public-only. UniFi rejects the tunnel CNAME, which
+    # failed every batch and froze all LAN records.
+    sources: ["gateway-httproute", "service"]
     txtOwnerId: k8s
     txtPrefix: k8s.
     domainFilters:
