@@ -84,7 +84,7 @@ spec:
         hostnames:
           - hub.juno.moe
         parentRefs:
-          - name: external
+          - name: internal
             namespace: kube-system
             sectionName: https
         rules:
