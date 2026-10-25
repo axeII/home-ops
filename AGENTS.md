@@ -148,60 +148,11 @@ Three headings, nothing else, whole body under 25 lines.
 
 Fallback: `gh issue create` is also permitted if MCP tools are unavailable.
 
-## Useful commands
-
-- `just reconcile` — Force Flux to reconcile the cluster.
-- `kubectl get pods -n <namespace>` — Check pod status.
-- `kubectl top nodes` — Check resource usage.
-
 ## CI tools
 
 - **flate** — Offline Flux renderer. `flate test all --path kubernetes/flux` validates all resources render. Used in CI as a synchronous merge gate.
 - **yayamlls** — YAML language server with Kubernetes schema validation. `yayamlls validate --render kubernetes/` validates source + rendered Flux output. Also provides editor LSP support via `.yayamlls.yaml`.
 - **konflate** — PR review service deployed in the `flux-system` namespace. Renders PRs with flate, surfaces blast radius, image changes, and danger flags. Posts status checks and summary comments. Web UI at `konflate.juno.moe`.
-
-## Auto-merge policy
-
-The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and applies these rules:
-
-| Category | Detection | Min age | Days | Konflate gate |
-|---|---|---|---|---|
-| **patch / digest** | `type/patch`, `type/digest` | **2d** | any | no failures, no cautions |
-| **minor** (release train) | `type/minor` | **3d** | **Fri–Sat** (Europe/Berlin) | no failures, no cautions |
-| **major (ci/gh-action)** | `type/major` + `renovate/github-action` | **2d** | any | no failures (cautions allowed) |
-| **major (other)** | `type/major`, not `renovate/github-action` | — | MANUAL | — |
-| **critical infra** | `needs-review` label, or title/branch matches `ceph\|cilium\|flux\|dragonfly` | — | MANUAL | — |
-| **area/talos** | `area/talos` label (`talos/**`) | — | MANUAL | — |
-
-- **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
-- **Sleep between merges:** 300 seconds to let Flux reconcile before the next merge.
-- Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
-- **Bulk merge** (`.github/workflows/bulk-merge-prs.yaml`) also excludes rook-ceph, `area/talos`, `type/major`, `type/minor`, and `hold`.
-- **Defense in depth:** The `pr-classify` workflow applies `needs-review` and `risk/critical` labels to
-  critical-infra PRs. Auto-merge hard-skips any PR with the `needs-review` label regardless of the
-  title/branch regex — two independent detection layers must both fail for a critical upgrade to
-  auto-merge.
-- **Konflate** is reachable only from inside the home network (private IP). From GitHub Actions, the
-  konflate gate is skipped — the auto-merge relies on label/age/day rules alone. `Konflate` as a
-  required status check in branch protection won't work from outside the network.
-- **Konflate write-back** posts a summary PR comment + commit status after each render when reachable (inside the network).
-- **Setup:** add `KONFLATE_PUSH_TOKEN` (random 32-byte hex) to 1Password `konflate` item and as a GitHub Actions secret; confirm the GitHub App has `checks: write` + `pull-requests: write` permissions.
-
-## Cloudflare WAF rules
-
-Required WAF rules for the `juno.moe` zone (effective only when DNS records are Proxied/orange-cloud — required for `external.juno.moe` to route through the Cloudflare Tunnel):
-
-| # | Rule name | Priority | Expression | Action |
-|---|---|---|---|---|
-| 1 | Block threats | 0 | `(cf.threat_score gt 40)` | Block |
-| 2 | Allow github webhooks | 20 | `(http.request.uri.path contains "/hook") and (ip.src in {192.30.252.0/22, 185.199.108.0/22, 140.82.112.0/20, 143.55.64.0/20})` | Skip |
-| 3 | Block bots | 10 | `(cf.client.bot)` | Block |
-| 4 | Allow kromgo and konflate | 45 | `((http.host wildcard "kromgo.juno.moe*") or (http.host eq "konflate.juno.moe")) and (ip.geoip.country eq "US")` | Skip |
-| 5 | Allow only home country | 5 | `(ip.geoip.country ne "CZ")` | Block |
-
-- **Rule 2** replaces the previous broad `/hook OR /api/` rule — `/api/` is no longer opened to everyone; GitHub Actions reaches konflate `/api/` via Rule 4 (host + US country).
-- **Rule 3** uses Cloudflare's `cf.client.bot` field (verified bots flag) — more reliable than the previous `Known Bots equals true`.
-- **GitHub webhook IPs** are published at `https://api.github.com/meta` under `hooks`. Update Rule 2's IP list when GitHub announces new ranges.
 
 ## Observability
 
@@ -213,143 +164,26 @@ Required WAF rules for the `juno.moe` zone (effective only when DNS records are 
 - Exporters (node-exporter, kube-state-metrics, smartctl-exporter, etc.) run locally, scraped by Alloy via ServiceMonitors.
 - Credentials stored in 1Password as `observability-vm` (Prometheus URL/user, Loki URL/user, API token).
 
-## Claude Code agents, skills, and commands
+## Reference docs
 
-This project ships its Claude Code configuration in `.claude/` (tracked in git, so it is reviewed
-like any other change). `CLAUDE.md` at the repo root imports this file, so everything below loads
-automatically at session start.
+- [Auto-merge policy](docs/auto-merge.md) — rules, gates, and quiet windows for the daily auto-merge workflow.
+- [Cloudflare WAF rules](docs/cloudflare-waf.md) — required rules for the `juno.moe` zone.
+- [GitHub Copilot CLI](docs/copilot-cli.md) — how agents and MCP config are shared with Copilot, and why `.github/agents/` is generated.
 
-### Agents (`.claude/agents/`)
+## Claude Code configuration
 
-- **cluster-radar** — Read-only live-cluster investigator. Triages via the radar MCP server
-  (`issues` → `diagnose` → `get_events` → `get_changes` → logs) and falls back to
-  `kubectl`/`flux`/`talosctl` when radar is unavailable. It never mutates the cluster — fixes come
-  back as manifest changes so they land through Flux.
-- **grafana-logs** — Loki and Prometheus query agent. Holds the datasource UIDs and Loki label
-  schema, grinds through log volume in its own context, and returns a summary plus a Grafana
-  deeplink instead of raw lines.
-- **ship** — Runs the full validation chain, commits with `but`, pushes, and opens the PR via the
-  GitHub MCP server. It cannot merge — that capability is deliberately withheld.
+Lives in `.claude/` (tracked, reviewed like any change). `CLAUDE.md` imports this file.
 
-Delegate to these rather than doing cluster or log investigation inline: their output stays out of
-the main context window.
-
-Two behaviours worth knowing, both observed directly rather than inferred (Claude Code
-2.1.236, 2026-08-30 — re-check before relying on either if your build is much newer):
-
-- **Editing an agent file does not take effect until Claude Code restarts.** A `.claude/agents/*.md`
-  edited mid-session keeps running with the definition loaded at startup — the agent will answer
-  from its old instructions and give no indication they are stale. Restart before testing a change.
-- **Declared built-in tools can be silently dropped.** `cluster-radar` declares `Grep` and `Glob`
-  but a backgrounded run received neither — 25 tools instead of 27, with no error. Seen once, in a
-  backgrounded subagent; whether foreground runs differ was not tested. It falls back to `Bash`
-  (`grep -rn …`) so nothing breaks, but do not assume a declared built-in is present. MCP tools
-  were unaffected.
-
-### Skills (`.claude/skills/`)
-
-- **gitbutler** — GitButler CLI (`but`) reference: commits, hunk selection, stacks, history edits.
-- **flux-validate** — The five-step validation pipeline in order with common failures and fixes.
-- **sops-secrets** — SOPS/Age encryption workflow for creating and verifying `*.sops.yaml` files.
-
-The Cloudflare skills come from the `cloudflare` plugin marketplace, enabled in
-`.claude/settings.json`.
-
-### Commands (`.claude/commands/`)
-
-- `/validate` — Run the full validation chain (`just configure` → `just validate` → `just flate-test`
-  → `find_mistakes.py` → `pre-commit`).
-- `/triage [namespace|app]` — Cluster health sweep via the cluster-radar agent.
-- `/ship [description]` — Validate, commit, push, and open a PR via the ship agent.
-
-### MCP servers
-
-- **radar** — `http://localhost:49412/mcp`, served by Radar.app. **Radar.app must be running**, or
-  every radar tool fails; agents fall back to `kubectl`/`flux` and say so.
-- **grafana** — points at `grafana.juno.moe`. Datasources: Prometheus `PBFA97CFB590B2093`,
-  Loki `P8E80F9AEF21F6940`.
-- **github** — repository, issue, and pull request operations.
-
-These are configured per-project in `~/.claude.json`, not in the repo, because the Grafana service
-account token would otherwise be committed.
-
-## GitHub Copilot CLI
-
-Copilot CLI works in this repo too, sharing the same instructions and an equivalent set of agents.
-
-### What is shared automatically
-
-Copilot CLI discovers `AGENTS.md` and `CLAUDE.md` at the repository root on its own, and supports
-the same `@relative/path` include syntax, so `CLAUDE.md` → `@AGENTS.md` resolves there exactly as
-it does in Claude Code. **This file is the single source of truth for both tools** — no
-`.github/copilot-instructions.md` is needed, and adding one would only duplicate this.
-
-### Agents (`.github/agents/*.agent.md`)
-
-The same three agents as `.claude/agents/`, in Copilot's schema — `cluster-radar`, `grafana-logs`,
-and `ship`, with the same read-only and no-merge boundaries. Invoke one with:
-
-```bash
-copilot --agent cluster-radar -p "<question>"
-```
-
-Repository agents live in `.github/agents/`; user-level ones in `~/.copilot/agents/`, and a
-user-level agent of the same name wins.
-
-**`.github/agents/*.agent.md` is generated — do not edit it.**
-
-Copilot CLI *does* read `.claude/agents/*.md`, so symlinking the two directories — the usual advice
-for sharing AI config — looks like it works. It does not, and it fails silently. Verified against
-CLI v1.0.82:
-
-| Agent file | `tools:` entry | Result |
-| --- | --- | --- |
-| `.claude/agents/probe.md` | `mcp__github__get_me` | **silently dropped**; agent had built-ins only |
-| `.github/agents/probe.agent.md` | `github/get_me` | granted and invoked successfully |
-
-This is deliberate on GitHub's part — the docs state that "all unrecognized tool names are ignored,
-which allows product-specific tools to be specified in an agent profile without causing problems."
-That tolerance is what makes sharing *instruction* files across tools work so well, and it is
-exactly what makes sharing *agent* files dangerous: `cluster-radar` symlinked into Copilot would
-load cleanly, report no error, and have zero radar tools.
-
-Two facts worth keeping in mind:
-
-- `.github/agents/` **wins** over `.claude/agents/` on a name conflict, so the generated files are
-  the ones in effect. Deleting them does not fall back gracefully — it silently strips every MCP
-  tool from all three agents.
-- Copilot ignores `model:` with a warning (`specifies model "inherit" which is not available`), so
-  model selection cannot be shared either.
-
-The bodies are identical, so `.claude/agents/` is the single source and the Copilot copies are
-generated from it:
-
-```bash
-python3 scripts/sync_agents.py           # regenerate after editing .claude/agents/
-python3 scripts/sync_agents.py --check   # what the pre-commit hook runs
-```
-
-The `sync-agents` pre-commit hook fails on any drift in either direction — an edit to a source
-that was not regenerated, or a hand-edit to a generated file. If an agent gains a tool with no
-Copilot equivalent, the script exits with the tool name rather than silently dropping it; add the
-mapping to `BUILTINS` in the script.
-
-### MCP servers for Copilot
-
-Copilot CLI reads `~/.copilot/mcp-config.json` — it does **not** auto-load a repo-level
-`.github/mcp.json` (that path applies to other Copilot surfaces). `github-mcp-server` is built in,
-so only `radar` and `grafana` need configuring, and both live in the user config because of the
-Grafana token.
-
-`.github/mcp.json` is kept as the committed, secret-free definition of the radar server. Apply it
-explicitly with:
-
-```bash
-copilot --additional-mcp-config @.github/mcp.json
-```
-
-### Not shared
-
-Slash commands (`.claude/commands/`) and skills (`.claude/skills/`) are Claude Code only. Copilot
-CLI can load `.github/skills/`, but the skills are not duplicated there — their content is either
-already in this file or reachable by reading `.claude/skills/`.
+- Agents: `cluster-radar` (read-only cluster triage via the radar MCP server, falls back to
+  `kubectl`/`flux`/`talosctl`), `grafana-logs` (Loki/Prometheus queries, returns a summary plus a
+  deeplink), `ship` (validate, commit with `but`, push, open PR; cannot merge). Delegate cluster and
+  log investigation to them so the output stays out of the main context.
+- Skills: `gitbutler`, `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
+  plugin enabled in `.claude/settings.json`.
+- Commands: `/validate`, `/triage [namespace|app]`, `/ship [description]`.
+- MCP servers (configured per-project in `~/.claude.json`, not in the repo, because of the Grafana
+  token): `radar` at `http://localhost:49412/mcp` (Radar.app must be running; agents fall back and say
+  so), `grafana` at `grafana.juno.moe` (Prometheus `PBFA97CFB590B2093`, Loki `P8E80F9AEF21F6940`),
+  `github`.
+- `.github/agents/*.agent.md` are generated from `.claude/agents/` by `scripts/sync_agents.py`; do not
+  edit them by hand (pre-commit enforces this).
