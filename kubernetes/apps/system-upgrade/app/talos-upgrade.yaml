@@ -10,10 +10,15 @@ spec:
   policy:
     debug: false
     force: false
-    rebootMode: default
+    # A default (kexec) reboot skips firmware, so the Arc A310 passed through
+    # to k8s-0 never resets and its i915 GuC stays wedged. Power-cycle instead.
+    rebootMode: powercycle
     placement: hard
     timeout: 30m
     stage: false
+    # Fast reboots can orphan RBD VolumeAttachments and leave rescheduled pods
+    # stuck on Multi-Attach errors.
+    waitForVolumeDetach: true
   parallelism: 1
   maintenance:
     windows:
