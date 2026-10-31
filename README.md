@@ -43,11 +43,11 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 ## 🤔 What is this?
 
-A Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s 😆. 
+A Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s 😆.
 
 In this repository every deployment, every network policy, and every secret lives here. Some are SOPS encrypted, others use 1password connection. Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline deploys them to the cluster via flux.
 
-> _Side note_: Most pull requests are automated, but cilium, rook, or flux updates are very critical. Those are always manul and that way it help me to maintain cluster with more ease and I don't have to randomly jump in to fix my cluster from a disaster. 
+> _Side note_: Most pull requests are automated, but cilium, rook, or flux updates are very critical. Those are always manul and that way it help me to maintain cluster with more ease and I don't have to randomly jump in to fix my cluster from a disaster.
 
 This repository has three types of PR automation. This way I try to safely automate as possible the upgrade process:
 - automated
