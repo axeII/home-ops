@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/unpackerr/unpackerr
-              tag: v0.16.1@sha256:406586865431b40b29353d899fb75a788f5384743f7f381444db5fe55d206914
+              tag: v1.0.1@sha256:22b4693fbeaae4bd927905d63b59b8f67b4a1446682d965ac876c61a48976658
             env:
               TZ: "Europe/Paris"
               UN_INTERVAL: 1m
