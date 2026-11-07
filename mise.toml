@@ -28,7 +28,7 @@ stern = "1.35.0"
 yq = "4.54.1"
 jq = "1.8.2"
 just = "1.59.0"
-fd = "10.5.0"
+fd = "10.5.2"
 pre-commit = "4.7.0"
 
 # pre-commit ships as a zipapp that runs on whatever python3 is on PATH, and
