@@ -82,6 +82,22 @@ spec:
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
+  name: exportarr
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  # Media dashboard from exportarr; pin the tag to the sidecar image in media/sabnzbd
+  url: https://raw.githubusercontent.com/onedr0p/exportarr/v2.3.0/examples/grafana/dashboard2.json
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
   name: gatus
 spec:
   allowCrossNamespaceImport: true
