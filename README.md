@@ -139,7 +139,6 @@ flowchart LR
 | [Radarr](https://radarr.video) | Movie collection manager |
 | [Prowlarr](https://prowlarr.com) | Torrent/usenet indexer manager |
 | [Sabnzbd](https://sabnzbd.org) | Usenet downloader |
-| [Unpackerr](https://unpackerr.zip) | Auto-extracts downloaded archives |
 | [Recyclarr](https://recyclarr.dev) | Syncs TRaSH Guides profiles |
 | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Cloudflare anti-bot bypass |
 | [Seerr](https://github.com/seerr-team/seerr) | Media request management |
