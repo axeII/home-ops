@@ -144,22 +144,6 @@ spec:
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: unpackerr
-spec:
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      dashboards: grafana
-  datasources:
-    - datasourceName: Prometheus
-      inputName: DS_PROMETHEUS
-  # renovate: depName="Unpackerr"
-  url: https://grafana.com/api/dashboards/18817/revisions/1/download
----
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDashboard
-metadata:
   name: volsync
 spec:
   allowCrossNamespaceImport: true
