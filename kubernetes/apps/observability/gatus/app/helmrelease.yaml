@@ -30,6 +30,8 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: gatus-secret
+              - secretRef:
+                  name: gatus-gpu-probe-secret
         containers:
           app:
             image:

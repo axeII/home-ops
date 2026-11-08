@@ -1,0 +1,33 @@
+---
+# Push token shared by Gatus and the gpu-probe CronJob. It is generated in the
+# cluster once and never leaves it, so nothing needs to live in 1Password or SOPS.
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: Password
+metadata:
+  name: gatus-gpu-probe
+spec:
+  length: 32
+  digits: 8
+  symbols: 0
+  noUpper: false
+  allowRepeat: true
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: gatus-gpu-probe
+spec:
+  refreshPolicy: CreatedOnce
+  target:
+    name: gatus-gpu-probe-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        GATUS_GPU_PROBE_TOKEN: "{{ .password }}"
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: Password
+          name: gatus-gpu-probe

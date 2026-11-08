@@ -127,5 +127,22 @@ endpoints:
       - type: pushover
         description: "a Flux-managed resource is not Ready"
 
+# Gatus cannot reach the GPU itself, so the gpu-probe CronJob in this namespace
+# runs a short VA-API encode on k8s-0's Arc A310 every 15 minutes and pushes the
+# result here. On 2026-09-25 the card wedged and stayed broken for 30 days with
+# nothing alerting (see #4089). The heartbeat also fires when no result arrives,
+# which covers the probe pod staying Pending because the GPU dropped out.
+external-endpoints:
+  - name: arc-gpu
+    group: infra
+    token: ${GATUS_GPU_PROBE_TOKEN}
+    heartbeat:
+      interval: 1h
+    alerts:
+      - type: pushover
+        description: "the Arc GPU on k8s-0 failed a VA-API encode - Plex hardware transcoding is broken"
+        failure-threshold: 2
+        success-threshold: 1
+
 web:
   port: ${GATUS_WEB_PORT}
