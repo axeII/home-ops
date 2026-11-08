@@ -2,12 +2,12 @@
 # One ICMP echo per second to each host. The `hop` label orders the targets
 # along the path out of the house, so loss can be pinned to a segment:
 #   lan       UniFi gateway; loss here is inside the house
-#   modem     Vodafone CH7465VF in bridge mode; its chip deprioritises ICMP
-#             to itself, so treat loss here as noise unless later hops agree
 #   isp-edge  first Vodafone router that answers (traceroute hop 3; the CMTS
 #             at hop 2 does not reply); loss starting here is the coax segment
 #   cz        CZ.NIC ODVR resolver, a Czech destination outside Vodafone
 #   internet  anycast resolvers, the whole path
+# The CH7465VF modem (192.168.100.1) is not probed: in bridge mode it serves
+# its web UI but never answers ICMP echo, so it would read as 100% loss.
 # protocol: udp uses unprivileged ICMP sockets (still ICMP echo on the wire),
 # which needs net.ipv4.ping_group_range on the pod instead of CAP_NET_RAW.
 targets:
@@ -16,11 +16,6 @@ targets:
     protocol: udp
     labels:
       hop: lan
-  - hosts: ["192.168.100.1"]
-    network: ip4
-    protocol: udp
-    labels:
-      hop: modem
   - hosts: ["86.49.1.113"]
     network: ip4
     protocol: udp

@@ -28,6 +28,10 @@ spec:
               tag: v0.12.0@sha256:2524b895bdae244984e937ecb8fdd755baedbf2bb108204bd1a1dc6732706303
             args:
               - --config.file=/config/config.yaml
+              # The default buckets double (6.4, 12.8, 25.6 ms), so every
+              # internet RTT lands in one bucket and p95 is interpolation.
+              # 2 ms steps across 0-30 ms resolve real jitter on this line.
+              - --buckets=0.0005,0.001,0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,0.025,0.03,0.04,0.05,0.075,0.1,0.15,0.25,0.5,1,2.5
             env:
               TZ: Europe/Paris
             probes:
