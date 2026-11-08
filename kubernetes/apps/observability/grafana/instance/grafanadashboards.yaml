@@ -11,7 +11,8 @@ spec:
       dashboards: grafana
   datasources:
     - datasourceName: Prometheus
-      inputName: DS_PROMETHEUS
+      # dashboard 7587 declares its input as DS_SIGNCL-PROMETHEUS, not DS_PROMETHEUS
+      inputName: DS_SIGNCL-PROMETHEUS
   # renovate: depName="Prometheus Blackbox Exporter"
   url: https://grafana.com/api/dashboards/7587/revisions/3/download
 ---
