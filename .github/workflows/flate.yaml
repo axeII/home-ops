@@ -4,6 +4,10 @@ name: Flate
 on:
   pull_request:
     branches: ["main"]
+  # Runs on main only to refresh the chart cache below: GitHub shares a cache
+  # with PRs only when it was saved from the default branch.
+  push:
+    branches: ["main"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -11,6 +15,12 @@ concurrency:
 
 permissions:
   contents: read
+
+env:
+  # Every run used to download every chart again (three full renders per PR),
+  # so any GitHub release-download hiccup failed unrelated PRs. Caching flate's
+  # store lets unchanged charts come from the cache instead.
+  FLATE_CACHE_DIR: /tmp/flate-cache
 
 jobs:
   filter:
@@ -49,8 +59,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+      # Same scheme as flate's own action: restore the newest cache, save a new one.
+      - name: Cache flate store
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLATE_CACHE_DIR }}
+          key: flate-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            flate-${{ runner.os }}-${{ runner.arch }}-
+
       - name: Run flate test
         run: flate test all --path kubernetes/flux
+
+      # Keep the cache bounded: drop entries unused for 30 days before it is saved.
+      - name: Prune flate cache
+        if: ${{ github.event_name == 'push' }}
+        run: flate cache gc
 
   # Helm deletes any resource that was in the previous release manifest and is absent
   # from the new one. A chart that moves its CRDs from templates/ (rendered into the
@@ -62,7 +86,7 @@ jobs:
   # has checked the deletion is intended adds crd-deletion-ack and re-runs the job,
   # which drops the hold and passes. Silent on every PR that removes no CRD.
   crd-guard:
-    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    if: ${{ github.event_name == 'pull_request' && needs.filter.outputs.changed-files != '[]' }}
     needs: filter
     name: Flate - CRD Guard
     runs-on: ubuntu-latest
@@ -84,6 +108,15 @@ jobs:
           install_args: "github:home-operations/flate"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+      # Same scheme as flate's own action: restore the newest cache, save a new one.
+      - name: Cache flate store
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLATE_CACHE_DIR }}
+          key: flate-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            flate-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Guard against CRD deletion
         shell: bash
