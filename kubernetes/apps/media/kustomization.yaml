@@ -19,3 +19,4 @@ resources:
   - ./seerr/ks.yaml
   - ./kapowarr/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./jellyplex-watched/ks.yaml
