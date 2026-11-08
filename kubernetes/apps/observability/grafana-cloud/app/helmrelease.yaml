@@ -28,6 +28,12 @@ spec:
             name: grafana-cloud-credentials
       mounts:
         varlog: true
+      # The DaemonSet stays (each pod tails its own node's /var/log/pods), but
+      # without clustering every pod also scraped every metrics target, so each
+      # series was ingested 3x. Clustered components below split targets across
+      # the pods instead.
+      clustering:
+        enabled: true
       resources:
         requests:
           cpu: 100m
@@ -40,11 +46,17 @@ spec:
           // Discover ServiceMonitors and scrape metrics
           prometheus.operator.servicemonitors "default" {
             namespaces = []
+            clustering {
+              enabled = true
+            }
             forward_to = [prometheus.remote_write.vm.receiver]
           }
 
           prometheus.operator.podmonitors "default" {
             namespaces = []
+            clustering {
+              enabled = true
+            }
             forward_to = [prometheus.remote_write.vm.receiver]
           }
 
@@ -72,6 +84,9 @@ spec:
           prometheus.scrape "cadvisor" {
             targets           = discovery.relabel.cadvisor.output
             job_name          = "kubelet-cadvisor"
+            clustering {
+              enabled = true
+            }
             scheme            = "https"
             scrape_interval   = "60s"
             bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
@@ -112,6 +127,9 @@ spec:
           prometheus.scrape "blackbox_nfs" {
             targets      = discovery.relabel.blackbox_nfs.output
             job_name     = "blackbox-nfs"
+            clustering {
+              enabled = true
+            }
             metrics_path = "/probe"
             forward_to   = [prometheus.remote_write.vm.receiver]
           }
@@ -139,6 +157,9 @@ spec:
           prometheus.scrape "blackbox_devices" {
             targets      = discovery.relabel.blackbox_devices.output
             job_name     = "blackbox-icmp"
+            clustering {
+              enabled = true
+            }
             metrics_path = "/probe"
             forward_to   = [prometheus.remote_write.vm.receiver]
           }
