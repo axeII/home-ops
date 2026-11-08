@@ -1,12 +1,18 @@
 ---
-apiVersion: operator.victoriametrics.com/v1beta1
-kind: VMPodScrape
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/podmonitor_v1.json
+# Dragonfly serves Prometheus metrics on its admin port (9999). This replaces a
+# VMPodScrape that nothing consumed, so these metrics were never collected.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
 metadata:
   name: dragonfly
 spec:
   selector:
     matchLabels:
       app: dragonfly
-  podTargetLabels: ["app"]
+      app.kubernetes.io/name: dragonfly
+  podTargetLabels:
+    - app
   podMetricsEndpoints:
     - port: admin
+      path: /metrics

@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: dragonfly-allow-vmagent
+  name: dragonfly-allow-clients-and-alloy
   namespace: database
 spec:
   podSelector:
@@ -13,18 +13,21 @@ spec:
   policyTypes:
     - Ingress
   ingress:
+    # Redis clients from any namespace (the operator's own policy only allows
+    # same-namespace clients).
     - from:
         - namespaceSelector: {}
       ports:
         - port: 6379
           protocol: TCP
+    # Metrics scrape on the admin port from Alloy, which replaced vmagent.
     - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: observability
           podSelector:
             matchLabels:
-              app.kubernetes.io/name: vmagent
+              app.kubernetes.io/name: alloy
       ports:
         - port: 9999
           protocol: TCP
