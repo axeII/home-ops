@@ -18,3 +18,4 @@ resources:
   - ./tautulli/ks.yaml
   - ./seerr/ks.yaml
   - ./kapowarr/ks.yaml
+  - ./jellyfin/ks.yaml
