@@ -24,6 +24,12 @@ limits_config:
   max_entries_limit_per_query: 5000
   ingestion_rate_mb: 16
   ingestion_burst_size_mb: 32
+  # Logs Drilldown: per-service volume views need the volume endpoint.
+  volume_enabled: true
+
+# Logs Drilldown "Patterns" tab: detects log line templates and counts them.
+pattern_ingester:
+  enabled: true
 
 compactor:
   working_directory: /loki/compactor
