@@ -5,4 +5,14 @@ kind: Kustomization
 resources:
   - ./grafana.yaml
   - ./grafanadashboards.yaml
+  - ./home-dashboard.yaml
   - ./servicemonitor.yaml
+configMapGenerator:
+  - name: grafana-dashboard-home
+    files:
+      - home.json=./dashboards/home.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # The dashboard JSON is full of ${...} Grafana variables.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
