@@ -33,7 +33,7 @@ spec:
         {
           "id": 1,
           "title": "Packet loss over the selected range",
-          "description": "Read along the path: lan, modem, isp-edge, cz, internet. Loss that starts at isp-edge and carries on to every later hop is the coax segment. Loss at a single middle hop only is ICMP deprioritisation on that router, not real loss.",
+          "description": "Read along the path: lan, isp-edge, cz, internet. Loss that starts at isp-edge and carries on to every later hop is the coax segment. Loss at a single middle hop only is ICMP deprioritisation on that router, not real loss. Each target sends 3600 pings an hour, so over a short range one lost ping already reads as yellow.",
           "type": "stat",
           "gridPos": { "h": 4, "w": 24, "x": 0, "y": 0 },
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
@@ -220,8 +220,8 @@ spec:
             {
               "refId": "A",
               "datasource": { "type": "prometheus", "uid": "${datasource}" },
-              "expr": "unpoller_device_wan_monitor_availability_percent",
-              "legendFormat": "{{name}} {{wan_networkgroup}} {{target}}"
+              "expr": "unpoller_device_wan_monitor_availability_percent{wan_networkgroup=\"WAN\"}",
+              "legendFormat": "{{monitor_type}} {{target}} alerting={{alerting}}"
             }
           ]
         },
@@ -247,8 +247,8 @@ spec:
             {
               "refId": "A",
               "datasource": { "type": "prometheus", "uid": "${datasource}" },
-              "expr": "unpoller_device_wan_monitor_latency_average_seconds",
-              "legendFormat": "{{name}} {{wan_networkgroup}} {{target}}"
+              "expr": "unpoller_device_wan_monitor_latency_average_seconds{wan_networkgroup=\"WAN\"}",
+              "legendFormat": "{{monitor_type}} {{target}} alerting={{alerting}}"
             }
           ]
         }
