@@ -17,4 +17,5 @@ resources:
   - ./node-exporter/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  # - ./unpoller/ks.yaml
+  - ./smokeping-prober/ks.yaml
+  - ./unpoller/ks.yaml
