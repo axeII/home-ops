@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: jellyplex-watched
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      jellyplex-watched:
+        type: cronjob
+        # Copies Plex watched and in-progress state to Jellyfin every 6 hours
+        # while both run side by side. Remove this app after the cutover.
+        cronjob:
+          schedule: "15 */6 * * *"
+          concurrencyPolicy: Forbid
+          backoffLimit: 0
+          successfulJobsHistory: 2
+          failedJobsHistory: 2
+          ttlSecondsAfterFinished: 86400
+        pod:
+          restartPolicy: Never
+        containers:
+          app:
+            image:
+              repository: ghcr.io/luigi311/jellyplex-watched
+              tag: 9.0.0@sha256:f7174e8a53fb5782a81e5cddf4ede5406eed7577c171406cab3de73bffb2c6c7
+            env:
+              TZ: Europe/Paris
+            envFrom:
+              - secretRef:
+                  name: jellyplex-watched-secret
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    persistence:
+      config:
+        type: configMap
+        name: jellyplex-watched-config
+        globalMounts:
+          - path: /app/config/config.yaml
+            subPath: config.yaml
+            readOnly: true
+      tmp:
+        type: emptyDir

@@ -1,0 +1,36 @@
+---
+# JellyPlex-Watched v9 config. Tokens come from JPW_SERVER_TOKENS in
+# jellyplex-watched-secret, keyed by the server names below.
+#
+# One direction only: Plex stays the source of truth until the cutover in
+# #4087, so nothing watched on Jellyfin during the trial is written back.
+#
+# dryrun stays true until the job logs show the matches look right. Then set
+# it to false to start writing watched and in-progress state to Jellyfin.
+dryrun: true
+debug_level: INFO
+run_only_once: true
+# The root filesystem is read-only, so both runtime files live on the /tmp
+# emptyDir.
+log_file: /tmp/log.log
+mark_file: /tmp/mark.log
+request_timeout: 300
+max_threads: 1
+generate_guids: true
+generate_locations: true
+
+blacklist_library_types: ["music", "photos"]
+whitelist_library_types: ["movie", "show", "movies", "tvshows"]
+
+plex:
+  - name: plex
+    baseurl: http://plex.media.svc.cluster.local:32400
+    sync_to: [jellyfin]
+
+jellyfin:
+  - name: jellyfin
+    baseurl: http://jellyfin.media.svc.cluster.local:8096
+    sync_to: []
+
+# Users with the same name on both servers match automatically. Add
+# user_mappings here for any Plex user whose Jellyfin name differs.
