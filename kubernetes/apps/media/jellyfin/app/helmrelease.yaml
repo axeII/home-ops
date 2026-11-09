@@ -64,6 +64,16 @@ spec:
                 drop:
                   - ALL
     defaultPodOptions:
+      # Keep Jellyfin on the GPU node (k8s-0) like Plex. k8s-1 throttles hard
+      # under sustained load and a library scan would push it there. This is
+      # also where hardware transcoding will need to run.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: intel.feature.node.kubernetes.io/gpu
+                    operator: Exists
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
