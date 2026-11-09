@@ -20,6 +20,19 @@ spec:
     - name: intel-device-plugin-gpu
       namespace: kube-system
   interval: 1h
+  # Plex is parked while Jellyfin replaces it (#4087). The nfs-scaler would
+  # start it whenever the NAS is up, so KEDA is held at 0 here, in git.
+  # A kubectl-set pause doesn't last: Flux strips it on the next apply.
+  patches:
+    - target:
+        kind: ScaledObject
+      patch: |-
+        apiVersion: keda.sh/v1alpha1
+        kind: ScaledObject
+        metadata:
+          name: plex
+          annotations:
+            autoscaling.keda.sh/paused-replicas: "0"
   path: ./kubernetes/apps/media/plex/app
   postBuild:
     substitute:
