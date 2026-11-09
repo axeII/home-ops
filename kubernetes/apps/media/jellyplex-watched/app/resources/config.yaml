@@ -5,9 +5,9 @@
 # One direction only: Plex stays the source of truth until the cutover in
 # #4087, so nothing watched on Jellyfin during the trial is written back.
 #
-# dryrun stays true until the job logs show the matches look right. Then set
-# it to false to start writing watched and in-progress state to Jellyfin.
-dryrun: true
+# The 2026-11-09 dry run planned 715 updates for akira and mom with no
+# errors, so this writes watched and in-progress state to Jellyfin.
+dryrun: false
 debug_level: INFO
 run_only_once: true
 # The root filesystem is read-only, so both runtime files live on the /tmp
@@ -48,3 +48,14 @@ user_mappings:
     aliases:
       - { server: plex, username: Mamka8 }
       - { server: jellyfin, username: mom }
+
+# Libraries pair by name, and the names differ between the two servers.
+library_mappings:
+  - canonical: movies
+    aliases:
+      - { server: plex, library: Films }
+      - { server: jellyfin, library: Movies }
+  - canonical: shows
+    aliases:
+      - { server: plex, library: TV shows }
+      - { server: jellyfin, library: Shows }
