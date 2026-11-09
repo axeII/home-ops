@@ -49,14 +49,15 @@ spec:
                 spec:
                   periodSeconds: 10
                   failureThreshold: 30
-            # No GPU yet: it is added when Plex is retired. Until then any
-            # transcode runs on the CPU.
+            # The Arc A310 on k8s-0. The device plugin shares it, so the
+            # gpu-probe CronJob keeps working alongside.
             resources:
               requests:
                 cpu: 100m
                 memory: 512Mi
               limits:
                 memory: 4Gi
+                gpu.intel.com/i915: 1
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -80,15 +81,16 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        # Same NAS group as Plex, for read access to the media share.
+        # 44 is the video group that owns /dev/dri; 65537 reads the NAS share.
         supplementalGroups:
+          - 44
           - 65537
     route:
       app:
         annotations:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
-          glance/description: "Jellyfin media server (trial next to Plex)"
+          glance/description: "Jellyfin media server"
           gatus.home-operations.com/endpoint: |
             path: /health
         hostnames: ["{{ .Release.Name }}.juno.moe"]
