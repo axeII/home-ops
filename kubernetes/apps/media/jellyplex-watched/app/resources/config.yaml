@@ -19,6 +19,11 @@ max_threads: 1
 generate_guids: true
 generate_locations: true
 
+# Only the two people moving to Jellyfin, by their canonical names below.
+whitelist_users: [akira, mom]
+
+# JellyPlex-Watched 9.0.0 reads only movie and show libraries from Plex and
+# skips music whatever these filters say, so music history does not sync.
 blacklist_library_types: ["music", "photos"]
 whitelist_library_types: ["movie", "show", "movies", "tvshows"]
 
@@ -32,5 +37,14 @@ jellyfin:
     baseurl: http://jellyfin.media.svc.cluster.local:8096
     sync_to: []
 
-# Users with the same name on both servers match automatically. Add
-# user_mappings here for any Plex user whose Jellyfin name differs.
+# Plex and Jellyfin usernames differ, so each person is mapped by hand.
+# Names match case-insensitively. A Jellyfin user must exist before it syncs.
+user_mappings:
+  - canonical: akira
+    aliases:
+      - { server: plex, username: nb8ds }
+      - { server: jellyfin, username: akira }
+  - canonical: mom
+    aliases:
+      - { server: plex, username: Mamka8 }
+      - { server: jellyfin, username: mom }
