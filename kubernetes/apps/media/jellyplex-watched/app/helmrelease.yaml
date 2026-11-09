@@ -25,7 +25,8 @@ spec:
         # Copies Plex watched and in-progress state to Jellyfin every 6 hours
         # while both run side by side. Remove this app after the cutover.
         cronjob:
-          schedule: "15 */6 * * *"
+          # :20 keeps it off the gpu-probe runs at :00/:15/:30/:45 on the same node.
+          schedule: "20 */6 * * *"
           concurrencyPolicy: Forbid
           backoffLimit: 0
           successfulJobsHistory: 2
@@ -33,6 +34,15 @@ spec:
           ttlSecondsAfterFinished: 86400
         pod:
           restartPolicy: Never
+          # Run next to Plex and Jellyfin on the GPU node (k8s-0). k8s-1 throttles
+          # hard under sustained load, and a full library scan is exactly that.
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: intel.feature.node.kubernetes.io/gpu
+                        operator: Exists
         containers:
           app:
             image:
@@ -46,7 +56,7 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 128Mi
+                memory: 64Mi
               limits:
                 memory: 512Mi
             securityContext:
