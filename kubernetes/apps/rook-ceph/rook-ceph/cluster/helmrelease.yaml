@@ -79,6 +79,18 @@ spec:
           osd_deep_scrub_interval: "604800"
           # Reduce mon warnings threshold
           mon_data_avail_warn: "20"
+          # RocksDB compaction chatter; warnings and errors still log.
+          debug_rocksdb: "1/5"
+        mon:
+          # At the default (debug) every mon prints a pgmap line each second
+          # and every read-only command, its own liveness probe included.
+          # That was about two thirds of all mon log volume.
+          mon_cluster_log_level: info
+        mgr:
+          # ceph-csi queues a trash purge for each image that volsync clones
+          # still pin. The purge fails until the clone goes, and at info the
+          # mgr prints the whole task as JSON on every retry.
+          mgr/rbd_support/log_level: error
       csi:
         readAffinity:
           enabled: true
