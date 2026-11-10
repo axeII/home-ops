@@ -20,6 +20,9 @@ spec:
   values:
     controllers:
       tautulli:
+        # Parked with Plex while Jellyfin replaces it (#4087). Tautulli only
+        # reads Plex, so it has nothing to do until Plex comes back or goes.
+        replicas: 0
         containers:
           app:
             image:
@@ -88,6 +91,8 @@ spec:
         annotations:
           glance/show: "true"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
+          # No health check while Tautulli is parked, or Gatus alerts on it.
+          gatus.home-operations.com/enabled: "false"
           gatus.home-operations.com/endpoint: |
             path: /auth/login
             conditions:
