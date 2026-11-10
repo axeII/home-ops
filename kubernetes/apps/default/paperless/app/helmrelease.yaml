@@ -65,7 +65,8 @@ spec:
             resources:
               requests:
                 cpu: 25m
-                memory: 3Gi
+                # Peaked at 850 MiB (Nov 2026); OCR bursts use the 6Gi limit.
+                memory: 1Gi
               limits:
                 memory: 6Gi
             securityContext:

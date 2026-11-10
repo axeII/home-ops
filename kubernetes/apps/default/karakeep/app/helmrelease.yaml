@@ -52,7 +52,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 512Mi
               limits:
                 memory: 2Gi
       chrome:
@@ -80,7 +80,7 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                memory: 256Mi
               limits:
                 memory: 3Gi
 
@@ -116,7 +116,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 512Mi
+                memory: 128Mi
               limits:
                 memory: 4Gi
     defaultPodOptions:

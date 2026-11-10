@@ -36,5 +36,7 @@ spec:
     resources:
       requests:
         cpu: 50m
+        memory: 512Mi
       limits:
-        memory: 1Gi
+        # Renders peaked at 850 MiB (Nov 2026), too close to the old 1Gi.
+        memory: 1536Mi

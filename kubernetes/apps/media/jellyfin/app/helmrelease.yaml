@@ -54,7 +54,8 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                # Peaked at 2 GiB during library scans and transcodes (Nov 2026).
+                memory: 1Gi
               limits:
                 memory: 4Gi
                 gpu.intel.com/i915: 1
