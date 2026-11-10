@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/csi.ceph.io/driver_v1.json
+# Rook created both CSI Driver CRs once (Dec 2025) and leaves them to the
+# user, so git owns their resources here. Server-side apply only takes the
+# fields below; the rest stays as Rook wrote it.
+#
+# Rook's values reserved 1 GiB per controller pod and 640 MiB per node pod
+# (about 7.8 GiB across the cluster) for containers that peaked at 85 MiB,
+# and 132 MiB for the node plugin (Nov 2026). Limits stay as they were.
+apiVersion: csi.ceph.io/v1
+kind: Driver
+metadata:
+  name: rook-ceph.rbd.csi.ceph.com
+  annotations:
+    # Never delete it if this file goes away; every Ceph RBD volume needs it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  controllerPlugin:
+    resources:
+      plugin:
+        requests: { cpu: 25m, memory: 128Mi }
+        limits: { memory: 1Gi }
+      provisioner: &sidecar
+        requests: { cpu: 10m, memory: 96Mi }
+        limits: { memory: 256Mi }
+      attacher: *sidecar
+      resizer: *sidecar
+      snapshotter: *sidecar
+      omapGenerator: *sidecar
+  nodePlugin:
+    resources:
+      plugin:
+        requests: { cpu: 25m, memory: 192Mi }
+        limits: { memory: 1Gi }
+      registrar:
+        requests: { cpu: 10m, memory: 32Mi }
+        limits: { memory: 256Mi }
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/csi.ceph.io/driver_v1.json
+apiVersion: csi.ceph.io/v1
+kind: Driver
+metadata:
+  name: rook-ceph.cephfs.csi.ceph.com
+  annotations:
+    # Never delete it if this file goes away; every CephFS volume needs it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  controllerPlugin:
+    resources:
+      plugin:
+        requests: { cpu: 25m, memory: 128Mi }
+        limits: { memory: 1Gi }
+      provisioner: &sidecar
+        requests: { cpu: 10m, memory: 64Mi }
+        limits: { memory: 256Mi }
+      attacher: *sidecar
+      resizer: *sidecar
+      snapshotter: *sidecar
+  nodePlugin:
+    resources:
+      plugin:
+        requests: { cpu: 25m, memory: 192Mi }
+        limits: { memory: 1Gi }
+      registrar:
+        requests: { cpu: 10m, memory: 32Mi }
+        limits: { memory: 256Mi }

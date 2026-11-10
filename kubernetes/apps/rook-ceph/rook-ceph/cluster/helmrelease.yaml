@@ -128,7 +128,8 @@ spec:
             memory: 4Gi
           requests:
             cpu: 50m
-            memory: 512Mi
+            # The mgr peaked at 3.1 GiB (Nov 2026); 512Mi left that unreserved.
+            memory: 1Gi
         mon:
           limits:
             memory: 2Gi
@@ -201,7 +202,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 1Gi
+                # Each MDS peaked under 80 MiB. Rook sizes the MDS cache from
+                # the limit, so the request only affects scheduling.
+                memory: 256Mi
               limits:
                 memory: 3Gi
         storageClass:
