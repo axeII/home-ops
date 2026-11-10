@@ -71,5 +71,7 @@ spec:
       app:
         endpoints:
           - port: http
-            interval: 2m # Unifi API only polls at 2m intervals
+            # 1m matches unpoller's scrape cache. The UniFi-Poller dashboards use
+            # rate() over a 2m window, which is empty at a 2m scrape interval.
+            interval: 1m
             scrapeTimeout: 10s
