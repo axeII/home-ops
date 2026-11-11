@@ -144,6 +144,7 @@ flowchart LR
 | [Seerr](https://github.com/seerr-team/seerr) | Media request management |
 | [Komga](https://komga.org) | Comic/manga/ebook library |
 | [Kapowarr](https://github.com/Casvt/Kapowarr) | Comic book collection manager |
+| [Suwayomi](https://github.com/Suwayomi/Suwayomi-Server) | Manga and manhwa downloader feeding Komga |
 
 ### Home & Productivity
 
