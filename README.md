@@ -142,7 +142,6 @@ flowchart LR
 | [Recyclarr](https://recyclarr.dev) | Syncs TRaSH Guides profiles |
 | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Cloudflare anti-bot bypass |
 | [Seerr](https://github.com/seerr-team/seerr) | Media request management |
-| [Tautulli](https://tautulli.com) | Plex statistics and monitoring |
 | [Komga](https://komga.org) | Comic/manga/ebook library |
 | [Kapowarr](https://github.com/Casvt/Kapowarr) | Comic book collection manager |
 
