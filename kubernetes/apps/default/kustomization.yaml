@@ -13,3 +13,4 @@ resources:
   - ./home-assistant/ks.yaml
   - ./minecraft/ks.yaml
   - ./paperless/ks.yaml
+  - ./redlib/ks.yaml

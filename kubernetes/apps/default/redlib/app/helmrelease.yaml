@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app redlib
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      redlib:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              # Fork of redlib-org/redlib. It only publishes `latest` and `sha-<commit>`
+              # tags, so Renovate tracks the digest of `latest`.
+              repository: ghcr.io/nachtalb/redlib
+              tag: latest@sha256:aa16bc4d091892b0cc04dbff0622c987364d712b07c68644a409f78bef583308
+            env:
+              REDLIB_LISTEN_PORT: &port 8080
+              REDLIB_ROBOTS_DISABLE_INDEXING: "on"
+              REDLIB_DEFAULT_SHOW_NSFW: "on"
+              REDLIB_DEFAULT_WIDE: "on"
+              REDLIB_DEFAULT_USE_HLS: "on"
+              REDLIB_DEFAULT_HIDE_HLS_NOTIFICATION: "on"
+              REDLIB_DEFAULT_POST_SORT: hot
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    # Answers without contacting Reddit, so probes cost no quota.
+                    path: &health /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        annotations:
+          glance/name: Redlib
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/redlib.png
+          glance/description: "Private front-end for Reddit."
+          # The default check path `/` would fetch the front page from Reddit every interval.
+          gatus.home-operations.com/endpoint: |
+            path: /healthz
+        hostnames:
+          - redlib.juno.moe
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
