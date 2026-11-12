@@ -10,3 +10,7 @@ configMapGenerator:
       - komga-covers.sh=./resources/komga-covers.sh
 generatorOptions:
   disableNameSuffixHash: true
+  # The script is full of shell ${...} expansions; without this Flux's
+  # postBuild substitution treats them as its own variables and the build fails.
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
