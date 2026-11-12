@@ -23,6 +23,8 @@ spec:
       suwayomi:
         labels:
           nfsMount: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
         initContainers:
           # The image hardcodes its downloads folder, so the NFS library is
           # mounted there by subPath. Create that folder as the app user first;
@@ -82,6 +84,31 @@ spec:
               limits:
                 memory: 1536Mi
             securityContext: *securityContext
+          # Komga shows the first page of chapter 1 as the series cover, which
+          # for a webtoon is a tall strip. This copies the cover Suwayomi keeps
+          # in its thumbnail cache into each series folder as cover.<ext>.
+          covers:
+            image: *image
+            args: ["/bin/sh", "/scripts/komga-covers.sh"]
+            env:
+              INTERVAL_SECONDS: "900"
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 5m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -109,6 +136,17 @@ spec:
             app:
               - path: /home/suwayomi/.local/share/Tachidesk/downloads
                 subPath: suwayomi
+            covers:
+              - path: /downloads
+                subPath: suwayomi
+      scripts:
+        type: configMap
+        name: suwayomi-scripts
+        advancedMounts:
+          suwayomi:
+            covers:
+              - path: /scripts
+                readOnly: true
     route:
       app:
         annotations:
