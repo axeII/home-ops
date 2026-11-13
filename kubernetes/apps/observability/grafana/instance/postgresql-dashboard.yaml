@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+# grafana.com dashboard 9628 rev 8, vendored so two panels could be fixed.
+# Upstream filtered "Active sessions" and "Lock tables" with `!= 0`, so a
+# quiet database rendered as "No data", which looks the same as a broken
+# exporter. Both now fall back to a single 0 series named "none".
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: postgresql
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  configMapRef:
+    name: grafana-dashboard-postgresql
+    key: postgresql.json
