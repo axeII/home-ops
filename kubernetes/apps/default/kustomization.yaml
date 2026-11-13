@@ -14,3 +14,4 @@ resources:
   - ./minecraft/ks.yaml
   - ./paperless/ks.yaml
   - ./redlib/ks.yaml
+  - ./securo/ks.yaml
