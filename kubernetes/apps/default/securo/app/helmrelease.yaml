@@ -20,12 +20,39 @@ spec:
   values:
     controllers:
       securo:
+        # RWO volume: a rolling update would leave the new pod waiting on the old one's attachment.
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          01-init-db:
+            image: &initImage
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
+              - secretRef:
+                  name: securo-secret
+          # pgvector is not a trusted extension, so the securo user cannot create it and
+          # migration 046 would fail. Create it as the superuser; the migration's own
+          # CREATE EXTENSION IF NOT EXISTS then does nothing.
+          02-init-vector:
+            image: *initImage
+            command:
+              - psql
+              - --set=ON_ERROR_STOP=1
+              - --command=CREATE EXTENSION IF NOT EXISTS vector
+            env:
+              PGHOST: db.internal
+              PGDATABASE: securo
+              PGUSER: postgres
+              PGPASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: securo-secret
+                    key: INIT_POSTGRES_SUPER_PASS
           # Workers must never race the schema, so the pod waits here until it is at head.
-          # The loop also covers Postgres still starting on a fresh install.
-          migrate:
+          03-migrate:
             image: &backendImage
               repository: ghcr.io/securo-finance/securo-backend
               tag: 0.18.0@sha256:9f050a7ac5dabfe6c53b89a08a5bd4c1cf5758e057c19359bda59e7cc74e212e
@@ -50,9 +77,7 @@ spec:
               # No bank connection: transactions come in through file import only.
               SIMPLEFIN_ENABLED: "false"
               TESOURO_DIRETO_ENABLED: "false"
-            envFrom: &envFrom
-              - secretRef:
-                  name: securo-secret
+            envFrom: *envFrom
         containers:
           app:
             image: *backendImage
@@ -155,55 +180,6 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 128Mi
-      # Own Postgres rather than db.internal: the migrations require pgvector, which the
-      # shared server does not ship.
-      postgres:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          # Shares the RWO volume with the securo controller.
-          affinity:
-            podAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app.kubernetes.io/controller
-                        operator: In
-                        values:
-                          - securo
-                  topologyKey: kubernetes.io/hostname
-        containers:
-          app:
-            image:
-              repository: docker.io/pgvector/pgvector
-              tag: 0.8.7-pg16@sha256:484e838076e04939d27d3e176e91c86eea96236126023be8d3059761122e579f
-            env:
-              TZ: Europe/Paris
-              POSTGRES_USER: securo
-              POSTGRES_DB: securo
-              PGDATA: /var/lib/postgresql/data/pgdata
-              POSTGRES_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: securo-secret
-                    key: POSTGRES_PASSWORD
-            probes:
-              liveness: &postgresProbe
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command: [pg_isready, -U, securo, -d, securo]
-                  periodSeconds: 20
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *postgresProbe
-            resources:
-              requests:
-                cpu: 10m
-                memory: 128Mi
-              limits:
-                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -217,11 +193,6 @@ spec:
         ports:
           http:
             port: *port
-      postgres:
-        controller: postgres
-        ports:
-          postgres:
-            port: 5432
     route:
       app:
         annotations:
@@ -249,7 +220,3 @@ spec:
                 subPath: attachments
             worker: *attachments
             beat: *attachments
-          postgres:
-            app:
-              - path: /var/lib/postgresql/data
-                subPath: postgres
