@@ -1,0 +1,1194 @@
+{
+  "uid": "cloudflare-zone",
+  "title": "Cloudflare Zone Analytics",
+  "tags": [
+    "cloudflare"
+  ],
+  "schemaVersion": 41,
+  "editable": true,
+  "timezone": "browser",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "refresh": "5m",
+  "graphTooltip": 1,
+  "description": "Queried live from the Cloudflare GraphQL Analytics API through the Infinity datasource. Free-plan limits: 30 days of history, at most 30 days per query.",
+  "templating": {
+    "list": [
+      {
+        "name": "bucket",
+        "label": "Bucket",
+        "type": "custom",
+        "query": "5 min : datetimeFiveMinutes, 15 min : datetimeFifteenMinutes, 1 hour : datetimeHour, 1 day : date",
+        "current": {
+          "text": "1 hour",
+          "value": "datetimeHour",
+          "selected": true
+        },
+        "options": [
+          {
+            "text": "5 min",
+            "value": "datetimeFiveMinutes",
+            "selected": false
+          },
+          {
+            "text": "15 min",
+            "value": "datetimeFifteenMinutes",
+            "selected": false
+          },
+          {
+            "text": "1 hour",
+            "value": "datetimeHour",
+            "selected": true
+          },
+          {
+            "text": "1 day",
+            "value": "date",
+            "selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Requests",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsOverviewAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { sum { requests } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "sum.requests",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Data served",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsOverviewAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { sum { bytes } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "sum.bytes",
+              "text": "bytes",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Served from cache",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsOverviewAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { ratio { cachedRequests } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "ratio.cachedRequests",
+              "text": "cached",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Blocked or challenged",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\", securityAction_in: [\"block\", \"challenge\", \"jschallenge\", \"managed_challenge\"]}) { count } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Requests that a WAF rule blocked or challenged.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "orange"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "4xx responses",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsOverviewAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { ratio { status4xx } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "ratio.status4xx",
+              "text": "4xx",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Includes 403s from WAF blocks.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "yellow"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "5xx responses",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 20,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsOverviewAdaptiveGroups(limit: 1, filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { ratio { status5xx } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "ratio.status5xx",
+              "text": "5xx",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "red"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Requests by status code",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 10000, orderBy: [${bucket}_ASC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count dimensions { ts: ${bucket} status: edgeResponseStatus } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.ts",
+              "text": "time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "dimensions.status",
+              "text": "status",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Requests by security action",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 10000, orderBy: [${bucket}_ASC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count dimensions { ts: ${bucket} action: securityAction } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.ts",
+              "text": "time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "dimensions.action",
+              "text": "action",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Requests by cache status",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 10000, orderBy: [${bucket}_ASC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count dimensions { ts: ${bucket} cache: cacheStatus } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.ts",
+              "text": "time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "dimensions.cache",
+              "text": "cache",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Data served",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 10000, orderBy: [${bucket}_ASC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { sum { edgeResponseBytes } dimensions { ts: ${bucket}  } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.ts",
+              "text": "time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "sum.edgeResponseBytes",
+              "text": "bytes",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes",
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "type": "table",
+      "title": "Top hosts",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 8,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 15, orderBy: [count_DESC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count sum { edgeResponseBytes } dimensions { host: clientRequestHTTPHost } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.host",
+              "text": "host",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            },
+            {
+              "selector": "sum.edgeResponseBytes",
+              "text": "bytes",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "host": 0,
+              "requests": 1,
+              "bytes": 2
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "id": 12,
+      "type": "table",
+      "title": "Top countries",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 20,
+        "w": 8,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 15, orderBy: [count_DESC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count sum { edgeResponseBytes } dimensions { country: clientCountryName } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.country",
+              "text": "country",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            },
+            {
+              "selector": "sum.edgeResponseBytes",
+              "text": "bytes",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "country": 0,
+              "requests": 1,
+              "bytes": 2
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "id": 13,
+      "type": "table",
+      "title": "Security actions",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 20,
+        "w": 8,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 15, orderBy: [count_DESC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\"}) { count dimensions { action: securityAction source: securitySource } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.action",
+              "text": "action",
+              "type": "string"
+            },
+            {
+              "selector": "dimensions.source",
+              "text": "source",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "What the WAF did with requests, and which product decided. 'unknown' means no rule acted.",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "action": 0,
+              "source": 1,
+              "requests": 2
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "id": 14,
+      "type": "table",
+      "title": "Top error responses",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 14,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 25, orderBy: [count_DESC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\", edgeResponseStatus_geq: 400}) { count dimensions { host: clientRequestHTTPHost path: clientRequestPath status: edgeResponseStatus } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.host",
+              "text": "host",
+              "type": "string"
+            },
+            {
+              "selector": "dimensions.path",
+              "text": "path",
+              "type": "string"
+            },
+            {
+              "selector": "dimensions.status",
+              "text": "status",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "host": 0,
+              "path": 1,
+              "status": 2,
+              "requests": 3
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "id": 15,
+      "type": "table",
+      "title": "Top blocked or challenged clients",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "cloudflare"
+      },
+      "gridPos": {
+        "x": 14,
+        "y": 29,
+        "w": 10,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cloudflare"
+          },
+          "type": "graphql",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "https://api.cloudflare.com/client/v4/graphql",
+          "url_options": {
+            "method": "POST",
+            "body_type": "graphql",
+            "body_graphql_query": "query { viewer { zones(limit: 1) { s: httpRequestsAdaptiveGroups(limit: 25, orderBy: [count_DESC], filter: {datetime_geq: \"${__from:date:iso}\", datetime_lt: \"${__to:date:iso}\", securityAction_in: [\"block\", \"challenge\", \"jschallenge\", \"managed_challenge\"]}) { count dimensions { ip: clientIP country: clientCountryName action: securityAction } } } } }"
+          },
+          "root_selector": "data.viewer.zones.s",
+          "columns": [
+            {
+              "selector": "dimensions.ip",
+              "text": "ip",
+              "type": "string"
+            },
+            {
+              "selector": "dimensions.country",
+              "text": "country",
+              "type": "string"
+            },
+            {
+              "selector": "dimensions.action",
+              "text": "action",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "requests",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "ip": 0,
+              "country": 1,
+              "action": 2,
+              "requests": 3
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    }
+  ]
+}
