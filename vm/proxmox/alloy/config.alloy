@@ -1,0 +1,138 @@
+// Grafana Alloy on the Proxmox host (pve). Ships to the observability VM:
+//   - host metrics (node-exporter collectors)     -> Prometheus, job="proxmox"
+//   - per-guest metrics pushed by Proxmox (OTLP)   -> Prometheus, job="proxmox-guests"
+//   - the systemd journal                          -> Loki, job="proxmox"
+// The VM's Caddy allowlists 192.168.69.0/24 and needs no credentials.
+
+// ---------- host metrics ----------
+prometheus.exporter.unix "host" {
+  enable_collectors = ["systemd"]
+
+  filesystem {
+    fs_types_exclude     = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|fuse\\.lxcfs|hugetlbfs|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tmpfs|tracefs)$"
+    mount_points_exclude = "^/(dev|proc|run|sys|var/lib/lxc)($|/)"
+  }
+
+  netclass {
+    ignored_devices = "^(veth|fwbr|fwln|fwpr|tap).*"
+  }
+
+  netdev {
+    device_exclude = "^(veth|fwbr|fwln|fwpr|tap).*"
+  }
+
+  systemd {
+    unit_include = "^(pve.*|qemu.*|corosync|ssh|cron|chrony|zfs.*|alloy)\\.(service|scope|slice)$"
+  }
+}
+
+discovery.relabel "host" {
+  targets = prometheus.exporter.unix.host.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "proxmox"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = "pve"
+  }
+}
+
+prometheus.scrape "host" {
+  targets         = discovery.relabel.host.output
+  scrape_interval = "30s"
+  forward_to      = [prometheus.remote_write.vm.receiver]
+}
+
+// ---------- per-guest metrics from Proxmox ----------
+// Proxmox pushes here: Datacenter -> Metric Server -> "alloy" (OpenTelemetry,
+// http://127.0.0.1:4318/v1/metrics).
+otelcol.receiver.otlp "pve" {
+  http {
+    endpoint = "127.0.0.1:4318"
+  }
+
+  output {
+    metrics = [otelcol.exporter.prometheus.pve.input]
+  }
+}
+
+otelcol.exporter.prometheus "pve" {
+  forward_to = [prometheus.relabel.pve.receiver]
+}
+
+prometheus.relabel "pve" {
+  forward_to = [prometheus.remote_write.vm.receiver]
+
+  // Keep per-guest and storage basics. The host itself is covered by the unix
+  // exporter above, and the per-disk blockstat series are ~450 of the ~530.
+  rule {
+    source_labels = ["__name__"]
+    regex         = "proxmox_vm_(cpu|cpus|mem|maxmem|memhost|swap|maxswap|disk|maxdisk|diskread|diskwrite|netin|netout|uptime|pressure[a-z]+)_.*|proxmox_storage_(used|total|avail)_bytes"
+    action        = "keep"
+  }
+
+  // Proxmox guesses a unit per push, so these flip between _ratio, _percent,
+  // _bytes and _seconds. Strip the suffix to get one stable name.
+  rule {
+    source_labels = ["__name__"]
+    regex         = "(proxmox_vm_(?:cpu|cpus|pressure[a-z]+))_(?:ratio|percent|bytes|seconds)"
+    target_label  = "__name__"
+    replacement   = "$1"
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "proxmox-guests"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = "pve"
+  }
+}
+
+prometheus.remote_write "vm" {
+  endpoint {
+    url = "http://metrics.internal/api/v1/write"
+  }
+}
+
+// ---------- journal ----------
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+
+  rule {
+    source_labels = ["__journal_syslog_identifier"]
+    target_label  = "syslog_identifier"
+  }
+}
+
+loki.source.journal "host" {
+  max_age       = "12h"
+  relabel_rules = loki.relabel.journal.rules
+  forward_to    = [loki.write.vm.receiver]
+  labels        = {
+    job          = "proxmox",
+    host         = "pve",
+    service_name = "proxmox",
+  }
+}
+
+loki.write "vm" {
+  endpoint {
+    url = "http://logs.internal/loki/api/v1/push"
+  }
+}

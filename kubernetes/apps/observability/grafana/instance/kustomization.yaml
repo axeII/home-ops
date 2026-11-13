@@ -6,11 +6,15 @@ resources:
   - ./grafana.yaml
   - ./grafanadashboards.yaml
   - ./home-dashboard.yaml
+  - ./proxmox-dashboard.yaml
   - ./servicemonitor.yaml
 configMapGenerator:
   - name: grafana-dashboard-home
     files:
       - home.json=./dashboards/home.json
+  - name: grafana-dashboard-proxmox
+    files:
+      - proxmox.json=./dashboards/proxmox.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
