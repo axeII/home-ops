@@ -104,6 +104,13 @@ spec:
     persistence:
       config:
         type: emptyDir
+      config-file:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /config/repository.config
+            subPath: repository.config
+            readOnly: true
       repository:
         type: nfs
         server: nas.internal
