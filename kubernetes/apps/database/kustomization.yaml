@@ -8,3 +8,4 @@ components:
 resources:
   - ./dragonfly/ks.yaml
   - ./pgbackup/ks.yaml
+  - ./postgres-exporter/ks.yaml
