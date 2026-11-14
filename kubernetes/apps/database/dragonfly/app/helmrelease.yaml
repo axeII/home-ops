@@ -66,6 +66,8 @@ spec:
               capabilities: { drop: ["ALL"] }
 
         pod:
+          # The operator talks to the Kubernetes API
+          automountServiceAccountToken: true
           labels:
             control-plane: controller-manager
           securityContext:

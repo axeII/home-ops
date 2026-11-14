@@ -86,7 +86,12 @@ spec:
                   - ALL
         serviceAccount:
           name: *app
+    global:
+      # The gatus ServiceAccount comes from rbac.yaml; don't let the chart create a clashing one
+      createDefaultServiceAccount: false
     defaultPodOptions:
+      # gatus-sidecar reads HTTPRoutes through the Kubernetes API
+      automountServiceAccountToken: true
       dnsConfig:
         options:
           - name: ndots
