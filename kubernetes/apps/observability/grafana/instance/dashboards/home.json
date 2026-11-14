@@ -1114,8 +1114,8 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (nodename) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval]))",
-          "legendFormat": "{{nodename}}",
+          "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval]))",
+          "legendFormat": "{{instance}}",
           "range": true
         }
       ],
@@ -1187,8 +1187,8 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (nodename) (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
-          "legendFormat": "{{nodename}}",
+          "expr": "1 - avg by (instance) (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+          "legendFormat": "{{instance}}",
           "range": true
         }
       ],
@@ -1260,8 +1260,8 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (nodename) (node_filesystem_avail_bytes{mountpoint=\"/var\"} / node_filesystem_size_bytes{mountpoint=\"/var\"})",
-          "legendFormat": "{{nodename}}",
+          "expr": "1 - avg by (instance) (node_filesystem_avail_bytes{mountpoint=\"/var\"} / node_filesystem_size_bytes{mountpoint=\"/var\"})",
+          "legendFormat": "{{instance}}",
           "instant": true,
           "range": false
         }
