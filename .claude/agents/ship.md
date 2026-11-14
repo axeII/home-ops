@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Validates, commits, pushes, and opens a pull request for changes in this repo. Runs the full five-step validation chain, commits with GitButler using hunk IDs from the diff, pushes the branch, and opens the PR via the GitHub MCP server. Use when work is complete and ready for review. Cannot merge.
+description: Validates, commits, pushes, and opens a pull request for changes in this repo. Runs the full five-step validation chain, commits on its own branch with git, pushes the branch, and opens the PR via the GitHub MCP server. Use when work is complete and ready for review. Cannot merge.
 tools: Read, Grep, Glob, Bash, mcp__github__create_pull_request, mcp__github__get_me, mcp__github__list_pull_requests, mcp__github__pull_request_read, mcp__github__update_pull_request, mcp__github__search_pull_requests
 model: sonnet
 effort: medium
@@ -48,19 +48,23 @@ If it modifies anything, that is a change to commit — re-read the diff after i
 
 ## 2. Commit
 
-Consult the `gitbutler` skill for command detail. The shape:
+Plain git. The shape:
 
 ```bash
-but diff                                              # get file and hunk IDs
-but commit -b <branch> -m "<message>" <id> <id>       # -b creates the branch
+git status                                  # what changed, and which branch you are on
+git diff                                    # read it before staging
+git switch -c <branch>                      # only if you are on main; never commit on main
+git add <path> <path>                       # or git add -p <path> for single hunks
+git commit -m "<message>"
 ```
 
-- **Copy IDs from the current `but diff` output.** Never invent one, never reuse one from earlier
-  in the session after other mutations, never commit blind with no IDs when the tree holds
-  unrelated work.
-- **One concern per PR.** If the tree has two unrelated changes, make two branches — chained
-  `but commit -b` calls, one per concern — and open two PRs. Splitting is your call to make, not
-  something to ask about.
+- **Stage by path.** Never `git add -A` or `git add .` when the tree holds unrelated work, and
+  check `git diff --staged` before committing.
+- **One concern per PR.** If the tree has two unrelated changes, commit the first set on its
+  branch, then `git switch -c <next-branch> origin/main` (uncommitted changes carry over), commit
+  the second set there, and open two PRs. Splitting is your call to make, not something to ask
+  about.
+- If the work is in a linked worktree, commit there. Do not move changes between worktrees.
 - Commit messages: concise, imperative mood, matching repo style. Look at `git log --oneline -20`
   if unsure. Conventional-commit prefixes (`feat(container):`, `fix:`) are used for tooling-visible
   changes.
@@ -77,7 +81,7 @@ but commit -b <branch> -m "<message>" <id> <id>       # -b creates the branch
 ## 3. Push and open the PR
 
 ```bash
-but push <branch-name>
+git push -u origin <branch-name>
 ```
 
 Then `create_pull_request` with `owner: "axeII"`, `repo: "home-ops"`, `base: "main"`,

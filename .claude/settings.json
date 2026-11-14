@@ -43,10 +43,11 @@
       "Bash(python3 scripts/find_mistakes.py)",
       "Bash(kustomize build:*)",
       "Bash(helm template:*)",
-      "Bash(but status:*)",
-      "Bash(but diff:*)",
-      "Bash(but show:*)",
-      "Bash(but log:*)"
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git log:*)",
+      "Bash(git worktree list:*)"
     ]
   }
 }

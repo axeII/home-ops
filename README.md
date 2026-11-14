@@ -179,6 +179,7 @@ This repo is a living reference - borrow what you like, ignore what you don't. H
 - **A secrets backend** - this repo uses 1Password Connect + external-secrets, but anything with an external-secrets provider works.
 - **An Age key** for SOPS-encrypted secrets (`age-keygen`).
 - **Workstation tooling**: install [mise](https://mise.jdx.dev), then run `mise install`. `mise.toml` pins every tool the repo needs (`talosctl`, `flux`, `just`, `helmfile`, `talhelper`, `sops`, `kubectl`, `flate`, `yayamlls`, and others) and CI installs from the same file.
+- **Git workflow**: plain git with one worktree per change. `just worktree <branch>` creates `../home-ops-<branch>` from `origin/main`. Worktrees read `kubeconfig`, `age.key` and `talosconfig` from the main checkout, so those files live in one place.
 - **Nodes**: at least one Talos-capable machine (bare metal, Proxmox VM, or any hypervisor). Three control-plane nodes are recommended.
 
 ### What to swap when forking

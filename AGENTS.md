@@ -6,7 +6,7 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 
 Claude works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
 
-- AI **does**: write code, run validation, create commits via `but`, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
+- AI **does**: write code, run validation, create commits with git, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
 - AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge without explicit human approval.
 - Every change goes through `pre-commit` and the full validation pipeline before a PR is opened.
 - The PR description must follow the shape under "Creating PRs" below. The reviewer skims it before reading the diff, so short and specific beats complete.
@@ -71,27 +71,37 @@ direnv.
 
 ## Commits and PRs
 
-Use GitButler CLI (`but`) for all version control writes (commits, branches, pushes). Delegate VCS to the
-gitbutler skill for command detail. Use GitHub MCP tools (`github_create_pull_request`,
-`github_issue_write`, etc.) for all GitHub API operations. Never use `git add`, `git commit`, `git push`,
-or `gh pr create` for write operations. Never force-push, never skip hooks.
+Version control is plain git. Use GitHub MCP tools (`github_create_pull_request`,
+`github_issue_write`, etc.) for all GitHub API operations, not `gh pr create`. Never commit on
+`main`, never force-push, never skip hooks.
+
+### Worktrees
+
+- Start each task on its own branch in its own worktree: `just worktree <branch>` creates
+  `../home-ops-<branch>` from `origin/main`. Remove it after merge with `git worktree remove <path>`.
+- Claude Code agents running with worktree isolation use `.claude/worktrees/`, which is gitignored.
+- `kubeconfig`, `age.key` and `talosconfig` exist only in the main checkout. `mise.toml` points every
+  worktree at those copies through `HOME_OPS_ROOT`, so do not copy them into a worktree.
 
 ### Before committing
 
-1. Always run `pre-commit run --all-files` and fix any errors.
+1. Always run `pre-commit run --all-files` and fix any errors. It skips untracked files, so pass new
+   files with `pre-commit run --files <paths>`.
 2. Run the full validation pipeline if Kubernetes manifests changed:
    - `just configure` → `just validate` → `just flate-test` → `python3 scripts/find_mistakes.py`
-3. Inspect the diff: `but diff` (selected dirty files/hunks), `but status` (commit/branch layout).
+3. Inspect the change: `git status`, `git diff`, `git diff --staged`.
 
 ### Making commits
 
-- Use `but commit -b <branch> -m "<msg>" <ids>` to create a branch and commit in one step.
-- Use file/hunk IDs from `but diff` — never stage blindly.
+- Stage by path: `git add <paths>`, or `git add -p <path>` for single hunks. Never `git add -A` or
+  `git add .` while the tree holds unrelated work.
+- To split unrelated changes into separate PRs, commit the first set on its branch, then
+  `git switch -c <next-branch> origin/main` (uncommitted changes carry over) and commit the next set.
 - Write concise, imperative-mood commit messages matching the existing repo style.
 
 ### Creating PRs
 
-1. Push the branch with `but push <branch-name>`.
+1. Push the branch with `git push -u origin <branch-name>`.
 2. Create the PR via MCP: `github_create_pull_request` with title, body (`head` branch, `base: "main"`, `owner: "axeII"`, `repo: "home-ops"`).
 3. Write the body to the shape below.
 4. Present the PR URL to the human maintainer for review.
@@ -177,9 +187,9 @@ Lives in `.claude/` (tracked, reviewed like any change). `CLAUDE.md` imports thi
 - Agents: `cluster-radar` (read-only cluster triage via the radar MCP server, falls back to
   `kubectl`/`flux`/`talosctl`), `grafana-logs` (Loki/Prometheus queries, returns a summary plus a
   deeplink), `app-builder` (writes and validates app manifests under `kubernetes/apps/`; does not
-  commit), `ship` (validate, commit with `but`, push, open PR; cannot merge). Delegate cluster and
+  commit), `ship` (validate, commit with git, push, open PR; cannot merge). Delegate cluster and
   log investigation to them so the output stays out of the main context.
-- Skills: `gitbutler`, `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
+- Skills: `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
   plugin enabled in `.claude/settings.json`.
 - Commands: `/validate`, `/triage [namespace|app]`, `/ship [description]`.
 - MCP servers (configured per-project in `~/.claude.json`, not in the repo, because of the Grafana

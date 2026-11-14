@@ -29,6 +29,20 @@ validate:
 flate-test:
     flate test all --path kubernetes/flux
 
+# ─── Git ─────────────────────────────────────────────────────────────────────
+
+# Start BRANCH from origin/main in its own worktree at ../home-ops-<branch>
+worktree BRANCH:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dir="../home-ops-{{ replace(BRANCH, "/", "-") }}"
+    git fetch --quiet origin main
+    # --no-track keeps origin/main from becoming the upstream, so a bare
+    # `git push` can never target main.
+    git worktree add --no-track -b "{{ BRANCH }}" "$dir" origin/main
+    mise trust --quiet "$dir/mise.toml"
+    echo "Worktree ready: cd $dir"
+
 # ─── Bootstrap ───────────────────────────────────────────────────────────────
 
 # Bootstrap the Talos cluster
