@@ -145,6 +145,7 @@ flowchart LR
 | [Komga](https://komga.org) | Comic/manga/ebook library |
 | [Kapowarr](https://github.com/Casvt/Kapowarr) | Comic book collection manager |
 | [Suwayomi](https://github.com/Suwayomi/Suwayomi-Server) | Manga and manhwa downloader feeding Komga |
+| [Bazarr](https://www.bazarr.media) | Subtitle downloader for Sonarr and Radarr |
 
 ### Home & Productivity
 
