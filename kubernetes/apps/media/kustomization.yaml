@@ -19,3 +19,4 @@ resources:
   - ./kapowarr/ks.yaml
   - ./jellyfin/ks.yaml
   - ./suwayomi/ks.yaml
+  - ./bazarr/ks.yaml
