@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: ghcr.io/seerr-team/seerr
-              tag: v3.5.0@sha256:27602401178d54f1964442287b9f23f67a3fa2252645ee8065839ea1c3f69e45
+              tag: v3.5.2@sha256:aadee014b40e28cf9aa4928bc9d1183a6eb08f8c44d543cddc9efdcb16549be2
             env:
               LOG_LEVEL: info
               PORT: &port 5055
@@ -74,6 +74,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 512Mi
               limits:
                 memory: 2Gi
             securityContext:

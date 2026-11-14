@@ -28,10 +28,24 @@ spec:
             sourceLabels:
               - __meta_kubernetes_pod_node_name
             targetLabel: nodename
+          # The pod IP changes on every reboot, so key instance on the node
+          # name. Node Exporter Full's host picker then survives restarts.
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            sourceLabels:
+              - __meta_kubernetes_pod_node_name
+            targetLabel: instance
     resources:
       requests:
         cpu: 10m
         memory: 64M
       limits:
         memory: 64M
-    hostNetwork: false
+    # The netdev collector reads /proc/net/dev of its own network namespace.
+    # Off the host network it only saw the pod's eth0, so the nodes' physical
+    # NICs had no error or drop counters in Prometheus.
+    hostNetwork: true
+    extraArgs:
+      # One veth per pod; their per-interface counters aren't worth the series.
+      - --collector.netdev.device-exclude=^(lxc|veth).*$

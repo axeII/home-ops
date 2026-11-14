@@ -43,11 +43,13 @@ _... automated via [Flux](https://github.com/fluxcd/flux2), [Renovate](https://g
 
 ## 🤔 What is this?
 
-A Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s :D. In this repository every deployment, every network policy, and every secret lives here. Some are SOPS encrypted, others use 1password connection. Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline deploys them to the cluster via flux.
+A Kubernetes homelab running real services - fully managed as code, automated as possible, and open source to show everyone how to break k8s 😆.
 
-> _Side note_: Though I mentioned this is automated some PRs like cilium upgrade, rook update are very critical and I have minimal time for my cluster and cannot jump in when PR automatically breaks my cluster for that reason.
+In this repository every deployment, every network policy, and every secret lives here. Some are SOPS encrypted, others use 1password connection. Renovate opens PRs, konflate reviews them, CI validates them, and the auto-merge pipeline deploys them to the cluster via flux.
 
-This repository has three types of PR. This way I try to safely automate as possible the upgrade process:
+> _Side note_: Most pull requests are automated, but cilium, rook, or flux updates are very critical. Those are always manul and that way it help me to maintain cluster with more ease and I don't have to randomly jump in to fix my cluster from a disaster.
+
+This repository has three types of PR automation. This way I try to safely automate as possible the upgrade process:
 - automated
 - deployed during release train (Friday/Saturday as during the weekend I can fix stuff)
 - critical which can be merged only by me.
@@ -137,13 +139,13 @@ flowchart LR
 | [Radarr](https://radarr.video) | Movie collection manager |
 | [Prowlarr](https://prowlarr.com) | Torrent/usenet indexer manager |
 | [Sabnzbd](https://sabnzbd.org) | Usenet downloader |
-| [Unpackerr](https://unpackerr.zip) | Auto-extracts downloaded archives |
 | [Recyclarr](https://recyclarr.dev) | Syncs TRaSH Guides profiles |
 | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Cloudflare anti-bot bypass |
 | [Seerr](https://github.com/seerr-team/seerr) | Media request management |
-| [Tautulli](https://tautulli.com) | Plex statistics and monitoring |
 | [Komga](https://komga.org) | Comic/manga/ebook library |
 | [Kapowarr](https://github.com/Casvt/Kapowarr) | Comic book collection manager |
+| [Suwayomi](https://github.com/Suwayomi/Suwayomi-Server) | Manga and manhwa downloader feeding Komga |
+| [Bazarr](https://www.bazarr.media) | Subtitle downloader for Sonarr and Radarr |
 
 ### Home & Productivity
 

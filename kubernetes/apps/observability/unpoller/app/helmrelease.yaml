@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/unpoller/unpoller
-              tag: v5.5.1@sha256:6d941ea1e46edebf12225b4ee9ca9abb88019a55f1add634e6f9300a201847b4
+              tag: v5.9.5@sha256:092e6ef8c388fcc9d8b52e8a5e04e6662f85b25ea3a0d4bb7d0d13e43a9b9c8d
             env:
               TZ: Europe/Paris
               UP_UNIFI_DEFAULT_ROLE: home-ops
@@ -54,6 +54,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 32Mi
               limits:
                 memory: 128Mi
     defaultPodOptions:
@@ -70,5 +71,7 @@ spec:
       app:
         endpoints:
           - port: http
-            interval: 2m # Unifi API only polls at 2m intervals
+            # 1m matches unpoller's scrape cache. The UniFi-Poller dashboards use
+            # rate() over a 2m window, which is empty at a 2m scrape interval.
+            interval: 1m
             scrapeTimeout: 10s

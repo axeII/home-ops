@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/prowlarr
-              tag: 2.6.5.5623@sha256:6152751c3ea2e7751564f5952173d5e83eed0e09f3fabd2cb6bdb58690c39e2f
+              tag: 3.0.1.5752@sha256:83cc967a3b7b754634e31773d4d58ea606714490b7e8592d41b608f7c249afe6
             env:
               PROWLARR__APP__INSTANCENAME: Prowlarr
               PROWLARR__APP__THEME: auto
@@ -62,8 +62,44 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 256Mi
               limits:
                 memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+          exportarr:
+            image:
+              repository: ghcr.io/onedr0p/exportarr
+              tag: v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520
+            args:
+              - prowlarr
+            env:
+              PORT: &metricsPort 9707
+              URL: http://localhost:9696
+              API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: prowlarr-secret
+                    key: PROWLARR__AUTH__APIKEY
+            probes:
+              liveness: &exportarrProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *metricsPort
+              readiness: *exportarrProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -110,3 +146,14 @@ spec:
         ports:
           http:
             port: *port
+          metrics:
+            port: *metricsPort
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s

@@ -22,6 +22,8 @@ spec:
   values:
     controllers:
       flaresolverr:
+        # Disabled: no Prowlarr indexer routes through it. Remove this line to re-enable.
+        replicas: 0
         containers:
           app:
             image:

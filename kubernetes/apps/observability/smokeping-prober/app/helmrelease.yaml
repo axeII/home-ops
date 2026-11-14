@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app smokeping-prober
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      smokeping-prober:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: quay.io/superq/smokeping-prober
+              tag: v0.12.0@sha256:2524b895bdae244984e937ecb8fdd755baedbf2bb108204bd1a1dc6732706303
+            args:
+              - --config.file=/config/config.yaml
+              # The default buckets double (6.4, 12.8, 25.6 ms), so every
+              # internet RTT lands in one bucket and p95 is interpolation.
+              # 2 ms steps across 0-30 ms resolve real jitter on this line.
+              - --buckets=0.0005,0.001,0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,0.025,0.03,0.04,0.05,0.075,0.1,0.15,0.25,0.5,1,2.5
+            env:
+              TZ: Europe/Paris
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /metrics
+                    port: &port 9374
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 2
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        # Lets the non-root process open unprivileged ICMP sockets, so the
+        # container needs no NET_RAW capability. A namespaced, safe sysctl.
+        sysctls:
+          - name: net.ipv4.ping_group_range
+            value: "0 2147483647"
+    persistence:
+      config:
+        type: configMap
+        name: smokeping-prober-configmap
+        globalMounts:
+          - path: /config/config.yaml
+            subPath: config.yaml
+            readOnly: true
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s

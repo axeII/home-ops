@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/kromgo
-              tag: 0.16.1@sha256:ad39dd32da600ea261112e7a098345d474d48c997790b0373eb651c66e490844
+              tag: 0.16.3@sha256:98775a53019250a517a09a0fb716404146d1aaa6fb1f67091c58345663e5b7b5
             env:
               KROMGO_SERVER_HOST: 0.0.0.0
               KROMGO_SERVER_PORT: &port 8080
@@ -59,6 +59,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 48Mi
               limits:
                 memory: 64Mi
             securityContext:

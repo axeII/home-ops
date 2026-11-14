@@ -13,7 +13,7 @@
 
 services:
   prometheus:
-    image: prom/prometheus:v3.15.0
+    image: prom/prometheus:v3.16.0
     container_name: prometheus
     restart: unless-stopped
     command:
@@ -33,7 +33,7 @@ services:
       - "9090"
 
   loki:
-    image: grafana/loki:3.7.8
+    image: grafana/loki:3.7.9
     container_name: loki
     restart: unless-stopped
     command: -config.file=/etc/loki/loki-config.yml
@@ -46,7 +46,7 @@ services:
       - "3100"
 
   grafana:
-    image: grafana/grafana:13.2.3
+    image: grafana/grafana:13.3.1
     container_name: grafana
     restart: unless-stopped
     environment:
@@ -65,7 +65,7 @@ services:
       - "3000"
 
   caddy:
-    image: caddy:2.11.7
+    image: caddy:2.11.9
     container_name: caddy
     restart: unless-stopped
     ports:

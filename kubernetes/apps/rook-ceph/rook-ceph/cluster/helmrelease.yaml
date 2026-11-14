@@ -37,7 +37,7 @@ spec:
           memory: 64Mi
     cephImage:
       repository: quay.io/ceph/ceph
-      tag: v20.2.4
+      tag: v20.2.5
     operatorNamespace: rook-ceph
     # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
     # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
@@ -79,6 +79,18 @@ spec:
           osd_deep_scrub_interval: "604800"
           # Reduce mon warnings threshold
           mon_data_avail_warn: "20"
+          # RocksDB compaction chatter; warnings and errors still log.
+          debug_rocksdb: "1/5"
+        mon:
+          # At the default (debug) every mon prints a pgmap line each second
+          # and every read-only command, its own liveness probe included.
+          # That was about two thirds of all mon log volume.
+          mon_cluster_log_level: info
+        mgr:
+          # ceph-csi queues a trash purge for each image that volsync clones
+          # still pin. The purge fails until the clone goes, and at info the
+          # mgr prints the whole task as JSON on every retry.
+          mgr/rbd_support/log_level: error
       csi:
         readAffinity:
           enabled: true
@@ -128,7 +140,8 @@ spec:
             memory: 4Gi
           requests:
             cpu: 50m
-            memory: 512Mi
+            # The mgr peaked at 3.1 GiB (Nov 2026); 512Mi left that unreserved.
+            memory: 1Gi
         mon:
           limits:
             memory: 2Gi
@@ -201,7 +214,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 1Gi
+                # Each MDS peaked under 80 MiB. Rook sizes the MDS cache from
+                # the limit, so the request only affects scheduling.
+                memory: 256Mi
               limits:
                 memory: 3Gi
         storageClass:

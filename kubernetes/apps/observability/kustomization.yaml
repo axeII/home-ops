@@ -7,8 +7,10 @@ components:
   - ../../components/common
 resources:
   - ./blackbox-exporter/ks.yaml
+  - ./cloudflare-analytics/ks.yaml
   - ./etcd-scrape/ks.yaml
   - ./gatus/ks.yaml
+  - ./gpu-probe/ks.yaml
   - ./grafana/ks.yaml
   - ./grafana-cloud/ks.yaml
   - ./keda/ks.yaml
@@ -17,4 +19,5 @@ resources:
   - ./node-exporter/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  # - ./unpoller/ks.yaml
+  - ./smokeping-prober/ks.yaml
+  - ./unpoller/ks.yaml

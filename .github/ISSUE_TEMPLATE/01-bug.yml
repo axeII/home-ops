@@ -28,7 +28,6 @@ body:
         - Prometheus
         - Plex
         - Sonarr/Radarr/Prowlarr
-        - Authentik
         - Database (PostgreSQL/Dragonfly)
         - Networking (Cilium/Cloudflare)
         - Storage (Ceph/VolSync)

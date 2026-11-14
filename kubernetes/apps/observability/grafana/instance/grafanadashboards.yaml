@@ -11,7 +11,8 @@ spec:
       dashboards: grafana
   datasources:
     - datasourceName: Prometheus
-      inputName: DS_PROMETHEUS
+      # dashboard 7587 declares its input as DS_SIGNCL-PROMETHEUS, not DS_PROMETHEUS
+      inputName: DS_SIGNCL-PROMETHEUS
   # renovate: depName="Prometheus Blackbox Exporter"
   url: https://grafana.com/api/dashboards/7587/revisions/3/download
 ---
@@ -82,6 +83,22 @@ spec:
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
+  name: exportarr
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  # Media dashboard from exportarr; pin the tag to the sidecar image in media/sabnzbd
+  url: https://raw.githubusercontent.com/onedr0p/exportarr/v2.3.0/examples/grafana/dashboard2.json
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
   name: gatus
 spec:
   allowCrossNamespaceImport: true
@@ -139,22 +156,6 @@ spec:
       inputName: DS_PROMETHEUS
   # renovate: depName="Spegel"
   url: https://grafana.com/api/dashboards/18089/revisions/1/download
----
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDashboard
-metadata:
-  name: unpackerr
-spec:
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      dashboards: grafana
-  datasources:
-    - datasourceName: Prometheus
-      inputName: DS_PROMETHEUS
-  # renovate: depName="Unpackerr"
-  url: https://grafana.com/api/dashboards/18817/revisions/1/download
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1

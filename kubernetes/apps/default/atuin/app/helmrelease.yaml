@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: ghcr.io/atuinsh/atuin
-              tag: 18.23.0@sha256:f232feeead54a0a13132b9cd477e312c3380e9dc90f1db24c4f79ce6c8e034ea
+              tag: 18.24.6@sha256:07aa18bc60e129254209b82da0fe8b1bf61fb770066360c657b5e462e8c61577
             env:
               ATUIN_HOST: 0.0.0.0
               ATUIN_PORT: &port 80
@@ -65,6 +65,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 48Mi
               limits:
                 memory: 64Mi
     defaultPodOptions:

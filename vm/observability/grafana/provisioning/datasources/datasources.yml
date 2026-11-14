@@ -8,6 +8,11 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: false
+    jsonData:
+      # Alloy scrapes every 60s. Without this Grafana assumes 15s, so
+      # $__rate_interval drops to 1m on short ranges, where a single sample
+      # leaves rate() empty and the "live" panels go blank.
+      timeInterval: 60s
 
   - name: Loki
     type: loki

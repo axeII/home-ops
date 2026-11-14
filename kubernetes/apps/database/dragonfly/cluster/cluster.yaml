@@ -5,7 +5,7 @@ kind: Dragonfly
 metadata:
   name: dragonfly
 spec:
-  image: ghcr.io/dragonflydb/dragonfly:v1.40.2@sha256:18afa43e911f1dff18c7d1eb452361876d9702bb1cdff5c5d75c69617a4065c9
+  image: ghcr.io/dragonflydb/dragonfly:v2.1.0@sha256:94891bb22ce2fb0f7a5a3ff1bb3b2fbbc5830e2523293e47723d87fa3e5b1184
   replicas: 1
   env:
     - name: MAX_MEMORY
@@ -31,5 +31,6 @@ spec:
   resources:
     requests:
       cpu: 100m
+      memory: 128Mi
     limits:
       memory: 512Mi

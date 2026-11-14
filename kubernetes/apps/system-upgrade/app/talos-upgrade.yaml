@@ -5,15 +5,20 @@ metadata:
   name: cluster
 spec:
   talos:
-    # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-    version: v1.13.9
+    # renovate: datasource=github-releases depName=siderolabs/talos
+    version: v1.14.6
   policy:
     debug: false
     force: false
-    rebootMode: default
+    # A default (kexec) reboot skips firmware, so the Arc A310 passed through
+    # to k8s-0 never resets and its i915 GuC stays wedged. Power-cycle instead.
+    rebootMode: powercycle
     placement: hard
     timeout: 30m
     stage: false
+    # Fast reboots can orphan RBD VolumeAttachments and leave rescheduled pods
+    # stuck on Multi-Attach errors.
+    waitForVolumeDetach: true
   parallelism: 1
   maintenance:
     windows:
@@ -32,7 +37,7 @@ spec:
   hooks:
     pre:
       - name: ceph-set-noout
-        image: docker.io/rook/ceph:v1.20.7
+        image: docker.io/rook/ceph:v1.20.10
         command:
           - sh
           - -c
@@ -68,7 +73,7 @@ spec:
             emptyDir: {}
     post:
       - name: ceph-unset-noout
-        image: docker.io/rook/ceph:v1.20.7
+        image: docker.io/rook/ceph:v1.20.10
         command:
           - sh
           - -c

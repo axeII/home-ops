@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: alloy
-      version: 1.13.0
+      version: 1.15.0
       sourceRef:
         kind: HelmRepository
         name: grafana
@@ -28,6 +28,12 @@ spec:
             name: grafana-cloud-credentials
       mounts:
         varlog: true
+      # The DaemonSet stays (each pod tails its own node's /var/log/pods), but
+      # without clustering every pod also scraped every metrics target, so each
+      # series was ingested 3x. Clustered components below split targets across
+      # the pods instead.
+      clustering:
+        enabled: true
       resources:
         requests:
           cpu: 100m
@@ -40,11 +46,17 @@ spec:
           // Discover ServiceMonitors and scrape metrics
           prometheus.operator.servicemonitors "default" {
             namespaces = []
+            clustering {
+              enabled = true
+            }
             forward_to = [prometheus.remote_write.vm.receiver]
           }
 
           prometheus.operator.podmonitors "default" {
             namespaces = []
+            clustering {
+              enabled = true
+            }
             forward_to = [prometheus.remote_write.vm.receiver]
           }
 
@@ -72,6 +84,9 @@ spec:
           prometheus.scrape "cadvisor" {
             targets           = discovery.relabel.cadvisor.output
             job_name          = "kubelet-cadvisor"
+            clustering {
+              enabled = true
+            }
             scheme            = "https"
             scrape_interval   = "60s"
             bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
@@ -87,11 +102,56 @@ spec:
           // where an unfiltered scrape is 39222. Against a ~72550 baseline that
           // is +9% rather than +54%, which matters because the VM Prometheus is
           // capped at 10GB retention and /data is already 87% full (issue #3726).
+          // machine_* (~6 series) feed the cluster/node CPU and RAM totals;
+          // cfs_throttled_seconds (~30 series) feeds the throttling panels.
           prometheus.relabel "cadvisor_keep" {
             forward_to = [prometheus.remote_write.vm.receiver]
             rule {
               source_labels = ["__name__"]
-              regex         = "container_(cpu_usage_seconds_total|cpu_cfs_periods_total|cpu_cfs_throttled_periods_total|memory_working_set_bytes|memory_rss|memory_cache|network_receive_bytes_total|network_transmit_bytes_total|fs_reads_bytes_total|fs_writes_bytes_total)"
+              regex         = "container_(cpu_usage_seconds_total|cpu_cfs_periods_total|cpu_cfs_throttled_periods_total|cpu_cfs_throttled_seconds_total|memory_working_set_bytes|memory_rss|memory_cache|network_receive_bytes_total|network_transmit_bytes_total|fs_reads_bytes_total|fs_writes_bytes_total)|machine_(cpu_cores|memory_bytes)"
+              action        = "keep"
+            }
+          }
+
+          // Kubelet's own /metrics, for PVC usage (kubelet_volume_stats_*) and
+          // node pod/container counts. Same auth as cAdvisor. Unfiltered this
+          // endpoint is thousands of series per node, so only a keep-list goes out.
+          discovery.relabel "kubelet" {
+            targets = discovery.kubernetes.nodes.targets
+            rule {
+              source_labels = ["__meta_kubernetes_node_name"]
+              target_label  = "node"
+            }
+            // A visible label, not __metrics_path__ (the scrape path is already
+            // /metrics by default): the Spegel dashboard filters on
+            // metrics_path="/metrics" for its kubelet operation panels.
+            rule {
+              target_label = "metrics_path"
+              replacement  = "/metrics"
+            }
+          }
+
+          prometheus.scrape "kubelet" {
+            targets           = discovery.relabel.kubelet.output
+            job_name          = "kubelet"
+            clustering {
+              enabled = true
+            }
+            scheme            = "https"
+            scrape_interval   = "60s"
+            bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+            tls_config {
+              ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+              insecure_skip_verify = true
+            }
+            forward_to = [prometheus.relabel.kubelet_keep.receiver]
+          }
+
+          prometheus.relabel "kubelet_keep" {
+            forward_to = [prometheus.remote_write.vm.receiver]
+            rule {
+              source_labels = ["__name__"]
+              regex         = "kubelet_volume_stats_(used_bytes|capacity_bytes|available_bytes|inodes|inodes_used)|kubelet_(node_name|running_pods|running_containers|runtime_operations_total|runtime_operations_errors_total)"
               action        = "keep"
             }
           }
@@ -112,6 +172,9 @@ spec:
           prometheus.scrape "blackbox_nfs" {
             targets      = discovery.relabel.blackbox_nfs.output
             job_name     = "blackbox-nfs"
+            clustering {
+              enabled = true
+            }
             metrics_path = "/probe"
             forward_to   = [prometheus.remote_write.vm.receiver]
           }
@@ -139,6 +202,9 @@ spec:
           prometheus.scrape "blackbox_devices" {
             targets      = discovery.relabel.blackbox_devices.output
             job_name     = "blackbox-icmp"
+            clustering {
+              enabled = true
+            }
             metrics_path = "/probe"
             forward_to   = [prometheus.remote_write.vm.receiver]
           }

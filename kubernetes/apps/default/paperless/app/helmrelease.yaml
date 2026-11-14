@@ -65,7 +65,8 @@ spec:
             resources:
               requests:
                 cpu: 25m
-                memory: 3Gi
+                # Peaked at 850 MiB (Nov 2026); OCR bursts use the 6Gi limit.
+                memory: 1Gi
               limits:
                 memory: 6Gi
             securityContext:
@@ -123,7 +124,7 @@ spec:
           tika:
             image:
               repository: docker.io/apache/tika
-              tag: 3.3.1.0-full
+              tag: 3.3.3.0-full
             resources:
               requests:
                 cpu: 100m

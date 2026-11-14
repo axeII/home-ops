@@ -1,0 +1,169 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app suwayomi
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      suwayomi:
+        labels:
+          nfsMount: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # The image hardcodes its downloads folder, so the NFS library is
+          # mounted there by subPath. Create that folder as the app user first;
+          # one created by the kubelet would not be writable by UID 1000.
+          library-dir:
+            image: &image
+              repository: ghcr.io/suwayomi/suwayomi-server
+              tag: v2.4.2490@sha256:d2ec1264bebcd9cd5d658cd2760571b1ae41409584b89afce7c72b6713640fb1
+            command: ["mkdir", "-p", "/library/suwayomi"]
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              # The image writes to its home directory and /tmp on every start.
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+        containers:
+          app:
+            image: *image
+            env:
+              TZ: Europe/Paris
+              BIND_PORT: &port 4567
+              # Komga reads CBZ; loose image folders are not picked up as books.
+              DOWNLOAD_AS_CBZ: "true"
+              # Serve the web UI shipped in the image instead of fetching the
+              # latest one from GitHub at start, so Renovate controls upgrades.
+              WEB_UI_CHANNEL: bundled
+              # Embedded Chromium costs about 280Mi idle. Turn it on only if a
+              # source needs the in-app WebView to get past a challenge page.
+              KCEF_ENABLED: "false"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/settings/about
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/settings/about
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+            resources:
+              requests:
+                cpu: 15m
+                memory: 512Mi
+              limits:
+                memory: 1536Mi
+            securityContext: *securityContext
+          # Komga shows the first page of chapter 1 as the series cover, which
+          # for a webtoon is a tall strip. This copies the cover Suwayomi keeps
+          # in its thumbnail cache into each series folder as cover.<ext>.
+          covers:
+            image: *image
+            args: ["/bin/sh", "/scripts/komga-covers.sh"]
+            env:
+              INTERVAL_SECONDS: "900"
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 5m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: *app
+        advancedMounts:
+          suwayomi:
+            app:
+              - path: /home/suwayomi/.local/share/Tachidesk
+      # Same export Komga mounts at /data, so downloads appear to Komga under
+      # /data/suwayomi.
+      library:
+        type: nfs
+        server: nas.internal
+        path: /mnt/storage0/media/Literature
+        advancedMounts:
+          suwayomi:
+            library-dir:
+              - path: /library
+            app:
+              - path: /home/suwayomi/.local/share/Tachidesk/downloads
+                subPath: suwayomi
+            covers:
+              - path: /downloads
+                subPath: suwayomi
+      scripts:
+        type: configMap
+        name: suwayomi-scripts
+        advancedMounts:
+          suwayomi:
+            covers:
+              - path: /scripts
+                readOnly: true
+    route:
+      app:
+        annotations:
+          glance/show: "true"
+          glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/suwayomi.png
+        hostnames:
+          - "{{ .Release.Name }}.juno.moe"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    service:
+      app:
+        ports:
+          http:
+            port: *port

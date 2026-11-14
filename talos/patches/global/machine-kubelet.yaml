@@ -2,6 +2,10 @@ machine:
   kubelet:
     extraConfig:
       serializeImagePulls: false
+      # Start image GC before /var crosses Ceph's mon_data_avail_warn (20% free).
+      # The kubelet defaults (85/80) leave mons on HEALTH_WARN MON_DISK_LOW.
+      imageGCHighThresholdPercent: 75
+      imageGCLowThresholdPercent: 65
     nodeIP:
       validSubnets:
         - 192.168.69.0/24

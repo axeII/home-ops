@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./dashboard.yaml
   - ./helmrelease.yaml
-  - ./prometheusrule.yaml
   - ./repository.yaml

@@ -5,5 +5,22 @@ kind: Kustomization
 resources:
   - ./grafana.yaml
   - ./grafanadashboards.yaml
-  - ./grafanadatasource.yaml
+  - ./home-dashboard.yaml
+  - ./postgresql-dashboard.yaml
+  - ./proxmox-dashboard.yaml
   - ./servicemonitor.yaml
+configMapGenerator:
+  - name: grafana-dashboard-home
+    files:
+      - home.json=./dashboards/home.json
+  - name: grafana-dashboard-postgresql
+    files:
+      - postgresql.json=./dashboards/postgresql.json
+  - name: grafana-dashboard-proxmox
+    files:
+      - proxmox.json=./dashboards/proxmox.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # The dashboard JSON is full of ${...} Grafana variables.
+    kustomize.toolkit.fluxcd.io/substitute: disabled

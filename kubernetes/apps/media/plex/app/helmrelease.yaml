@@ -20,11 +20,14 @@ spec:
   values:
     controllers:
       plex:
+        # Parked while Jellyfin replaces it (#4087). KEDA is paused at 0 in
+        # ks.yaml; this keeps a Helm upgrade from scaling it back to 1.
+        replicas: 0
         containers:
           app:
             image:
               repository: ghcr.io/home-operations/plex
-              tag: 1.43.4.10903@sha256:fdc6fe82bc7d8acd08fc0aa581fcb76722803ba5905e2537135a697347dd6149
+              tag: 1.43.5.11079@sha256:06ef0fc23e9af9bbaf284c3f27972f94e703d13d6f745edeb6818fcbebf6c673
             env:
               TZ: "Europe/Paris"
               PLEX_NO_AUTH_NETWORKS: 192.168.69.0/24
@@ -45,6 +48,7 @@ spec:
             resources:
               requests:
                 cpu: 100m
+                memory: 1Gi
               limits:
                 memory: 6Gi
                 gpu.intel.com/i915: 1
@@ -75,9 +79,11 @@ spec:
     route:
       app:
         annotations:
-          glance/show: "true"
+          glance/show: "false"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
           glance/description: "Plex Media server"
+          # No health check while Plex is parked, or Gatus alerts on it.
+          gatus.home-operations.com/enabled: "false"
           gatus.home-operations.com/endpoint: |
             path: /identity
         hostnames: ["{{ .Release.Name }}.juno.moe"]

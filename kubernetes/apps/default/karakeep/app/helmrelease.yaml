@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: 0.33.2
+              tag: 0.34.1
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
@@ -52,7 +52,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 512Mi
               limits:
                 memory: 2Gi
       chrome:
@@ -80,7 +80,7 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                memory: 256Mi
               limits:
                 memory: 3Gi
 
@@ -102,7 +102,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.54.3
+              tag: v1.56.2
             args:
               - /bin/meilisearch
               - --upgrade-db
@@ -116,7 +116,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 512Mi
+                memory: 128Mi
               limits:
                 memory: 4Gi
     defaultPodOptions:

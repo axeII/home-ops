@@ -1,0 +1,222 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app securo
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      securo:
+        # RWO volume: a rolling update would leave the new pod waiting on the old one's attachment.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          01-init-db:
+            image: &initImage
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
+              - secretRef:
+                  name: securo-secret
+          # pgvector is not a trusted extension, so the securo user cannot create it and
+          # migration 046 would fail. Create it as the superuser; the migration's own
+          # CREATE EXTENSION IF NOT EXISTS then does nothing.
+          02-init-vector:
+            image: *initImage
+            command:
+              - psql
+              - --set=ON_ERROR_STOP=1
+              - --command=CREATE EXTENSION IF NOT EXISTS vector
+            env:
+              PGHOST: db.internal
+              PGDATABASE: securo
+              PGUSER: postgres
+              PGPASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: securo-secret
+                    key: INIT_POSTGRES_SUPER_PASS
+          # Workers must never race the schema, so the pod waits here until it is at head.
+          03-migrate:
+            image: &backendImage
+              repository: ghcr.io/securo-finance/securo-backend
+              tag: 0.18.0@sha256:9f050a7ac5dabfe6c53b89a08a5bd4c1cf5758e057c19359bda59e7cc74e212e
+            command:
+              - sh
+              - -c
+              - |
+                for i in $(seq 1 30); do
+                  alembic upgrade head && exit 0
+                  echo "Migration failed, retrying in 5s"
+                  sleep 5
+                done
+                exit 1
+            env: &backendEnv
+              TZ: Europe/Paris
+              HOME: /tmp
+              FRONTEND_URL: https://finance.juno.moe
+              REDIS_URL: redis://127.0.0.1:6379/0
+              STORAGE_LOCAL_PATH: /app/data/attachments
+              # Gateway, then the nginx frontend container.
+              TRUSTED_PROXY_HOPS: "2"
+              # No bank connection: transactions come in through file import only.
+              SIMPLEFIN_ENABLED: "false"
+              TESOURO_DIRETO_ENABLED: "false"
+            envFrom: *envFrom
+        containers:
+          app:
+            image: *backendImage
+            command: [uvicorn, app.main:app, --host, 0.0.0.0, --port, "8000"]
+            env: *backendEnv
+            envFrom: *envFrom
+            probes:
+              liveness: &backendProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: 8000
+                  periodSeconds: 20
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *backendProbe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: 8000
+                  periodSeconds: 5
+                  failureThreshold: 30
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+          worker:
+            image: *backendImage
+            command: [celery, -A, app.worker, worker, --loglevel=info, --concurrency=2]
+            env: *backendEnv
+            envFrom: *envFrom
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+          beat:
+            image: *backendImage
+            # /app is not writable as uid 1000, so the schedule file goes to /tmp.
+            command: [celery, -A, app.worker, beat, --loglevel=info, --schedule=/tmp/celerybeat-schedule]
+            env: *backendEnv
+            envFrom: *envFrom
+            resources:
+              requests:
+                cpu: 5m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+          frontend:
+            image:
+              repository: ghcr.io/securo-finance/securo-frontend
+              tag: 0.18.0@sha256:6a0d726085cf6b67898c3dbb2b53e7949dfeeb8479ec8d45046a5cc0169ead01
+            env:
+              TZ: Europe/Paris
+              # An IP on purpose: nginx resolves this at request time through cluster DNS,
+              # which does not know "localhost".
+              BACKEND_URL: http://127.0.0.1:8000
+              FRONTEND_URL: https://finance.juno.moe
+            probes:
+              liveness: &frontendProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8080
+                  periodSeconds: 20
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *frontendProbe
+            securityContext:
+              # nginx-unprivileged can only render its config template as its own user.
+              runAsUser: 101
+              runAsGroup: 101
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+          # Own Redis rather than the shared Dragonfly: Celery's default queue is the key
+          # "celery", which Paperless already uses there, and Dragonfly runs in emulated
+          # cluster mode so a separate DB index is not available. Nothing here needs to persist.
+          redis:
+            image:
+              repository: docker.io/library/redis
+              tag: 8.8.4-alpine@sha256:1273af45b299d2b8b60d0e400d90aa6c2c5b1794f01d6a7ca60ff3ba6e65efb5
+            args: [--save, "", --appendonly, "no", --maxmemory, 96mb, --maxmemory-policy, noeviction]
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: securo
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        annotations:
+          glance/name: Finance
+          glance/show: "true"
+          glance/icon: https://raw.githubusercontent.com/securo-finance/securo/main/favicons/android-icon-192x192.png
+          glance/description: "Personal finance manager."
+        hostnames:
+          - finance.juno.moe
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      data:
+        existingClaim: *app
+        advancedMounts:
+          securo:
+            app: &attachments
+              - path: /app/data/attachments
+                subPath: attachments
+            worker: *attachments
+            beat: *attachments

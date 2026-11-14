@@ -25,31 +25,27 @@
       minimumGroupSize: 2,
     },
     {
+      // Talos and Kubernetes upgrade separately: each has its own tuppr CR, so
+      // grouping them only let one block the other. Each group carries its
+      // client tool from mise.toml so the client moves with the cluster it
+      // talks to. No datasource filter: mise pins the tools via the aqua
+      // backend, whose datasource is neither docker nor github-releases.
+      //
+      // Splitting them hides the pairing from review, so CI enforces it:
+      // scripts/find_mistakes.py fails a PR whose Kubernetes version the pinned
+      // Talos does not support.
       description: "Talos Group",
       groupName: "talos",
-      matchDatasources: ["docker", "github-releases"],
-      matchPackageNames: [
-        "/installer/",
-        "/kubelet/",
-        "/talosctl/",
-        "/siderolabs\\/talos/",
-      ],
+      matchPackageNames: ["/talosctl/", "/siderolabs\\/talos/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 2,
     },
     {
-      // mise pins talosctl and kubectl via the aqua backend, whose datasource is
-      // neither docker nor github-releases — so the rule above cannot reach them
-      // and they opened as standalone "feat(deps)" PRs. Match on the manager
-      // instead, so the client tools travel with the cluster version they target.
-      description: "Talos Group (mise-pinned client tools)",
-      groupName: "talos",
-      matchManagers: ["mise"],
+      description: "Kubernetes Group",
+      groupName: "kubernetes",
       matchPackageNames: [
-        "/talosctl/",
-        "/siderolabs\\/talos/",
+        "/siderolabs\\/kubelet/",
         "/kubectl/",
         "/kubernetes\\/kubernetes/",
       ],

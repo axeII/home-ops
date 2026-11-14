@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: docmost/docmost
-              tag: 0.96.0
+              tag: 0.97.0
             env:
               TZ: "Europe/Paris"
               APP_URL: "https://hub.juno.moe"
@@ -49,7 +49,7 @@ spec:
             resources:
               requests:
                 cpu: 25m
-                memory: 300Mi
+                memory: 512Mi
               limits:
                 memory: 1Gi
         pod:

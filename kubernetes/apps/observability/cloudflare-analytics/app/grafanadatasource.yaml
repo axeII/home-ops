@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadatasource_v1beta1.json
+# Grafana queries the Cloudflare GraphQL Analytics API directly. No exporter:
+# the free plan lacks the datasets lablabs/cloudflare-exporter needs, and
+# Cloudflare keeps 30 days where Prometheus keeps about 4.
+# Needs the Infinity plugin on the external Grafana host (installed by hand).
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: cloudflare
+  annotations:
+    # ${CF_API_TOKEN} is the operator's valuesFrom placeholder, not a Flux variable.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: cloudflare
+  datasource:
+    name: Cloudflare
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    jsonData:
+      auth_method: bearerToken
+      allowedHosts:
+        - https://api.cloudflare.com
+    secureJsonData:
+      bearerToken: ${CF_API_TOKEN}
+  valuesFrom:
+    - targetPath: secureJsonData.bearerToken
+      valueFrom:
+        secretKeyRef:
+          name: cloudflare-analytics-secret
+          key: CF_API_TOKEN

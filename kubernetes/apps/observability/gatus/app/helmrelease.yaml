@@ -30,11 +30,13 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: gatus-secret
+              - secretRef:
+                  name: gatus-gpu-probe-secret
         containers:
           app:
             image:
               repository: ghcr.io/twin/gatus
-              tag: v5.37.0@sha256:094eb186e55235db367e90e9d56140e5897b7044c41de23cde4cc18e6da1242e
+              tag: v5.38.0@sha256:085ed63da963728965d00a3c78aa6167e3bf135218485b893201758e079e8415
             env:
               GATUS_WEB_PORT: &port 80
               GATUS_CONFIG_PATH: /config
@@ -58,6 +60,7 @@ spec:
             resources: &resources
               requests:
                 cpu: 10m
+                memory: 96Mi
               limits:
                 memory: 128Mi
             securityContext:
@@ -69,7 +72,7 @@ spec:
           gatus-sidecar:
             image:
               repository: ghcr.io/home-operations/gatus-sidecar
-              tag: 0.5.3@sha256:b52ae9161639c7453308096aa8f5095d540196d097f5e3c681465737f22e8e76
+              tag: 0.6.1@sha256:c2b24374a8a4c5551c0122f3a7ae383ff65a0ea0bcd3b541530db84490fea2af
             args:
               - --auto-httproute
               - --gateway-name=external

@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2026.9.4@sha256:cd5ffc0a3bc873b35f20189ef22ee7ee9e8875fe666928dfee263cd464cc053d
+              tag: 2026.11.1@sha256:c129b1e4190273254d93d413fe2a083233c9202d84cb08f84dddb01861df432e
             env:
               TZ: Europe/Paris
               HASS_HTTP_TRUSTED_PROXY_1: 192.168.69.0/24
@@ -44,6 +44,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 1Gi
               limits:
                 memory: 2Gi
     defaultPodOptions:

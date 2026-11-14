@@ -30,7 +30,7 @@ spec:
       webhook:
         image:
           repository: ghcr.io/home-operations/external-dns-unifi-webhook
-          tag: 0.10.12@sha256:5338b99662e2e15048b4e14b49e17279d384970fdcb3c29169f509f806f49cbe
+          tag: 0.11.0@sha256:663442f116d7b45546782bdf7ace50d05ac15cc630c7236d443d69593845e992
         env:
           - name: UNIFI_HOST
             value: https://unifi.internal
@@ -54,7 +54,10 @@ spec:
     # TODO: restore `sync` once the 0.10.x Integration API provider is confirmed
     # to be reconciling records correctly; upsert-only cannot prune.
     policy: upsert-only
-    sources: ["crd", "gateway-httproute", "service"]
+    # No `crd` source: both DNSEndpoints (cloudflared tunnel CNAME, minecraft
+    # WAN A record) are public-only. UniFi rejects the tunnel CNAME, which
+    # failed every batch and froze all LAN records.
+    sources: ["gateway-httproute", "service"]
     txtOwnerId: k8s
     txtPrefix: k8s.
     domainFilters:

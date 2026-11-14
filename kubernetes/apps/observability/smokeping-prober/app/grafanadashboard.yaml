@@ -1,0 +1,256 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: internet-quality
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  json: |
+    {
+      "title": "Internet Quality",
+      "uid": "internet-quality",
+      "tags": ["network", "smokeping", "unifi"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "1m",
+      "time": { "from": "now-24h", "to": "now" },
+      "templating": {
+        "list": [
+          {
+            "name": "datasource",
+            "label": "Datasource",
+            "type": "datasource",
+            "query": "prometheus",
+            "current": { "text": "Prometheus", "value": "Prometheus" }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Packet loss over the selected range",
+          "description": "Read along the path: lan, isp-edge, cz, internet. Loss that starts at isp-edge and carries on to every later hop is the coax segment. Loss at a single middle hop only is ICMP deprioritisation on that router, not real loss. Each target sends 3600 pings an hour, so over a short range one lost ping already reads as yellow.",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 24, "x": 0, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "decimals": 2,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 0.5 },
+                  { "color": "red", "value": 2 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "textMode": "value_and_name",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "100 * (1 - sum by (hop, host) (increase(smokeping_response_duration_seconds_count[$__range])) / sum by (hop, host) (increase(smokeping_requests_total[$__range])))",
+              "instant": true,
+              "legendFormat": "{{hop}} {{host}}"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Packet loss by hop",
+          "type": "timeseries",
+          "gridPos": { "h": 9, "w": 24, "x": 0, "y": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "min": 0,
+              "custom": { "lineWidth": 1, "fillOpacity": 10, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean", "max"] },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "100 * (1 - sum by (hop, host) (rate(smokeping_response_duration_seconds_count[$__rate_interval])) / sum by (hop, host) (rate(smokeping_requests_total[$__rate_interval])))",
+              "legendFormat": "{{hop}} {{host}}"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Round-trip time, median",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "min": 0,
+              "custom": { "lineWidth": 1, "fillOpacity": 0, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "histogram_quantile(0.5, sum by (le, hop, host) (rate(smokeping_response_duration_seconds_bucket[$__rate_interval])))",
+              "legendFormat": "{{hop}} {{host}}"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Round-trip time, p95",
+          "description": "A p95 that climbs in the evening while the median stays flat points at congestion on the Vodafone segment or a full upload queue at home.",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "min": 0,
+              "custom": { "lineWidth": 1, "fillOpacity": 0, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "histogram_quantile(0.95, sum by (le, hop, host) (rate(smokeping_response_duration_seconds_bucket[$__rate_interval])))",
+              "legendFormat": "{{hop}} {{host}}"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "UniFi WAN port drops and errors",
+          "description": "Interface counters on the gateway WAN port. Errors here mean the cable or port between the modem and the gateway, not the Vodafone line.",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 0, "y": 21 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "pps",
+              "min": 0,
+              "custom": { "lineWidth": 1, "fillOpacity": 0, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "sum by (name, port) (rate(unpoller_device_wan_receive_dropped_total[$__rate_interval]))",
+              "legendFormat": "rx dropped {{name}} {{port}}"
+            },
+            {
+              "refId": "B",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "sum by (name, port) (rate(unpoller_device_wan_transmit_dropped_total[$__rate_interval]))",
+              "legendFormat": "tx dropped {{name}} {{port}}"
+            },
+            {
+              "refId": "C",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "sum by (name, port) (rate(unpoller_device_wan_receive_errors_total[$__rate_interval]))",
+              "legendFormat": "rx errors {{name}} {{port}}"
+            },
+            {
+              "refId": "D",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "sum by (name, port) (rate(unpoller_device_wan_transmit_errors_total[$__rate_interval]))",
+              "legendFormat": "tx errors {{name}} {{port}}"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "title": "UniFi WAN monitor availability",
+          "description": "The gateway's own ping monitors, as shown in the UniFi UI. Compare with the smokeping loss above.",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 8, "y": 21 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "max": 100,
+              "custom": { "lineWidth": 1, "fillOpacity": 0, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "asc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "unpoller_device_wan_monitor_availability_percent{wan_networkgroup=\"WAN\"}",
+              "legendFormat": "{{monitor_type}} {{target}} alerting={{alerting}}"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "title": "UniFi WAN monitor latency",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 16, "y": 21 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "min": 0,
+              "custom": { "lineWidth": 1, "fillOpacity": 0, "showPoints": "never" }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "expr": "unpoller_device_wan_monitor_latency_average_seconds{wan_networkgroup=\"WAN\"}",
+              "legendFormat": "{{monitor_type}} {{target}} alerting={{alerting}}"
+            }
+          ]
+        }
+      ]
+    }

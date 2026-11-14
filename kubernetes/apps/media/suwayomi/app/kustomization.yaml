@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./helmrelease.yaml
+configMapGenerator:
+  - name: suwayomi-scripts
+    files:
+      - komga-covers.sh=./resources/komga-covers.sh
+generatorOptions:
+  disableNameSuffixHash: true
+  # The script is full of shell ${...} expansions; without this Flux's
+  # postBuild substitution treats them as its own variables and the build fails.
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
