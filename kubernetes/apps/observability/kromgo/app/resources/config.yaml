@@ -9,12 +9,12 @@ badges:
     colorExpr: '"green"'
 
   - id: cluster_cpu_usage
-    query: round(100 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100, 0.1)
+    query: round(100 - avg(rate(node_cpu_seconds_total{job!="proxmox",mode="idle"}[5m])) * 100, 0.1)
     valueExpr: 'string(result) + "%"'
     colorExpr: 'colorScale(result, [35.0, 75.0], ["green", "orange", "red"])'
 
   - id: cluster_memory_usage
-    query: round(sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / sum(node_memory_MemTotal_bytes) * 100, 0.1)
+    query: round(sum(node_memory_MemTotal_bytes{job!="proxmox"} - node_memory_MemAvailable_bytes{job!="proxmox"}) / sum(node_memory_MemTotal_bytes{job!="proxmox"}) * 100, 0.1)
     valueExpr: 'string(result) + "%"'
     colorExpr: 'colorScale(result, [35.0, 75.0], ["green", "orange", "red"])'
 
@@ -24,7 +24,7 @@ badges:
     colorExpr: 'colorScale(result, [180.0, 360.0], ["green", "orange", "red"])'
 
   - id: cluster_uptime_days
-    query: round(avg(node_time_seconds - node_boot_time_seconds) / 86400)
+    query: round(avg(node_time_seconds{job!="proxmox"} - node_boot_time_seconds{job!="proxmox"}) / 86400)
     valueExpr: 'string(int(result)) + "d"'
     colorExpr: 'colorScale(result, [180.0, 360.0], ["green", "orange", "red"])'
 
