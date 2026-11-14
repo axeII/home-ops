@@ -12,8 +12,19 @@ context, not this one:
 |---|---|
 | Why is something broken in the cluster right now? | `cluster-radar` agent, or `/triage [namespace]` |
 | What do the logs or metrics say over time? | `grafana-logs` agent |
+| Add or rework an app under `kubernetes/apps/` | `app-builder` agent |
 | Validate, commit, and open a PR | `ship` agent, or `/ship [description]` |
 | Just run the validation chain | `/validate` |
+
+### Delegation rules
+
+These are rules, not suggestions. They apply whichever model the main session runs on.
+
+- Commits, pushes and PRs always go through the `ship` agent. Never run `but commit`, `but push`
+  or `github_create_pull_request` in the main session.
+- Adding a new app, or reworking an existing one across several files, goes to the `app-builder`
+  agent. When it reports back, pass its report to `ship` as the PR context.
+- Small edits (a value, a version, one file) stay in the main session, then go to `ship`.
 
 Before writing manifests, read the `flux-validate` skill for the validation pipeline and
 `sops-secrets` before touching any `*.sops.yaml`. Use `but` for every version control write — see

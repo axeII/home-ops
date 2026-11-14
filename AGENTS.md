@@ -176,7 +176,8 @@ Lives in `.claude/` (tracked, reviewed like any change). `CLAUDE.md` imports thi
 
 - Agents: `cluster-radar` (read-only cluster triage via the radar MCP server, falls back to
   `kubectl`/`flux`/`talosctl`), `grafana-logs` (Loki/Prometheus queries, returns a summary plus a
-  deeplink), `ship` (validate, commit with `but`, push, open PR; cannot merge). Delegate cluster and
+  deeplink), `app-builder` (writes and validates app manifests under `kubernetes/apps/`; does not
+  commit), `ship` (validate, commit with `but`, push, open PR; cannot merge). Delegate cluster and
   log investigation to them so the output stays out of the main context.
 - Skills: `gitbutler`, `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
   plugin enabled in `.claude/settings.json`.
