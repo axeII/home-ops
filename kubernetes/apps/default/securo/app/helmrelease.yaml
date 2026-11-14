@@ -172,7 +172,7 @@ spec:
           redis:
             image:
               repository: docker.io/library/redis
-              tag: 8.8.4-alpine@sha256:1273af45b299d2b8b60d0e400d90aa6c2c5b1794f01d6a7ca60ff3ba6e65efb5
+              tag: 8.10.3-alpine@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3
             args: [--save, "", --appendonly, "no", --maxmemory, 96mb, --maxmemory-policy, noeviction]
             resources:
               requests:
