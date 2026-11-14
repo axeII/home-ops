@@ -69,6 +69,8 @@ spec:
         serviceAccount:
           identifier: *app
         pod:
+          # k8s-extension sidecar lists cluster resources through the Kubernetes API
+          automountServiceAccountToken: true
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
