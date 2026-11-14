@@ -38,6 +38,9 @@ spec:
               REDLIB_DEFAULT_USE_HLS: "on"
               REDLIB_DEFAULT_HIDE_HLS_NOTIFICATION: "on"
               REDLIB_DEFAULT_POST_SORT: hot
+            envFrom:
+              - secretRef:
+                  name: redlib-secret
             probes:
               liveness: &probes
                 enabled: true
