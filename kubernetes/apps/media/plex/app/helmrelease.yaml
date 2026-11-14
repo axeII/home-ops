@@ -79,7 +79,7 @@ spec:
     route:
       app:
         annotations:
-          glance/show: "true"
+          glance/show: "false"
           glance/icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
           glance/description: "Plex Media server"
           # No health check while Plex is parked, or Gatus alerts on it.
