@@ -630,7 +630,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval]))",
+          "expr": "1 - avg(rate(node_cpu_seconds_total{job!=\"proxmox\",mode=\"idle\"}[$__rate_interval]))",
           "instant": true,
           "range": false
         }
@@ -707,7 +707,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - sum(node_memory_MemAvailable_bytes) / sum(node_memory_MemTotal_bytes)",
+          "expr": "1 - sum(node_memory_MemAvailable_bytes{job!=\"proxmox\"}) / sum(node_memory_MemTotal_bytes{job!=\"proxmox\"})",
           "instant": true,
           "range": false
         }
@@ -1114,7 +1114,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval]))",
+          "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{job!=\"proxmox\",mode=\"idle\"}[$__rate_interval]))",
           "legendFormat": "{{instance}}",
           "range": true
         }
@@ -1187,7 +1187,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (instance) (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+          "expr": "1 - avg by (instance) (node_memory_MemAvailable_bytes{job!=\"proxmox\"} / node_memory_MemTotal_bytes{job!=\"proxmox\"})",
           "legendFormat": "{{instance}}",
           "range": true
         }
@@ -1260,7 +1260,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "1 - avg by (instance) (node_filesystem_avail_bytes{mountpoint=\"/var\"} / node_filesystem_size_bytes{mountpoint=\"/var\"})",
+          "expr": "1 - avg by (instance) (node_filesystem_avail_bytes{job!=\"proxmox\",mountpoint=\"/var\"} / node_filesystem_size_bytes{job!=\"proxmox\",mountpoint=\"/var\"})",
           "legendFormat": "{{instance}}",
           "instant": true,
           "range": false
