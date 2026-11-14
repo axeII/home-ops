@@ -29,7 +29,7 @@ spec:
               # Fork of redlib-org/redlib. It only publishes `latest` and `sha-<commit>`
               # tags, so Renovate tracks the digest of `latest`.
               repository: ghcr.io/nachtalb/redlib
-              tag: latest@sha256:aa16bc4d091892b0cc04dbff0622c987364d712b07c68644a409f78bef583308
+              tag: latest@sha256:d5947e142a4c09419c2046da20d7910ea2cff6556868c61a3d973f3cad05936e
             env:
               REDLIB_LISTEN_PORT: &port 8080
               REDLIB_ROBOTS_DISABLE_INDEXING: "on"
