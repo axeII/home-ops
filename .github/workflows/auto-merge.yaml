@@ -41,7 +41,9 @@ jobs:
       - name: Merge Eligible PRs
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_APP_PRIVATE_KEY: ${{ secrets.BOT_APP_PRIVATE_KEY }}
           DRY_RUN: ${{ inputs.dryRun || 'false' }}
           FORCE: ${{ inputs.force || 'false' }}
           KONFLATE_PUSH_TOKEN: ${{ secrets.KONFLATE_PUSH_TOKEN }}
@@ -64,7 +66,51 @@ jobs:
           # Also matches flux and dragonfly — all three are manual-only.
           MANUAL_TITLE_REGEX="ceph|cilium|flux|dragonfly"
 
+          # ── Token refresh ─────────────────────────────────────
+          # App installation tokens expire after 1h. With 5-10 min sleeps
+          # between merges a run outlives the token from the Generate Token
+          # step, so re-mint one before merging once it is 50 min old.
+          TOKEN_MAX_AGE_SEC=3000
+          token_minted_at=$(date +%s)
+
+          b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
+
+          refresh_token() {
+            local now header payload sig jwt installation_id token
+            now=$(date +%s)
+            header=$(printf '{"alg":"RS256","typ":"JWT"}' | b64url)
+            payload=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' $((now - 60)) $((now + 540)) "${BOT_APP_ID}" | b64url)
+            sig=$(printf '%s.%s' "${header}" "${payload}" \
+              | openssl dgst -sha256 -sign <(printf '%s\n' "${BOT_APP_PRIVATE_KEY}") | b64url)
+            jwt="${header}.${payload}.${sig}"
+
+            installation_id=$(curl -fsS \
+              -H "Authorization: Bearer ${jwt}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/installation" | jq -r '.id')
+            token=$(curl -fsS -X POST \
+              -H "Authorization: Bearer ${jwt}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/app/installations/${installation_id}/access_tokens" | jq -r '.token')
+
+            if [ -z "${token}" ] || [ "${token}" = "null" ]; then
+              echo "  → token refresh failed"
+              return 1
+            fi
+            echo "::add-mask::${token}"
+            export GH_TOKEN="${token}"
+            token_minted_at=${now}
+            echo "  → token refreshed"
+          }
+
+          ensure_fresh_token() {
+            if [ $(( $(date +%s) - token_minted_at )) -ge "${TOKEN_MAX_AGE_SEC}" ]; then
+              refresh_token
+            fi
+          }
+
           merged=0
+          failed_ids=()
           skipped_manual=()
           skipped_quiet=()
           skipped_day=()
@@ -282,12 +328,13 @@ jobs:
             fi
 
             echo "  → MERGING..."
-            if gh pr merge "${number}" --squash 2>&1; then
+            if ensure_fresh_token && gh pr merge "${number}" --squash 2>&1; then
               echo "  → MERGED ✓"
               merged_ids+=("#${number}")
               sleep "${sleep_sec}"
             else
               echo "  → MERGE FAILED ⚠"
+              failed_ids+=("#${number}")
             fi
 
           done < <(
@@ -307,4 +354,10 @@ jobs:
           echo " Day skip:      ${#skipped_day[@]} (${skipped_day[*]})"
           echo " Age skip:      ${#skipped_age[@]} (${skipped_age[*]})"
           echo " Konflate skip: ${#skipped_konflate[@]} (${skipped_konflate[*]})"
+          echo " Failed:        ${#failed_ids[@]} (${failed_ids[*]})"
           echo "=============================="
+
+          # Fail the job so merge failures are visible instead of a green run.
+          if [ "${#failed_ids[@]}" -gt 0 ]; then
+            exit 1
+          fi

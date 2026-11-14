@@ -13,6 +13,7 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 
 - **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
 - **Sleep between merges:** 300 seconds to let Flux reconcile before the next merge.
+- **Token refresh:** GitHub App tokens expire after 1h, so the run re-mints one from `BOT_APP_PRIVATE_KEY` once it is 50 min old. Any failed merge fails the job.
 - Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
 - **Bulk merge** (`.github/workflows/bulk-merge-prs.yaml`) also excludes rook-ceph, `area/talos`, `type/major`, `type/minor`, and `hold`.
 - **Defense in depth:** The `pr-classify` workflow applies `needs-review` and `risk/critical` labels to
