@@ -42,8 +42,6 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
-          BOT_APP_PRIVATE_KEY: ${{ secrets.BOT_APP_PRIVATE_KEY }}
           DRY_RUN: ${{ inputs.dryRun || 'false' }}
           FORCE: ${{ inputs.force || 'false' }}
           KONFLATE_PUSH_TOKEN: ${{ secrets.KONFLATE_PUSH_TOKEN }}
@@ -58,58 +56,25 @@ jobs:
           MIN_AGE_MINOR_DAYS=3
           MIN_AGE_ACTION_MAJOR_DAYS=2
 
-          MERGE_SLEEP_PATCH_SEC=300
-          MERGE_SLEEP_MINOR_TRAIN_SEC=600
+          # Pause between merges so Flux (webhook receiver) reconciles one
+          # change at a time. No pause after the last merge.
+          MERGE_SLEEP_PATCH_SEC=180
+          MERGE_SLEEP_MINOR_TRAIN_SEC=300
 
           # Matches rook-ceph chart/operator PRs *and* standalone quay.io/ceph/ceph
           # image PRs (separate Renovate package, not part of the rook-ceph group).
           # Also matches flux and dragonfly — all three are manual-only.
           MANUAL_TITLE_REGEX="ceph|cilium|flux|dragonfly"
 
-          # ── Token refresh ─────────────────────────────────────
-          # App installation tokens expire after 1h. With 5-10 min sleeps
-          # between merges a run outlives the token from the Generate Token
-          # step, so re-mint one before merging once it is 50 min old.
-          TOKEN_MAX_AGE_SEC=3000
-          token_minted_at=$(date +%s)
+          # Merges stop once the run reaches this age; the rest are deferred
+          # to the next run. App installation tokens expire after 1h, so the
+          # budget keeps every merge well inside the token's lifetime.
+          RUN_BUDGET_SEC=2700
+          run_started_at=$(date +%s)
 
-          b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
-
-          refresh_token() {
-            local now header payload sig jwt installation_id token
-            now=$(date +%s)
-            header=$(printf '{"alg":"RS256","typ":"JWT"}' | b64url)
-            payload=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' $((now - 60)) $((now + 540)) "${BOT_APP_ID}" | b64url)
-            sig=$(printf '%s.%s' "${header}" "${payload}" \
-              | openssl dgst -sha256 -sign <(printf '%s\n' "${BOT_APP_PRIVATE_KEY}") | b64url)
-            jwt="${header}.${payload}.${sig}"
-
-            installation_id=$(curl -fsS \
-              -H "Authorization: Bearer ${jwt}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/installation" | jq -r '.id')
-            token=$(curl -fsS -X POST \
-              -H "Authorization: Bearer ${jwt}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/app/installations/${installation_id}/access_tokens" | jq -r '.token')
-
-            if [ -z "${token}" ] || [ "${token}" = "null" ]; then
-              echo "  → token refresh failed"
-              return 1
-            fi
-            echo "::add-mask::${token}"
-            export GH_TOKEN="${token}"
-            token_minted_at=${now}
-            echo "  → token refreshed"
-          }
-
-          ensure_fresh_token() {
-            if [ $(( $(date +%s) - token_minted_at )) -ge "${TOKEN_MAX_AGE_SEC}" ]; then
-              refresh_token
-            fi
-          }
-
-          merged=0
+          plan_numbers=()
+          plan_categories=()
+          deferred_ids=()
           failed_ids=()
           skipped_manual=()
           skipped_quiet=()
@@ -163,8 +128,7 @@ jobs:
           }
 
           echo ""
-          echo "=== Fetching open bot PRs ==="
-          merged=0
+          echo "=== Phase 1: evaluating open bot PRs ==="
           while IFS=$'\t' read -r number branch title created_at labels_str state; do
             echo ""
             echo "---"
@@ -313,29 +277,9 @@ jobs:
               echo "  → konflate: unreachable/error (skipping gate, relying on label/age policy)"
             fi
 
-            # ── Merge ─────────────────────────────────────────────
-            if [ "${DRY_RUN}" = "true" ]; then
-              echo "  → WOULD MERGE (${category}) ✓"
-              merged_ids+=("#${number}")
-              continue
-            fi
-
-            # Sleep longer during release train (minor Fri-Sat) to let Flux reconcile
-            if [ "${category}" = "minor" ]; then
-              sleep_sec=${MERGE_SLEEP_MINOR_TRAIN_SEC}
-            else
-              sleep_sec=${MERGE_SLEEP_PATCH_SEC}
-            fi
-
-            echo "  → MERGING..."
-            if ensure_fresh_token && gh pr merge "${number}" --squash 2>&1; then
-              echo "  → MERGED ✓"
-              merged_ids+=("#${number}")
-              sleep "${sleep_sec}"
-            else
-              echo "  → MERGE FAILED ⚠"
-              failed_ids+=("#${number}")
-            fi
+            echo "  → ELIGIBLE (${category})"
+            plan_numbers+=("${number}")
+            plan_categories+=("${category}")
 
           done < <(
             gh pr list \
@@ -346,10 +290,60 @@ jobs:
             jq -r '.[] | [.number, .headRefName, .title, .createdAt, (.labels | join(",")), .mergeStateStatus] | @tsv'
           )
 
+          # ── Phase 2: merge the plan ───────────────────────────
+          plan_ids=()
+          for n in "${plan_numbers[@]}"; do plan_ids+=("#${n}"); done
+          echo ""
+          echo "=== Merge plan: ${#plan_numbers[@]} PR(s) ${plan_ids[*]} ==="
+
+          for idx in "${!plan_numbers[@]}"; do
+            number=${plan_numbers[$idx]}
+            category=${plan_categories[$idx]}
+
+            if [ "${DRY_RUN}" = "true" ]; then
+              echo "  #${number} → WOULD MERGE (${category}) ✓"
+              merged_ids+=("#${number}")
+              continue
+            fi
+
+            echo "  #${number} → MERGING (${category})..."
+            if gh pr merge "${number}" --squash 2>&1; then
+              echo "  #${number} → MERGED ✓"
+              merged_ids+=("#${number}")
+            else
+              echo "  #${number} → MERGE FAILED ⚠"
+              failed_ids+=("#${number}")
+              continue
+            fi
+
+            # Nothing left to merge: no pause.
+            if [ "$((idx + 1))" -ge "${#plan_numbers[@]}" ]; then
+              break
+            fi
+
+            # Longer pause during the release train so Flux reconciles minors.
+            if [ "${category}" = "minor" ]; then
+              sleep_sec=${MERGE_SLEEP_MINOR_TRAIN_SEC}
+            else
+              sleep_sec=${MERGE_SLEEP_PATCH_SEC}
+            fi
+
+            # Stop if the pause would take the run past its budget.
+            if [ $(( $(date +%s) + sleep_sec - run_started_at )) -gt "${RUN_BUDGET_SEC}" ]; then
+              for rest in "${plan_numbers[@]:$((idx + 1))}"; do deferred_ids+=("#${rest}"); done
+              echo "  → run budget reached, deferring ${deferred_ids[*]} to next run"
+              break
+            fi
+
+            echo "  → waiting ${sleep_sec}s for Flux"
+            sleep "${sleep_sec}"
+          done
+
           echo ""
           echo "=============================="
           echo " Summary"
           echo " Merged:        ${#merged_ids[@]} (${merged_ids[*]})"
+          echo " Deferred:      ${#deferred_ids[@]} (${deferred_ids[*]})"
           echo " Manual skip:   ${#skipped_manual[@]} (${skipped_manual[*]})"
           echo " Day skip:      ${#skipped_day[@]} (${skipped_day[*]})"
           echo " Age skip:      ${#skipped_age[@]} (${skipped_age[*]})"
