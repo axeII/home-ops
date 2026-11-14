@@ -23,3 +23,6 @@ Thumbs.db
 # Claude Code - track agents/skills/commands, ignore local state
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+
+# Linked git worktrees created by Claude Code agents
+.claude/worktrees/

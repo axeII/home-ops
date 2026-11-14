@@ -36,8 +36,11 @@ pre-commit = "4.7.0"
 # python here keeps the hooks working and also covers scripts/*.py.
 python = "3.15.2"
 
-# Replaces the former .envrc. Paths resolve against the repo root.
+# Replaces the former .envrc. kubeconfig, age.key and talosconfig are gitignored, so they exist
+# only in the main checkout. HOME_OPS_ROOT resolves to that checkout from any linked git worktree,
+# so every worktree uses the same copies.
 [env]
-KUBECONFIG = "{{config_root}}/kubeconfig"
-SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
-TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
+HOME_OPS_ROOT = "{{ exec(command='dirname \"$(git rev-parse --path-format=absolute --git-common-dir)\"') }}"
+KUBECONFIG = "{{env.HOME_OPS_ROOT}}/kubeconfig"
+SOPS_AGE_KEY_FILE = "{{env.HOME_OPS_ROOT}}/age.key"
+TALOSCONFIG = "{{env.HOME_OPS_ROOT}}/talos/clusterconfig/talosconfig"
