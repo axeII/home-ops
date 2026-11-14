@@ -95,7 +95,7 @@ def render(path: Path) -> str:
             sys.exit(f"{path}: frontmatter is missing {required!r}")
 
     tools = json.dumps(convert_tools(fields["tools"], path))
-    # 'model' is intentionally dropped: Copilot CLI selects the model itself.
+    # 'model' and 'effort' are intentionally dropped: Copilot CLI selects the model itself.
     head = "\n".join(
         [
             "---",
