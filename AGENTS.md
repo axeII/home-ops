@@ -52,8 +52,9 @@ direnv.
 
 ## Talos changes
 
-- Run `just talos-genconfig` to regenerate node configs after editing `talos/patches/`.
-- Apply to each control plane node: `just talos-apply IP=192.168.69.110` (repeat for .111, .112).
+- **Do not run `just talos-genconfig` or `just talos-apply` until #4262 is closed.** Generation fails on Talos 1.14, and talhelper is archived. Its last release would generate an etcd encryption config the cluster cannot decrypt its Secrets with. Any `talos/clusterconfig/` files on disk are stale.
+- Until then, edit `talos/patches/` so git stays the record, then put the same change on each node (.110, .111, .112) with `talosctl -n <ip> patch mc --patch @<file> --mode=no-reboot --dry-run`. Read the diff, then run it again without `--dry-run`, one node at a time.
+  - A strategic merge appends to lists. To replace a list, pass two patches: one with `$patch: delete` on the parent key, then one that sets it.
 - Static pod resources (apiserver, etcd, etc.) live in `talos/patches/controller/`. Always set both `requests` and `limits`.
 - Check for OOM issues: `talosctl -n <node-ip> dmesg | grep -i "oom\|kill"`.
 - Talos/K8s upgrades are automated via [tuppr](https://github.com/home-operations/tuppr) in `system-upgrade` namespace.

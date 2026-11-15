@@ -200,6 +200,9 @@ This repo is opinionated and personal. These are the hardcoded values you will n
 
 Once you have edited `talos/patches/` to match your hardware, follow these steps:
 
+> [!WARNING]
+> `just talos-genconfig` fails on Talos 1.14 and talhelper is archived, so this path does not work today. See [#4262](https://github.com/axeII/home-ops/issues/4262).
+
 ```sh
 just talos-genconfig      # Regenerate Talos configs from patches
 just bootstrap-age-key    # Generate SOPS Age key (age.key)
