@@ -1,6 +1,16 @@
 machine:
   time:
     disabled: false
+    # Talos syncs to the first server that answers and stays on it, so the order
+    # is the preference. pve (192.168.69.80) runs chrony against four pool
+    # servers and answers over the LAN in under a millisecond. Talos takes one
+    # SNTP sample per poll and polls every 34 minutes once stable, so a single
+    # sample skewed by WAN jitter stays applied that long: on 2026-11-15 that put
+    # k8s-2 71 ms ahead and Ceph raised MON_CLOCK_SKEW. Cloudflare stays as the
+    # fallback for when pve is down. A node that has fallen back stays on
+    # Cloudflare until a query to it fails or the node reboots; `talosctl dmesg |
+    # grep "adjusting time"` shows which server a node is using.
     servers:
+      - 192.168.69.80
       - 162.159.200.1
       - 162.159.200.123
