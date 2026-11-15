@@ -12,7 +12,7 @@ Catches common mistakes before Flux applies them to the cluster:
 - Duplicate resource references in kustomizations
 - talosctl/kubectl pins drifting from the cluster versions they talk to
 - A Kubernetes version the pinned Talos does not support, or tuppr upgrade
-  CRs disagreeing with talos/talenv.yaml
+  CRs disagreeing with talos/topf.yaml
 """
 
 import sys
@@ -23,7 +23,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 APPS_DIR = ROOT / "kubernetes" / "apps"
 FLUX_DIR = ROOT / "kubernetes" / "flux"
 MISE_TOML = ROOT / "mise.toml"
-TALENV = ROOT / "talos" / "talenv.yaml"
+TOPF_YAML = ROOT / "talos" / "topf.yaml"
 UPGRADE_DIR = APPS_DIR / "system-upgrade" / "app"
 
 # Kubernetes minors each Talos minor supports, inclusive. Copied from
@@ -397,18 +397,18 @@ def check_common_component():
 
 
 def check_client_tool_versions():
-    """Client tools in mise.toml must match the cluster in talos/talenv.yaml.
+    """Client tools in mise.toml must match the cluster in talos/topf.yaml.
 
     talosctl and kubectl are pinned in mise.toml; the cluster they talk to is
-    pinned in talos/talenv.yaml. Renovate groups each tool with its cluster
+    pinned in talos/topf.yaml. Renovate groups each tool with its cluster
     version so they move together; this catches one side bumped without the
     other.
     """
-    if not MISE_TOML.exists() or not TALENV.exists():
+    if not MISE_TOML.exists() or not TOPF_YAML.exists():
         return
     try:
         mise = MISE_TOML.read_text()
-        talenv = TALENV.read_text()
+        topf_yaml = TOPF_YAML.read_text()
     except OSError:
         return
 
@@ -418,13 +418,13 @@ def check_client_tool_versions():
     ]
     for tool, tool_re, cluster_re in pairs:
         pinned = re.search(tool_re, mise, re.MULTILINE)
-        cluster = re.search(cluster_re, talenv, re.MULTILINE)
+        cluster = re.search(cluster_re, topf_yaml, re.MULTILINE)
         if not pinned or not cluster:
             continue
         if pinned.group(1) != cluster.group(1):
             errors.append(
                 f"{tool} is {pinned.group(1)} in mise.toml but the cluster is "
-                f"{cluster.group(1)} in talos/talenv.yaml - bump both together"
+                f"{cluster.group(1)} in talos/topf.yaml - bump both together"
             )
 
 
@@ -446,19 +446,19 @@ def check_cluster_versions():
     direction, so a Talos bump that drops the running Kubernetes minor fails too.
 
     tuppr applies the versions in its TalosUpgrade / KubernetesUpgrade CRs, not
-    talenv.yaml, so those must match talenv.yaml for the check to mean anything.
+    topf.yaml, so those must match topf.yaml for the check to mean anything.
     """
-    if not TALENV.exists():
+    if not TOPF_YAML.exists():
         return
     try:
-        talenv = TALENV.read_text()
+        topf_yaml = TOPF_YAML.read_text()
     except OSError:
         return
 
-    talos = re.search(r"^talosVersion:\s*(\S+)", talenv, re.MULTILINE)
-    k8s = re.search(r"^kubernetesVersion:\s*(\S+)", talenv, re.MULTILINE)
+    talos = re.search(r"^talosVersion:\s*(\S+)", topf_yaml, re.MULTILINE)
+    k8s = re.search(r"^kubernetesVersion:\s*(\S+)", topf_yaml, re.MULTILINE)
     if not talos or not k8s:
-        errors.append("talos/talenv.yaml: talosVersion or kubernetesVersion not found")
+        errors.append("talos/topf.yaml: talosVersion or kubernetesVersion not found")
         return
     talos, k8s = talos.group(1), k8s.group(1)
 
@@ -473,13 +473,13 @@ def check_cluster_versions():
             errors.append(f"{rel(path)}: spec version not found")
         elif found.group(1).lstrip("v") != pinned.lstrip("v"):
             errors.append(
-                f"{rel(path)} upgrades to {found.group(1)} but talos/talenv.yaml "
+                f"{rel(path)} upgrades to {found.group(1)} but talos/topf.yaml "
                 f"pins {pinned} - bump both together"
             )
 
     talos_minor, k8s_minor = minor(talos), minor(k8s)
     if not talos_minor or not k8s_minor:
-        errors.append(f"talos/talenv.yaml: cannot parse {talos} / {k8s}")
+        errors.append(f"talos/topf.yaml: cannot parse {talos} / {k8s}")
         return
     supported = TALOS_KUBERNETES_SUPPORT.get(talos_minor)
     if not supported:

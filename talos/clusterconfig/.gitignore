@@ -1,4 +1,5 @@
-kubernetes-k8s-0.yaml
-kubernetes-k8s-1.yaml
-kubernetes-k8s-2.yaml
+# Local Talos client config, written by `topf talosconfig`. mise.toml points
+# TALOSCONFIG here.
 talosconfig
+# Left over from talhelper; safe to delete.
+kubernetes-*.yaml

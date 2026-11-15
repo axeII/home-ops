@@ -1,0 +1,7 @@
+# topf adds the installer image from each node's schematicId and talosVersion.
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.dev_path == "/dev/sda"
+  wipe: false

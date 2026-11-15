@@ -7,10 +7,10 @@ on:
     # Talos and Kubernetes upgrade in separate Renovate PRs, so a reviewer never
     # sees the pair side by side. find_mistakes.py fails when talosVersion and
     # kubernetesVersion are not a supported pair, when the tuppr CRs disagree
-    # with talenv.yaml, or when the mise client tools drift from either. These
+    # with topf.yaml, or when the mise client tools drift from either. These
     # paths are everything those checks read.
     paths:
-      - "talos/talenv.yaml"
+      - "talos/topf.yaml"
       - "kubernetes/apps/system-upgrade/**"
       - "mise.toml"
       - "scripts/find_mistakes.py"

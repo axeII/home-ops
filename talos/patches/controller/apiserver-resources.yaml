@@ -1,8 +1,0 @@
-cluster:
-  apiServer:
-    resources:
-      requests:
-        cpu: 200m
-        memory: 1Gi
-      limits:
-        memory: 3Gi
