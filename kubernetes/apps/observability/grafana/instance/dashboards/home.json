@@ -1317,13 +1317,105 @@
       }
     },
     {
+      "id": 36,
+      "type": "timeseries",
+      "title": "Clock offset by node",
+      "description": "Correction the kernel is still applying after the last NTP sync. A spike means Talos measured that node that far off. Ceph raises MON_CLOCK_SKEW when monitors differ by more than 50 ms (dashed lines), and tuppr holds an upgrade while it does.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 24,
+        "h": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "max by (instance) (node_timex_offset_seconds{job!=\"proxmox\", instance=~\"k8s-.*\"})",
+          "legendFormat": "{{instance}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": -0.06,
+            "axisSoftMax": 0.06,
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "links": [
+            {
+              "title": "Node Exporter Full",
+              "url": "/d/rYdddlPWk?${__url_time_range}"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "transparent",
+                "value": -0.05
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "min",
+            "max"
+          ],
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
       "id": 18,
       "type": "row",
       "title": "Workloads (click a bar to filter the logs below to its namespace)",
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 18,
+        "y": 24,
         "w": 24,
         "h": 1
       },
@@ -1340,7 +1432,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 19,
+        "y": 25,
         "w": 8,
         "h": 9
       },
@@ -1422,7 +1514,7 @@
       },
       "gridPos": {
         "x": 8,
-        "y": 19,
+        "y": 25,
         "w": 8,
         "h": 9
       },
@@ -1504,7 +1596,7 @@
       },
       "gridPos": {
         "x": 16,
-        "y": 19,
+        "y": 25,
         "w": 8,
         "h": 9
       },
@@ -1579,7 +1671,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 28,
+        "y": 34,
         "w": 24,
         "h": 1
       },
@@ -1596,7 +1688,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 29,
+        "y": 35,
         "w": 12,
         "h": 8
       },
@@ -1673,7 +1765,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 29,
+        "y": 35,
         "w": 6,
         "h": 8
       },
@@ -1760,7 +1852,7 @@
       },
       "gridPos": {
         "x": 18,
-        "y": 29,
+        "y": 35,
         "w": 6,
         "h": 8
       },
@@ -1832,7 +1924,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 37,
+        "y": 43,
         "w": 24,
         "h": 1
       },
@@ -1849,7 +1941,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 38,
+        "y": 44,
         "w": 10,
         "h": 8
       },
@@ -1921,7 +2013,7 @@
       },
       "gridPos": {
         "x": 10,
-        "y": 38,
+        "y": 44,
         "w": 3,
         "h": 4
       },
@@ -1989,7 +2081,7 @@
       },
       "gridPos": {
         "x": 13,
-        "y": 38,
+        "y": 44,
         "w": 3,
         "h": 4
       },
@@ -2067,7 +2159,7 @@
       },
       "gridPos": {
         "x": 10,
-        "y": 42,
+        "y": 48,
         "w": 3,
         "h": 4
       },
@@ -2135,7 +2227,7 @@
       },
       "gridPos": {
         "x": 13,
-        "y": 42,
+        "y": 48,
         "w": 3,
         "h": 4
       },
@@ -2202,7 +2294,7 @@
       },
       "gridPos": {
         "x": 16,
-        "y": 38,
+        "y": 44,
         "w": 8,
         "h": 8
       },
@@ -2356,7 +2448,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 46,
+        "y": 52,
         "w": 24,
         "h": 1
       },
@@ -2372,7 +2464,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 47,
+        "y": 53,
         "w": 24,
         "h": 7
       },
@@ -2436,7 +2528,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 54,
+        "y": 60,
         "w": 24,
         "h": 12
       },
