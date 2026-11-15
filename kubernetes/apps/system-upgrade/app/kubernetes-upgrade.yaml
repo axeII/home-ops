@@ -20,4 +20,10 @@ spec:
       kind: CephCluster
       name: rook-ceph
       namespace: rook-ceph
-      expr: status.ceph.health in ["HEALTH_OK"]
+      description: Ceph healthy apart from noout and muted AUTH_INSECURE
+      # Same check as the TalosUpgrade, so a noout left over from a Talos run
+      # doesn't block a Kubernetes upgrade.
+      expr: >-
+        status.ceph.health == "HEALTH_OK" ||
+        (status.ceph.health == "HEALTH_WARN" &&
+        status.ceph.details.all(k, k == "OSDMAP_FLAGS" || k.startsWith("AUTH_INSECURE")))
