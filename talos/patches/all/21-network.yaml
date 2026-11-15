@@ -1,0 +1,6 @@
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+  - address: 192.168.69.1
+searchDomains:
+  disableDefault: true

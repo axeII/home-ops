@@ -13,6 +13,8 @@
 # Kubernetes
 kubeconfig
 talosconfig
+# topf render output: full machine configs, with secrets
+/talos/output/
 # Misc.
 .private/
 .task/

@@ -1,0 +1,6 @@
+# Talos 1.14 defaults new configs to running kubelet and pods in a sandboxed
+# PID/mount namespace. That breaks workloads using hostPID or host mounts
+# (node-exporter, Rook, the GPU plugin), and the nodes do not run with it today.
+apiVersion: v1alpha1
+kind: SecurityProfileConfig
+workloadIsolation: false

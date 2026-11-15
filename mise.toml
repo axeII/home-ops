@@ -13,15 +13,15 @@
 # 0.3.0 gets its own PR so a validation regression stays attributable.
 "github:home-operations/yayamlls" = "0.3.3"
 "github:home-operations/flate" = "0.7.3"
+"github:postfinance/topf" = "v0.6.2"
 
-# Must equal talosVersion / kubernetesVersion in talos/talenv.yaml — these are
+# Must equal talosVersion / kubernetesVersion in talos/topf.yaml — these are
 # clients for that cluster. Renovate groups each with its cluster version, and
 # scripts/find_mistakes.py errors if they ever disagree.
 talosctl = "1.14.6"
 kubectl = "1.36.4"
 
 flux2 = "2.10.0"       # registry name is flux2; the binary is `flux`
-talhelper = "3.1.17"
 sops = "3.13.3"
 helmfile = "1.8.4"
 stern = "1.35.0"

@@ -45,16 +45,17 @@ worktree BRANCH:
 
 # ─── Bootstrap ───────────────────────────────────────────────────────────────
 
-# Bootstrap the Talos cluster
+# Bootstrap the Talos cluster (not re-tested since the move to topf, see #4262)
 bootstrap-talos:
     #!/usr/bin/env bash
     set -euo pipefail
     cd talos
-    [ -f talsecret.sops.yaml ] || talhelper gensecret | sops --filename-override talos/talsecret.sops.yaml --encrypt /dev/stdin > talsecret.sops.yaml
-    talhelper genconfig
-    talhelper gencommand apply --extra-flags="--insecure" | bash
-    until talhelper gencommand bootstrap | bash; do sleep 10; done
-    until talhelper gencommand kubeconfig --extra-flags="$(pwd)/.. --force" | bash; do sleep 10; done
+    # Generates and sops-encrypts secrets.sops.yaml only if it does not exist.
+    topf secrets --confirm=false > /dev/null
+    topf apply --auto-bootstrap --confirm=false
+    topf talosconfig > clusterconfig/talosconfig
+    # topf issues 12h admin certs by default.
+    topf kubeconfig --validity 8760h > ../kubeconfig
 
 # Bootstrap apps into the Talos cluster
 bootstrap-apps:
@@ -177,34 +178,34 @@ resources:
 
 # ─── Talos ───────────────────────────────────────────────────────────────────
 
-# Generate Talos node configuration
-talos-genconfig:
-    cd talos && talhelper genconfig
+# Show what applying talos/ would change on each node, without applying
+talos-diff:
+    cd talos && { topf apply --dry-run || [ $? -eq 2 ]; }
 
-# Apply Talos config to a node [IP=required] [MODE=auto]
-talos-apply IP MODE="auto":
-    cd talos && talhelper gencommand apply --node {{IP}} --extra-flags '--mode={{MODE}}' | bash
+# Apply Talos config to a node; shows the diff and asks first [NODE=required, e.g. k8s-1] [MODE=auto]
+talos-apply NODE MODE="auto":
+    cd talos && topf apply --nodes-filter '^{{NODE}}$' --mode '{{MODE}}'
 
-# Upgrade Talos on a node [IP=required]
-talos-upgrade IP:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    cd talos
-    TALOS_IMAGE=$(yq '.nodes[] | select(.ipAddress == "{{IP}}") | .talosImageURL' talconfig.yaml)
-    TALOS_VERSION=$(yq '.talosVersion' talenv.yaml)
-    talhelper gencommand upgrade --node {{IP}} --extra-flags "--image='$TALOS_IMAGE:$TALOS_VERSION' --timeout=10m" | bash
+# Render machine configs to talos/output (they contain secrets; gitignored)
+talos-render:
+    cd talos && topf render
 
-# Upgrade Kubernetes
+# Upgrade Talos on a node to talosVersion in topf.yaml; asks first [NODE=required]
+talos-upgrade NODE:
+    # powercycle, as in the tuppr TalosUpgrade: a kexec reboot leaves the Arc GPU on k8s-0 wedged.
+    cd talos && topf upgrade --nodes-filter '^{{NODE}}$' --reboot-mode powercycle
+
+# Upgrade Kubernetes to kubernetesVersion in topf.yaml (topf does not manage this)
 talos-upgrade-k8s:
     #!/usr/bin/env bash
     set -euo pipefail
     cd talos
-    KUBE_VERSION=$(yq '.kubernetesVersion' talenv.yaml)
-    talhelper gencommand upgrade-k8s --extra-flags "--to '$KUBE_VERSION'" | bash
+    talosctl --nodes "$(yq '[.nodes[] | select(.role == "control-plane")][0].ip' topf.yaml)" \
+        upgrade-k8s --to "$(yq '.kubernetesVersion' topf.yaml)"
 
-# Reset nodes back to maintenance mode
+# Reset nodes back to maintenance mode (DESTRUCTIVE; asks first)
 talos-reset:
-    cd talos && talhelper gencommand reset --extra-flags="--reboot --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --graceful=false --wait=false" | bash
+    cd talos && topf reset
 
 # ─── Plex ────────────────────────────────────────────────────────────────────
 

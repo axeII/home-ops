@@ -29,7 +29,7 @@ Claude works as the **medior developer** — it implements changes, validates th
 ## Toolchain
 
 Every CLI this repo needs is pinned in `mise.toml` at the repo root — `talosctl`, `kubectl`, `flux`,
-`talhelper`, `sops`, `helmfile`, `stern`, `yq`, `jq`, `just`, `fd`, `pre-commit`, plus `flate` and
+`topf`, `sops`, `helmfile`, `stern`, `yq`, `jq`, `just`, `fd`, `pre-commit`, plus `flate` and
 `yayamlls`. Install [mise](https://mise.jdx.dev) and run `just tools` (or `mise install`).
 
 CI installs from the same `mise.toml` via `jdx/mise-action`, so local runs and the merge gate use
@@ -52,16 +52,18 @@ direnv.
 
 ## Talos changes
 
-- Run `just talos-genconfig` to regenerate node configs after editing `talos/patches/`.
-- Apply to each control plane node: `just talos-apply IP=192.168.69.110` (repeat for .111, .112).
-- Static pod resources (apiserver, etcd, etc.) live in `talos/patches/controller/`. Always set both `requests` and `limits`.
+- Node config is built by [topf](https://postfinance.github.io/topf/) from `talos/topf.yaml`, `talos/secrets.sops.yaml` and the patches under `talos/patches/` (`all/`, `control-plane/`, `node/<host>/`). See `talos/patches/README.md`.
+- After editing a patch, run `just talos-diff`. It shows the change per node and applies nothing.
+- Apply one node at a time: `just talos-apply k8s-1` (then `k8s-0`, `k8s-2`). It shows the diff and asks first.
+- Never print a rendered machine config or `talosctl get mc` output. Both contain the cluster's private keys. Use `just talos-diff`, which redacts them.
+- Static pod resources (apiserver, etcd, etc.) live in `talos/patches/control-plane/`. Always set both `requests` and `limits`.
 - Check for OOM issues: `talosctl -n <node-ip> dmesg | grep -i "oom\|kill"`.
 - Talos/K8s upgrades are automated via [tuppr](https://github.com/home-operations/tuppr) in `system-upgrade` namespace.
   - Renovate bumps versions in `TalosUpgrade`/`KubernetesUpgrade` CRs — merge the PR, Flux applies, tuppr orchestrates.
   - Talos and Kubernetes arrive as separate PRs (`talos` and `kubernetes` groups). The `Find Mistakes` CI check fails a Kubernetes version the pinned Talos does not support, so a Kubernetes minor waits until the Talos upgrade that supports it has merged.
   - Before moving to a new Talos minor, add its row to `TALOS_KUBERNETES_SUPPORT` in `scripts/find_mistakes.py`. The check fails on a Talos minor it does not know.
   - Upgrades run during maintenance window (Sunday 02:00 Europe/Paris) with Ceph noout pre/post hooks.
-  - Manual upgrade still possible: `task talos:upgrade-node IP=192.168.69.110`.
+  - Manual upgrade still possible: `just talos-upgrade k8s-0`.
 
 ## Secrets
 

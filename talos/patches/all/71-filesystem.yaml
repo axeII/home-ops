@@ -1,0 +1,15 @@
+# Talos 1.14 turns both of these on for newly generated configs. The nodes were
+# installed before that and run without them, so they stay off here to keep
+# this config equal to what is live. Dropping this file opts in.
+#
+# secure mounts /var with nosuid,nodev.
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+mount:
+  secure: false
+---
+# Weekly fstrim of the system disk.
+apiVersion: v1alpha1
+kind: FilesystemTrimConfig
+$patch: delete
