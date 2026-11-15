@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Install or update Grafana Alloy on the Proxmox host and load alloy/config.alloy.
+# Install or update Grafana Alloy on the Proxmox host and load alloy/config.alloy,
+# and let the cluster subnet use the host's chrony as its NTP server.
 # Usage: ./deploy.sh
 set -euo pipefail
 
@@ -30,6 +31,19 @@ systemctl enable -q alloy
 systemctl restart alloy
 sleep 5
 systemctl is-active alloy'
+
+log "Letting the cluster subnet use chrony as its NTP server..."
+scp -q "${SCRIPT_DIR}/chrony/serve-lan.conf" "${PVE}:/etc/chrony/conf.d/serve-lan.conf.new"
+ssh "${PVE}" 'set -euo pipefail
+if cmp -s /etc/chrony/conf.d/serve-lan.conf.new /etc/chrony/conf.d/serve-lan.conf; then
+  rm /etc/chrony/conf.d/serve-lan.conf.new
+else
+  mv /etc/chrony/conf.d/serve-lan.conf.new /etc/chrony/conf.d/serve-lan.conf
+  chronyd -p >/dev/null
+  systemctl restart chrony
+  sleep 5
+fi
+systemctl is-active chrony'
 
 log "Pointing the Proxmox metric server at Alloy (no-op if present)..."
 ssh "${PVE}" 'pvesh get /cluster/metrics/server/alloy >/dev/null 2>&1 \
