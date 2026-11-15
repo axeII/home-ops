@@ -33,7 +33,16 @@ spec:
       kind: CephCluster
       name: rook-ceph
       namespace: rook-ceph
-      expr: status.ceph.health in ["HEALTH_OK"]
+      description: Ceph healthy apart from noout and muted AUTH_INSECURE
+      # The ceph-set-noout pre-hook puts Ceph in HEALTH_WARN (OSDMAP_FLAGS) for
+      # the whole run, so a bare HEALTH_OK check can never pass after the first
+      # node and the post-hook never clears noout. Allow that flag and the
+      # muted AUTH_INSECURE_* checks; anything else (OSD_DOWN, MON_DOWN,
+      # PG_DEGRADED, ...) still holds the next node until Ceph recovers.
+      expr: >-
+        status.ceph.health == "HEALTH_OK" ||
+        (status.ceph.health == "HEALTH_WARN" &&
+        status.ceph.details.all(k, k == "OSDMAP_FLAGS" || k.startsWith("AUTH_INSECURE")))
   hooks:
     pre:
       - name: ceph-set-noout
