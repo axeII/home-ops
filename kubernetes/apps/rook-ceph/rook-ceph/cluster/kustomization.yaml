@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./cephclient-tuppr.yaml
   - ./csi-drivers.yaml
+  - ./csi-rbac.yaml
   - ./dashboard-proxy.yaml
   - ./eso-reader-rbac.yaml
   - ./externalsecret.yaml
