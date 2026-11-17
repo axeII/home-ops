@@ -42,8 +42,8 @@ spec:
     # Route is managed by a separate HTTPRoute (dashboard-proxy) instead of the
     # Helm chart, because Cilium Gateway envoy can't EDS-proxy to hostNetwork pods.
     cephClusterSpec:
-      # All daemons (mon/mgr/mds/osd) now run v20.2.4 and support AES256K cephx
-      # keys (CVE-2025-30156 fix). Rotate off the old insecure AES key type to
+      # All daemons (mon/mgr/mds/osd) run v20.2.4 or newer, so they support AES256K
+      # cephx keys (CVE-2025-30156 fix). Rotate off the old insecure AES key type to
       # clear HEALTH_ERR/AUTH_INSECURE_SERVICE_KEY_TYPE. Bump keyGeneration to
       # a higher integer to trigger another rotation in the future.
       security:
@@ -106,11 +106,13 @@ spec:
         modules:
           - name: pg_autoscaler
             enabled: true
-          # Upstream disables the rook mgr module on Ceph v20.2.2-v20.2.4 regardless
-          # of this value: v20.2.2 leaks memory, v20.2.3/v20.2.4 crash the mgr. Asking
-          # for it was a no-op that only made the manifest disagree with the cluster.
-          # The only cost of leaving it off is a few orchestrator pages in the Ceph
-          # dashboard. https://rook.io/docs/rook/latest-release/Upgrade/ceph-upgrade/
+          # Rook force-disables the rook mgr module on Ceph v20.2.2-v20.2.4 whatever
+          # this says (v20.2.2 leaks memory, v20.2.3/v20.2.4 crash the mgr). From
+          # v20.2.5 Rook honours this value again, so false is what keeps it off now.
+          # v20.2.5 fixes the watcher-thread leak (ceph/ceph#71754), but it stays off
+          # until someone tests it here. Leaving it off only loses a few orchestrator
+          # pages in the Ceph dashboard. See rookModuleDisabledForCephVersion in Rook's
+          # pkg/operator/ceph/cluster/mgr/mgr.go.
           - name: rook
             enabled: false
       crashCollector:
