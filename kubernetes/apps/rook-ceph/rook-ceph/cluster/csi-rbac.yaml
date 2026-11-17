@@ -1,0 +1,469 @@
+# RBAC for the four ceph-csi plugin ServiceAccounts, copied from
+# ceph/ceph-csi-operator v1.1.0 config/csi-rbac/ (rbd and cephfs only; nfs and
+# nvmeof are not deployed). ceph-csi-operator does not create these objects and
+# the Rook chart does not template them, so they live in git. The v1.1.0 rules
+# are a superset of v1.0.4, so this works with Rook 1.20 and 1.21. Refresh from
+# upstream whenever Rook bumps ceph-csi-operator.
+# https://github.com/ceph/ceph-csi-operator/tree/v1.1.0/config/csi-rbac
+#
+# The ServiceAccounts are never pruned: running CSI pods hold tokens bound to
+# their UIDs, so a delete and recreate would break them until they restart.
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rbd-ctrlplugin-sa
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-ctrlplugin-cr
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments/status"]
+    verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csinodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims/status"]
+    verbs: ["patch"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshots"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotcontents"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts/token"]
+    verbs: ["create"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotcontents"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotcontents"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["replication.storage.openshift.io"]
+    resources: ["volumegroupreplicationcontents"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["replication.storage.openshift.io"]
+    resources: ["volumegroupreplicationclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+  - apiGroups: ["cbt.storage.k8s.io"]
+    resources: ["snapshotmetadataservices"]
+    verbs: ["get", "list"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattributesclasses"]
+    verbs: ["get", "list", "watch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-ctrlplugin-crb
+subjects:
+  - kind: ServiceAccount
+    name: rbd-ctrlplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: ClusterRole
+  name: rbd-ctrlplugin-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-ctrlplugin-r
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "watch", "list", "delete", "update", "create"]
+  - apiGroups: ["csiaddons.openshift.io"]
+    resources: ["csiaddonsnodes"]
+    verbs: ["get", "watch", "list", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/finalizers", "daemonsets/finalizers"]
+    verbs: ["update"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-ctrlplugin-rb
+subjects:
+  - kind: ServiceAccount
+    name: rbd-ctrlplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: Role
+  name: rbd-ctrlplugin-r
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rbd-nodeplugin-sa
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-nodeplugin-cr
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts/token"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get"]
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-nodeplugin-crb
+subjects:
+  - kind: ServiceAccount
+    name: rbd-nodeplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: ClusterRole
+  name: rbd-nodeplugin-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-nodeplugin-r
+rules:
+  - apiGroups: ["csiaddons.openshift.io"]
+    resources: ["csiaddonsnodes"]
+    verbs: ["get", "watch", "list", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/finalizers", "daemonsets/finalizers"]
+    verbs: ["update"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbd-nodeplugin-rb
+subjects:
+  - kind: ServiceAccount
+    name: rbd-nodeplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: Role
+  name: rbd-nodeplugin-r
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cephfs-ctrlplugin-sa
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-ctrlplugin-cr
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csinodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments/status"]
+    verbs: ["patch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims/status"]
+    verbs: ["patch"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshots"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotcontents"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotcontents"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.k8s.io"]
+    resources: ["volumegroupsnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotcontents"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["groupsnapshot.storage.openshift.io"]
+    resources: ["volumegroupsnapshotcontents/status"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["replication.storage.openshift.io"]
+    resources: ["volumegroupreplicationcontents"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["replication.storage.openshift.io"]
+    resources: ["volumegroupreplicationclasses"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts/token"]
+    verbs: ["create"]
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattributesclasses"]
+    verbs: ["get", "list", "watch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-ctrlplugin-crb
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-ctrlplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: ClusterRole
+  name: cephfs-ctrlplugin-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-ctrlplugin-r
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "watch", "list", "delete", "update", "create"]
+  - apiGroups: ["csiaddons.openshift.io"]
+    resources: ["csiaddonsnodes"]
+    verbs: ["get", "watch", "list", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/finalizers", "daemonsets/finalizers"]
+    verbs: ["update"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-ctrlplugin-rb
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-ctrlplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: Role
+  name: cephfs-ctrlplugin-r
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cephfs-nodeplugin-sa
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-nodeplugin-cr
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts/token"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "patch"]
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-nodeplugin-crb
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-nodeplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: ClusterRole
+  name: cephfs-nodeplugin-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-nodeplugin-r
+rules:
+  - apiGroups: ["csiaddons.openshift.io"]
+    resources: ["csiaddonsnodes"]
+    verbs: ["get", "watch", "list", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/finalizers", "daemonsets/finalizers"]
+    verbs: ["update"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-nodeplugin-rb
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-nodeplugin-sa
+    namespace: rook-ceph
+roleRef:
+  kind: Role
+  name: cephfs-nodeplugin-r
+  apiGroup: rbac.authorization.k8s.io
