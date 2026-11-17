@@ -2,8 +2,14 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
+      // Client images must match the db.internal server major (Postgres 17).
+      // Raise together with the server upgrade in #3197.
       matchDatasources: ["docker"],
-      matchPackageNames: ["/postgresql/"],
+      matchPackageNames: [
+        "/postgresql/",
+        "ghcr.io/home-operations/postgres-init",
+        "mirror.gcr.io/prodrigestivill/postgres-backup-local",
+      ],
       allowedVersions: "<=17",
     },
   ],
