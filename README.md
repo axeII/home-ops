@@ -134,7 +134,6 @@ flowchart LR
 | App | Description |
 | --- | ----------- |
 | [Plex](https://plex.tv) | Media server and streaming |
-| [Plex-Music](https://github.com/axeII/chromatix) | Music streaming via Plexamp |
 | [Sonarr](https://sonarr.tv) | TV show collection manager |
 | [Radarr](https://radarr.video) | Movie collection manager |
 | [Prowlarr](https://prowlarr.com) | Torrent/usenet indexer manager |
