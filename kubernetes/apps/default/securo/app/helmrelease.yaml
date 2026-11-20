@@ -55,7 +55,7 @@ spec:
           03-migrate:
             image: &backendImage
               repository: ghcr.io/securo-finance/securo-backend
-              tag: 0.20.0@sha256:c161123067ada4fe332e5647e5af2b0c1e2840087166638b52b6db42a7d4a2c0
+              tag: 0.21.0@sha256:bc3ebd62ddd725c9a457c53b0973c841457ed24b4a599ece9b56eff3a677b371
             command:
               - sh
               - -c
