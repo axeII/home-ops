@@ -8,6 +8,7 @@ on: # yamllint disable-line rule:truthy
     paths:
       - "kubernetes/**/*.yaml"
       - "kubernetes/**/*.yml"
+      - ".github/workflows/scan-containers.yaml"
 
 permissions:
   contents: read
@@ -27,11 +28,15 @@ jobs:
               - added|modified: "kubernetes/**/*.yaml"
               - added|modified: "kubernetes/**/*.yml"
     outputs:
+      yaml: ${{ steps.filter.outputs.yaml }}
       yaml_files: ${{ steps.filter.outputs.yaml_files }}
   detect-containers:
     name: Detect Containers
     runs-on: ubuntu-latest
     needs: detect-file-changes
+    # An empty matrix fails the run before any job starts, so skip instead.
+    # `if` is evaluated before the matrix is expanded.
+    if: needs.detect-file-changes.outputs.yaml == 'true'
     strategy:
       matrix:
         file: ${{ fromJSON(needs.detect-file-changes.outputs.yaml_files) }}
@@ -53,6 +58,9 @@ jobs:
     name: Scan Containers
     runs-on: ubuntu-latest
     needs: detect-containers
+    # Changed files with no image (an OCIRepository or ks.yaml bump, say)
+    # leave `containers` empty; skip the scan rather than fail the run.
+    if: needs.detect-containers.outputs.containers != ''
     permissions:
       security-events: write
     strategy:
