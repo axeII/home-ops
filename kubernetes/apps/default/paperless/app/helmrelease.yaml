@@ -82,6 +82,11 @@ spec:
                   httpGet:
                     path: /
                     port: *port
+                    # 3.5 restricts ALLOWED_HOSTS to PAPERLESS_URL; the kubelet's default
+                    # Host (pod IP) gets a 400 DisallowedHost.
+                    httpHeaders: &probeHost
+                      - name: Host
+                        value: docs.juno.moe
                   initialDelaySeconds: 0
                   periodSeconds: 60
                   timeoutSeconds: 10
@@ -93,6 +98,7 @@ spec:
                   httpGet:
                     path: /
                     port: *port
+                    httpHeaders: *probeHost
                   initialDelaySeconds: 0
                   periodSeconds: 30
                   timeoutSeconds: 2
@@ -104,6 +110,7 @@ spec:
                   httpGet:
                     path: /
                     port: *port
+                    httpHeaders: *probeHost
                   initialDelaySeconds: 180
                   timeoutSeconds: 3
                   failureThreshold: 40
