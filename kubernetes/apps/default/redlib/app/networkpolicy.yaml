@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Redlib is internet-facing, so a compromise must not reach the kube API, the
+# nodes (Talos API on :50000) or anything on the LAN. Anything not allowed
+# below is dropped. Kubelet probes from the local node still pass, because
+# Cilium runs with allow-localhost=always.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: redlib
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: redlib
+  ingress:
+    # The external gateway. Cilium's Envoy forwards to backends with the
+    # reserved `ingress` identity, not as a pod, so only an entity matches it.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    # Reddit over HTTPS. CIDR rules only ever match the `world` identity; the
+    # exceptions keep LAN hosts (db.internal, NAS, Proxmox, router) out of it.
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 100.64.0.0/10
+            - 169.254.0.0/16
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
