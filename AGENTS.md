@@ -179,7 +179,6 @@ Fallback: `gh issue create` is also permitted if MCP tools are unavailable.
 ## Reference docs
 
 - [Auto-merge policy](docs/auto-merge.md) — rules, gates, and quiet windows for the daily auto-merge workflow.
-- [Cloudflare WAF rules](docs/cloudflare-waf.md) — required rules for the `juno.moe` zone.
 - [GitHub Copilot CLI](docs/copilot-cli.md) — how agents and MCP config are shared with Copilot, and why `.github/agents/` is generated.
 
 ## Claude Code configuration
