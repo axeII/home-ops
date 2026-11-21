@@ -6,6 +6,8 @@ metadata:
   name: &app paperless
 spec:
   interval: 1h
+  # Startup probe alone allows ~580s; v3 migrations need more than Helm's 5m default.
+  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: app-template
@@ -14,9 +16,10 @@ spec:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    # No rollback: paperless migrates its database on startup, so the previous
+    # image cannot run on the migrated schema. Fail forward instead.
     remediation:
-      strategy: rollback
-      retries: 3
+      retries: 0
   values:
     controllers:
       paperless:
