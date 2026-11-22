@@ -13,6 +13,7 @@ Catches common mistakes before Flux applies them to the cluster:
 - talosctl/kubectl pins drifting from the cluster versions they talk to
 - A Kubernetes version the pinned Talos does not support, or tuppr upgrade
   CRs disagreeing with talos/topf.yaml
+- An app routed through the external gateway without a CiliumNetworkPolicy
 """
 
 import sys
@@ -35,6 +36,23 @@ UPGRADE_DIR = APPS_DIR / "system-upgrade" / "app"
 TALOS_KUBERNETES_SUPPORT = {
     (1, 13): ((1, 31), (1, 36)),
     (1, 14): ((1, 32), (1, 37)),
+}
+
+# Apps on the external gateway that do not have a CiliumNetworkPolicy yet,
+# keyed by their ks.yaml directory under kubernetes/apps/. Nothing new may be
+# added here: a new external app ships with its policy. Remove an entry in the
+# PR that adds the app's policy; the check fails while a stale entry remains.
+EXTERNAL_WITHOUT_NETPOL = {
+    "default/atuin",
+    "default/docmost",
+    "default/karakeep",
+    "flux-system/flux-instance",
+    "flux-system/konflate",
+    "media/plex",
+    "media/seerr",
+    "network/echo-server",
+    "observability/gatus",
+    "observability/kromgo",
 }
 
 errors: list[str] = []
@@ -498,6 +516,108 @@ def check_cluster_versions():
         )
 
 
+# ── Check: external apps have a CiliumNetworkPolicy ──────────────────────
+
+def routes_to_external_gateway(content: str) -> bool:
+    """True if a parentRefs block in the file names the `external` Gateway."""
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        m = re.match(r'^(\s*)(?:-\s+)?parentRefs:\s*$', line)
+        if not m:
+            continue
+        indent = len(m.group(1))
+        for inner in lines[i + 1:]:
+            stripped = inner.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            inner_indent = len(inner) - len(inner.lstrip())
+            # Block ends at a shallower line, or a sibling key at the same
+            # indent (list items may sit at the parentRefs indent).
+            if inner_indent < indent or (
+                inner_indent == indent and not stripped.startswith("-")
+            ):
+                break
+            if re.match(r'^(?:-\s+)?name:\s*["\']?external["\']?\s*$', stripped):
+                return True
+    return False
+
+
+def app_dir_of(path: pathlib.Path) -> pathlib.Path | None:
+    """The nearest ancestor holding a ks.yaml, i.e. kubernetes/apps/<ns>/<app>."""
+    for parent in path.parents:
+        if parent == APPS_DIR or APPS_DIR not in parent.parents:
+            return None
+        if (parent / "ks.yaml").exists():
+            return parent
+    return None
+
+
+def has_network_policy(app_dir: pathlib.Path) -> bool:
+    """A CiliumNetworkPolicy file that the app's kustomization.yaml includes."""
+    for f in app_dir.rglob("*.yaml"):
+        try:
+            if not re.search(r'^kind:\s*CiliumNetworkPolicy\s*$',
+                             f.read_text(), re.MULTILINE):
+                continue
+            kustomization = (f.parent / "kustomization.yaml").read_text()
+        except OSError:
+            continue
+        if re.search(rf'^\s*-\s+(?:\./)?{re.escape(f.name)}\s*$',
+                     kustomization, re.MULTILINE):
+            return True
+    return False
+
+
+def check_external_network_policies():
+    """Every app on the external gateway ships a CiliumNetworkPolicy.
+
+    The policy is what stops a compromised internet-facing pod from reaching
+    the kube API, the Talos API on the nodes, or the LAN. Checking the whole
+    tree, not the PR diff, catches an app moved to the external gateway in any
+    file, and EXTERNAL_WITHOUT_NETPOL keeps the backlog explicit.
+    """
+    if not APPS_DIR.exists():
+        return
+
+    external: dict[str, pathlib.Path] = {}
+    for f in sorted(APPS_DIR.rglob("*.yaml")):
+        if f.name.endswith(".sops.yaml"):
+            continue
+        try:
+            if not routes_to_external_gateway(f.read_text()):
+                continue
+        except OSError:
+            continue
+        app_dir = app_dir_of(f)
+        if app_dir is None:
+            errors.append(f"{rel(f)}: routes through the external gateway "
+                          "but no ks.yaml was found above it")
+            continue
+        external.setdefault(str(app_dir.relative_to(APPS_DIR)), f)
+
+    for app, route_file in sorted(external.items()):
+        protected = has_network_policy(APPS_DIR / app)
+        if app in EXTERNAL_WITHOUT_NETPOL:
+            if protected:
+                errors.append(
+                    f"{app} now has a CiliumNetworkPolicy - remove it from "
+                    "EXTERNAL_WITHOUT_NETPOL in scripts/find_mistakes.py"
+                )
+        elif not protected:
+            errors.append(
+                f"{app} is routed through the external gateway "
+                f"({rel(route_file)}) but has no CiliumNetworkPolicy - add one "
+                "and list it in the app's kustomization.yaml "
+                "(template: kubernetes/apps/default/redlib/app/networkpolicy.yaml)"
+            )
+
+    for app in sorted(EXTERNAL_WITHOUT_NETPOL - external.keys()):
+        errors.append(
+            f"{app} is no longer on the external gateway - remove it from "
+            "EXTERNAL_WITHOUT_NETPOL in scripts/find_mistakes.py"
+        )
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main():
@@ -512,6 +632,7 @@ def main():
         ("Common component usage", check_common_component),
         ("Client tool versions", check_client_tool_versions),
         ("Talos/Kubernetes compatibility", check_cluster_versions),
+        ("External gateway network policies", check_external_network_policies),
     ]
 
     for name, check_fn in checks:
