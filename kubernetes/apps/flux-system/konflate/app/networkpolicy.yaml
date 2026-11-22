@@ -1,0 +1,56 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# konflate is internet-facing (konflate.juno.moe) and holds a GitHub token, so a
+# compromise must not reach the kube API, the nodes (Talos API on :50000) or
+# anything on the LAN. It has no RBAC and never calls the kube API. Anything not
+# allowed is dropped. Kubelet probes still pass (Cilium runs with
+# allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: konflate
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: konflate
+  ingress:
+    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    # Alloy scrapes /metrics for the ServiceMonitor.
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: alloy
+      toPorts:
+        - ports:
+            - port: "8081"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    # GitHub, and the chart registries flate pulls from when it renders a PR.
+    # Those change with Renovate, so this is any internet host on 443. CIDR rules
+    # only ever match the `world` identity; the exceptions keep LAN hosts out.
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 100.64.0.0/10
+            - 169.254.0.0/16
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
