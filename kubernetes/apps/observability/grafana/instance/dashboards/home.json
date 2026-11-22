@@ -1319,8 +1319,8 @@
     {
       "id": 36,
       "type": "timeseries",
-      "title": "Clock offset by node",
-      "description": "Correction the kernel is still applying after the last NTP sync. A spike means Talos measured that node that far off. Ceph raises MON_CLOCK_SKEW when monitors differ by more than 50 ms (dashed lines), and tuppr holds an upgrade while it does.",
+      "title": "etcd disk sync latency (p99)",
+      "description": "How long etcd waits for the disk to confirm each write-ahead-log fsync. etcd recommends under 10 ms (dashed line). Sustained values above it mean slow system disks, not etcd itself; heavy spikes can cause leader elections and slow API calls. Histogram buckets are 16-32 ms wide here, so ~29 ms reads as 'between 16 and 32 ms'.",
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -1338,7 +1338,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "max by (instance) (node_timex_offset_seconds{job!=\"proxmox\", instance=~\"k8s-.*\"})",
+          "expr": "histogram_quantile(0.99, sum by (instance, le) (rate(etcd_disk_wal_fsync_duration_seconds_bucket{job=\"etcd\"}[$__rate_interval])))",
           "legendFormat": "{{instance}}",
           "range": true
         }
@@ -1346,6 +1346,7 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
+          "min": 0,
           "custom": {
             "drawStyle": "line",
             "lineWidth": 2,
@@ -1357,8 +1358,7 @@
               "mode": "none",
               "group": "A"
             },
-            "axisSoftMin": -0.06,
-            "axisSoftMax": 0.06,
+            "axisSoftMax": 0.04,
             "thresholdsStyle": {
               "mode": "dashed"
             }
@@ -1366,38 +1366,65 @@
           "color": {
             "mode": "palette-classic"
           },
-          "links": [
-            {
-              "title": "Node Exporter Full",
-              "url": "/d/rYdddlPWk?${__url_time_range}"
-            }
-          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "transparent",
                 "value": null
               },
               {
-                "color": "transparent",
-                "value": -0.05
-              },
-              {
                 "color": "red",
-                "value": 0.05
+                "value": 0.01
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "192.168.69.110:2381"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "k8s-0"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "192.168.69.111:2381"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "k8s-1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "192.168.69.112:2381"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "k8s-2"
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "calcs": [
-            "min",
+            "mean",
             "max"
           ],
           "showLegend": true
