@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Kromgo is internet-facing (README badges), so a compromise must reach nothing
+# but Prometheus queries. Prometheus, Loki and Grafana share one host and port
+# on the observability VM, picked by Host header, so the egress rule filters
+# HTTP as well: only instant queries to metrics.internal pass, and Envoy answers
+# anything else with 403. Kubelet probes still pass (Cilium runs with
+# allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kromgo
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kromgo
+  ingress:
+    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    # metrics.internal on the observability VM. Kromgo's Prometheus client sends
+    # POST and falls back to GET; the path is matched in full, so query_range,
+    # write and admin paths are refused. Update the address if the VM moves.
+    - toCIDR:
+        - 192.168.3.3/32
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+          rules:
+            http:
+              - method: POST|GET
+                host: metrics\.internal
+                path: /api/v1/query
