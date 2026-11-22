@@ -40,6 +40,8 @@ spec:
               APP_URL: "https://hub.juno.moe"
               PORT: &port 3000
               REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
+              # The network policy blocks internet egress, so telemetry could not be sent anyway.
+              DISABLE_TELEMETRY: "true"
             envFrom: *envFrom
             probes:
               liveness:

@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Docmost is internet-facing and needs only Dragonfly and its Postgres
+# database, so it gets no internet access and cannot reach the kube API, the
+# nodes or the rest of the LAN. Anything not allowed is dropped. Kubelet
+# probes still pass (Cilium runs with allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: docmost
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: docmost
+  ingress:
+    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # db.internal (Postgres LXC on pve), for the app and the init-db container.
+    # Update this address if the LXC ever moves.
+    - toCIDR:
+        - 192.168.69.107/32
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
