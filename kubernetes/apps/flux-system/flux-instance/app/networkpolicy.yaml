@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# notification-controller takes GitHub's push webhook from the internet
+# (flux-webhook.juno.moe) and holds a kube API token, so a compromise must reach
+# nothing but the kube API. There are no Providers, so it sends nothing out and
+# needs no DNS; adding a Provider (GitHub commit status, a chat hook) needs an
+# egress rule here. Kubelet probes still pass (Cilium runs with
+# allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: notification-controller
+spec:
+  endpointSelector:
+    matchLabels:
+      app: notification-controller
+  ingress:
+    # The webhook receiver, through the external gateway's Envoy, which has the
+    # reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "9292"
+              protocol: TCP
+    # Events from source-, kustomize- and helm-controller (--events-addr).
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: flux-system
+            app.kubernetes.io/part-of: flux
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+    # Alloy scrapes /metrics for the flux-controllers PodMonitor.
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: alloy
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    # Watching Receivers and annotating the GitRepository to reconcile it.
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
