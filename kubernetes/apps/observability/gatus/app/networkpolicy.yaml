@@ -1,9 +1,10 @@
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
-# Gatus is internet-facing (status.juno.moe), so a compromise must reach only
-# what Gatus itself checks. Anything not allowed is dropped: a new check in
-# resources/config.yaml that targets something else needs a rule here, or it
-# goes red. Kubelet probes still pass (Cilium runs with allow-localhost=always).
+# Gatus is internet-facing (status.juno.moe). It may reach any pod, but outside
+# the pods only what its checks need, so a compromise cannot reach the LAN, the
+# Talos API or other node ports. A new check that targets something outside the
+# cluster's pods needs a rule here, or it goes red. Kubelet probes still pass
+# (Cilium runs with allow-localhost=always).
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -33,14 +34,14 @@ spec:
             - port: "80"
               protocol: TCP
   egress:
+    # Any pod, on any port. Route checks go through a gateway, and Cilium's Envoy
+    # checks them against this policy with the route's backend pod and port as
+    # the destination, so every backend must be allowed. This also covers the
+    # infra checks (kube-state-metrics, tuppr) and CoreDNS.
     - toEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: kube-system
-            k8s-app: kube-dns
-      toPorts:
-        - ports:
-            - port: "53"
-              protocol: ANY
+        - matchExpressions:
+            - key: k8s:io.kubernetes.pod.namespace
+              operator: Exists
     # The DNS resolvers set on the Gateways' gatus annotations, which every route
     # check inherits: 1.1.1.1 for external, the router for internal. 1.1.1.1 is
     # also the connectivity checker.
@@ -50,15 +51,6 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: TCP
-    # Every route check goes to a gateway LB IP. Cilium sees these as `world`, so
-    # the LAN exceptions below would block them without this rule.
-    - toCIDR:
-        - 192.168.69.104/32
-        - 192.168.69.105/32
-      toPorts:
-        - ports:
-            - port: "443"
               protocol: TCP
     # db.internal (Postgres LXC on pve), for the app and the init-db container.
     # Update this address if the LXC ever moves.
@@ -81,23 +73,6 @@ spec:
       toPorts:
         - ports:
             - port: "443"
-              protocol: TCP
-    # The infra checks' metrics endpoints.
-    - toEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: observability
-            app.kubernetes.io/name: kube-state-metrics
-      toPorts:
-        - ports:
-            - port: "8080"
-              protocol: TCP
-    - toEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: system-upgrade
-            app.kubernetes.io/name: tuppr
-      toPorts:
-        - ports:
-            - port: "8081"
               protocol: TCP
     # The Ceph mgr runs on the host network, so it has a node identity, and it can
     # move to any node on failover.
