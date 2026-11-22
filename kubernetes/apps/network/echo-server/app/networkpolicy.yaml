@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Echo is internet-facing and only answers requests, so it gets no egress at
+# all, not even DNS. Anything not allowed is dropped. Kubelet probes still pass
+# (Cilium runs with allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: echo
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: echo
+  enableDefaultDeny:
+    egress: true
+  ingress:
+    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+    # Alloy scrapes /metrics for the ServiceMonitor.
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: alloy
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
