@@ -111,7 +111,10 @@ spec:
           - "{{ .Release.Name }}.juno.moe"
           - "status.juno.moe"
         parentRefs:
-          - name: external
+          # Internal only: the unauthenticated API lists every check, and the page
+          # is down with the house anyway, when Pushover is what reaches you.
+          # Revisit once Jellyfin and Seerr are public again.
+          - name: internal
             namespace: kube-system
             sectionName: https
         rules:

@@ -1,8 +1,8 @@
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
-# Gatus is internet-facing (status.juno.moe). It may reach any pod, but outside
-# the pods only what its checks need, so a compromise cannot reach the LAN, the
-# Talos API or other node ports. A new check that targets something outside the
+# Gatus holds the Pushover keys and a kube API token. It may reach any pod, but
+# outside the pods only what its checks need, so a compromise cannot reach the
+# LAN, the Talos API or other node ports. A new check that targets something outside the
 # cluster's pods needs a rule here, or it goes red. Kubelet probes still pass
 # (Cilium runs with allow-localhost=always).
 apiVersion: cilium.io/v2
@@ -14,7 +14,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: gatus
   ingress:
-    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    # The internal gateway's Envoy, which has the reserved `ingress` identity.
     - fromEntities:
         - ingress
       toPorts:
