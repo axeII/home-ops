@@ -40,7 +40,7 @@ spec:
         port: 25565
         annotations:
           lbipam.cilium.io/ips: "192.168.69.102"
-          external-dns.alpha.kubernetes.io/hostname: "mc.${SECRET_DOMAIN}"
+          external-dns.kubernetes.io/hostname: "mc.${SECRET_DOMAIN}"
   postRenderers:
     - kustomize:
         patches:
