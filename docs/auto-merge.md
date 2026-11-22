@@ -13,11 +13,13 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 
 - **CI gate:** every row above also needs green CI. `.github/scripts/pr-ci-gate.sh` takes the latest
   run of each check on the head commit, and every one must have succeeded, been skipped, or be
-  neutral. A failed, cancelled or still-running check skips the PR until the next run. The head
-  commit must also be at least 60 minutes old, and GitHub's merge state must be `CLEAN` or
-  `HAS_HOOKS`; the merge state also catches a workflow that failed before it created a job. The
-  merge passes `--match-head-commit`, so if Renovate pushes after the check, GitHub refuses the
-  merge and the job fails instead of merging an unchecked commit. Run the script by hand to see why
+  neutral. A failed, cancelled or still-running check skips the PR until the next run. The newest
+  run of each workflow on the head commit must also have passed, not counting runs that
+  `cancel-in-progress` cancelled. This catches a job that failed before GitHub created it, such as
+  one with an empty matrix: it leaves no check behind, and GitHub's merge state ignores it. The head
+  commit must also be at least 60 minutes old, and GitHub's merge state must be `CLEAN` or `HAS_HOOKS`. The merge
+  passes `--match-head-commit`, so if Renovate pushes after the check, GitHub refuses the merge and
+  the job fails instead of merging an unchecked commit. Run the script by hand to see why
   a PR is held: `.github/scripts/pr-ci-gate.sh <number>`.
 - **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
 - **Two phases:** every PR is evaluated first and the merge plan is printed; then the plan is merged.

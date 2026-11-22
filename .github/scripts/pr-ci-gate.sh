@@ -8,12 +8,23 @@
 #     skipped, or was neutral (failed, cancelled, timed out, or still
 #     running all block)
 #   - at least one check has reported
+#   - no workflow run on the head commit is still queued or running, and
+#     the newest run of each workflow that was not cancelled succeeded,
+#     was skipped, or was neutral
 #   - the head commit is at least MIN_COMMIT_AGE_MIN minutes old
 #   - GitHub's merge state is CLEAN or HAS_HOOKS
 #
 # Checks are judged one by one rather than through GitHub's rollup state,
 # which counts superseded runs (cancelled by `cancel-in-progress`) as
 # failures in some queries and not in others.
+#
+# Workflow runs are judged as well because a job can fail before GitHub
+# creates it (an empty matrix), and a workflow that fails to start ends
+# with no jobs at all. Neither leaves a check run, and GitHub's merge state
+# ignores both: every check is green, only the run's conclusion says
+# failure. Cancelled runs are skipped because when several runs start in
+# the same second, `cancel-in-progress` does not always cancel the older
+# one. A workflow whose every run was cancelled still blocks.
 #
 # The age floor covers jobs with `needs:`. GitHub creates their check run
 # only when the jobs they wait on finish, so right after a push every
@@ -67,8 +78,22 @@ checks=$(jq -c '
   | map(max_by(.sort))
 ' <<<"${pr_json}")
 
-failing=$(jq -r 'map(select(.done and (.ok | not)) | .label) | join(", ")' <<<"${checks}")
-pending=$(jq -r 'map(select(.done | not) | .label) | join(", ")' <<<"${checks}")
+# One entry per workflow, in the same shape as the checks above.
+runs_json=$(gh run list --commit "${head_sha}" --limit 200 \
+  --json workflowDatabaseId,workflowName,databaseId,status,conclusion)
+runs=$(jq -c '
+  group_by(.workflowDatabaseId)
+  | map(
+      (map(select(.status != "completed")) | first) as $running
+      | (map(select(.conclusion != "cancelled")) | max_by(.databaseId)) as $live
+      | ($running // $live // max_by(.databaseId))
+      | {done: (.status == "completed"),
+         ok: ((.conclusion // "") | IN("success", "skipped", "neutral")),
+         label: "workflow \(.workflowName)=\(if .status == "completed" then .conclusion else .status end | ascii_upcase)"})
+' <<<"${runs_json}")
+
+failing=$(jq -r -s 'add | map(select(.done and (.ok | not)) | .label) | join(", ")' <<<"${checks}${runs}")
+pending=$(jq -r -s 'add | map(select(.done | not) | .label) | join(", ")' <<<"${checks}${runs}")
 total=$(jq -r 'length' <<<"${checks}")
 commit_age_min=$(jq -r '(now - (.commits[-1].committedDate | fromdateiso8601)) / 60 | floor' <<<"${pr_json}")
 
@@ -96,4 +121,5 @@ case "${state}" in
     ;;
 esac
 
-echo "ok (${head_sha:0:7}: ${total} checks green, merge state ${state})"
+workflows=$(jq -r 'length' <<<"${runs}")
+echo "ok (${head_sha:0:7}: ${total} checks and ${workflows} workflows green, merge state ${state})"
