@@ -22,9 +22,11 @@ spec:
     workloadAsStatefulSet: true
     strategyType: RollingUpdate
     replicaCount: 0
+    terminationGracePeriodSeconds: 120
     deploymentAnnotations:
       secret.reloader.stakater.com/reload: &secret minecraft-secret
     image:
+      pullPolicy: IfNotPresent
       repository: ghcr.io/itzg/minecraft-server
       tag: 2026.11.0-java21
     resources:
