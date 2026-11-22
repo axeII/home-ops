@@ -25,9 +25,12 @@ spec:
         down:
           enabled: true
           after: "30m"
+      metrics:
+        backend: prometheus
     extraEnv:
       KUBE_NAMESPACE: default
       AUTO_SCALE_WAKE_KICK_MESSAGE: "The server is waking up - join again in about 3 minutes"
+      RECORD_LOGINS: "true"
     resources:
       limits:
         memory: 64Mi

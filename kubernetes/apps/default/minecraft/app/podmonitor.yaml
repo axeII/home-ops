@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/podmonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: minecraft
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minecraft
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/podmonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: mc-router
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mc-router
+  podMetricsEndpoints:
+    - port: api
+      path: /metrics

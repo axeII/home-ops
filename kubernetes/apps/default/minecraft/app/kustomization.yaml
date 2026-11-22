@@ -9,3 +9,4 @@ resources:
   - ./mc-router-helmrelease.yaml
   - ./mc-router-rbac.yaml
   - ./dnsendpoint.yaml
+  - ./podmonitor.yaml
