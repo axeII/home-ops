@@ -1,0 +1,133 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# The karakeep app is internet-facing and fetches user-supplied URLs, so it
+# must not reach the kube API, the nodes or the LAN. Anything not allowed is
+# dropped. Kubelet probes still pass (Cilium runs with allow-localhost=always).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: karakeep
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: karakeep
+      app.kubernetes.io/controller: karakeep
+  ingress:
+    # The external gateway's Envoy, which has the reserved `ingress` identity.
+    - fromEntities:
+        - ingress
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: karakeep
+            app.kubernetes.io/controller: chrome
+      toPorts:
+        - ports:
+            - port: "9222"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: karakeep
+            app.kubernetes.io/controller: meilisearch
+      toPorts:
+        - ports:
+            - port: "7700"
+              protocol: TCP
+    # Feeds, banner images, adblock lists and the inference API. CIDR rules
+    # only match the `world` identity; the exceptions keep LAN hosts out.
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 100.64.0.0/10
+            - 169.254.0.0/16
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Headless Chrome exposes the DevTools protocol on 9222 without auth and loads
+# any URL it is told to. Only the karakeep app may drive it, and it may only
+# load public addresses, so a bookmark cannot be used to read LAN services.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: karakeep-chrome
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: karakeep
+      app.kubernetes.io/controller: chrome
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: karakeep
+            app.kubernetes.io/controller: karakeep
+      toPorts:
+        - ports:
+            - port: "9222"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 100.64.0.0/10
+            - 169.254.0.0/16
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+# Meilisearch only answers the karakeep app and needs no outbound traffic
+# (analytics are off), so egress is denied outright.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: karakeep-meilisearch
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: karakeep
+      app.kubernetes.io/controller: meilisearch
+  enableDefaultDeny:
+    egress: true
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: karakeep
+            app.kubernetes.io/controller: karakeep
+      toPorts:
+        - ports:
+            - port: "7700"
+              protocol: TCP
