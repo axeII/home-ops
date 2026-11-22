@@ -10,3 +10,4 @@ resources:
   - ./mc-router-rbac.yaml
   - ./dnsendpoint.yaml
   - ./podmonitor.yaml
+  - ./networkpolicy.yaml
