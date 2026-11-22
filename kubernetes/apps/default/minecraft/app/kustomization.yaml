@@ -7,4 +7,5 @@ resources:
   - ./externalsecret.yaml
   - ./mc-router-repository.yaml
   - ./mc-router-helmrelease.yaml
+  - ./mc-router-rbac.yaml
   - ./dnsendpoint.yaml

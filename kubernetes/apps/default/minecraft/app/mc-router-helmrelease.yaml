@@ -25,6 +25,11 @@ spec:
         down:
           enabled: true
           after: "30m"
+    extraEnv:
+      # Watch only this namespace, so the Role in mc-router-rbac.yaml is enough.
+      # A literal, because chart 1.5.0 renders a valueFrom map one level too
+      # shallow and the fieldRef ends up outside it.
+      KUBE_NAMESPACE: default
     resources:
       limits:
         memory: 64Mi
@@ -37,3 +42,27 @@ spec:
         port: 25565
         annotations:
           lbipam.cilium.io/ips: "192.168.69.102"
+  # The chart always creates a ClusterRole that can update every StatefulSet in
+  # the cluster, enough to swap the pod template of any of them.
+  # mc-router-rbac.yaml replaces it with a Role for this namespace.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: ClusterRole
+              name: mc-router
+            patch: |
+              $patch: delete
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRole
+              metadata:
+                name: mc-router
+          - target:
+              kind: ClusterRoleBinding
+              name: mc-router
+            patch: |
+              $patch: delete
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRoleBinding
+              metadata:
+                name: mc-router

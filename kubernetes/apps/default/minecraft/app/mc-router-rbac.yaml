@@ -1,0 +1,35 @@
+---
+# mc-router's kube API access, limited to this namespace. It replaces the
+# chart's ClusterRole, which mc-router-helmrelease.yaml drops.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: mc-router
+rules:
+  # Route discovery. KUBE_NAMESPACE keeps mc-router's watches in this namespace.
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["list", "watch"]
+  # Autoscale. The scale subresource can only change replicas. mc-router first
+  # tries a patch on the StatefulSet itself, which is forbidden here, logs a
+  # warning and falls back to this.
+  - apiGroups: ["apps"]
+    resources: ["statefulsets/scale"]
+    resourceNames: ["minecraft"]
+    verbs: ["get", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: mc-router
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: mc-router
+subjects:
+  - kind: ServiceAccount
+    name: mc-router
+    namespace: default
