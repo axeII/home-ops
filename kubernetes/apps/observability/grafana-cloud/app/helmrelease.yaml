@@ -257,6 +257,17 @@ spec:
                 container = "container",
               }
             }
+            // The CronJob controller logs a 409 on its own stale status write as
+            // "Unhandled Error", then retries and succeeds (about once per run).
+            // Keep the line, but label it a warning so it stops showing as an error.
+            stage.match {
+              selector = "{namespace=\"kube-system\", container=\"kube-controller-manager\"} |= \"cronjob_controllerv2\" |= \"the object has been modified\""
+              stage.static_labels {
+                values = {
+                  level = "warning",
+                }
+              }
+            }
             forward_to = [loki.write.vm.receiver]
           }
 
