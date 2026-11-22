@@ -39,6 +39,7 @@ ui:
     - name: Homelab
       link: https://github.com/axeII/home-ops
 
+# networkpolicy.yaml allows only the targets below; a new one needs a rule there.
 endpoints:
   - name: blog
     group: external

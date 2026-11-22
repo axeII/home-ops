@@ -5,6 +5,7 @@ resources:
   - ./externalsecret.yaml
   - ./gpu-probe-token.yaml
   - ./helmrelease.yaml
+  - ./networkpolicy.yaml
   - ./rbac.yaml
 configMapGenerator:
   - name: gatus-configmap
