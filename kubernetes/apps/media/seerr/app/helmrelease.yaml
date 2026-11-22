@@ -115,7 +115,9 @@ spec:
         hostnames:
           - requests.juno.moe
         parentRefs:
-          - name: external
+          # Internal only, like Jellyfin: without outside access to Jellyfin there is
+          # nothing to request from outside.
+          - name: internal
             namespace: kube-system
             sectionName: https
         rules:
