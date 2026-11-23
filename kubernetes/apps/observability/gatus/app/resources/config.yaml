@@ -52,6 +52,18 @@ endpoints:
     alerts:
       - type: pushover
 
+  - name: minecraft
+    group: external
+    url: tcp://mc-router.default.svc.cluster.local:25565
+    interval: 10m
+    # Minecraft status ping (handshake for 192.168.69.102, then status request)
+    body: "\x14\x00\x00\x0e192.168.69.102\x63\x63\x01\x01\x00"
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: pushover
+        description: "mc-router does not answer a status ping - nobody can join or wake the Minecraft server"
+
   # The mgr exports ceph_health_status without labels ("ceph_health_status 0.0"),
   # so the old pattern *ceph_health_status{* 2* could never match and HEALTH_ERR
   # was never actually alerted on. 0 = OK, 1 = WARN, 2 = ERR.

@@ -18,6 +18,14 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: gatus
+      toPorts:
+        - ports:
+            - port: "25565"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
             app.kubernetes.io/name: alloy
       toPorts:
         - ports:
