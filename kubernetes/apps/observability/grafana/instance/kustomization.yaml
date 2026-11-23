@@ -6,6 +6,7 @@ resources:
   - ./grafana.yaml
   - ./grafanadashboards.yaml
   - ./home-dashboard.yaml
+  - ./minecraft-dashboard.yaml
   - ./postgresql-dashboard.yaml
   - ./proxmox-dashboard.yaml
   - ./servicemonitor.yaml
@@ -13,6 +14,9 @@ configMapGenerator:
   - name: grafana-dashboard-home
     files:
       - home.json=./dashboards/home.json
+  - name: grafana-dashboard-minecraft
+    files:
+      - minecraft.json=./dashboards/minecraft.json
   - name: grafana-dashboard-postgresql
     files:
       - postgresql.json=./dashboards/postgresql.json
