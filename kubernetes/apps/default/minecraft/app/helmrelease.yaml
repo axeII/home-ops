@@ -34,7 +34,7 @@ spec:
         memory: 10Gi
       requests:
         cpu: 1000m
-        memory: 9Gi
+        memory: 6Gi
     securityContext:
       runAsUser: 1000
     podSecurityContext:
@@ -69,6 +69,7 @@ spec:
       TZ: "Europe/Paris"
       UID: 1000
       GID: 2000
+      INIT_MEMORY: 2G
     persistence:
       dataDir:
         enabled: true
@@ -101,36 +102,17 @@ spec:
       viewDistance: 12
       forceReDownload: false
       memory: 8G
-      jvmXXOpts: "-XX:+UseZGC -XX:+ZGenerational -XX:+DisableExplicitGC
-        -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions
-        -XX:SoftMaxHeapSize=7g -XX:ConcGCThreads=2"
+      jvmXXOpts: "-XX:+UseZGC -XX:+UseCompactObjectHeaders -XX:+DisableExplicitGC
+        -XX:+PerfDisableSharedMem -XX:SoftMaxHeapSize=7g -XX:ConcGCThreads=2"
       rcon:
         enabled: true
         serviceType: ClusterIP
       serviceType: ClusterIP
-      spigetResources:
-        - 36618
-      spigotConfig: |
-        settings:
-          timeout-time: 90
-        world-settings:
-          default:
-            max-tick-time:
-              tile: 1000
-              entity: 1000
       serverProperties: |
         network-compression-threshold=512
         max-tick-time=60000
         player-idle-timeout=30
       extraPorts:
-        - name: map
-          containerPort: 8100
-          protocol: TCP
-          service:
-            enabled: true
-            embedded: false
-            type: ClusterIP
-            port: 8100
         - name: metrics
           containerPort: 25585
           protocol: TCP
