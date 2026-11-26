@@ -11,8 +11,9 @@ it does in Claude Code. **This file is the single source of truth for both tools
 
 ## Agents (`.github/agents/*.agent.md`)
 
-The same three agents as `.claude/agents/`, in Copilot's schema — `cluster-radar`, `grafana-logs`,
-and `ship`, with the same read-only and no-merge boundaries. Invoke one with:
+The same agents as `.claude/agents/`, in Copilot's schema — `cluster-radar`, `grafana-logs`,
+`app-builder` and `ship`, with the same boundaries: the first two are read-only, `app-builder` does
+not commit, and `ship` merges only a PR the user has asked it to merge. Invoke one with:
 
 ```bash
 copilot --agent cluster-radar -p "<question>"
@@ -42,7 +43,7 @@ Two facts worth keeping in mind:
 
 - `.github/agents/` **wins** over `.claude/agents/` on a name conflict, so the generated files are
   the ones in effect. Deleting them does not fall back gracefully — it silently strips every MCP
-  tool from all three agents.
+  tool from every agent.
 - Copilot ignores `model:` with a warning (`specifies model "inherit" which is not available`), so
   model selection cannot be shared either.
 

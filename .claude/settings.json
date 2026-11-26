@@ -10,6 +10,9 @@
       }
     }
   },
+  "skillOverrides": {
+    "ship-local": "off"
+  },
   "permissions": {
     "allow": [
       "Bash(kubectl get:*)",

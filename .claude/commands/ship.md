@@ -1,18 +1,10 @@
 ---
-description: Validate, commit, push, and open a PR for the current changes
-argument-hint: "[what the change does]"
+description: Alias for /home-ship (review, validate, commit, push and open a PR)
+argument-hint: "[low|medium|high|xhigh|max] [what the change does] [and merge it]"
+disable-model-invocation: true
 ---
 
-# Ship
+`/ship` is this repo's alias for `/home-ship`. Claude Code's built-in `/ship` is turned off here by
+`skillOverrides` in `.claude/settings.json`.
 
-Ship the current working tree for review: **$ARGUMENTS**
-
-Delegate to the `ship` subagent. Give it the description above (or, if none was given, summarize the
-changes yourself from `git diff` and pass that along) plus any context from this session it needs to
-write an accurate PR body — what problem the change solves, anything you worked around, anything a
-reviewer should look at closely.
-
-It will run the full validation chain, commit on its own branch with git, push, and open
-the PR. It cannot merge, and it will split unrelated changes into separate PRs.
-
-Relay the PR URL and the summary back to the user — the agent's report is not shown to them.
+Run the `home-ship` command now, passing these arguments unchanged: $ARGUMENTS
