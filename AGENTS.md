@@ -193,8 +193,9 @@ Lives in `.claude/` (tracked, reviewed like any change). `CLAUDE.md` imports thi
 - Skills: `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
   plugin enabled in `.claude/settings.json`.
 - Commands: `/validate`, `/triage [namespace|app]`, `/home-ship [level] [description]` (runs
-  `code-review`, then hands off to the `ship` agent). `/ship` is its alias; Claude Code's built-in
-  `/ship` is turned off by `skillOverrides` in `.claude/settings.json`.
+  `code-review`, then hands off to the `ship` agent). `/shipit` is its alias. The alias is not
+  `/ship` because Claude Code's built-in `/ship` keeps that name even while `skillOverrides` in
+  `.claude/settings.json` turns it off, so Claude never invokes a skill named `ship`.
 - MCP servers (configured per-project in `~/.claude.json`, not in the repo, because of the Grafana
   token): `radar` at `http://localhost:49412/mcp` (Radar.app must be running; agents fall back and say
   so), `grafana` at `grafana.juno.moe` (Prometheus `PBFA97CFB590B2093`, Loki `P8E80F9AEF21F6940`),

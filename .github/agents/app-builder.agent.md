@@ -92,4 +92,4 @@ Return to the main session:
 - what the user must do by hand (1Password items, DNS, data to migrate)
 - anything a reviewer should look at closely
 
-Keep it short. The main session passes this to `ship` as the PR context.
+Keep it short. The main session passes this to `/home-ship` as the PR context.
