@@ -28,7 +28,7 @@ spec:
     image:
       pullPolicy: IfNotPresent
       repository: ghcr.io/itzg/minecraft-server
-      tag: 2026.11.0-java25
+      tag: 2026.11.1-java25
     resources:
       limits:
         memory: 10Gi
