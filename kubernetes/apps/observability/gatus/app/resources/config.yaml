@@ -79,9 +79,8 @@ endpoints:
         description: "Ceph cluster is in HEALTH_ERR"
 
   # Three noisy auth checks are muted (see issue #3841), so a WARN that survives
-  # two hours is a real, non-recovering problem rather than routine churn. Pools
-  # are replicated size 2, so a single down OSD leaves no redundancy. The long
-  # threshold is what keeps a normal 3-node Talos roll from paging.
+  # two hours is a real, non-recovering problem rather than routine churn. The
+  # long threshold is what keeps a normal 3-node Talos roll from paging.
   - name: ceph-health-degraded
     group: infra
     url: http://rook-ceph-mgr.rook-ceph.svc.cluster.local:9283/metrics
