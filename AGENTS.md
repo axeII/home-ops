@@ -7,7 +7,7 @@ Home-ops IaC repo — Kubernetes cluster managed with Flux CD, Talos Linux, and 
 Claude works as the **medior developer** — it implements changes, validates them, and presents PRs for review. The human maintainer is the **senior** — reviews code, runs final checks, and merges approved PRs.
 
 - AI **does**: write code, run validation, create commits with git, open PRs via GitHub MCP tools (`github_create_pull_request`), check konflate blast radius, report cautions.
-- AI **does not**: merge PRs, push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge without explicit human approval.
+- AI **does not**: push to `main` directly, approve its own changes, skip validation hooks, run auto-merge, or merge a PR the maintainer has not explicitly asked it to merge.
 - Every change goes through `pre-commit` and the full validation pipeline before a PR is opened.
 - The PR description must follow the shape under "Creating PRs" below. The reviewer skims it before reading the diff, so short and specific beats complete.
 
@@ -134,7 +134,7 @@ Four headings, nothing else, whole body under 30 lines.
 - Address any konflate cautions (data-loss, immutable-field, RBAC) before requesting review.
 - Wait for CI (flate, yayamlls) to pass.
 - Report the konflate summary and any cautions in the PR description so the human reviewer can assess risk.
-- **Never merge your own PRs.** The human maintainer reviews and merges approved PRs.
+- **Merge only on request.** The human maintainer reviews and merges approved PRs. The AI merges a PR only when the maintainer explicitly asks for that PR to be merged, and only once its checks are green.
 
 ### Creating issues
 
@@ -188,11 +188,13 @@ Lives in `.claude/` (tracked, reviewed like any change). `CLAUDE.md` imports thi
 - Agents: `cluster-radar` (read-only cluster triage via the radar MCP server, falls back to
   `kubectl`/`flux`/`talosctl`), `grafana-logs` (Loki/Prometheus queries, returns a summary plus a
   deeplink), `app-builder` (writes and validates app manifests under `kubernetes/apps/`; does not
-  commit), `ship` (validate, commit with git, push, open PR; cannot merge). Delegate cluster and
+  commit), `ship` (validate, commit with git, push, open PR; merges only when asked). Delegate cluster and
   log investigation to them so the output stays out of the main context.
 - Skills: `flux-validate`, `sops-secrets`. Cloudflare skills come from the `cloudflare`
   plugin enabled in `.claude/settings.json`.
-- Commands: `/validate`, `/triage [namespace|app]`, `/ship [description]`.
+- Commands: `/validate`, `/triage [namespace|app]`, `/home-ship [level] [description]` (runs
+  `code-review`, then hands off to the `ship` agent). `/ship` is its alias; Claude Code's built-in
+  `/ship` is turned off by `skillOverrides` in `.claude/settings.json`.
 - MCP servers (configured per-project in `~/.claude.json`, not in the repo, because of the Grafana
   token): `radar` at `http://localhost:49412/mcp` (Radar.app must be running; agents fall back and say
   so), `grafana` at `grafana.juno.moe` (Prometheus `PBFA97CFB590B2093`, Loki `P8E80F9AEF21F6940`),
