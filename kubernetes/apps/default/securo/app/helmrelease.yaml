@@ -137,7 +137,7 @@ spec:
           frontend:
             image:
               repository: ghcr.io/securo-finance/securo-frontend
-              tag: 0.22.0@sha256:5ecbe79a212c5f1a92c83e80aff5419a2b8942e9cda42f5278142a618caf5316
+              tag: 0.23.0@sha256:51854f000ee0ebf76deff9e68f95b8564f8cbb2d7c2ec9bc0be1ea3041dffd7d
             env:
               TZ: Europe/Paris
               # An IP on purpose: nginx resolves this at request time through cluster DNS,
