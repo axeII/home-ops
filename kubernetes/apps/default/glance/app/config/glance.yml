@@ -162,7 +162,14 @@ pages:
                 collapse-after: 10
                 comments-url-template: "https://redlib.juno.moe/{POST-PATH}"
               - type: reddit
-                subreddit: amd
+                subreddit: stocks
+                show-thumbnails: true
+                sort-by: "top"
+                limit: 15
+                collapse-after: 10
+                comments-url-template: "https://redlib.juno.moe/{POST-PATH}"
+              - type: reddit
+                subreddit: wallstreetbets
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
@@ -191,13 +198,6 @@ pages:
                 comments-url-template: "https://redlib.juno.moe/{POST-PATH}"
               - type: reddit
                 subreddit: linux
-                show-thumbnails: true
-                sort-by: "top"
-                limit: 15
-                collapse-after: 10
-                comments-url-template: "https://redlib.juno.moe/{POST-PATH}"
-              - type: reddit
-                subreddit: cachyos
                 show-thumbnails: true
                 sort-by: "top"
                 limit: 15
