@@ -25,6 +25,7 @@
       addLabels: ["renovate/grafana-dashboard"],
       automerge: true,
       automergeType: "branch",
+      automergeSchedule: ["* 2-22 * * 1-6"],
       matchDatasources: ["custom.grafana-dashboards"],
       matchUpdateTypes: ["major"],
       semanticCommitType: "chore",

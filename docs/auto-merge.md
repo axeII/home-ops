@@ -1,6 +1,8 @@
 # Auto-merge policy
 
-The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and applies these rules:
+The `.github/workflows/auto-merge.yaml` workflow is scheduled Monday to Saturday at 02:00 UTC and
+applies these rules. GitHub often starts scheduled runs hours late (7–10 h in November 2026), so
+the quiet window below is checked when the run actually starts and again before each merge.
 
 | Category | Detection | Min age | Days | Konflate gate |
 |---|---|---|---|---|
@@ -21,7 +23,13 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
   `HAS_HOOKS`. The merge passes `--match-head-commit`, so if Renovate pushes after the check, GitHub
   refuses the merge and the job fails instead of merging an unchecked commit. Run the script by hand
   to see why a PR is held: `.github/scripts/pr-ci-gate.sh <number>`.
-- **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
+- **Cluster quiet window:** no merges on Sunday (Talos/Kubernetes upgrade 02:00–06:00
+  Europe/Paris, then recovery), or 23:00–02:00 Europe/Paris on any night, while backups run.
+  Renovate's branch automerge of Grafana dashboards (`.renovate/grafanaDashboards.json5`) keeps
+  the same hours.
+- **Backups:** VolSync daily at 23:00 UTC, Kopia maintenance at 23:30 UTC, `pgbackup` Thursday
+  23:00 Europe/Paris. VolSync and Kopia only take UTC, which puts them at 00:00–01:30 Paris in
+  both winter and summer, so on Sundays they finish before the upgrade starts at 02:00.
 - **Two phases:** every PR is evaluated first and the merge plan is printed; then the plan is merged.
 - **Pause between merges:** 3 min for patch/digest/action-major, 5 min for minors, so Flux reconciles one change at a time. No pause after the last merge.
 - **Run budget:** merging stops at 45 min and the rest of the plan is deferred to the next run. This keeps every merge inside the 1h lifetime of the GitHub App token. Any failed merge fails the job.
