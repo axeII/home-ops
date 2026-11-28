@@ -16,7 +16,7 @@ spec:
   values:
     image:
       repository: itzg/mc-router
-      tag: 1.56.5
+      tag: 1.57.1
       pullPolicy: IfNotPresent
     minecraftRouter:
       autoScale:
