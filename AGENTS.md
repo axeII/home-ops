@@ -29,7 +29,7 @@ Claude works as the **medior developer** — it implements changes, validates th
 ## Toolchain
 
 Every CLI this repo needs is pinned in `mise.toml` at the repo root — `talosctl`, `kubectl`, `flux`,
-`topf`, `sops`, `helmfile`, `stern`, `yq`, `jq`, `just`, `fd`, `pre-commit`, plus `flate` and
+`topf`, `sops`, `helmfile`, `stern`, `yq`, `jq`, `just`, `fd`, `gh`, `pre-commit`, plus `flate` and
 `yayamlls`. Install [mise](https://mise.jdx.dev) and run `just tools` (or `mise install`).
 
 CI installs from the same `mise.toml` via `jdx/mise-action`, so local runs and the merge gate use
@@ -74,13 +74,16 @@ direnv.
 ## Commits and PRs
 
 Version control is plain git. Use GitHub MCP tools (`github_create_pull_request`,
-`github_issue_write`, etc.) for all GitHub API operations, not `gh pr create`. Never commit on
-`main`, never force-push, never skip hooks.
+`github_issue_write`, etc.) for all GitHub API operations, not `gh pr create`. `gh` is pinned in
+`mise.toml` only for `just` recipes such as `worktree-clean`. Never commit on `main`, never
+force-push, never skip hooks.
 
 ### Worktrees
 
 - Start each task on its own branch in its own worktree: `just worktree <branch>` creates
-  `../home-ops-<branch>` from `origin/main`. Remove it after merge with `git worktree remove <path>`.
+  `../home-ops-<branch>` from `origin/main`.
+- `just worktree-clean` lists the worktrees and local branches whose PR has merged; `--yes` deletes
+  them. It keeps anything with uncommitted changes or with commits the merged PR never contained.
 - Claude Code agents running with worktree isolation use `.claude/worktrees/`, which is gitignored.
 - `kubeconfig`, `age.key` and `talosconfig` exist only in the main checkout. `mise.toml` points every
   worktree at those copies through `HOME_OPS_ROOT`, so do not copy them into a worktree.

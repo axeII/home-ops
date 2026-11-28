@@ -23,12 +23,13 @@ kubectl = "1.36.4"
 
 flux2 = "2.10.1"       # registry name is flux2; the binary is `flux`
 sops = "3.13.3"
-helmfile = "1.8.5"
+helmfile = "1.8.6"
 stern = "1.35.0"
 yq = "4.54.3"
 jq = "1.8.2"
 just = "1.59.0"
 fd = "10.5.2"
+gh = "2.106.0"
 pre-commit = "4.7.0"
 
 # pre-commit ships as a zipapp that runs on whatever python3 is on PATH, and

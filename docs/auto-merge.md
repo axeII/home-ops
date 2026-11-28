@@ -1,6 +1,8 @@
 # Auto-merge policy
 
-The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and applies these rules:
+The `.github/workflows/auto-merge.yaml` workflow is scheduled Monday to Saturday at 02:00 UTC and
+applies these rules. GitHub often starts scheduled runs hours late (7–10 h in November 2026), so
+the quiet window below is checked when the run actually starts and again before each merge.
 
 | Category | Detection | Min age | Days | Konflate gate |
 |---|---|---|---|---|
@@ -25,12 +27,19 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 - **Mise tools:** `.github/scripts/pr-mise-only.sh` decides it from the changed files, not the title,
   and rejects any change to `talosctl` or `kubectl`, which move with the cluster in the talos and
   kubernetes groups. The age counts from the head commit, not the PR, so a newer release that
-  Renovate pushes into an open PR waits its own day. The flux2 CLI is exempt from the `flux` pattern in both auto-merge and `pr-classify`, and
-  merges like any other tool. Tool majors stay manual. The 1-day wait is there because these
-  binaries run on the workstation that holds `age.key`, the kubeconfig and the talosconfig, and CI
-  never runs most of them (helmfile, sops, stern, topf, just, fd, pre-commit). The
-  Fri–Sat train and the pause after the merge do not apply: Flux deploys nothing from `mise.toml`.
-- **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
+  Renovate pushes into an open PR waits its own day. The flux2 CLI is exempt from the `flux`
+  pattern in both auto-merge and `pr-classify`, and merges like any other tool. Tool majors stay
+  manual. The 1-day wait is there because these binaries run on the workstation that holds
+  `age.key`, the kubeconfig and the talosconfig, and CI never runs most of them (helmfile, sops,
+  stern, topf, just, fd, pre-commit). The Fri–Sat train and the pause after the merge do not
+  apply: Flux deploys nothing from `mise.toml`.
+- **Cluster quiet window:** no merges on Sunday (Talos/Kubernetes upgrade 02:00–06:00
+  Europe/Paris, then recovery), or 23:00–02:00 Europe/Paris on any night, while backups run.
+  Renovate's branch automerge of Grafana dashboards (`.renovate/grafanaDashboards.json5`) keeps
+  the same hours.
+- **Backups:** VolSync daily at 23:00 UTC, Kopia maintenance at 23:30 UTC, `pgbackup` Thursday
+  23:00 Europe/Paris. VolSync and Kopia only take UTC, which puts them at 00:00–01:30 Paris in
+  both winter and summer, so on Sundays they finish before the upgrade starts at 02:00.
 - **Two phases:** every PR is evaluated first and the merge plan is printed; then the plan is merged.
 - **Pause between merges:** 3 min for patch/digest/action-major, 5 min for minors, so Flux reconciles one change at a time. No pause after the last merge or after a mise tools merge.
 - **Run budget:** merging stops at 45 min and the rest of the plan is deferred to the next run. This keeps every merge inside the 1h lifetime of the GitHub App token. Any failed merge fails the job.

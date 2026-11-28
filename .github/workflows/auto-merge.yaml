@@ -3,7 +3,7 @@ name: Auto-Merge
 
 on:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 2 * * 1-6"
   workflow_dispatch:
     inputs:
       dryRun:
@@ -99,13 +99,17 @@ jobs:
           echo " Berlin:      $(TZ='Europe/Berlin' date -R)"
           echo "=============================="
 
-          # ── Quiet window: Sun 00:00-05:00 UTC ───────────
-          utc_day=$(date -u +%u)
-          utc_hour=$(date -u +%H)
-          if [ "${FORCE}" != "true" ] && [ "$utc_day" -eq 7 ] && [ "$utc_hour" -lt 5 ]; then
+          # ── Quiet window: Sunday, and 23:00-02:00 nightly (Europe/Paris) ───
+          in_quiet_window() {
+            local day hour
+            day=$(TZ='Europe/Paris' date +%u)
+            hour=$(TZ='Europe/Paris' date +%H)
+            [ "$day" -eq 7 ] || [ "$hour" -ge 23 ] || [ "$hour" -lt 2 ]
+          }
+          if [ "${FORCE}" != "true" ] && in_quiet_window; then
             echo ""
-            echo "=== QUIET WINDOW (Sun 00:00-05:00 UTC) ==="
-            echo "No merges during Talos upgrade window."
+            echo "=== QUIET WINDOW (Sunday, or 23:00-02:00 Europe/Paris) ==="
+            echo "No merges on Sunday (Talos upgrade and recovery) or while backups run."
             echo "Use 'force' input to bypass."
             echo "==========================================="
             echo "Summary: 0 merges (quiet window)"
@@ -337,6 +341,12 @@ jobs:
             number=${plan_numbers[$idx]}
             category=${plan_categories[$idx]}
             head_sha=${plan_shas[$idx]}
+
+            if [ "${FORCE}" != "true" ] && in_quiet_window; then
+              for rest in "${plan_numbers[@]:${idx}}"; do deferred_ids+=("#${rest}"); done
+              echo "  → quiet window reached, deferring ${deferred_ids[*]} to next run"
+              break
+            fi
 
             if [ "${DRY_RUN}" = "true" ]; then
               echo "  #${number} → WOULD MERGE ${head_sha:0:7} (${category}) ✓"

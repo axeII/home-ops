@@ -23,7 +23,8 @@ spec:
       postgres-backup:
         type: cronjob
         cronjob:
-          schedule: "0 3 * * 0"
+          schedule: "0 23 * * 4"
+          timeZone: Europe/Paris
           concurrencyPolicy: Forbid
           ttlSecondsAfterFinished: 43200
         pod:
