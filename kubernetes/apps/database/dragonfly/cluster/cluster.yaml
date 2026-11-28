@@ -20,7 +20,7 @@ spec:
     - --default_lua_flags=allow-undeclared-keys
     - --hz=10
   snapshot:
-    cron: "0 */6 * * *"
+    cron: "45 5,11,17,23 * * *"
     persistentVolumeClaimSpec:
       accessModes:
         - ReadWriteOnce
