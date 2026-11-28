@@ -23,7 +23,7 @@ kubectl = "1.36.4"
 
 flux2 = "2.10.1"       # registry name is flux2; the binary is `flux`
 sops = "3.13.3"
-helmfile = "1.8.5"
+helmfile = "1.8.6"
 stern = "1.35.0"
 yq = "4.54.3"
 jq = "1.8.2"
