@@ -12,5 +12,10 @@
       ],
       allowedVersions: "<=17",
     },
+    {
+      description: "Hold Intel device plugins below 0.37.2 until intel/intel-device-plugins-for-kubernetes#2416 is fixed",
+      matchPackageNames: ["/intel-device-plugins-(operator|gpu)/"],
+      allowedVersions: "<0.37.2",
+    },
   ],
 }
