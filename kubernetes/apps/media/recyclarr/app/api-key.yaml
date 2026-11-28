@@ -1,0 +1,31 @@
+---
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: Password
+metadata:
+  name: recyclarr-api-key
+spec:
+  length: 32
+  digits: 8
+  symbols: 0
+  noUpper: false
+  allowRepeat: true
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: recyclarr-api-key
+spec:
+  refreshPolicy: CreatedOnce
+  target:
+    name: recyclarr-api-key-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RECYCLARR_API_KEY: "{{ .password }}"
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: Password
+          name: recyclarr-api-key
