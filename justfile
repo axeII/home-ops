@@ -41,6 +41,9 @@ worktree BRANCH:
     # `git push` can never target main.
     git worktree add --no-track -b "{{ BRANCH }}" "$dir" origin/main
     mise trust --quiet "$dir/mise.toml"
+    # Install what this checkout pins, so a merged tool bump is ready before the
+    # first command. Best-effort: the worktree already exists at this point.
+    mise -C "$dir" install --quiet || echo "warning: mise install failed; run 'just tools' in $dir" >&2
     echo "Worktree ready: cd $dir"
 
 # Remove worktrees and local branches whose PR has merged (dry run; --yes deletes)
