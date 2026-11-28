@@ -4,7 +4,7 @@
 
 > **Prefer automated restore for most cases:**
 > ```bash
-> just volsync-restore APP=<app> NS=<namespace>
+> just volsync-restore <app> <namespace>
 > ```
 > Use this manual guide **only** when you need to restore a *specific* snapshot ID (point-in-time recovery beyond the latest snapshot).
 
