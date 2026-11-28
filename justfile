@@ -413,6 +413,16 @@ volsync-unlock-local APP NS="default":
     stern --namespace "$NS" job/volsync-unlock-"$APP" --no-follow
     kubectl --namespace "$NS" delete job volsync-unlock-"$APP"
 
+# ─── Observability VM ────────────────────────────────────────────────────────
+
+# Show how the observability VM differs from vm/observability on main
+vm-diff:
+    scripts/vm-observability.sh
+
+# Roll the observability VM to main: sync config, pull, recreate, check versions
+vm-apply:
+    scripts/vm-observability.sh apply
+
 # ─── Workstation ─────────────────────────────────────────────────────────────
 
 # Install the pinned toolchain from mise.toml

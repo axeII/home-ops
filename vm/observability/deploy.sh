@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Deploy observability stack to the VM
 # Usage: ./deploy.sh [--dry-run]
+# First deploy only. Later updates, such as Renovate image bumps: just vm-apply
 set -euo pipefail
 
 VM_IP="192.168.3.3"
