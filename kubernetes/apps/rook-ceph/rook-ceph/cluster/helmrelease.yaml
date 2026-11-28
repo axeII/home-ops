@@ -65,7 +65,6 @@ spec:
           bdev_async_discard_threads: "1"
           osd_class_update_on_start: "false"
           # Throttle recovery/backfill to reduce network pressure on 1GbE
-          osd_mclock_profile: high_client_ops
           osd_recovery_max_active: "1"
           osd_max_backfills: "1"
           # Schedule scrubbing overnight (2:00 - 6:00)
