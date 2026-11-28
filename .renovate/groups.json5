@@ -127,6 +127,15 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
     },
+    {
+      description: "Securo Group",
+      groupName: "securo",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/securo-finance\\/securo-/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+    },
 
     {
       description: "Dragonfly Group",
