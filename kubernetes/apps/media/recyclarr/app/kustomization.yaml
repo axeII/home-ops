@@ -5,6 +5,7 @@ namespace: media
 resources:
   - ./pvc.yaml
   - ./externalsecret.yaml
+  - ./api-key.yaml
   - ./helmrelease.yaml
 configMapGenerator:
   - name: recyclarr-configmap

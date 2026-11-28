@@ -5,6 +5,7 @@ metadata:
   name: &app recyclarr
 spec:
   interval: 1h
+  timeout: 10m
   chartRef:
     kind: OCIRepository
     name: app-template
@@ -20,34 +21,56 @@ spec:
   values:
     controllers:
       recyclarr:
-        type: cronjob
+        replicas: 1
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
-        cronjob:
-          schedule: "@daily"
-          timeZone: &timeZone Europe/Paris
-          successfulJobsHistory: 1
-          failedJobsHistory: 1
         containers:
           app:
             image:
               repository: ghcr.io/recyclarr/recyclarr
-              tag: 8.8.1@sha256:3e9c41b9ec29bbf65fe846864058730d321a21f7695d8c0d9437b73e34d50ad9
+              tag: 9.0.0@sha256:4973d11b18b5ef09fb226f4161eecb16434ff7e6b43c56d50fceb52fb22c66c7
             env:
-              TZ: *timeZone
+              TZ: Europe/Paris
             envFrom:
               - secretRef:
                   name: recyclarr-secret
-            args: ["sync"]
+              - secretRef:
+                  name: recyclarr-api-key-secret
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /livez
+                    port: &managementPort 7983
+                  periodSeconds: 10
+                  failureThreshold: 30
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /livez
+                    port: *managementPort
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *managementPort
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 10m
+                cpu: 50m
+                memory: 256Mi
               limits:
-                memory: 128Mi
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -70,3 +93,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/logs
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
