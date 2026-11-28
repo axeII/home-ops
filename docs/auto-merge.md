@@ -7,8 +7,9 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
 | **patch / digest** | `type/patch`, `type/digest` | **2d** | any | no failures, no cautions |
 | **minor** (release train) | `type/minor` | **3d** | **Fri–Sat** (Europe/Berlin) | no failures, no cautions |
 | **major (ci/gh-action)** | `type/major` + `renovate/github-action` | **2d** | any | no failures (cautions allowed) |
+| **mise tools** | `type/patch`, `type/digest` or `type/minor` + `renovate/mise`, and `mise.toml` is the only changed file | **1d** from the head commit | any | no failures, no cautions |
 | **major (other)** | `type/major`, not `renovate/github-action` | — | MANUAL | — |
-| **critical infra** | `needs-review` label, or title/branch matches `ceph\|cilium\|flux\|dragonfly` | — | MANUAL | — |
+| **critical infra** | `needs-review` label, or title/branch matches `ceph\|cilium\|flux\|dragonfly` (not checked for mise tools) | — | MANUAL | — |
 | **area/talos** | `area/talos` label (`talos/**`) | — | MANUAL | — |
 
 - **CI gate:** every row above also needs green CI. `.github/scripts/pr-ci-gate.sh` takes the latest
@@ -21,9 +22,17 @@ The `.github/workflows/auto-merge.yaml` workflow runs daily at 02:00 UTC and app
   `HAS_HOOKS`. The merge passes `--match-head-commit`, so if Renovate pushes after the check, GitHub
   refuses the merge and the job fails instead of merging an unchecked commit. Run the script by hand
   to see why a PR is held: `.github/scripts/pr-ci-gate.sh <number>`.
+- **Mise tools:** `.github/scripts/pr-mise-only.sh` decides it from the changed files, not the title,
+  and rejects any change to `talosctl` or `kubectl`, which move with the cluster in the talos and
+  kubernetes groups. The age counts from the head commit, not the PR, so a newer release that
+  Renovate pushes into an open PR waits its own day. The flux2 CLI is exempt from the `flux` pattern in both auto-merge and `pr-classify`, and
+  merges like any other tool. Tool majors stay manual. The 1-day wait is there because these
+  binaries run on the workstation that holds `age.key`, the kubeconfig and the talosconfig, and CI
+  never runs most of them (helmfile, sops, stern, topf, just, fd, pre-commit). The
+  Fri–Sat train and the pause after the merge do not apply: Flux deploys nothing from `mise.toml`.
 - **Cluster quiet window:** Sun 00:00–05:00 UTC — no merges (Talos upgrade window).
 - **Two phases:** every PR is evaluated first and the merge plan is printed; then the plan is merged.
-- **Pause between merges:** 3 min for patch/digest/action-major, 5 min for minors, so Flux reconciles one change at a time. No pause after the last merge.
+- **Pause between merges:** 3 min for patch/digest/action-major, 5 min for minors, so Flux reconciles one change at a time. No pause after the last merge or after a mise tools merge.
 - **Run budget:** merging stops at 45 min and the rest of the plan is deferred to the next run. This keeps every merge inside the 1h lifetime of the GitHub App token. Any failed merge fails the job.
 - Konflate re-render is triggered before each merge gate via `KONFLATE_PUSH_TOKEN`.
 - **Defense in depth:** The `pr-classify` workflow applies `needs-review` and `risk/critical` labels to

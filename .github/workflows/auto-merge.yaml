@@ -55,6 +55,12 @@ jobs:
           MIN_AGE_PATCH_DAYS=2
           MIN_AGE_MINOR_DAYS=3
           MIN_AGE_ACTION_MAJOR_DAYS=2
+          # mise.toml-only PRs (.github/scripts/pr-mise-only.sh) move workstation
+          # and CI tools. Flux deploys nothing from them, so only the age wait
+          # applies, counted from the head commit: a hijacked release should be
+          # caught before it reaches the workstation that holds age.key and the
+          # cluster credentials.
+          MIN_AGE_MISE_DAYS=1
 
           # Pause between merges so Flux (webhook receiver) reconciles one
           # change at a time. No pause after the last merge.
@@ -113,6 +119,7 @@ jobs:
           cutoff_patch=$(date -u -d "${MIN_AGE_PATCH_DAYS} days ago" +%s)
           cutoff_minor=$(date -u -d "${MIN_AGE_MINOR_DAYS} days ago" +%s)
           cutoff_action=$(date -u -d "${MIN_AGE_ACTION_MAJOR_DAYS} days ago" +%s)
+          cutoff_mise=$(date -u -d "${MIN_AGE_MISE_DAYS} days ago" +%s)
 
           classify_label_str() {
             local labels="$1"
@@ -152,11 +159,19 @@ jobs:
 
             # Classify update type from labels
             category=$(classify_label_str "${labels_str}")
+
+            # A mise.toml-only patch or minor skips the infra regex (the flux2
+            # CLI matches "flux") and the release train. Majors stay manual.
+            if [ "${category}" = "patch" ] || [ "${category}" = "minor" ]; then
+              if [[ ",${labels_str}," == *",renovate/mise,"* ]] && .github/scripts/pr-mise-only.sh "${number}"; then
+                category="mise"
+              fi
+            fi
             echo "  Type:    ${category}"
 
             # ── Manual filters ──────────────────────────────────
             # rook-ceph / ceph image by title or branch
-            if echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; then
+            if [ "${category}" != "mise" ] && { echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; }; then
               echo "  → SKIP (manual: critical infra)"
               skipped_manual+=("#${number}")
               continue
@@ -198,6 +213,16 @@ jobs:
             fi
 
             # ── Age check ─────────────────────────────────────────
+            # mise: age the newest commit, not the PR. Renovate pushes a newer
+            # release into an open PR, and that release is what has to age.
+            if [ "${category}" = "mise" ]; then
+              if ! created_at=$(gh pr view "${number}" --json commits --jq '.commits[-1].committedDate'); then
+                echo "  → SKIP (cannot read the head commit date)"
+                skipped_age+=("#${number}")
+                continue
+              fi
+              echo "  Head:    ${created_at}"
+            fi
             created_epoch=$(date -u -d "${created_at}" +%s 2>/dev/null) || {
               echo "  → SKIP (cannot parse createdAt)"
               skipped_age+=("#${number}")
@@ -208,6 +233,7 @@ jobs:
               patch|digest) cutoff_epoch=${cutoff_patch} ;;
               minor) cutoff_epoch=${cutoff_minor} ;;
               action-major) cutoff_epoch=${cutoff_action} ;;
+              mise) cutoff_epoch=${cutoff_mise} ;;
               *) cutoff_epoch=${cutoff_patch} ;;
             esac
 
@@ -333,6 +359,11 @@ jobs:
             # Nothing left to merge: no pause.
             if [ "$((idx + 1))" -ge "${#plan_numbers[@]}" ]; then
               break
+            fi
+
+            # A mise.toml-only merge gives Flux nothing to reconcile.
+            if [ "${category}" = "mise" ]; then
+              continue
             fi
 
             # Longer pause during the release train so Flux reconciles minors.

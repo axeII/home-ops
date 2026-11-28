@@ -66,8 +66,19 @@ jobs:
             is_manual=false
             is_critical=false
 
+            # A mise.toml-only patch or minor moves workstation and CI tools,
+            # not cluster infra, so the regex below does not apply (the flux2
+            # CLI matches "flux"). The same rule is in auto-merge.yaml.
+            mise_only=false
+            if [[ ",${labels_str}," == *",renovate/mise,"* ]] &&
+              [[ ",${labels_str}," == *",type/patch,"* || ",${labels_str}," == *",type/digest,"* || ",${labels_str}," == *",type/minor,"* ]] &&
+              .github/scripts/pr-mise-only.sh "${number}"; then
+              echo "  → mise.toml only"
+              mise_only=true
+            fi
+
             # risk/critical by title or branch
-            if echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; then
+            if [ "${mise_only}" = "false" ] && { echo "${title}" | grep -qiE "${MANUAL_TITLE_REGEX}" || echo "${branch}" | grep -qiE "${MANUAL_TITLE_REGEX}"; }; then
               echo "  → risk/critical (critical infra pattern)"
               is_manual=true
               is_critical=true
